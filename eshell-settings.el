@@ -1,6 +1,5 @@
 (add-hook 'after-init-hook  (lambda() (eshell)))
-(setenv "PATH"
-	(concat "~/bin:/opt/local/bin:" (getenv "PATH")))
+
 (setq eshell-modify-global-environment t)
 (add-hook 'eshell-mode-hook
 	  '(lambda nil
