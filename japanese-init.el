@@ -1,5 +1,5 @@
 ;; A. language environment
-(set-language-environment "Japanese")
+(set-language-environment 'utf-8)
 (set-default-coding-systems 'utf-8-unix)
 (set-keyboard-coding-system 'utf-8)
 (cond ((eq system-type 'darwin)
@@ -11,6 +11,7 @@
       ((eq window-system 'w32)))
 (set-terminal-coding-system 'utf-8)
 (setq default-process-coding-system '(utf-8 . utf-8))
+(setenv "LANG" "ja_JP.UTF-8")
 
   ;; A. end
 
