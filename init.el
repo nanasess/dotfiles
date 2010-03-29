@@ -290,13 +290,15 @@
 (require 'anything-migemo)
 (require 'anything-complete)
 (require 'anything-show-completion)
+(require 'anything-etags)
 (anything-read-string-mode 1)
 (setq anything-sources (list anything-c-source-buffers
 			     anything-c-source-recentf
 			     anything-c-howm-recent
 			     anything-c-source-file-name-history
 			     anything-c-source-bookmarks
-			     anything-c-source-files-in-current-dir))
+			     anything-c-source-files-in-current-dir
+			     anything-c-source-etags-select))
 (define-key anything-map (kbd "C-p") 'anything-previous-line)
 (define-key anything-map (kbd "C-n") 'anything-next-line)
 (define-key anything-map (kbd "C-v") 'anything-next-source)
