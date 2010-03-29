@@ -14,7 +14,7 @@
 (setq mac-allow-anti-aliasing t)
 ;(set-default-font my-font)
 (add-to-list 'default-frame-alist `(font . ,my-font))
-(when (= emacs-major-version 23)
+(when (>= emacs-major-version 23)
   (set-fontset-font
    (frame-parameter nil 'font)
    'japanese-jisx0208
