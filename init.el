@@ -76,12 +76,26 @@
 (require 'migemo)
 
 ;; --------------------------- dired-x settings --------------------------------
+(setq dired-bind-jump nil)
+(add-hook 'dired-mode-hook
+	  (lambda ()
+	    (local-unset-key "\C-td")
+	    (local-unset-key "\C-tt")
+	    (local-unset-key "\C-tr")
+	    (local-unset-key "\C-tj")
+	    (local-unset-key "\C-ti")
+	    (local-unset-key "\C-tx")
+	    (local-unset-key "\C-ta")
+	    (local-unset-key "\C-t.")
+	    (local-unset-key "\C-tc")
+	    (local-unset-key "\C-tf")
+	    (local-unset-key "\C-t\C-t")
+	    (local-unset-key "\C-te")
+	    (local-set-key "\C-t" 'other-window)))
+
 (add-hook 'dired-load-hook
 	  (lambda ()
-	    (load "dired-x")
-	    (global-set-key "\C-x\C-j" 'skk-mode)
-	    (global-set-key "\C-x\C-t" 'multi-term-dedicated-toggle)
-	    (global-set-key "\C-t" 'other-window)))
+	    (load "dired-x")))
 
 ;; --------------------------- CSS Settings ------------------------------------
 (add-hook 'css-mode-hook
@@ -290,16 +304,18 @@
 (require 'anything-migemo)
 (require 'anything-complete)
 (require 'anything-show-completion)
-(require 'anything-etags)
 (require 'anything-gtags)
 (anything-read-string-mode 1)
+
+(setq anything-input-idle-delay 0.2)
+(setq anything-idle-delay 0.7)
+
 (setq anything-sources (list anything-c-source-buffers
 			     anything-c-source-recentf
 			     anything-c-howm-recent
 			     anything-c-source-file-name-history
 			     anything-c-source-bookmarks
 			     anything-c-source-files-in-current-dir
-			     anything-c-source-etags-select
 			     anything-c-source-gtags-select))
 (define-key anything-map (kbd "C-p") 'anything-previous-line)
 (define-key anything-map (kbd "C-n") 'anything-next-line)
