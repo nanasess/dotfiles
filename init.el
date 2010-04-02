@@ -79,18 +79,6 @@
 (setq dired-bind-jump nil)
 (add-hook 'dired-mode-hook
 	  (lambda ()
-	    (local-unset-key "\C-td")
-	    (local-unset-key "\C-tt")
-	    (local-unset-key "\C-tr")
-	    (local-unset-key "\C-tj")
-	    (local-unset-key "\C-ti")
-	    (local-unset-key "\C-tx")
-	    (local-unset-key "\C-ta")
-	    (local-unset-key "\C-t.")
-	    (local-unset-key "\C-tc")
-	    (local-unset-key "\C-tf")
-	    (local-unset-key "\C-t\C-t")
-	    (local-unset-key "\C-te")
 	    (local-set-key "\C-t" 'other-window)))
 
 (add-hook 'dired-load-hook
