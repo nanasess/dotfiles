@@ -36,6 +36,7 @@
 (global-set-key "\M-g" 'goto-line)
 (global-set-key (kbd "C-t") 'other-window)
 (global-set-key (kbd "C-z") 'other-frame)
+(global-unset-key (kbd "C-M-t"))
 
 ;; backup files
 (setq make-backup-files t)
@@ -353,8 +354,10 @@
 (setq twittering-username "nanasess")
 (setq twittering-retweet-format "RT @%s: %t")
 ; (twittering-icon-mode)
-(define-key global-map (kbd "C-M-t") 'twittering-update-status-interactive)
-
+(add-hook 'twittering-mode-hook
+	  '(lambda ()
+	     (define-key global-map (kbd "C-M-t")
+	       'twittering-update-status-from-pop-up-buffer)))
 
 ;; --------------------------- window-system settings --------------------------
 (if window-system (tool-bar-mode 0))
