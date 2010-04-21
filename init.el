@@ -68,6 +68,7 @@
 
 ;; --------------------------- Japanesed settings ------------------------------
 (require 'japanese-init)
+(setq skk-preload t)
 
 ;; --------------------------- migemo Settings -------------------------------
 (setq migemo-command "migemo"
