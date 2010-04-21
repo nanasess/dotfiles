@@ -329,9 +329,10 @@
 ;(global-set-key (kbd "C-M-o") 'anything-c-moccur-dmoccur)
 ;; grep
 (require 'anything-grep)
+(setq grep-command "grep -nHr -e ")
 ;;(global-set-key (kbd "C-M-o") 'moccur-grep)
-;;(global-set-key (kbd "C-M-o") 'anything-grep)
-(global-set-key (kbd "C-M-o") 'moccur-grep-find)
+(global-set-key (kbd "C-M-o") 'anything-grep)
+;(global-set-key (kbd "C-M-o") 'moccur-grep-find)
 ;; dired
 (add-hook 'dired-mode-hook
           '(lambda ()
