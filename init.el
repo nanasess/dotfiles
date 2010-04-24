@@ -357,7 +357,7 @@
 (setq twittering-retweet-format "RT @%s: %t")
 ; (twittering-icon-mode)
 (add-to-list 'twittering-tinyurl-services-map
-	     '(bitly . "http://api.bit.ly/v3/shorten?login=nanasess&apiKey=&format=txt&uri=")))
+	     '(bitly . "http://api.bit.ly/v3/shorten?login=nanasess&apiKey=&format=txt&uri="))
 (setq twittering-tinyurl-service 'bitly)
 (add-hook 'twittering-mode-hook
 	  '(lambda ()
