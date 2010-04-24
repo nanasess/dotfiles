@@ -356,6 +356,9 @@
 (setq twittering-username "nanasess")
 (setq twittering-retweet-format "RT @%s: %t")
 ; (twittering-icon-mode)
+(add-to-list 'twittering-tinyurl-services-map
+	     '(bitly . "http://api.bit.ly/v3/shorten?login=nanasess&apiKey=&format=txt&uri=")))
+(setq twittering-tinyurl-service 'bitly)
 (add-hook 'twittering-mode-hook
 	  '(lambda ()
 	     (define-key global-map (kbd "C-M-t")
@@ -375,4 +378,3 @@
 (setq calendar-weekend-marker 'diary)
 (add-hook 'today-visible-calendar-hook 'calendar-mark-weekend)
 (add-hook 'today-invisible-calendar-hook 'calendar-mark-weekend)
-
