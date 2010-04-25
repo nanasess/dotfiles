@@ -359,6 +359,7 @@
 (add-to-list 'twittering-tinyurl-services-map
 	     '(bitly . "http://api.bit.ly/v3/shorten?login=nanasess&apiKey=&format=txt&uri="))
 (setq twittering-tinyurl-service 'bitly)
+(setq twittering-display-remaining t)
 (add-hook 'twittering-mode-hook
 	  '(lambda ()
 	     (define-key global-map (kbd "C-M-t")
