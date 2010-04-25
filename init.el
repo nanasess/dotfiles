@@ -66,6 +66,20 @@
 (setq cua-enable-cua-keys nil)
 (cua-mode t)
 
+;; -------------------------- face settings ------------------------------------
+(defface hlline-face
+  '((((class color)
+      (background dark))
+     (:background "blue" :foreground "white"))
+    (((class color)
+      (background light))
+     (:background "azure2"))
+    (t
+     ()))
+  "*Face used by hl-line.")
+(setq hl-line-face 'hlline-face)
+(global-hl-line-mode)
+
 ;; --------------------------- Japanesed settings ------------------------------
 (require 'japanese-init)
 (setq skk-preload t)
