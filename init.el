@@ -73,7 +73,7 @@
      (:background "blue" :foreground "white"))
     (((class color)
       (background light))
-     (:background "azure2"))
+     (:background "honeydew"))
     (t
      ()))
   "*Face used by hl-line.")
