@@ -380,6 +380,9 @@
 	     (define-key global-map (kbd "C-M-t")
 	       'twittering-update-status-from-pop-up-buffer)))
 
+;; --------------------------- navi2ch settings --------------------------------
+(autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
+
 ;; --------------------------- window-system settings --------------------------
 (if window-system (tool-bar-mode 0))
 
