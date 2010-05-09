@@ -59,6 +59,9 @@
 ;; EOF を表示
 (setq default-indicate-empty-lines t)
 
+;; 論理行単位の移動
+(setq line-move-visual nil)
+
 ;; mm-version
 (require 'mm-version)
 
