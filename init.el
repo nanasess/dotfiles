@@ -117,6 +117,13 @@
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil))))
 
+;; -------------------------- JavaScript-mode settings -------------------------
+(add-hook 'js-mode-hook
+	  (function
+	   (lambda()
+	     (setq tab-width 4)
+	     (setq indent-tabs-mode nil))))
+
 ;; --------------------------- nXML-mode settings ------------------------------
 (add-to-list 'auto-mode-alist
 	     '("\\.\\(xml\\|xsl\\|rng\\|html\\|tpl\\)\\'" . nxml-mode))
