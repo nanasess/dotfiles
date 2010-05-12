@@ -6,7 +6,7 @@
 (defun init-environment (sys-type)
   (setq load-path (cons (expand-file-name
 			 (concat user-emacs-directory "/" sys-type)) load-path))
-  (load (concat sys-type "-init.el")))
+  (load (concat sys-type "-init")))
 
 (cond ((eq system-type 'darwin) (init-environment "darwin")
        (cond ((eq window-system 'mac) (init-environment "mac"))
