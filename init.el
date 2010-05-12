@@ -91,7 +91,9 @@
 (setq migemo-command "migemo"
       migemo-options '("-t" "emacs" "-i" "\a" ))
 (setenv "RUBYLIB" "/Library/Ruby/Site/1.8/")
-(setq migemo-directory "~/Applications/Emacs.app/Contents/Resources/share/migemo")
+(setq migemo-directory (expand-file-name
+			(concat invocation-directory
+				"../Resources/share/migemo")))
 (require 'migemo)
 
 ;; --------------------------- dired-x settings --------------------------------
@@ -117,6 +119,39 @@
 	   (lambda()
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil))))
+
+;; --------------------------- nXML-mode settings ------------------------------
+(add-to-list 'auto-mode-alist
+	     '("\\.\\(xml\\|xsl\\|rng\\|html\\|tpl\\)\\'" . nxml-mode))
+(add-hook 'nxml-mode-hook
+	  (lambda ()
+	    (setq auto-fill-mode -1)
+	    (setq nxml-slash-auto-complete-flag t)
+	    (setq nxml-child-indent 2)
+	    (rng-validate-mode 0)
+	    (cua-mode 0)
+	    (setq indent-tabs-mode t)
+	    (setq tab-width 2)))
+
+;; --------------------------- mmm-mode settings -------------------------------
+(setq load-path
+      (append
+       (list (expand-file-name (concat user-emacs-directory "/mmm"))) load-path))
+(require 'mmm-mode)
+(setq mmm-global-mode 'maybe)
+(set-face-background 'mmm-default-submode-face nil)
+(mmm-add-classes
+ '((embedded-css
+    :submode css-mode
+    :front "<style[^>]*>"
+    :back  "</style>")))
+(mmm-add-classes
+ '((embedded-js
+    :submode javascript-mode
+    :front "<script[^>]*>"
+    :back  "</script>")))
+(mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-css)
+(mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-js)
 
 ;; --------------------------- install-elisp setting ---------------------------
 (require 'install-elisp)
