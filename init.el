@@ -4,8 +4,8 @@
 ;;
 
 (defun init-environment (sys-type)
-  (setq load-path (cons (expand-file-name
-			 (concat user-emacs-directory "/" sys-type)) load-path))
+  (add-to-list 'load-path (expand-file-name
+			   (concat user-emacs-directory "/" sys-type)))
   (load (concat sys-type "-init")))
 
 (cond ((eq system-type 'darwin) (init-environment "darwin")
@@ -16,7 +16,7 @@
       ((eq system-type 'usg-unix-v) (init-environment "usg-unix-v"))
       ((eq window-system 'w32) (init-environment "win32")))
 
-(setq load-path (cons (expand-file-name user-emacs-directory) load-path))
+(add-to-list 'load-path (expand-file-name user-emacs-directory))
 
 ;; exec-path settings
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
@@ -138,9 +138,7 @@
 	    (setq tab-width 2)))
 
 ;; --------------------------- mmm-mode settings -------------------------------
-(setq load-path
-      (append
-       (list (expand-file-name (concat user-emacs-directory "/mmm"))) load-path))
+(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "/mmm")))
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
 (set-face-background 'mmm-default-submode-face nil)
