@@ -251,6 +251,15 @@
 ;; --------------------------- emacs-muse setting ------------------------------
 (require 'muse-settings)
 
+;; --------------------------- gtags settings ----------------------------------
+(autoload 'gtags-mode "gtags" nil t)
+(setq gtags-mode-hook
+      '(lambda ()
+	 (local-set-key "\M-." 'gtags-find-tag)
+	 (local-set-key "\C-u\M-." 'gtags-pop-stack)
+	 (local-set-key "\C-u\M-r" 'gtags-find-rtag)
+	 (local-set-key "\C-u\M-s" 'gtags-find-symbol)))
+
 ;; --------------------------- auto-complete.el settings -----------------------
 (require 'auto-complete)
 (require 'auto-complete-gtags)
@@ -282,6 +291,7 @@
 (setq php-search-url "http://jp2.php.net/")
 (add-hook 'php-mode-hook
 	  (lambda ()
+	    (gtags-mode 1)
 	    (require 'php-completion)
 	    (php-completion-mode t)
 	    (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
@@ -442,3 +452,10 @@
 (require 'auto-async-byte-compile)
 (setq auto-async-byte-compile-exclude-files-regexp "/mac/")
 (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
+
+;; --------------------------- one-key settings --------------------------------
+(require 'one-key)
+(require 'one-key-config)
+(require 'my-one-key-config)
+(require 'one-key-default)
+(one-key-default-setup-keys)
