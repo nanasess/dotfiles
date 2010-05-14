@@ -92,4 +92,39 @@
 
 (define-key global-map "\C-xV" 'one-key-menu-DVC)
 
+(defvar one-key-menu-howm-alist nil
+  "The `one-key' menu alist for howm.")
+
+(setq one-key-menu-howm-alist
+      '(
+	(("SPC" . "Howm Toggle Buffer") . howm-toggle-buffer)
+	(("," . "Howm Menu") . howm-menu)
+	(("." . "Howm Find Today") . howm-find-today)
+	((":" . "Howm Find Yesterday") . howm-find-yesterday)
+	(("C" . "Howm Create Here") . howm-create-here)
+	(("I" . "Howm Create Interactively") . howm-create-interactively)
+	(("K" . "Howm Keyword To Kill Ring") . howm-keyword-to-kill-ring)
+	(("M" . "Howm Open Named File") . howm-open-named-file)
+	(("Q" . "Howm Kill All") . howm-kill-all)
+	(("T" . "Howm Insert Dtime") . howm-insert-dtime)
+	(("a" . "Howm List All") . howm-list-all)
+	(("c" . "Howm Create") . howm-create)
+	(("d" . "Howm Insert Date") . howm-insert-date)
+	(("g" . "Howm List Grep") . howm-list-grep)
+	(("h" . "Howm History") . howm-history)
+	(("i" . "Howm Insert Keyword") . howm-insert-keyword)
+	(("l" . "Howm List Recent") . howm-list-recent)
+	(("m" . "Howm List Migemo") . howm-list-migemo)
+	(("s" . "Howm List Grep Fixed") . howm-list-grep-fixed)
+	(("t" . "Howm List Todo") . howm-list-todo)
+	(("w" . "Howm Random Walk") . howm-random-walk)
+	(("y" . "Howm List Schedule") . howm-list-schedule)
+	))
+
+(defun one-key-menu-howm ()
+  "The `one-key' menu for howm"
+  (interactive)
+  (one-key-menu "howm" one-key-menu-howm-alist))
+
+(define-key global-map "\C-c," 'one-key-menu-howm)
 (provide 'my-one-key-config)
