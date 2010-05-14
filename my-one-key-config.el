@@ -1,28 +1,6 @@
-(defvar one-key-menu-C-x-and-RET-alist nil
-  "The `one-key' menu alist for C-x and RET.")
-
-(setq one-key-menu-C-x-and-RET-alist
-      '(
-	(("C-\\" . "Set Input Method") . set-input-method)
-	(("F" . "Set File Name Coding System") . set-file-name-coding-system)
-	(("X" . "Set Next Selection Coding System") . set-next-selection-coding-system)
-	(("c" . "Universal Coding System Argument") . universal-coding-system-argument)
-	(("f" . "Set Buffer File Coding System") . set-buffer-file-coding-system)
-	(("k" . "Set Keyboard Coding System") . set-keyboard-coding-system)
-	(("l" . "Set Language Environment") . set-language-environment)
-	(("p" . "Set Buffer Process Coding System") . set-buffer-process-coding-system)
-	(("r" . "Revert Buffer With Coding System") . revert-buffer-with-coding-system)
-	(("t" . "Set Terminal Coding System") . set-terminal-coding-system)
-	(("x" . "Set Selection Coding System") . set-selection-coding-system)
-	))
-
-(defun one-key-menu-C-x-and-RET ()
-  "The `one-key' menu for C-x and RET"
-  (interactive)
-  (one-key-menu "C-x and RET" one-key-menu-C-x-and-RET-alist))
-
-(define-key ctl-x-map [return] 'one-key-menu-C-x-and-RET)
-
+;;
+;; dvc
+;;
 (defvar one-key-menu-DVC-alist nil
   "The `one-key' menu alist for DVC.")
 
@@ -92,6 +70,9 @@
 
 (define-key global-map "\C-xV" 'one-key-menu-DVC)
 
+;;
+;; howm
+;;
 (defvar one-key-menu-howm-alist nil
   "The `one-key' menu alist for howm.")
 
