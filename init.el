@@ -67,6 +67,8 @@
 (cua-mode t)
 
 ;; -------------------------- face settings ------------------------------------
+(set-background-color "ivory")
+
 (defface hlline-face
   '((((class color)
       (background dark))
