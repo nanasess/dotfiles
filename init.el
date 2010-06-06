@@ -419,7 +419,6 @@
 
 ;; --------------------------- twitting-mode settings --------------------------
 (require 'twittering-mode)
-(setq twittering-username "nanasess")
 (setq twittering-retweet-format "RT @%s: %t")
 ; (twittering-icon-mode)
 (add-to-list 'twittering-tinyurl-services-map
@@ -427,10 +426,6 @@
 (setq twittering-tinyurl-service 'bitly)
 (setq twittering-display-remaining t)
 (setq twittering-timer-interval 300)
-(add-hook 'twittering-mode-hook
-	  '(lambda ()
-	     (define-key global-map (kbd "C-M-t")
-	       'twittering-update-status-from-pop-up-buffer)))
 
 ;; --------------------------- navi2ch settings --------------------------------
 (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
