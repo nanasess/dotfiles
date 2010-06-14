@@ -425,7 +425,6 @@
 	     '(bitly . "http://api.bit.ly/v3/shorten?login=nanasess&apiKey=&format=txt&uri="))
 (setq twittering-tinyurl-service 'bitly)
 (setq twittering-display-remaining t)
-(setq twittering-timer-interval 300)
 
 ;; --------------------------- navi2ch settings --------------------------------
 (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
