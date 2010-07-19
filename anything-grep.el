@@ -1,5 +1,5 @@
 ;;; anything-grep.el --- search refinement of grep result with anything
-;; $Id: anything-grep.el,v 1.27 2010/03/21 11:31:04 rubikitch Exp $
+;; $Id: anything-grep.el,v 1.27 2010-03-21 11:31:04 rubikitch Exp $
 
 ;; Copyright (C) 2008, 2009, 2010  rubikitch
 
@@ -62,7 +62,7 @@
 ;;; History:
 
 ;; $Log: anything-grep.el,v $
-;; Revision 1.27  2010/03/21 11:31:04  rubikitch
+;; Revision 1.27  2010-03-21 11:31:04  rubikitch
 ;; Resume bug fix
 ;;
 ;; Revision 1.26  2010/03/21 11:13:30  rubikitch
@@ -156,7 +156,7 @@
 
 ;;; Code:
 
-(defvar anything-grep-version "$Id: anything-grep.el,v 1.27 2010/03/21 11:31:04 rubikitch Exp $")
+(defvar anything-grep-version "$Id: anything-grep.el,v 1.27 2010-03-21 11:31:04 rubikitch Exp $")
 (require 'anything)
 (require 'grep)
 
@@ -218,15 +218,17 @@ The command is converting standard input to EUC-JP line by line. ")
 ;; (@* "core")
 (defvar anything-grep-sources nil
   "`anything-sources' for last invoked `anything-grep'.")
-(defun anything-grep-base (sources)
+(defvar anything-grep-buffer-name nil)
+(defun anything-grep-base (sources &optional bufname)
   "Invoke `anything' for `anything-grep'."
   (and anything-grep-save-buffers-before-grep
        (save-some-buffers (not compilation-ask-about-save) nil))
   (setq anything-grep-sources sources)
+  (setq anything-grep-buffer-name (or bufname "*anything grep*"))
   (let ((anything-quit-if-no-candidate t)
         (anything-compile-source-functions
          (cons 'anything-compile-source--agrep-init anything-compile-source-functions)))
-    (anything sources nil nil nil nil "*anything grep*")))
+    (anything sources nil nil nil nil bufname)))
 
 ;; (anything (list (agrep-source "grep -Hin agrep anything-grep.el" default-directory) (agrep-source "grep -Hin pwd anything-grep.el" default-directory)))
 
@@ -284,14 +286,29 @@ GNU grep is expected for COMMAND. The grep result is colorized."
                                   (format "cd %s; %s" pwd command))
      'agrep-sentinel)))
 
+(defvar agrep-do-after-minibuffer-exit nil)
+(defun agrep-minibuffer-exit-hook ()
+  (when agrep-do-after-minibuffer-exit
+    (run-at-time 1 nil agrep-do-after-minibuffer-exit)
+    (setq agrep-do-after-minibuffer-exit nil)))
+(add-hook 'minibuffer-exit-hook 'agrep-minibuffer-exit-hook)
+
+(defun agrep-show (func)
+  (if (active-minibuffer-window)
+      (setq agrep-do-after-minibuffer-exit func)
+    (funcall func)))
+;; (anything-grep "sleep 1; grep -Hin grep anything-grep.el" "~/src/anything-config/extensions/")
+
 (defun agrep-sentinel (proc stat)
   (with-current-buffer (process-buffer proc)
     (setq agrep-waiting-source (delete agrep-source-local agrep-waiting-source))
     (agrep-fontify))
   (unless agrep-waiting-source
     ;; call anything
-    (let ((anything-quit-if-no-candidate (lambda () (message "No matches"))))
-      (anything anything-grep-sources nil nil nil nil "*anything grep*"))))
+    (agrep-show
+     (lambda ()
+       (let ((anything-quit-if-no-candidate (lambda () (message "No matches"))))
+         (anything anything-grep-sources nil nil nil nil anything-grep-buffer-name))))))
 
 (defun agrep-fontify ()
   "Fontify the result of `agrep-do-grep'."
@@ -348,7 +365,8 @@ It asks COMMAND for grep command line and PWD for current directory."
 				   nil nil 'grep-history
 				   (if current-prefix-arg nil default))
              (read-directory-name "Directory: " default-directory default-directory t)))))
-  (anything-grep-base (list (agrep-source (agrep-preprocess-command command) pwd))))
+  (anything-grep-base (list (agrep-source (agrep-preprocess-command command) pwd))
+                      (format "*anything grep:%s [%s]*" command (abbreviate-file-name pwd))))
 ;; (anything-grep "grep -Hin agrep anything-grep.el" default-directory)
 
 (defun agrep-preprocess-command (command)
@@ -369,14 +387,17 @@ It asks COMMAND for grep command line and PWD for current directory."
   "The last used name by `anything-grep-by-name'.")
 
 (defun agrep-by-name-read-info (&rest kinds)
-  (let ((result (mapcar (lambda (kind)
-                          (case kind
-                            ('query (read-string "Grep query: "))
-                            ('name (completing-read
-                                    "Grep by name: "
-                                    anything-grep-alist
-                                    nil t nil nil agbn-last-name))))
-                        kinds)))
+  (let* ((default (or (thing-at-point 'symbol) ""))
+         (result (mapcar (lambda (kind)
+                           (case kind
+                             ('query (read-string
+                                      (format "Grep query (default:%s): " default)
+                                      nil nil default))
+                             ('name (completing-read
+                                     "Grep by name: "
+                                     anything-grep-alist
+                                     nil t nil nil agbn-last-name))))
+                         kinds)))
     (if (cdr result)                    ; length >= 1
         result
       (car result))))
@@ -396,7 +417,8 @@ It asks NAME for location name and QUERY."
                    (destructuring-bind (cmd dir) args
                      (agrep-source (format (agrep-preprocess-command cmd)
                                            (shell-quote-argument query)) dir)))
-                 it)))
+                 it)
+         (format "*anything grep:%s [%s]" query name)))
     (error "no such name %s" name)))
 
 (defun anything-grep-by-name-reversed (&optional name query)
@@ -433,5 +455,5 @@ Difference with `anything-grep-by-name' is prompt order."
 (provide 'anything-grep)
 
 ;; How to save (DO NOT REMOVE!!)
-;; (emacswiki-post "anything-grep.el")
+;; (progn (magit-push) (emacswiki-post "anything-grep.el"))
 ;;; anything-grep.el ends here
