@@ -62,10 +62,6 @@
 ;; mm-version
 (require 'mm-version)
 
-;; cua-mode
-(setq cua-enable-cua-keys nil)
-(cua-mode t)
-
 ;; -------------------------- face settings ------------------------------------
 (set-background-color "ivory")
 
@@ -81,6 +77,15 @@
   "*Face used by hl-line.")
 (setq hl-line-face 'hlline-face)
 (global-hl-line-mode)
+
+;; --------------------------- uniquify settings -------------------------------
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
+(setq uniquify-ignore-buffers-re "*[^*]+*")
+
+;; --------------------------- sense-region settings ---------------------------
+(require 'sense-region)
+(sense-region-on)
 
 ;; --------------------------- Japanesed settings ------------------------------
 (require 'japanese-init)
