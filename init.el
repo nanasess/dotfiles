@@ -399,6 +399,14 @@
 	     '(bitly . "http://api.bit.ly/v3/shorten?login=nanasess&apiKey=&format=txt&uri="))
 (setq twittering-tinyurl-service 'bitly)
 (setq twittering-display-remaining t)
+(add-hook 'twittering-mode-hook
+	  (lambda ()
+	    (let ((km twittering-mode-map))
+	      (define-key km (kbd "s") 'twittering-current-timeline)
+	      (define-key km (kbd "w") 'twittering-update-status-interactive))
+	    (let ((km twittering-edit-mode-map))
+	      (define-key km (kbd "C-c C-q") 'twittering-edit-cancel-status)
+	      (define-key km (kbd "C-u C-u") 'twittering-edit-replace-at-point))))
 
 ;; ----------------------------------------------------------------------------
 ;; navi2ch settings
