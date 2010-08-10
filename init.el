@@ -125,11 +125,11 @@
 (setq dired-bind-jump nil)
 (add-hook 'dired-mode-hook
 	  (lambda ()
-	    (local-set-key "\C-t" 'other-window)))
+	    (local-set-key "\C-t" 'other-window)
+	    (local-set-key "r" 'wdired-change-to-wdired-mode)))
 (add-hook 'dired-load-hook
 	  (lambda ()
 	    (load "dired-x")))
-(define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
 
 ;; ----------------------------------------------------------------------------
 ;; CSS settings
