@@ -391,13 +391,12 @@
 ;; ----------------------------------------------------------------------------
 ;; twitting-mode settings
 (require 'twittering-mode)
+(load "twittering-tinyurl-api-key" nil t)
 (setq twittering-auth-method 'xauth)
 (setq twittering-username "nanasess")
+(setq twittering-status-format (concat "%i %S(%s),  %@:\n%"
+				       "FILL[  ]{%T // from %f%L%r%R}\n "))
 (setq twittering-retweet-format "RT @%s: %t")
-; (twittering-icon-mode)
-(add-to-list 'twittering-tinyurl-services-map
-	     '(bitly . "http://api.bit.ly/v3/shorten?login=nanasess&apiKey=&format=txt&uri="))
-(setq twittering-tinyurl-service 'bitly)
 (setq twittering-display-remaining t)
 (add-hook 'twittering-mode-hook
 	  (lambda ()
@@ -407,6 +406,26 @@
 	    (let ((km twittering-edit-mode-map))
 	      (define-key km (kbd "C-c C-q") 'twittering-edit-cancel-status)
 	      (define-key km (kbd "C-u C-u") 'twittering-edit-replace-at-point))))
+(defun twittering-tinyurl-get (longurl)
+  "Tinyfy LONGURL."
+  (if longurl
+      (let ((buffer
+	     (twittering-url-retrieve-synchronously (concat
+						     twittering-tinyurl-api
+						     longurl))))
+	(with-current-buffer buffer
+	  (goto-char (point-min))
+	  (prog1
+	      (if (search-forward-regexp "\n\r?\n\\([^\n\r]*\\)" nil t)
+		  (match-string-no-properties 1)
+		(error "TinyURL failed: %s" longurl))
+	    (kill-buffer buffer))))
+    nil))
+(setq twittering-tinyurl-api (concat "http://api.bit.ly/v3/shorten?login="
+				     twittering-username
+				     "&apiKey="
+				     twittering-tinyurl-api-key
+				     "&format=txt&uri="))
 
 ;; ----------------------------------------------------------------------------
 ;; navi2ch settings
