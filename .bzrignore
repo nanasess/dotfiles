@@ -1,3 +1,4 @@
 *.elc
 auto-save-list
 anything-c-adaptive-history
+twittering-tinyurl-api-key.el
