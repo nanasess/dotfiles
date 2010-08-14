@@ -391,7 +391,8 @@
 ;; ----------------------------------------------------------------------------
 ;; twitting-mode settings
 (require 'twittering-mode)
-(load "twittering-tinyurl-api-key" nil t)
+(unless (load "twittering-tinyurl-api-key" t t)
+  (setq twittering-tinyurl-api-key nil))
 (setq twittering-auth-method 'xauth)
 (setq twittering-username "nanasess")
 (setq twittering-status-format (concat "%i %S(%s),  %@:\n%"
