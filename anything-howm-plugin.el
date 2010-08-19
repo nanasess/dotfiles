@@ -21,9 +21,6 @@
           ))
     ()))
 
-(setq auto-mode-alist
-      (append '(("\\.howm$" . howm-mode)) auto-mode-alist))
-
 (defvar anything-c-howm-recent
   '((name . "howm Recent")
     (candidates . (lambda ()

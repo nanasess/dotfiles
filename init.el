@@ -249,6 +249,24 @@
 (global-set-key "\C-x\C-t" 'multi-term-dedicated-toggle)
 
 ;; ----------------------------------------------------------------------------
+;; org-mode settings
+(require 'org-install)
+(setq org-startup-truncated nil)
+(setq org-startup-folded nil)
+(setq org-return-follows-link t)
+(org-remember-insinuate)
+(setq org-directory "~/howm/")
+(setq org-default-notes-file (concat org-directory "agenda.howm"))
+(setq org-time-stamp-formats '("[%Y-%m-%d]" . "[%Y-%m-%d %H:%M]"))
+(setq org-remember-templates
+      '(("Todo" ?t "** TODO %?\n   %i\n   %a\n   %t" nil "Inbox")
+	("Bug" ?b "** TODO %?   :bug:\n   %i\n   %a\n   %t" nil "Inbox")
+	("Idea" ?i "** %?\n   %i\n   %a\n   %t" nil "New Ideas")))
+(add-hook 'org-remember-mode-hook
+	  (lambda ()
+	    (local-set-key "\C-c\C-f" 'org-remember-finalize)))
+
+;; ----------------------------------------------------------------------------
 ;; session settings
 (require 'session)
 (add-hook 'after-init-hook 'session-initialize)
@@ -294,18 +312,20 @@
 (setq howm-menu-refresh-after-save nil)
 (setq howm-refresh-after-save nil)
 (setq howm-list-all-title t)
-(setq howm-view-title-header "#title")
+(add-hook 'org-mode-hook 'howm-mode)
+(setq howm-view-title-header "*")
+(setq howm-view-use-grep nil)
+(add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
 (require 'howm)
 (setq howm-template
       (concat howm-view-title-header
 	      (concat
-	      " %title%cursor\n"
-	      "#date %date\n\n"
+	      " %title%cursor %date\n\n"
 	      "%file\n\n")
 	      (concat
-	       "; Local Variables:\n"
-	       "; mode: howm\n"
-	       "; coding: utf-8-unix\n; End:\n")))
+	       "# Local Variables:\n"
+	       "# coding: utf-8-unix\n"
+	       "# End:\n")))
 (add-hook 'howm-menu-hook
 	  '(lambda nil
 	     (call-process "svn" nil "*Messages*" nil "update"
