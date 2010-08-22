@@ -30,7 +30,7 @@
 
 (define-key global-map [ns-drag-file] 'ns-find-file)
 
-(setq ns-alternate-modifier 'alt)
+(setq ns-alternate-modifier 'super)
 (setq ns-command-modifier 'meta)
 
 (setq ns-pop-up-frames nil)

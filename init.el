@@ -265,6 +265,9 @@
 (add-hook 'org-remember-mode-hook
 	  (lambda ()
 	    (local-set-key "\C-c\C-f" 'org-remember-finalize)))
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
 
 ;; ----------------------------------------------------------------------------
 ;; session settings
