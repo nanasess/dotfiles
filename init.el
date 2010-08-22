@@ -256,6 +256,8 @@
 (setq org-return-follows-link t)
 (org-remember-insinuate)
 (setq org-directory "~/howm/")
+(setq org-mobile-directory "~/Dropbox/MobileOrg")
+(setq org-mobile-inbox-for-pull (concat org-directory "flagged.howm"))
 (setq org-default-notes-file (concat org-directory "agenda.howm"))
 (setq org-time-stamp-formats '("[%Y-%m-%d]" . "[%Y-%m-%d %H:%M]"))
 (setq org-remember-templates
