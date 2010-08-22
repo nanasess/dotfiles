@@ -268,6 +268,14 @@
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
+(add-to-list 'org-export-latex-classes
+  '("jarticle"
+    "\\documentclass[11t,a4j,oneside]{jarticle}"
+    ("\\section{%s}" . "\\section*{%s}")
+    ("\\subsection{%s}" . "\\subsection*{%s}")
+    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+    ("\\paragraph{%s}" . "\\paragraph*{%s}")
+    ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 ;; ----------------------------------------------------------------------------
 ;; session settings
@@ -326,6 +334,7 @@
 	      " %title%cursor %date\n\n"
 	      "%file\n\n")
 	      (concat
+	       "#+LATEX_CLASS: jarticle\n"
 	       "# Local Variables:\n"
 	       "# coding: utf-8-unix\n"
 	       "# End:\n")))
