@@ -34,6 +34,11 @@
 ;; ----------------------------------------------------------------------------
 ;; Japanesed settings
 (require 'japanese-init)
+
+;; ----------------------------------------------------------------------------
+;; SKK settings
+(setq skk-user-directory "~/Dropbox/ddskk")
+(setq skk-init-file (concat user-emacs-directory ".skk"))
 (setq skk-preload t)
 
 ;; ----------------------------------------------------------------------------

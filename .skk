@@ -1,0 +1,32 @@
+;; -*- emacs-lisp -*-
+;; dot.skk
+;;
+
+(require 'skk-study)
+(setq skk-server-host "localhost")
+(setq skk-server-portnum 1178)
+(setq-default skk-kutouten-type 'en)
+(setq-default skk-kuten-touten-alist
+	      '((jp "。" . "、")
+		(en "." . ",")
+		(jp-en "。" . "，")
+		(en-jp "．" . "、")))
+(setq skk-japanese-message-and-error t)
+(setq skk-show-tooltip t)
+(setq skk-verbose t)
+(setq skk-show-inline 'vertical)
+(setq skk-use-jisx0201-input-method t)
+(setq skk-share-private-jisyo t)
+(setq skk-use-face t)
+(setq skk-use-color-cursor t)
+(setq skk-japanese-message-and-error t)
+(setq skk-show-annotation t)
+(setq skk-egg-like-newline  nil)
+(setq skk-kakutei-early t)
+(setq skk-auto-start-henkan t)
+(setq skk-show-icon t)
+(setq skk-dcomp-activate t)
+(setq skk-annotation-show-wikipedia-url t)
+(setq skk-rom-kana-rule-list
+           (append skk-rom-kana-rule-list
+                   '(("@" nil "@"))))
