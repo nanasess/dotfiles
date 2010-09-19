@@ -197,14 +197,6 @@
 (require 'migemo nil t)
 
 ;; ----------------------------------------------------------------------------
-;; ELScreen settings
-(setq elscreen-prefix-key "\M-z")
-(require 'elscreen)
-(require 'elscreen-howm)
-(setq elscreen-display-screen-number nil)
-(setq elscreen-display-tab nil)
-
-;; ----------------------------------------------------------------------------
 ;; gtags settings
 (autoload 'gtags-mode "gtags" nil t)
 (setq gtags-mode-hook
@@ -340,10 +332,29 @@
 	       "# Local Variables:\n"
 	       "# coding: utf-8-unix\n"
 	       "# End:\n")))
-(add-hook 'howm-menu-hook
+(defun howm-save-and-kill-buffer ()
+"kill screen when exiting from howm-mode
+"
+  (interactive)
+  (let* ((file-name (buffer-file-name)))
+    (when (and file-name (string-match "\\.howm" file-name))
+      (if (save-excursion
+            (goto-char (point-min))
+            (re-search-forward "[^ \t\r\n]" nil t))
+          (howm-save-buffer)
+        (set-buffer-modified-p nil)
+        (when (file-exists-p file-name)
+          (delete-file file-name)
+          (message "(Deleted %s)" (file-name-nondirectory file-name))))
+      (kill-buffer nil))))
+(add-hook 'howm-mode-hook
 	  '(lambda nil
-	     (call-process "svn" nil "*Messages*" nil "update"
+	     (start-process "howm-svn-update" "*Messages*" "svn" "update"
 			   (expand-file-name "~/howm"))))
+(eval-after-load "howm-mode"
+  '(progn
+     (define-key howm-mode-map
+       "\C-c\C-q" 'howm-save-and-kill-buffer)))
 
 ;; ----------------------------------------------------------------------------
 ;; PHP settings
@@ -433,6 +444,7 @@
 				       "FILL[  ]{%T // from %f%L%r%R}\n "))
 (setq twittering-retweet-format "RT @%s: %t")
 (setq twittering-display-remaining t)
+(setq twittering-allow-insecure-server-cert t)
 (add-hook 'twittering-mode-hook
 	  (lambda ()
 	    (let ((km twittering-mode-map))
