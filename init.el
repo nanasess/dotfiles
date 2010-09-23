@@ -40,6 +40,12 @@
 (setq skk-user-directory "~/Dropbox/ddskk")
 (setq skk-init-file (concat user-emacs-directory ".skk"))
 (setq skk-preload t)
+(setq skk-auto-save-interval 30)
+(defun skk-auto-save ()
+  "auto save of the skk-jisyo and skk-study."
+  (skk-save-jisyo)
+  (skk-study-save))
+(run-with-idle-timer skk-auto-save-interval t 'skk-auto-save)
 
 ;; ----------------------------------------------------------------------------
 ;; line-number settings
