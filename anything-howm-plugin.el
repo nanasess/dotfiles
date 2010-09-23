@@ -24,11 +24,11 @@
 (defvar anything-c-howm-recent
   '((name . "howm Recent")
     (candidates . (lambda ()
-                    (howm-get-recent-title-list (howm-recent-menu 10))))
+                    (howm-get-recent-title-list (howm-recent-menu 30))))
     (action . (("Open howm file" .
                 (lambda (howm-recent-title)
                   (find-file (howm-title2file howm-recent-title
-                                              (howm-recent-menu 10)))))))
+                                              (howm-recent-menu 30)))))))
     ))
 
 (provide 'anything-howm-plugin)
