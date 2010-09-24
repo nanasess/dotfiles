@@ -27,6 +27,10 @@
 (setq skk-show-icon t)
 (setq skk-dcomp-activate t)
 (setq skk-annotation-show-wikipedia-url t)
+(setq skk-auto-okuri-process t)
+(setq skk-kakutei-when-unique-candidate t)
+(setq skk-egg-like-newline t)
+(setq skk-auto-insert-paren t)
 (setq skk-rom-kana-rule-list
            (append skk-rom-kana-rule-list
                    '(("@" nil "@"))))
