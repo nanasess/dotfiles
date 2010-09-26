@@ -54,9 +54,10 @@
 
 ;; ----------------------------------------------------------------------------
 ;; global key-bindings
-(global-set-key "\M-g" 'goto-line)
+(global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-t") 'other-window)
 (global-set-key (kbd "C-z") 'other-frame)
+(global-set-key (kbd "C-j") 'skk-mode)
 (global-unset-key (kbd "C-M-t"))
 
 ;; ----------------------------------------------------------------------------
@@ -254,6 +255,9 @@
 ;; ----------------------------------------------------------------------------
 ;; org-mode settings
 (require 'org-install)
+(require 'ob-sh)
+(require 'ob-css)
+(require 'ob-sql)
 (setq org-startup-truncated nil)
 (setq org-startup-folded nil)
 (setq org-return-follows-link t)
@@ -320,8 +324,9 @@
 ;; ----------------------------------------------------------------------------
 ;; howm settings
 (setq howm-menu-lang 'ja)
-(setq howm-history-file "~/howm/.howm-history")
-(setq howm-keyword-file "~/howm/.howm-keys")
+(setq howm-directory org-directory)
+(setq howm-history-file (concat howm-directory ".howm-history"))
+(setq howm-keyword-file (concat howm-directory ".howm-keys"))
 (setq howm-menu-schedule-days-before 30)
 (setq howm-menu-schedule-days 30)
 (setq howm-menu-expiry-hours 2)
@@ -361,7 +366,7 @@
 (add-hook 'howm-mode-hook
 	  '(lambda nil
 	     (start-process "howm-svn-update" "*Messages*" "svn" "update"
-			   (expand-file-name "~/howm"))))
+			   (expand-file-name howm-directory))))
 (eval-after-load "howm-mode"
   '(progn
      (define-key howm-mode-map
@@ -425,7 +430,7 @@
 (setq w3m-use-cookies t)
 (setq w3m-cookie-accept-bad-cookies t)
 (setq w3m-broken-proxy-cache t)
-(setq w3m-bookmark-file "~/howm/bookmark.html")
+(setq w3m-bookmark-file (concat howm-directory "bookmark.html"))
 (setq w3m-bookmark-file-coding-system "utf-8-unix")
 ;  (require 'octet)
 ;  (octet-mime-setup))
@@ -435,11 +440,11 @@
 (require 'simple-hatena-mode)
 (setq simple-hatena-default-id "nanasess")
 (setq simple-hatena-bin	 (expand-file-name (concat user-emacs-directory "/hw.pl")))
-(setq simple-hatena-root "~/howm")
+(setq simple-hatena-root howm-directory)
 (add-hook 'simple-hatena-mode-hook
 	  '(lambda nil
 	     (call-process "svn" nil "*Messages*" nil "update"
-			   (expand-file-name "~/howm/nanasess/diary"))))
+			   (expand-file-name (concat howm-directory "nanasess/diary")))))
 (add-hook 'simple-hatena-after-submit-hook
 	  '(lambda nil
 	     (call-process "svn" nil "*Messages*" nil "ci" "-m" " " ".")))
@@ -479,7 +484,7 @@
 		(error "TinyURL failed: %s" longurl))
 	    (kill-buffer buffer))))
     nil))
-(setq twittering-tinyurl-api (concat "http://api.bit.ly/v3/shorten?login="
+(setq twittering-tinyurl-api (concat "http://api.j.mp/v3/shorten?login="
 				     twittering-username
 				     "&apiKey="
 				     twittering-tinyurl-api-key
