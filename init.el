@@ -25,7 +25,8 @@
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
 		   "/opt/local/sbin" "/opt/local/bin"
 		   (expand-file-name "~/bin")
-		   (expand-file-name "~/.emacs.d")))
+		   (expand-file-name "~/.emacs.d")
+		   (expand-file-name "~/Applications/pTeX.app/teTeX/bin")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
@@ -285,7 +286,8 @@
 	("\\subsubsection{%s}" . "\\subsubsection*{%s}")
 	("\\paragraph{%s}" . "\\paragraph*{%s}")
 	("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-
+(setq org-latex-to-pdf-process
+      '("org-latex-to-pdf.sh %s" "org-latex-to-pdf.sh %s"))
 ;; ----------------------------------------------------------------------------
 ;; session settings
 (require 'session)
