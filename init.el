@@ -278,13 +278,13 @@
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 (setq org-export-latex-classes
-      '("jarticle"
+      '(("jarticle"
 	"\\documentclass[11t,a4j,oneside]{jarticle}"
 	("\\section{%s}" . "\\section*{%s}")
 	("\\subsection{%s}" . "\\subsection*{%s}")
 	("\\subsubsection{%s}" . "\\subsubsection*{%s}")
 	("\\paragraph{%s}" . "\\paragraph*{%s}")
-	("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+	("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 ;; ----------------------------------------------------------------------------
 ;; session settings
