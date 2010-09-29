@@ -389,6 +389,20 @@
     (prefix . ac-css-prefix)
     (requires . 0)))
 
+;; slime
+(ac-define-source slime
+  '((depends slime)
+    (candidates . (car (slime-simple-completions ac-prefix)))
+    (symbol . "s")
+    (cache)))
+
+;; ghc-mod
+(ac-define-source ghc-mod
+  '((depends ghc)
+    (candidates . (ghc-select-completion-symbol))
+    (symbol . "s")
+    (cache)))
+
 
 
 ;;;; Not maintained sources
@@ -465,7 +479,8 @@
   (add-to-list 'ac-ignores "end"))
 
 (defun ac-css-mode-setup ()
-  (setq ac-sources (append '(ac-source-css-property) ac-sources)))
+  ;(setq ac-sources (append '(ac-source-css-property) ac-sources))
+  )
 
 (defun ac-config-default ()
   (setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
