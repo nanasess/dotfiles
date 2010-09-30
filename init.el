@@ -278,6 +278,7 @@
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
+(org-defkey org-mode-map "\C-j" 'skk-mode)
 (setq org-export-latex-classes
       '(("jarticle"
 	"\\documentclass[11t,a4j,oneside]{jarticle}"
