@@ -368,13 +368,10 @@
           (message "(Deleted %s)" (file-name-nondirectory file-name))))
       (kill-buffer nil))))
 (add-hook 'howm-mode-hook
-	  '(lambda nil
+	  '(lambda ()
+	     (define-key howm-mode-map "\C-c\C-q" 'howm-save-and-kill-buffer)
 	     (start-process "howm-svn-update" "*Messages*" "svn" "update"
 			   (expand-file-name howm-directory))))
-(eval-after-load "howm-mode"
-  '(progn
-     (define-key howm-mode-map
-       "\C-c\C-q" 'howm-save-and-kill-buffer)))
 
 ;; ----------------------------------------------------------------------------
 ;; PHP settings
@@ -518,6 +515,10 @@
 (setq calendar-weekend-marker 'diary)
 (add-hook 'today-visible-calendar-hook 'calendar-mark-weekend)
 (add-hook 'today-invisible-calendar-hook 'calendar-mark-weekend)
+
+;; ----------------------------------------------------------------------------
+;; htmlize settings
+(require 'htmlize)
 
 ;; ----------------------------------------------------------------------------
 ;; install-elisp settings
