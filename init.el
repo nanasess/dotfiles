@@ -337,14 +337,15 @@
 (setq howm-refresh-after-save nil)
 (setq howm-list-all-title t)
 (add-hook 'org-mode-hook 'howm-mode)
-(setq howm-view-title-header "*")
+(setq howm-view-title-header "#+TITLE:")
 (setq howm-view-use-grep nil)
 (add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
 (require 'howm)
 (setq howm-template
       (concat howm-view-title-header
 	      (concat
-	      " %title%cursor %date\n\n"
+	      " %title%cursor\n"
+	      "#+DATE: %date\n\n"
 	      "%file\n\n")
 	      (concat
 	       "#+LATEX_CLASS: jarticle\n"
@@ -518,14 +519,6 @@
 (setq calendar-weekend-marker 'diary)
 (add-hook 'today-visible-calendar-hook 'calendar-mark-weekend)
 (add-hook 'today-invisible-calendar-hook 'calendar-mark-weekend)
-
-;; ----------------------------------------------------------------------------
-;; emacs-muse settings
-(require 'muse-settings)
-
-;; ----------------------------------------------------------------------------
-;; htmlize settings
-(require 'htmlize)
 
 ;; ----------------------------------------------------------------------------
 ;; install-elisp settings
