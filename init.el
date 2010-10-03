@@ -92,15 +92,8 @@
 (set-background-color "ivory")
 
 (defface hlline-face
-  '((((class color)
-      (background dark))
-     (:background "blue" :foreground "white"))
-    (((class color)
-      (background light))
-     (:background "honeydew"))
-    (t
-     ()))
-  "*Face used by hl-line.")
+  '((((class color) (background light))
+     (:background "honeydew"))) nil)
 (setq hl-line-face 'hlline-face)
 (global-hl-line-mode)
 
@@ -289,6 +282,9 @@
 	("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 (setq org-latex-to-pdf-process
       '("org-latex-to-pdf.sh %s" "org-latex-to-pdf.sh %s"))
+(set-face-bold-p 'org-document-title nil)
+(set-face-attribute 'org-document-title nil :height 1.0)
+
 ;; ----------------------------------------------------------------------------
 ;; session settings
 (require 'session)
