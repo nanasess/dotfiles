@@ -258,9 +258,9 @@ so that the deferred task will not be called twice."
 (defun deferred:default-cancel (d)
   "[internal] Default canceling function."
   (deferred:message "CANCEL : %s" d)
-  (setf (deferred-callback d) 'deferred:default-callback)
-  (setf (deferred-errorback d) 'deferred:default-errorback)
-  (setf (deferred-next d) nil)
+  ;; (setf (deferred-callback d) 'deferred:default-callback)
+  ;; (setf (deferred-errorback d) 'deferred:default-errorback)
+  ;; (setf (deferred-next d) nil)
   d)
 
 ;; Struct: deferred
