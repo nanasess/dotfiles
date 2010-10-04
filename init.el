@@ -73,7 +73,7 @@
 ;; ----------------------------------------------------------------------------
 ;; recentf settings
 (recentf-mode t)
-(setq recentf-max-saved-items 1000)
+(setq recentf-max-saved-items 50000)
 
 ;; ----------------------------------------------------------------------------
 ;; coloring-region settings
@@ -140,26 +140,23 @@
 ;; ----------------------------------------------------------------------------
 ;; CSS settings
 (add-hook 'css-mode-hook
-	  (function
 	   (lambda()
 	     (setq tab-width 4)
-	     (setq indent-tabs-mode nil))))
+	     (setq indent-tabs-mode nil)))
 
 ;; ----------------------------------------------------------------------------
 ;; Java settings
 (add-hook 'java-mode-hook
-	  (function
 	   (lambda()
 	     (setq tab-width 4)
-	     (setq indent-tabs-mode nil))))
+	     (setq indent-tabs-mode nil)))
 
 ;; ----------------------------------------------------------------------------
 ;; JavaScript-mode settings
 (add-hook 'js-mode-hook
-	  (function
 	   (lambda()
 	     (setq tab-width 4)
-	     (setq indent-tabs-mode nil))))
+	     (setq indent-tabs-mode nil)))
 
 ;; ----------------------------------------------------------------------------
 ;; nXML-mode settings
@@ -171,7 +168,6 @@
 	    (setq nxml-slash-auto-complete-flag t)
 	    (setq nxml-child-indent 2)
 	    (rng-validate-mode 0)
-	    (cua-mode 0)
 	    (setq indent-tabs-mode t)
 	    (setq tab-width 2)))
 
