@@ -33,6 +33,7 @@
 (setq skk-rom-kana-rule-list
            (append skk-rom-kana-rule-list
                    '(("@" nil "@"))))
+(setq skk-jisyo-code "euc-jisx0213-unix")
 (defun skk-study-save (&optional nomsg)
   "`skk-study-file' に学習結果を保存する。
 オプショナル引数の NOMSG が non-nil であれば、保存メッセージを出力しない。"
