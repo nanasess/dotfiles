@@ -33,3 +33,73 @@
 (setq skk-rom-kana-rule-list
            (append skk-rom-kana-rule-list
                    '(("@" nil "@"))))
+(defun skk-study-save (&optional nomsg)
+  "`skk-study-file' に学習結果を保存する。
+オプショナル引数の NOMSG が non-nil であれば、保存メッセージを出力しない。"
+  (interactive "P")
+  (let ((inhibit-quit t)
+	e)
+    (if (or (and (null skk-study-alist) (not nomsg))
+	    (not skk-study-last-read)
+	    (and skk-study-last-save
+		 (skk-study-time-lessp
+		  skk-study-last-save skk-study-last-read)))
+	(progn
+	  (skk-message "SKK の学習結果をセーブする必要はありません"
+		       "No SKK study need saving")
+	  (sit-for 1))
+      (when (not nomsg)
+	(skk-message "%s に SKK の学習結果をセーブしています..."
+		     "Saving SKK study to %s..." skk-study-file))
+      (and skk-study-backup-file
+	   (file-exists-p (expand-file-name skk-study-file))
+	   (cond ((eq system-type 'ms-dos)
+		  (with-temp-file skk-study-backup-file
+		    (erase-buffer)
+		    (insert-file-contents skk-study-file)))
+		 (t
+		  (copy-file (expand-file-name skk-study-file)
+			     (expand-file-name skk-study-backup-file)
+			     'ok-if-already-exists 'keep-date))))
+      (with-temp-buffer
+	(insert
+	 (format ";;; skk-study-file format version %s -*- coding: euc-jisx0213 -*-\n"
+		 skk-study-file-format-version))
+	(when skk-study-sort-saving
+	  ;; sort is not necessary, but make an alist rather readable.
+	  (setq e (assq 'okuri-ari skk-study-alist))
+	  (setcdr e (sort (cdr e)
+			  (function (lambda (a b)
+				      (skk-string< (car a) (car b))))))
+	  (setq e (assq 'okuri-nasi skk-study-alist))
+	  (setcdr e (sort (cdr e)
+			  (function (lambda (a b)
+				      (skk-string< (car a) (car b)))))))
+	(skk-study-prin1 skk-study-alist (current-buffer))
+	(let ((coding-system-for-write (skk-find-coding-system skk-jisyo-code))
+	      jka-compr-compression-info-list)
+	  (write-region (point-min) (point-max) skk-study-file)))
+      (setq skk-study-last-save (current-time))
+      (when (not nomsg)
+	(skk-message "%s に SKK の学習結果をセーブしています...完了！"
+		     "Saving SKK study to %s...done" skk-study-file)
+	(sit-for 1)
+	(message "")))))
+(defun skk-study-read-1 (file)
+  ;; read FILE and return alist.
+  (with-temp-buffer
+    (let ((version-string
+	   (format ";;; skk-study-file format version %s -*- coding: euc-jisx0213 -*-\n"
+		   skk-study-file-format-version)))
+      (let ((coding-system-for-read (skk-find-coding-system skk-jisyo-code))
+	    format-alist)
+	(insert-file-contents file))
+      (when (= (buffer-size) 0)
+	;; bare alist
+	(insert version-string "((okuri-ari) (okuri-nasi))"))
+      (goto-char (point-min))
+      (if (looking-at (regexp-quote version-string))
+	  (read (current-buffer))
+	(skk-error
+	 "skk-study-file フォーマットのバージョンが一致しません"
+	 "skk-study-file format version is inconsistent")))))
