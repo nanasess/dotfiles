@@ -85,9 +85,6 @@
 ;; * deferred:earlier(fun1, fun2, ...) -> d
 ;; Execute given functions in parallel and wait for the first callback value.
 
-;; * deferred:chain(fun1, fun2, ...) -> d
-;; Connect given functions as a deferred chain.
-
 ;; ** deferred instance methods
 
 ;; * deferred:new(&optional fun) -> d
@@ -98,6 +95,9 @@
 
 ;; * deferred:errorback(error)
 ;; Start errorback chain.
+;; All errors occurred in deferred tasks are cought by errorback handlers.
+;; If you want to debug the error, set `debug-on-signal' to non-nil.
+;; (setq debug-on-signal t)
 
 ;; * deferred:callback-post(value)
 ;; Start callback chain asynchronously.
@@ -146,6 +146,14 @@
              `(setq it ,i))
      it))
 
+(defmacro deferred:lambda (args &rest body)
+  "Anaphoric lambda macro for self recursion."
+  (let ((argsyms (loop for i in args collect (gensym))))
+  `(lambda (,@argsyms)
+     (lexical-let (self)
+       (setq self (lambda( ,@args ) ,@body))
+       (funcall self ,@argsyms)))))
+
 (defun deferred:setTimeout (f msec)
   "[internal] Timer function that emulates the `setTimeout' function in JS."
   (run-at-time (/ msec 1000.0) nil f))
@@ -153,6 +161,14 @@
 (defun deferred:cancelTimeout (id)
   "[internal] Timer cancellation function that emulates the `cancelTimeout' function in JS."
   (cancel-timer id))
+
+(defun deferred:call-lambda (f &optional arg)
+  "[internal] Call a function with one or zero argument safely.
+The lambda function can define with zero and one argument."
+  (condition-case err
+      (funcall f arg)
+    ('wrong-number-of-arguments (funcall f))))
+
 
 ;; debug
 
@@ -188,6 +204,18 @@ See the functions `deferred:post' and `deferred:worker'.")
 (defmacro deferred:pack (a b c)
   `(cons ,a (cons ,b ,c)))
 
+(defun deferred:remove-from-queue (d)
+  "[internal] Remove the deferred object from the execution queue
+so that the deferred task will not be called twice."
+  (setq deferred:queue 
+        (loop for pack in deferred:queue
+              unless (eq d (car pack))
+              collect pack)))
+
+(defun deferred:schedule-worker ()
+  "[internal] Schedule consuming a deferred task in the execution queue."
+  (run-at-time 0.001 nil 'deferred:worker))
+
 (defun deferred:post-task (d which &optional arg)
   "[internal] Add a deferred object to the execution queue
 `deferred:queue' and schedule to execute.
@@ -200,19 +228,16 @@ an argument value for execution of the deferred task."
   (deferred:schedule-worker)
   d)
 
-(defun deferred:schedule-worker ()
-  "[internal] Schedule consuming a deferred task in the execution queue."
-  (run-at-time 0.001 nil 'deferred:worker))
-
 (defun deferred:clear-queue ()
   "Clear the execution queue. For test and debugging."
+  (interactive)
   (deferred:message "QUEUE-CLEAR [%s -> 0]" (length deferred:queue))
   (setq deferred:queue nil))
 
 (defun deferred:esc-msg (msg)
   "[internal] Escaping the character '%'."
   (replace-regexp-in-string
-   "\\([^%]\\)%\\([^%]\\)" "\\1%%\\2" msg))
+   "\\([^%]\\|^\\)%\\([^%]\\)" "\\1%%\\2" msg))
 
 (defun deferred:worker ()
   "[internal] Consume a deferred task. 
@@ -230,14 +255,6 @@ Mainly this function is called by timer asynchronously."
          (message "deferred error : %s" err)))
       value)))
 
-(defun deferred:remove-from-queue (d)
-  "[internal] Remove the deferred object from the execution queue
-so that the deferred task will not be called twice."
-  (setq deferred:queue 
-        (loop for pack in deferred:queue
-              unless (eq d (car pack))
-              collect pack)))
-
 (defun deferred:flush-queue! ()
   "Call all deferred tasks synchronously. For test and debugging."
   (let (value)
@@ -246,22 +263,6 @@ so that the deferred task will not be called twice."
     value))
 
 
-
-(defun deferred:default-callback (i)
-  "[internal] Default callback function."
-  (identity i))
-
-(defun deferred:default-errorback (error-msg)
-  "[internal] Default errorback function."
-  (error error-msg))
-
-(defun deferred:default-cancel (d)
-  "[internal] Default canceling function."
-  (deferred:message "CANCEL : %s" d)
-  ;; (setf (deferred-callback d) 'deferred:default-callback)
-  ;; (setf (deferred-errorback d) 'deferred:default-errorback)
-  ;; (setf (deferred-next d) nil)
-  d)
 
 ;; Struct: deferred
 ;; 
@@ -278,16 +279,21 @@ so that the deferred task will not be called twice."
   (cancel 'deferred:default-cancel)
   next status value)
 
-(defun deferred:set-next (prev next)
-  "[internal] Connect deferred objects."
-  (setf (deferred-next prev) next)
-  (cond
-   ((eq 'ok (deferred-status prev))
-    (setf (deferred-status prev) nil)
-    (deferred:exec-task next 'ok (deferred-value prev)))
-   ((eq 'ng (deferred-status prev))
-    (setf (deferred-status prev) nil)
-    (deferred:exec-task next 'ng (deferred-value prev)))))
+(defun deferred:default-callback (i)
+  "[internal] Default callback function."
+  (identity i))
+
+(defun deferred:default-errorback (error-msg)
+  "[internal] Default errorback function."
+  (error (deferred:esc-msg error-msg)))
+
+(defun deferred:default-cancel (d)
+  "[internal] Default canceling function."
+  (deferred:message "CANCEL : %s" d)
+  (setf (deferred-callback d) 'deferred:default-callback)
+  (setf (deferred-errorback d) 'deferred:default-errorback)
+  (setf (deferred-next d) nil)
+  d)
 
 (defun deferred:exec-task (d which &optional arg)
   "[internal] Executing deferred task. If the deferred object has
@@ -306,7 +312,7 @@ an argument value for execution of the deferred task."
         (condition-case err
             (progn 
               (setq value
-                    (apply callback (list arg)))
+                    (deferred:call-lambda callback arg))
               (cond
                ((deferred-p value)
                 (deferred:message "WAIT NEST : %s" value)
@@ -322,7 +328,7 @@ an argument value for execution of the deferred task."
             (next-deferred
              (deferred:post-task next-deferred 'ng (error-message-string err)))
             (deferred:onerror
-              (funcall deferred:onerror err))
+              (deferred:call-lambda deferred:onerror err))
             (t
              (error (deferred:esc-msg (error-message-string err)))))))))
      ((null callback)
@@ -332,6 +338,17 @@ an argument value for execution of the deferred task."
           (deferred:exec-task next-deferred which arg))
          ((eq which 'ok) arg)
          (t (error (deferred:esc-msg arg)))))))))
+
+(defun deferred:set-next (prev next)
+  "[internal] Connect deferred objects."
+  (setf (deferred-next prev) next)
+  (cond
+   ((eq 'ok (deferred-status prev))
+    (setf (deferred-status prev) nil)
+    (deferred:exec-task next 'ok (deferred-value prev)))
+   ((eq 'ng (deferred-status prev))
+    (setf (deferred-status prev) nil)
+    (deferred:exec-task next 'ng (deferred-value prev)))))
 
 
 
@@ -379,20 +396,6 @@ an argument value for execution of the deferred task."
 (defvar deferred:onerror nil 
   "Default error handler. This value is nil or a function that
   have one argument for the error message.")
-
-(defun deferred:call (f &rest args)
-  "Call the given function asynchronously."
-  (lexical-let ((f f) (args args))
-    (deferred:next
-      (lambda (x)
-        (apply f args)))))
-
-(defun deferred:apply (f &optional args)
-  "Call the given function asynchronously."
-  (lexical-let ((f f) (args args))
-    (deferred:next
-      (lambda (x)
-        (apply f args)))))
 
 (defun deferred:succeed (&optional arg)
   "Create a synchronous deferred object."
@@ -444,6 +447,20 @@ is a short cut of following code:
             (deferred:default-cancel x)))
     d))
 
+(defun deferred:call (f &rest args)
+  "Call the given function asynchronously."
+  (lexical-let ((f f) (args args))
+    (deferred:next
+      (lambda (x)
+        (apply f args)))))
+
+(defun deferred:apply (f &optional args)
+  "Call the given function asynchronously."
+  (lexical-let ((f f) (args args))
+    (deferred:next
+      (lambda (x)
+        (apply f args)))))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -467,7 +484,7 @@ is a short cut of following code:
                         (push ld items)
                         (setq ld 
                               (lexical-let ((i i) (func func))
-                                (deferred:nextc ld (lambda (x) (funcall func i)))))
+                                (deferred:nextc ld (lambda (x) (deferred:call-lambda func i)))))
                         finally return ld))
                  ((listp times-or-list)
                   (loop for i in times-or-list
@@ -476,23 +493,13 @@ is a short cut of following code:
                         (push ld items)
                         (setq ld 
                               (lexical-let ((i i) (func func))
-                                (deferred:nextc ld (lambda (x) (funcall func i)))))
+                                (deferred:nextc ld (lambda (x) (deferred:call-lambda func i)))))
                         finally return ld)))))
       (setf (deferred-cancel rd)
             (lambda (x) (deferred:default-cancel x)
               (loop for i in items
                     do (deferred:cancel i))))
       rd)))
-
-(defun deferred:parallel (&rest args)
-  "Return a deferred object that calls given deferred objects or
-functions in parallel and wait for all callbacks. The following
-deferred task will be called with an array of the return
-values. ARGS can be a list or an alist of deferred objects or
-functions."
-  (deferred:message "PARALLEL : %s" args)
-  (deferred:trans-multi-args args 
-    'deferred:parallel 'deferred:parallel-list 'deferred:parallel-main))
 
 (defun deferred:trans-multi-args (args self-func list-func main-func)
   "[internal] Check the argument values and dispatch to methods."
@@ -510,17 +517,6 @@ functions."
         (funcall main-func lst))
        (t (error "Wrong argument type. %s" args)))))
    (t (funcall self-func args))))
-
-(defun deferred:parallel-list (lst)
-  "[internal] Deferred list implementation for `deferred:parallel'. "
-  (deferred:message "PARALLEL<LIST>" )
-  (lexical-let*
-      ((pd (deferred:parallel-main (deferred:parallel-array-to-alist lst)))
-       (rd (deferred:nextc pd 'deferred:parallel-alist-to-array)))
-    (setf (deferred-cancel rd)
-          (lambda (x) (deferred:default-cancel x)
-            (deferred:cancel pd)))
-    rd))
 
 (defun deferred:parallel-array-to-alist (lst)
   "[internal] Translation array to alist."
@@ -542,7 +538,7 @@ functions."
         collect
         (progn 
           (unless (deferred-p d)
-            (setf (cdr pair) (deferred:call d)))
+            (setf (cdr pair) (deferred:next d)))
           pair)))
 
 (defun deferred:parallel-main (alst)
@@ -577,27 +573,26 @@ functions."
                 nil))))
     nd))
 
-
-(defun deferred:earlier (&rest args)
-  "Return a deferred object that calls given deferred objects or
-functions in parallel and wait for the first callback. The
-following deferred task will be called with the first return
-value. ARGS can be a list or an alist of deferred objects or
-functions."
-  (deferred:message "EARLIER : %s" args)
-  (deferred:trans-multi-args args 
-    'deferred:earlier 'deferred:earlier-list 'deferred:earlier-main))
-
-(defun deferred:earlier-list (lst)
-  "[internal] Deferred list implementation for `deferred:earlier'. "
-  (deferred:message "EARLIER<LIST>" )
+(defun deferred:parallel-list (lst)
+  "[internal] Deferred list implementation for `deferred:parallel'. "
+  (deferred:message "PARALLEL<LIST>" )
   (lexical-let*
-      ((pd (deferred:earlier-main (deferred:parallel-array-to-alist lst)))
-       (rd (deferred:nextc pd (lambda (x) (cdr x)))))
+      ((pd (deferred:parallel-main (deferred:parallel-array-to-alist lst)))
+       (rd (deferred:nextc pd 'deferred:parallel-alist-to-array)))
     (setf (deferred-cancel rd)
           (lambda (x) (deferred:default-cancel x)
             (deferred:cancel pd)))
     rd))
+
+(defun deferred:parallel (&rest args)
+  "Return a deferred object that calls given deferred objects or
+functions in parallel and wait for all callbacks. The following
+deferred task will be called with an array of the return
+values. ARGS can be a list or an alist of deferred objects or
+functions."
+  (deferred:message "PARALLEL : %s" args)
+  (deferred:trans-multi-args args 
+    'deferred:parallel 'deferred:parallel-list 'deferred:parallel-main))
 
 (defun deferred:earlier-main (alst)
   "[internal] Deferred alist implementation for `deferred:earlier'. "
@@ -634,48 +629,27 @@ functions."
                 nil))))
     nd))
 
+(defun deferred:earlier-list (lst)
+  "[internal] Deferred list implementation for `deferred:earlier'. "
+  (deferred:message "EARLIER<LIST>" )
+  (lexical-let*
+      ((pd (deferred:earlier-main (deferred:parallel-array-to-alist lst)))
+       (rd (deferred:nextc pd (lambda (x) (cdr x)))))
+    (setf (deferred-cancel rd)
+          (lambda (x) (deferred:default-cancel x)
+            (deferred:cancel pd)))
+    rd))
 
-(defun deferred:chain (args)
-  "Build and return a deferred chain with the given functions and
-deferred objects. The deferred object is a chain of the given
-functions and deferred objects. A nested list in ARGS is
-translated into a parallel task. A set of the symbol `:error' and
-a following function is translated into an errorback task."
-  (lexical-let* ((first (deferred:next)) (d first))
-    (cond
-     ((null args) nil)
-     (t
-      (loop for i in args
-            with onerror-flag = nil
-            do
-            (cond
-             ((eq ':error i)
-              (setq onerror-flag t))
-             (onerror-flag
-              (setq onerror-flag nil)
-              (setq d 
-                    (cond
-                     ((deferred-p i) 
-                      (deferred:set-next d i) i)
-                     ((functionp i)
-                      (deferred:error d i))
-                     (t
-                      (error "A wrong object was given for chain : %s" i)))))
-             ((deferred-p i)
-              (deferred:set-next d i)
-              (setq d i))
-             ((functionp i)
-              (setq d (deferred:nextc d i)))
-             ((listp i)
-              (setq d (deferred:parallel i)))
-             (t
-              (error "A wrong object was given for chain : %s" i))))))
-    (setf (deferred-cancel d)
-          (lambda (x)
-            (deferred:default-cancel x)
-            (deferred:cancel first)))
-    d))
 
+(defun deferred:earlier (&rest args)
+  "Return a deferred object that calls given deferred objects or
+functions in parallel and wait for the first callback. The
+following deferred task will be called with the first return
+value. ARGS can be a list or an alist of deferred objects or
+functions."
+  (deferred:message "EARLIER : %s" args)
+  (deferred:trans-multi-args args 
+    'deferred:earlier 'deferred:earlier-list 'deferred:earlier-main))
 
 
 
@@ -711,7 +685,9 @@ process."
           (condition-case err
               (progn
                 (setq proc
-                      (apply 'start-process proc-name buf-name command args))
+                      (if (null (car args))
+                          (apply 'start-process proc-name buf-name command nil)
+                        (apply 'start-process proc-name buf-name command args)))
                 (set-process-sentinel
                  proc
                  (lambda (proc event)
@@ -740,11 +716,13 @@ process."
 
 (eval-after-load "url"
   ;; for url package
+  ;; TODO: cookie, proxy
   '(progn
+
      (defun deferred:url-retrieve (url &optional cbargs)
        "A wrapper function for url-retrieve. The next deferred
-     object receives the buffer object that URL will load into.
-     Currently dynamic binding variables are not supported."
+object receives the buffer object that URL will load
+into. Currently dynamic binding variables are not supported."
        (lexical-let ((nd (deferred:new)) (url url) (cbargs cbargs) buf)
          (deferred:next
            (lambda (x)
@@ -753,7 +731,68 @@ process."
                     url (lambda (xx) (deferred:post-task nd 'ok buf))
                     cbargs))
              nil))
-         nd))))
+         (setf (deferred-cancel nd)
+               (lambda (x) 
+                 (when (buffer-live-p buf)
+                   (kill-buffer buf))))
+         nd))
+
+     (defun deferred:url-get (url &optional params)
+       "Perform a HTTP GET method with `url-retrieve'. PARAMS is
+a parameter list of (key . value) or key. The next deferred
+object receives the buffer object that URL will load into."
+       (when params
+         (setq url
+               (concat url "?" (deferred:url-param-serialize params))))
+       (deferred:url-retrieve url))
+
+     (defun deferred:url-post (url &optional params)
+       "Perform a HTTP POST method with `url-retrieve'. PARAMS is
+a parameter list of (key . value) or key. The next deferred
+object receives the buffer object that URL will load into."
+       (lexical-let ((nd (deferred:new)) 
+                     (url url) (params params)
+                     buf)
+         (deferred:next
+           (lambda (x)
+             (let ((url-request-method "POST")
+                   (url-request-extra-headers
+                    '(("Content-Type" . "application/x-www-form-urlencoded")))
+                   (url-request-data
+                    (deferred:url-param-serialize params)))
+               (setq buf 
+                     (url-retrieve 
+                      url 
+                      (lambda (xx) (deferred:post-task nd 'ok buf)))))
+             nil))
+         (setf (deferred-cancel nd)
+               (lambda (x) 
+                 (when (buffer-live-p buf)
+                   (kill-buffer buf))))
+         nd))
+
+     (defun deferred:url-escape (val)
+       "[internal] Return a new string that is VAL URI-encoded."
+       (unless (stringp val)
+         (setq val (format "%s" val)))
+       (url-hexify-string 
+        (encode-coding-string val 'utf-8)))
+
+     (defun deferred:url-param-serialize (params)
+       "[internal] Serialize a list of (key . value) cons cells
+into a query string."
+       (mapconcat
+        (loop for p in params
+              collect
+              (cond
+               ((consp p)
+                (concat 
+                 (deferred:url-escape (car p)) "="
+                 (deferred:url-escape (cdr p))))
+               (t
+                (deferred:url-escape p))))
+        "&"))
+     ))
 
 
 (provide 'deferred)
