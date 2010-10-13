@@ -253,10 +253,9 @@
 (setq org-return-follows-link t)
 (org-remember-insinuate)
 (setq org-directory "~/howm/")
-(setq org-mobile-directory "~/Dropbox/MobileOrg")
-(setq org-mobile-inbox-for-pull (concat org-directory "flagged.howm"))
-(setq org-default-notes-file (concat org-directory "agenda.howm"))
-(setq org-time-stamp-formats '("[%Y-%m-%d]" . "[%Y-%m-%d %H:%M]"))
+(setq org-mobile-directory "~/Dropbox/MobileOrg/")
+(setq org-mobile-inbox-for-pull (concat org-directory "flagged.org"))
+(setq org-default-notes-file (concat org-directory "agenda.org"))
 (setq org-remember-templates
       '(("Todo" ?t "** TODO %?\n   %i\n   %a\n   %t" nil "Inbox")
 	("Bug" ?b "** TODO %?   :bug:\n   %i\n   %a\n   %t" nil "Inbox")
@@ -332,6 +331,7 @@
 (setq howm-view-title-header "#+TITLE:")
 (setq howm-view-use-grep nil)
 (add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
+(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "/howm")))
 (require 'howm)
 (setq howm-template
       (concat howm-view-title-header
@@ -505,8 +505,8 @@
 (setq mark-holidays-in-calendar t)
 (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
 (setq calendar-weekend-marker 'diary)
-(add-hook 'today-visible-calendar-hook 'calendar-mark-weekend)
-(add-hook 'today-invisible-calendar-hook 'calendar-mark-weekend)
+;; (add-hook 'today-visible-calendar-hook 'calendar-mark-weekend)
+;; (add-hook 'today-invisible-calendar-hook 'calendar-mark-weekend)
 
 ;; ----------------------------------------------------------------------------
 ;; htmlize settings
