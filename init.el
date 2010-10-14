@@ -190,12 +190,11 @@
 
 ;; ----------------------------------------------------------------------------
 ;; migemo settings
-(setq migemo-command "migemo"
-      migemo-options '("-t" "emacs" "-i" "\a" ))
-(setenv "RUBYLIB" "/Library/Ruby/Site/1.8/")
-(setq migemo-directory (expand-file-name
-			(concat invocation-directory
-				"../Resources/share/migemo")))
+(setq migemo-command "cmigemo")
+(setq migemo-options '("-q" "--emacs" "-i" "\a"))
+(setq migemo-dictionary "/usr/local/share/migemo/euc-jp/migemo-dict")
+(setq migemo-user-dictionary nil)
+(setq migemo-regex-dictionary nil)
 (require 'migemo nil t)
 
 ;; ----------------------------------------------------------------------------
