@@ -29,6 +29,6 @@
                 (lambda (howm-recent-title)
                   (find-file (howm-title2file howm-recent-title
                                               (howm-recent-menu 30)))))))
-    ))
+    (migemo)))
 
 (provide 'anything-howm-plugin)
