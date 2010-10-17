@@ -599,3 +599,7 @@ which fetch older tweets on reverse-mode."
     (goto-char (point-min)))
    (t
     (inertias-down))))
+
+;; ----------------------------------------------------------------------------
+;; mkpasswd settings
+(autoload 'mkpasswd "mkpasswd" nil t)
