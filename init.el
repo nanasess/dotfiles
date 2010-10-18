@@ -451,7 +451,7 @@
 
 ;; ----------------------------------------------------------------------------
 ;; twitting-mode settings
-(require 'twittering-mode)
+(autoload 'twit "twittering-mode" nil t)
 (unless (load "twittering-tinyurl-api-key" t t)
   (setq twittering-tinyurl-api-key nil))
 (setq twittering-auth-method 'xauth)
