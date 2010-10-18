@@ -33,11 +33,12 @@
   "make password strings."
   (interactive)
   (let ((str_pass "")
-	(rand 0))
+	(rand_pos 0))
     (random t)
     (while (< (length str_pass) mkpasswd-length)
-      (setq rand (random (length mkpasswd-strings)))
+      (setq rand_pos (random (length mkpasswd-strings)))
       (setq str_pass (concat str_pass
 			     (substring mkpasswd-strings
-					rand (+ rand 1)))))
-    (insert str_pass)))
+					rand_pos (+ rand_pos 1)))))
+    (insert str_pass)
+    (kill-new str_pass)))
