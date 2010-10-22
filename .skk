@@ -28,7 +28,7 @@
 (setq skk-kakutei-when-unique-candidate nil)
 (setq skk-egg-like-newline t)
 (setq skk-auto-insert-paren t)
-(setq skk-henkan-okuri-strictly t)
+(setq skk-henkan-okuri-strictly nil)
 (setq skk-rom-kana-rule-list
            (append skk-rom-kana-rule-list
                    '(("@" nil "@"))))
