@@ -3,8 +3,13 @@
 ;; Author: Kentaro Ohkouchi  <nanasess@fsm.ne.jp>
 ;; URL: https://launchpad.net/~nanasess/+junk/dot.emacs.d/
 
-;; ----------------------------------------------------------------------------
-;; initial functions
+;;; Code:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; initial functions
+;;;
+
 (defun init-environment (sys-type)
   (add-to-list 'load-path (expand-file-name
 			   (concat user-emacs-directory "/" sys-type)))
@@ -20,8 +25,11 @@
 
 (add-to-list 'load-path (expand-file-name user-emacs-directory))
 
-;; ----------------------------------------------------------------------------
-;; exec-path settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; exec-path settings
+;;;
+
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
 		   "/opt/local/sbin" "/opt/local/bin"
 		   (expand-file-name "~/bin")
@@ -32,12 +40,18 @@
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
     (setq exec-path (append (list dir) exec-path))))
 
-;; ----------------------------------------------------------------------------
-;; Japanesed settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Japanesed settings
+;;;
+
 (require 'japanese-init)
 
-;; ----------------------------------------------------------------------------
-;; SKK settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; SKK settings
+;;;
+
 (setq skk-user-directory "~/Dropbox/ddskk")
 (setq skk-init-file (concat user-emacs-directory ".skk"))
 (setq skk-preload t)
@@ -48,19 +62,28 @@
   (skk-study-save))
 (run-with-idle-timer skk-auto-save-interval t 'skk-auto-save)
 
-;; ----------------------------------------------------------------------------
-;; line-number settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; line-number settings
+;;;
+
 (line-number-mode 1)
 (column-number-mode 1)
 
-;; ----------------------------------------------------------------------------
-;; global key-bindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; global key-bindings
+;;;
+
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-j") 'skk-mode)
 (global-unset-key (kbd "C-M-t"))
 
-;; ----------------------------------------------------------------------------
-;; backup files settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; backup files settings
+;;;
+
 (setq make-backup-files t)
 (setq backup-directory-alist
       (cons (cons "\\.*$" (expand-file-name "~/.bak/"))
@@ -68,25 +91,40 @@
 (setq version-control t)
 (setq delete-old-versions t)
 
-;; ----------------------------------------------------------------------------
-;; recentf settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; recentf settings
+;;;
+
 (recentf-mode t)
 (setq recentf-max-saved-items 50000)
 
-;; ----------------------------------------------------------------------------
-;; coloring-region settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; coloring-region settings
+;;;
+
 (transient-mark-mode 1)
 
-;; ----------------------------------------------------------------------------
-;; show-paren settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; show-paren settings
+;;;
+
 (show-paren-mode 1)
 
-;; ----------------------------------------------------------------------------
-;; show EOF settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; show EOF settings
+;;;
+
 (setq default-indicate-empty-lines t)
 
-;; ----------------------------------------------------------------------------
-;; face settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; face settings
+;;;
+
 (set-background-color "ivory")
 
 (defface hlline-face
@@ -114,8 +152,11 @@
 (ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
 (ad-activate 'font-lock-mode)
 
-;; ----------------------------------------------------------------------------
-;; window and frame settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; window and frame settings
+;;;
+
 (defun other-window-or-split ()
   (interactive)
   (when (one-window-p)
@@ -134,18 +175,27 @@
   (other-frame 1))
 (global-set-key (kbd "C-z") 'other-frame-or-make-frame)
 
-;; ----------------------------------------------------------------------------
-;; window-system settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; window-system settings
+;;;
+
 (if window-system (tool-bar-mode 0))
 
-;; ----------------------------------------------------------------------------
-;; uniquify settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; uniquify settings
+;;;
+
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 (setq uniquify-ignore-buffers-re "*[^*]+*")
 
-;; ----------------------------------------------------------------------------
-;; dired-x settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; dired-x settings
+;;;
+
 (setq dired-bind-jump nil)
 (add-hook 'dired-mode-hook
 	  (lambda ()
@@ -155,29 +205,41 @@
 	  (lambda ()
 	    (load "dired-x")))
 
-;; ----------------------------------------------------------------------------
-;; CSS settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; CSS settings
+;;;
+
 (add-hook 'css-mode-hook
 	   (lambda()
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
 
-;; ----------------------------------------------------------------------------
-;; Java settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Java settings
+;;;
+
 (add-hook 'java-mode-hook
 	   (lambda()
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
 
-;; ----------------------------------------------------------------------------
-;; JavaScript-mode settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; JavaScript-mode settings
+;;;
+
 (add-hook 'js-mode-hook
 	   (lambda()
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
 
-;; ----------------------------------------------------------------------------
-;; nXML-mode settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; nXML-mode settings
+;;;
+
 (add-to-list 'auto-mode-alist
 	     '("\\.\\(xml\\|xsl\\|rng\\|html\\|tpl\\)\\'" . nxml-mode))
 (add-hook 'nxml-mode-hook
@@ -189,14 +251,20 @@
 	    (setq indent-tabs-mode t)
 	    (setq tab-width 2)))
 
-;; ----------------------------------------------------------------------------
-;; SQL settings
-(setq sql-product 'postgres)
-;(setq sql-postgres-options
-;      '("-P" "pager=off" "-p" "54320"))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; SQL settings
+;;;
 
-;; ----------------------------------------------------------------------------
-;; tramp settings
+(setq sql-product 'postgres)
+;; (setq sql-postgres-options
+;;       '("-P" "pager=off" "-p" "54320"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; tramp settings
+;;;
+
 (require 'tramp)
 (setq tramp-default-method "ssh")
 (add-to-list 'tramp-default-proxies-alist
@@ -205,9 +273,11 @@
 	     '("localhost\\'" nil nil))
 (add-to-list 'tramp-default-proxies-alist
 	     '("\\.local\\'" nil nil))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; migemo settings
+;;;
 
-;; ----------------------------------------------------------------------------
-;; migemo settings
 (setq migemo-command "cmigemo")
 (setq migemo-options '("-q" "--emacs" "-i" "\a"))
 (setq migemo-dictionary "/usr/local/share/migemo/euc-jp/migemo-dict")
@@ -215,8 +285,11 @@
 (setq migemo-regex-dictionary nil)
 (require 'migemo nil t)
 
-;; ----------------------------------------------------------------------------
-;; gtags settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; gtags settings
+;;;
+
 (autoload 'gtags-mode "gtags" nil t)
 (setq gtags-mode-hook
       '(lambda ()
@@ -225,8 +298,11 @@
 	 (local-set-key "\C-u\M-r" 'gtags-find-rtag)
 	 (local-set-key "\C-u\M-s" 'gtags-find-symbol)))
 
-;; ----------------------------------------------------------------------------
-;; mmm-mode settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mmm-mode settings
+;;;
+
 (add-to-list 'load-path (expand-file-name (concat user-emacs-directory "/mmm")))
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
@@ -244,8 +320,11 @@
 (mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-css)
 (mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-js)
 
-;; ----------------------------------------------------------------------------
-;; term settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; term settings
+;;;
+
 (setq shell-file-name "/opt/local/bin/zsh")
 (setenv "SHELL" shell-file-name)
 (setq explicit-shell-file-name shell-file-name)
@@ -259,8 +338,11 @@
 ;; 	     (term-set-escape-char ?\C-x)))
 (global-set-key "\C-x\C-t" 'multi-term-dedicated-toggle)
 
-;; ----------------------------------------------------------------------------
-;; org-mode settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; org-mode settings
+;;;
+
 (require 'org-install)
 (require 'ob-sh)
 (require 'ob-css)
@@ -297,43 +379,63 @@
 (set-face-bold-p 'org-document-title nil)
 (set-face-attribute 'org-document-title nil :height 1.0)
 
-;; ----------------------------------------------------------------------------
-;; session settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; session settings
+;;;
+
 (require 'session)
 (add-hook 'after-init-hook 'session-initialize)
 (setq session-globals-max-size 500)
 
-;; ----------------------------------------------------------------------------
-;; moccur settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; moccur settings
+;;;
+
 (require 'color-moccur)
 (require 'moccur-edit)
 (setq moccur-use-migemo t)
 
-;; ----------------------------------------------------------------------------
-;; sense-region settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; sense-region settings
+;;;
+
 (require 'sense-region)
 (sense-region-on)
 
-;; ----------------------------------------------------------------------------
-;; dvc settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; dvc settings
+;;;
+
 (require 'dvc-autoloads)
 (setq dvc-tips-enabled nil)
 
-;; ----------------------------------------------------------------------------
-;; vc-svn settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; vc-svn settings
+;;;
+
 (setq process-coding-system-alist
       (cons '("svn" . utf-8) process-coding-system-alist))
 
-;; ----------------------------------------------------------------------------
-;; psvn settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; psvn settings
+;;;
+
 (require 'psvn)
 (setq svn-status-svn-environment-var-list '("LC_MESSAGES=C"
 					    "LC_ALL="
 					    "LANG=ja_JP.UTF-8"
 					    "LC_TIME=C"))
 
-;; ----------------------------------------------------------------------------
-;; howm settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; howm settings
+;;;
+
 (setq howm-menu-lang 'ja)
 (setq howm-directory org-directory)
 (setq howm-history-file (concat howm-directory ".howm-history"))
@@ -382,8 +484,11 @@
 	     (start-process "howm-svn-update" "*Messages*" "svn" "update"
 			   (expand-file-name howm-directory))))
 
-;; ----------------------------------------------------------------------------
-;; PHP settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; PHP settings
+;;;
+
 (require 'php-mode)
 (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)" . php-mode))
 (setq php-mode-force-pear t)
@@ -402,8 +507,11 @@
 			   'ac-source-yasnippet)
 	      (auto-complete-mode t))))
 
-;; ----------------------------------------------------------------------------
-;; yasnippet settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; yasnippet settings
+;;;
+
 (require 'yasnippet)
 (yas/initialize)
 (yas/load-directory (expand-file-name (concat user-emacs-directory "/snippets")))
@@ -413,14 +521,18 @@
   (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
 (add-hook 'org-mode-hook
           (lambda ()
-            ;;yasnippet (using the new org-cycle hooks)
+            ;; yasnippet (using the new org-cycle hooks)
             (setq ac-use-overriding-local-map t)
             (make-variable-frame-local 'yas/trigger-key)
             (setq  yas/trigger-key [tab])
             (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
             (define-key yas/keymap [tab] 'yas/next-field)))
-;; ----------------------------------------------------------------------------
-;; auto-complete.el settings
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; auto-complete.el settings
+;;;
+
 (require 'auto-complete)
 (require 'auto-complete-gtags)
 (require 'auto-complete-yasnippet)
@@ -435,26 +547,35 @@
 			   ac-source-words-in-buffer
 			   ac-source-gtags))
 
-;; ----------------------------------------------------------------------------
-;; mew settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mew settings
+;;;
+
 (autoload 'mew "mew" nil t)
 (autoload 'mew-send "mew" nil t)
 ;; mm-version
 (require 'mm-version)
 
-;; ----------------------------------------------------------------------------
-;; w3m seettings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; w3m seettings
+;;;
+
 (autoload 'w3m "w3m" "Visit the www page using w3m" t)
 (setq w3m-use-cookies t)
 (setq w3m-cookie-accept-bad-cookies t)
 (setq w3m-broken-proxy-cache t)
 (setq w3m-bookmark-file (concat howm-directory "bookmark.html"))
 (setq w3m-bookmark-file-coding-system "utf-8-unix")
-;  (require 'octet)
-;  (octet-mime-setup))
+;; (require 'octet)
+;; (octet-mime-setup))
 
-;; ----------------------------------------------------------------------------
-;; simple-hatena-mode settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; simple-hatena-mode settings
+;;;
+
 (require 'simple-hatena-mode)
 (setq simple-hatena-default-id "nanasess")
 (setq simple-hatena-bin	 (expand-file-name (concat user-emacs-directory "/hw.pl")))
@@ -467,8 +588,11 @@
 	  '(lambda nil
 	     (call-process "svn" nil "*Messages*" nil "ci" "-m" " " ".")))
 
-;; ----------------------------------------------------------------------------
-;; twitting-mode settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; twitting-mode settings
+;;;
+
 (require 'twittering-mode)
 (unless (load "twittering-tinyurl-api-key" t t)
   (setq twittering-tinyurl-api-key nil))
@@ -509,12 +633,18 @@
 				     "&format=txt&uri="))
 ;; (auto-install-from-url "http://github.com/hayamiz/twittering-mode/raw/master/twittering-mode.el")
 
-;; ----------------------------------------------------------------------------
-;; navi2ch settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; navi2ch settings
+;;;
+
 (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
 
-;; ----------------------------------------------------------------------------
-;; japanese-holiays settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; japanese-holiays settings
+;;;
+
 (add-hook 'calendar-load-hook
 	  (lambda ()
 	    (require 'japanese-holidays)
@@ -526,29 +656,44 @@
 ;; (add-hook 'today-visible-calendar-hook 'calendar-mark-weekend)
 ;; (add-hook 'today-invisible-calendar-hook 'calendar-mark-weekend)
 
-;; ----------------------------------------------------------------------------
-;; htmlize settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; htmlize settings
+;;;
+
 (require 'htmlize)
 
-;; ----------------------------------------------------------------------------
-;; install-elisp settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; install-elisp settings
+;;;
+
 (require 'install-elisp)
 
-;; ----------------------------------------------------------------------------
-;; auto-install settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; auto-install settings
+;;;
+
 (require 'auto-install)
 (setq auto-install-directory "~/.emacs.d/")
 (auto-install-update-emacswiki-package-name t)
 (auto-install-compatibility-setup)
 
-;; ----------------------------------------------------------------------------
-;; auto-async-byte-compile settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; auto-async-byte-compile settings
+;;;
+
 (require 'auto-async-byte-compile)
 (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
 (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
 
-;; ----------------------------------------------------------------------------
-;; anything.el settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; anything.el settings
+;;;
+
 (require 'anything-startup)
 (require 'anything-howm-plugin)
 (require 'anything-gtags)
@@ -575,16 +720,22 @@ It is automatically generated by `anything-migrate-sources'."
 (define-key anything-map (kbd "M-v") 'anything-previous-source)
 ;; (auto-install-batch "anything")
 
-;; ----------------------------------------------------------------------------
-;; one-key settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; one-key settings
+;;;
+
 (require 'one-key)
 (require 'one-key-config)
 (require 'my-one-key-config)
 (require 'one-key-default)
 (one-key-default-setup-keys)
 
-;; ----------------------------------------------------------------------------
-;; UI async settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; UI async settings
+;;;
+
 (require 'deferred)
 (require 'inertial-scroll)
 (setq inertias-initial-velocity 50)
@@ -622,6 +773,9 @@ which fetch older tweets on reverse-mode."
    (t
     (inertias-down))))
 
-;; ----------------------------------------------------------------------------
-;; mkpasswd settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mkpasswd settings
+;;;
+
 (autoload 'mkpasswd "mkpasswd" nil t)
