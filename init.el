@@ -56,8 +56,6 @@
 ;; ----------------------------------------------------------------------------
 ;; global key-bindings
 (global-set-key (kbd "M-g") 'goto-line)
-(global-set-key (kbd "C-t") 'other-window)
-(global-set-key (kbd "C-z") 'other-frame)
 (global-set-key (kbd "C-j") 'skk-mode)
 (global-unset-key (kbd "C-M-t"))
 
@@ -117,6 +115,26 @@
 (ad-activate 'font-lock-mode)
 
 ;; ----------------------------------------------------------------------------
+;; window and frame settings
+(defun other-window-or-split ()
+  (interactive)
+  (when (one-window-p)
+    (split-window))
+  (other-window 1))
+(global-set-key (kbd "C-t") 'other-window-or-split)
+
+(defun one-frame-p ()
+  (= (length (frame-list)) 1))
+
+(defun other-frame-or-make-frame ()
+  "thisandthat."
+  (interactive)
+  (when (one-frame-p)
+    (make-frame))
+  (other-frame 1))
+(global-set-key (kbd "C-z") 'other-frame-or-make-frame)
+
+;; ----------------------------------------------------------------------------
 ;; window-system settings
 (if window-system (tool-bar-mode 0))
 
@@ -131,7 +149,7 @@
 (setq dired-bind-jump nil)
 (add-hook 'dired-mode-hook
 	  (lambda ()
-	    (local-set-key "\C-t" 'other-window)
+	    (local-set-key "\C-t" 'other-window-or-split)
 	    (local-set-key "r" 'wdired-change-to-wdired-mode)))
 (add-hook 'dired-load-hook
 	  (lambda ()
