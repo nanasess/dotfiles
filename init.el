@@ -278,8 +278,8 @@
    ("prefix t" . e2wm:dp-two)  ; twoへ変更
    ("prefix i" . e2wm:dp-doc)  ; docへ変更
    ("prefix d" . e2wm:dp-dashboard) ; dashboardへ変更
-   ("prefix p" . e2wm:pst-history-forward-command) ; 履歴を進む
-   ("prefix n" . e2wm:pst-history-back-command) ; 履歴をもどる
+   ("prefix C-p" . e2wm:pst-history-forward-command) ; 履歴を進む
+   ("prefix C-n" . e2wm:pst-history-back-command) ; 履歴をもどる
    ("prefix L" . ielm)
    ("prefix m" . e2wm:pst-window-select-main-command)
    ) e2wm:prefix-key)
