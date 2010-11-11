@@ -293,6 +293,8 @@
 	(open :plugin-args (:command w3m-bookmark-view :buffer "*w3m*"))
 	(open :plugin-args (:command howm-menu :buffer "*howmM:%menu%*"))))
 
+(setq follow-intercept-processes nil)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; split-root settings
