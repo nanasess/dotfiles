@@ -305,7 +305,7 @@
 ;;;
 
 (require 'split-root)
-(defvar split-root-window-height 16)
+(setq split-root-window-height 16)
 (defun display-buffer-function--split-root (buf &optional ignore)
   (let ((window (split-root-window split-root-window-height)))
     (set-window-buffer window buf)
