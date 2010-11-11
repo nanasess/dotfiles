@@ -75,9 +75,12 @@
 ;;; global key-bindings
 ;;;
 
+(global-unset-key (kbd "C-M-t"))
+(global-unset-key (kbd "C-z"))
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-j") 'skk-mode)
-(global-unset-key (kbd "C-M-t"))
+(global-set-key (kbd "C-t") 'other-window)
+(global-set-key "\C-z\C-u" 'other-frame)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -284,7 +287,6 @@
    ("prefix m" . e2wm:pst-window-select-main-command)
    ) e2wm:prefix-key)
 (global-set-key (kbd "M-+") 'e2wm:start-management)
-(global-set-key (kbd "C-t") 'other-window)
 
 ;;; dashboard
 (setq e2wm:c-dashboard-plugins
