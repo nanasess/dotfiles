@@ -629,7 +629,7 @@
 
 (require 'simple-hatena-mode)
 (setq simple-hatena-default-id "nanasess")
-(setq simple-hatena-bin	 (expand-file-name (concat user-emacs-directory "/hw.pl")))
+(setq simple-hatena-bin (expand-file-name (concat user-emacs-directory "hw.pl")))
 (setq simple-hatena-root howm-directory)
 (add-hook 'simple-hatena-mode-hook
 	  '(lambda nil
