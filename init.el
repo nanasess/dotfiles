@@ -286,7 +286,7 @@
    ("prefix L" . ielm)
    ("prefix m" . e2wm:pst-window-select-main-command)
    ) e2wm:prefix-key)
-(global-set-key (kbd "M-+") 'e2wm:start-management)
+
 
 ;;; dashboard
 (setq e2wm:c-dashboard-plugins
@@ -296,6 +296,19 @@
 	(open :plugin-args (:command howm-menu :buffer "*howmM:%menu%*"))))
 
 (setq follow-intercept-processes nil)
+
+(defun normal-size-frame ()
+"Resize to normal size frame."
+  (interactive)
+  (set-frame-width (selected-frame) 82))
+(defun wide-size-frame ()
+"Resize to wide size frame."
+  (interactive)
+  (set-frame-width (selected-frame) 175))
+
+(global-set-key (kbd "M-+") 'e2wm:start-management)
+(global-set-key "\C-zs" 'normal-size-frame)
+(global-set-key "\C-zw" 'wide-size-frame)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
