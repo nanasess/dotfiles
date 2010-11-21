@@ -1236,7 +1236,7 @@ If FORCE-DISPLAY-PART is non-nil, return the display string."
                    (source-name
                     (save-excursion
                       (unless header-pos
-                        (message "No candidates")
+                        ;(message "No candidates")
                         (return-from exit nil))
                       (goto-char header-pos)
                       (anything-current-line-contents))))
@@ -1656,7 +1656,6 @@ It is needed because restoring position when `anything' is keyboard-quitted.")
 (defun anything-set-frame/window-configuration (conf)
   (funcall (car anything-save-configuration-functions) conf))
 
-(declare-function 'anything-frame/window-configuration "anything")
 (lexical-let (conf)
   (defun anything-frame/window-configuration (save-or-restore)
     (anything-log-eval anything-save-configuration-functions)
@@ -3194,7 +3193,7 @@ Otherwise ignores `special-display-buffer-names' and `special-display-regexps'."
         anything-marked-candidates))
 
 (defun anything-toggle-visible-mark ()
-  "Toggle anything visible bookmark at point."
+  "Toggle anything visible mark at point."
   (interactive)
   (with-anything-window
     (anything-aif (anything-this-visible-mark)
@@ -3205,11 +3204,12 @@ Otherwise ignores `special-display-buffer-names' and `special-display-regexps'."
 (defun anything-display-all-visible-marks ()
   "Show all `anything' visible marks strings."
   (interactive)
-  (lexical-let ((overlays (reverse anything-visible-mark-overlays)))
-    (anything-run-after-quit
-     (lambda ()
-       (with-output-to-temp-buffer "*anything visible marks*"
-         (dolist (o overlays) (princ (overlay-get o 'string))))))))
+  (with-anything-window
+    (lexical-let ((overlays (reverse anything-visible-mark-overlays)))
+      (anything-run-after-quit
+       (lambda ()
+         (with-output-to-temp-buffer "*anything visible marks*"
+           (dolist (o overlays) (princ (overlay-get o 'string)))))))))
 
 (defun anything-marked-candidates ()
   "Marked candidates (real value) of current source if any,
@@ -3328,7 +3328,8 @@ You can paste it by typing C-y."
 
 (defun anything-follow-execute-persistent-action-maybe ()
   "Execute persistent action after `anything-input-idle-delay' secs when `anything-follow-mode' is enabled."
-  (and (buffer-local-value 'anything-follow-mode
+  (and (not (get-buffer-window anything-action-buffer 'visible))
+       (buffer-local-value 'anything-follow-mode
                            (get-buffer-create anything-buffer))
        (sit-for anything-input-idle-delay)
        (anything-window)

@@ -42,7 +42,7 @@
 (if (boundp 'window-system)
     (setq initial-frame-alist
           (append (list
-                   '(width . 175)
+                   '(width . 82)
                    '(height . 50)
                    )
                   initial-frame-alist)))
