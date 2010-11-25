@@ -746,6 +746,19 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; emacs-init-check settings
+;;;
+;;; (install-elisp-from-emacswiki "emacs-init-check.el")
+;;;
+
+(require 'emacs-init-check)
+(add-to-list 'auto-emacs-init-check-program-args "nice")
+(defadvice dvc-status (after auto-syntax-check activate)
+"dvc-status after performing a emacs-init-check is executed."
+  (emacs-init-check))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; anything.el settings
 ;;;
 ;;; (auto-install-batch "anything")
