@@ -455,6 +455,7 @@
 (require 'color-moccur)
 (require 'moccur-edit)
 (setq moccur-use-migemo t)
+(setq moccur-split-word t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
