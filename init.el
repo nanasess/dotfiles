@@ -564,8 +564,7 @@
 	      (make-variable-buffer-local 'ac-sources)
 	      (add-to-list 'ac-sources
 			   'ac-source-php-completion
-			   'ac-source-yasnippet
-			   'ac-source-filename)
+			   'ac-source-yasnippet)
 	      (auto-complete-mode t))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
