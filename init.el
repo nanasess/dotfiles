@@ -506,6 +506,7 @@
 (setq howm-menu-refresh-after-save nil)
 (setq howm-refresh-after-save nil)
 (setq howm-list-all-title t)
+(setq howm-schedule-menu-types "[!@\+]")
 (add-hook 'org-mode-hook 'howm-mode)
 (setq howm-view-title-header "#+TITLE:")
 (setq howm-view-use-grep nil)
@@ -707,6 +708,8 @@
 ;;;
 ;;; (auto-install-from-url "https://github.com/kiwanami/emacs-calfw/raw/master/calfw.el")
 ;;; (auto-install-from-url "https://github.com/kiwanami/emacs-calfw/raw/master/calfw-howm.el")
+;;; (auto-install-from-url "https://github.com/kiwanami/emacs-calfw/raw/master/calfw-ical.el")
+;;;
 
 (require 'calfw)
 (defvar my-howm-schedule-page "calfw スケジュール" "予定を入れるメモのタイトル")
@@ -715,7 +718,7 @@
   (interactive)
   (let*
       ((date (cfw:cursor-to-nearest-date))
-       (howm-items 
+       (howm-items
         (howm-folder-grep
          howm-directory
          (regexp-quote my-howm-schedule-page))))
@@ -741,8 +744,8 @@
 	    (define-key cfw:howm-schedule-inline-keymap (kbd "i")
 	      'my-cfw-open-schedule-buffer)))
 
-(setq cfw:howm-schedule-summary-transformer 
-  (lambda (line) (split-string (replace-regexp-in-string "^[^@!]+[@!] " "" line) " / ")))
+(setq cfw:howm-schedule-summary-transformer
+  (lambda (line) (split-string (replace-regexp-in-string "^[^@!\+]+[@!\+] " "" line) " / ")))
 
 (setq calendar-month-name-array
       ["January(01)" "February(02)" "March(03)" "April(04)" "May(05)" "June(06)"
@@ -750,6 +753,13 @@
        "December(12)"])
 (setq calendar-day-name-array
       ["日" "月" "火" "水" "木" "金" "土"])
+
+;; (require 'calfw-ical)
+;; (cfw:install-ical-schedules)
+;; (setq cfw:ical-calendar-contents-sources
+;;       '("http://www.google.com/calendar/ical/ja.japanese%23holiday%40group.v.calendar.google.com/public/basic.ics"))
+;; (setq cfw:ical-calendar-annotations-sources
+;;       '("http://www.google.com/calendar/ical/ja.japanese%23holiday%40group.v.calendar.google.com/public/basic.ics"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
