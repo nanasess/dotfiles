@@ -691,19 +691,65 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; japanese-holiays settings
+;;; Japanese-holiays settings
 ;;;
 
-(add-hook 'calendar-load-hook
-	  (lambda ()
-	    (require 'japanese-holidays)
-	    (setq calendar-holidays
-		  (append japanese-holidays local-holidays other-holidays))))
 (setq mark-holidays-in-calendar t)
 (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
 (setq calendar-weekend-marker 'diary)
-;; (add-hook 'today-visible-calendar-hook 'calendar-mark-weekend)
-;; (add-hook 'today-invisible-calendar-hook 'calendar-mark-weekend)
+(require 'japanese-holidays)
+(setq calendar-holidays
+      (append japanese-holidays local-holidays other-holidays))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; calfw settings
+;;;
+;;; (auto-install-from-url "https://github.com/kiwanami/emacs-calfw/raw/master/calfw.el")
+;;; (auto-install-from-url "https://github.com/kiwanami/emacs-calfw/raw/master/calfw-howm.el")
+
+(require 'calfw)
+(defvar my-howm-schedule-page "calfw スケジュール" "予定を入れるメモのタイトル")
+
+(defun my-cfw-open-schedule-buffer ()
+  (interactive)
+  (let*
+      ((date (cfw:cursor-to-nearest-date))
+       (howm-items 
+        (howm-folder-grep
+         howm-directory
+         (regexp-quote my-howm-schedule-page))))
+    (cond
+     ((null howm-items) ; create
+      (howm-create-file-with-title my-howm-schedule-page nil nil nil nil))
+     (t
+      (howm-view-open-item (car howm-items))))
+    (goto-char (point-max))
+    (unless (bolp) (insert "\n"))
+    (insert
+     (format "[%04d-%02d-%02d]@ "
+             (calendar-extract-year date)
+             (calendar-extract-month date)
+             (calendar-extract-day date)))))
+
+(eval-after-load "howm-menu"
+  '(progn
+     (require 'calfw-howm)
+     (cfw:install-howm-schedules)
+     (define-key howm-mode-map (kbd "M-C") 'cfw:open-howm-calendar)
+     (define-key cfw:howm-schedule-map (kbd "i") 'my-cfw-open-schedule-buffer)
+	    (define-key cfw:howm-schedule-inline-keymap (kbd "i")
+	      'my-cfw-open-schedule-buffer)))
+
+(setq cfw:howm-schedule-summary-transformer 
+  (lambda (line) (split-string (replace-regexp-in-string "^[^@!]+[@!] " "" line) " / ")))
+
+(setq calendar-month-name-array
+      ["January(01)" "February(02)" "March(03)" "April(04)" "May(05)" "June(06)"
+       "July(07)" "August(08)" "September(09)" "October(10)" "November(11)"
+       "December(12)"])
+(setq calendar-day-name-array
+      ["日" "月" "火" "水" "木" "金" "土"])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
