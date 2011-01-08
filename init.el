@@ -754,12 +754,13 @@
 (setq calendar-day-name-array
       ["日" "月" "火" "水" "木" "金" "土"])
 
-;; (require 'calfw-ical)
-;; (cfw:install-ical-schedules)
-;; (setq cfw:ical-calendar-contents-sources
-;;       '("http://www.google.com/calendar/ical/ja.japanese%23holiday%40group.v.calendar.google.com/public/basic.ics"))
-;; (setq cfw:ical-calendar-annotations-sources
-;;       '("http://www.google.com/calendar/ical/ja.japanese%23holiday%40group.v.calendar.google.com/public/basic.ics"))
+(require 'calfw-ical)
+(cfw:install-ical-schedules)
+(setq cfw:ical-calendar-contents-sources
+      '("http://www.google.com/calendar/ical/nanasess%40gmail.com/private-61b32d43d3ef5ec36e4339e0161389aa/basic.ics"
+	"http://www.google.com/calendar/ical/p%23weather%40group.v.calendar.google.com/public/basic.ics"))
+(setq cfw:ical-calendar-annotations-sources
+      '("http://www.google.com/calendar/ical/p%23weather%40group.v.calendar.google.com/public/basic.ics"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
