@@ -314,26 +314,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; split-root settings
-;;;
-;;; (install-elisp "http://nschum.de/src/emacs/split-root/split-root.el")
-;;;
-
-(require 'split-root)
-(setq split-root-window-height 16)
-(defun display-buffer-function--split-root (buf &optional ignore)
-  (let ((window (split-root-window split-root-window-height)))
-    (set-window-buffer window buf)
-    window))
-
-(defun twittering-update-status-interactive--split-root ()
-  (interactive)
-  (let ((display-buffer-function 'display-buffer-function--split-root)
-	(split-root-window-height 16))
-    (twittering-update-status-interactive)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; migemo settings
 ;;;
 
@@ -712,7 +692,7 @@
 ;;;
 
 (require 'calfw)
-(defvar my-howm-schedule-page "calfw スケジュール" "予定を入れるメモのタイトル")
+(setq my-howm-schedule-page "calfw スケジュール")
 
 (defun my-cfw-open-schedule-buffer ()
   (interactive)
