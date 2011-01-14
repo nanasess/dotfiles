@@ -212,7 +212,19 @@
 ;;; JavaScript-mode settings
 ;;;
 
-(add-hook 'js-mode-hook
+(add-hook 'javascript-mode-hook
+	   (lambda()
+	     (setq tab-width 4)
+	     (setq indent-tabs-mode nil)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; js2-mode settings
+;;;
+
+(autoload 'js2-mode "js2" nil t)
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-hook 'js2-mode-hook
 	   (lambda()
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
