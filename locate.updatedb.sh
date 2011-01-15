@@ -59,7 +59,7 @@ set -o noglob
 : ${mklocatedb:=locate.mklocatedb}	 # make locate database program
 : ${FCODES:=$HOME/locate.database}	 # the database
 : ${SEARCHPATHS:=$HOME}		# directories to be put in the database
-: ${PRUNEPATHS:="/private/tmp /private/var/folders /private/var/tmp */Backups.backupdb .bak .svn .bzr CVS"} # unwanted directories
+: ${PRUNEPATHS:="/private/tmp /private/var/folders /private/var/tmp */Backups.backupdb .bak .svn .bzr CVS ~/Library"} # unwanted directories
 : ${FILESYSTEMS:="hfs ufs"}			 # allowed filesystems 
 : ${find:=find}
 

@@ -928,7 +928,7 @@ which fetch older tweets on reverse-mode."
       (list "nice" "-n" "19" locate-update-command))
 
 (setq anything-c-locate-command
-      (concat "locate -i -d " locate-home-database " %s")
+      (concat "locate -i -d " locate-home-database " %s"))
 
 (defun locate-update-home ()
   "offer to update the locate database in home."
