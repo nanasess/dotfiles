@@ -915,3 +915,27 @@ which fetch older tweets on reverse-mode."
 ;;;
 
 (autoload 'mkpasswd "mkpasswd" nil t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; locate settings
+;;;
+
+(setq locate-home-database  (expand-file-name "~/locate.database"))
+(setq locate-update-command (expand-file-name
+			     (concat user-emacs-directory "locate.updatedb.sh")))
+(setq locate-update-command-program-args
+      (list "nice" "-n" "19" locate-update-command))
+
+(setq anything-c-locate-command
+      (concat "locate -i -d " locate-home-database " %s")
+
+(defun locate-update-home ()
+  "offer to update the locate database in home."
+  (interactive)
+  (set-process-sentinel
+   (apply 'start-process "locate-update-home" "*Messages*" locate-update-command-program-args)
+   (lambda (proc stat)
+     (if (zerop (process-exit-status proc))
+	 (message "locate.updatedb done.")))))
+
