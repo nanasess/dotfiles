@@ -934,8 +934,9 @@ which fetch older tweets on reverse-mode."
   "offer to update the locate database in home."
   (interactive)
   (set-process-sentinel
-   (apply 'start-process "locate-update-home" "*Messages*" locate-update-command-program-args)
+   (apply 'start-process "locate-update-home" "*Messages*"
+	  locate-update-command-program-args)
    (lambda (proc stat)
      (if (zerop (process-exit-status proc))
-	 (message "locate.updatedb done.")))))
+	 (message "locate.updatedb...done")))))
 
