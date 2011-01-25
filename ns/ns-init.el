@@ -9,12 +9,12 @@
 		    "grep -nH -e  {} /dev/null \\;") 59))
 
 ;; font settings
-(create-fontset-from-ascii-font "Monaco-12:weight=normal:slant=normal" nil
-				"monacokakugo")
-(set-fontset-font "fontset-monacokakugo"
+(create-fontset-from-ascii-font "Menlo-12:weight=normal:slant=normal" nil
+				"menlokakugo")
+(set-fontset-font "fontset-menlokakugo"
 		  'unicode (font-spec :family "Hiragino Kaku Gothic ProN" ) nil
 		  'append)
-(setq face-font-rescale-alist '((".*Hiragino.*" . 1.2) (".*Monaco.*" . 1.0)))
+(setq face-font-rescale-alist '((".*Hiragino.*" . 1.2) (".*Menlo.*" . 1.0)))
 
 (setq mac-allow-anti-aliasing t)
 
@@ -34,7 +34,7 @@
 	  (append (list
 		   '(width . 82)
 		   '(height . 50)
-		   '(font . "fontset-monacokakugo")
+		   '(font . "fontset-menlokakugo")
 		   )
 		  initial-frame-alist)))
 (setq default-frame-alist initial-frame-alist)
