@@ -234,7 +234,7 @@ used by `anything-lisp-complete-symbol-set-timer' and `anything-apropos'"
         (if (loop for src in (anything-get-sources)
                   thereis (string-match "^dabbrev" (assoc-default 'name src)))
             anything-dabbrev-last-target
-          (anything-aif (symbol-at-point) (symbol-name it) "")))
+          (or (tap-symbol) "")))
   (anything-candidate-buffer (get-buffer bufname)))
 
 (defcustom anything-complete-sort-candidates nil
@@ -442,8 +442,16 @@ used by `anything-lisp-complete-symbol-set-timer' and `anything-apropos'"
   (alcs-make-candidates)
   (anything-update))
 
+(defun tap-symbol ()
+  "Get symbol name before point."
+  (save-excursion
+    (let ((beg (point)))
+      ;; older regexp "\(\\|\\s-\\|^\\|\\_<\\|\r\\|'\\|#'"
+      (when (re-search-backward "\\_<" (point-at-bol) t)
+        (buffer-substring-no-properties beg (match-end 0))))))
+
 (defun alcs-initial-input (partial-match)
-  (anything-aif (symbol-at-point)
+  (anything-aif (tap-symbol)
       (format "%s%s%s"
               (if partial-match "" "^")
               it
@@ -486,7 +494,10 @@ used by `anything-lisp-complete-symbol-set-timer' and `anything-apropos'"
       (mapcar 'symbol-name anything-additional-attributes))))
 
 (defvar acaa-anything-commands-regexp
-  (concat "(" (regexp-opt '("anything" "anything-other-buffer")) " "))
+  (concat "(" (regexp-opt
+               '("anything" "anything-other-buffer"
+                 "define-anything-type-attribute" "anything-c-arrange-type-attribute"))
+          " "))
 
 (defun acaa-completing-attribute-p (point)
   (save-excursion

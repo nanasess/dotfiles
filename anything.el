@@ -141,7 +141,7 @@
 ;;  `anything-scroll-other-window-down'
 ;;    Scroll other window (not *Anything* window) downward.
 ;;  `anything-toggle-visible-mark'
-;;    Toggle anything visible bookmark at point.
+;;    Toggle anything visible mark at point.
 ;;  `anything-display-all-visible-marks'
 ;;    Show all `anything' visible marks strings.
 ;;  `anything-next-visible-mark'
@@ -1211,7 +1211,8 @@ If FORCE-DISPLAY-PART is non-nil, return the display string."
           selection)))))
 
 (defun anything-get-action ()
-  "Return the associated action for the selected candidate."
+  "Return the associated action for the selected candidate.
+It is a function symbol (sole action) or list of (action-display . function)."
   (unless (anything-empty-buffer-p (anything-buffer-get))
     (anything-aif (anything-attr 'action-transformer)
         (anything-composed-funcall-with-source
@@ -1731,6 +1732,7 @@ If TEST-MODE is non-nil, clear `anything-candidate-cache'."
     (set (make-local-variable 'anything-last-sources-local) anything-sources)
     (set (make-local-variable 'anything-follow-mode) nil)
     (set (make-local-variable 'anything-display-function) anything-display-function)
+    (anything-initialize-persistent-action)
     (anything-log-eval anything-display-function anything-let-variables)
     (loop for (var . val) in anything-let-variables
           do (set (make-local-variable var) val))
@@ -2264,7 +2266,12 @@ the real value in a text property."
                        (split-string string "\n")
                        (assoc 'incomplete-line source))
                       source t))
-    (anything-insert-match candidate 'insert-before-markers source)
+    (if (not (assq 'multiline source))
+        (anything-insert-match candidate 'insert-before-markers source)
+      (let ((start (point)))
+        (anything-insert-candidate-separator)
+        (anything-insert-match candidate 'insert-before-markers source)
+        (put-text-property start (point) 'anything-multiline t)))
     (incf (cdr (assoc 'item-count source)))
     (when (>= (assoc-default 'item-count source) limit)
       (anything-kill-async-process process)
@@ -3055,8 +3062,19 @@ Acceptable values of CREATE-OR-BUFFER:
   (setq anything-saved-selection (anything-get-selection))
   (unless anything-saved-selection
     (error "Nothing is selected."))
-  (setq anything-saved-action (cdr (elt (anything-get-action) n)))
+  (setq anything-saved-action (anything-get-nth-action n (anything-get-action)))
   (anything-exit-minibuffer))
+
+(defun anything-get-nth-action (n action)
+  (cond ((and (zerop n) (functionp action))
+         action)
+        ((listp action)
+         (or (cdr (elt action n))
+             (error "No such action")))
+        ((and (functionp action) (< 0 n))
+         (error "Sole action."))
+        (t
+         (error "Error in `anything-select-nth-action'."))))
 
 (defun anything-select-2nd-action ()
   "Select the 2nd action for the currently selected candidate."
@@ -3088,15 +3106,16 @@ Otherwise goto the end of minibuffer."
      ,@body))
 (put 'with-anything-display-same-window 'lisp-indent-function 0)
 
+(defvar anything-persistent-action-display-window nil)
+(defun anything-initialize-persistent-action ()
+  (set (make-local-variable 'anything-persistent-action-display-window) nil))
+
 (defun* anything-execute-persistent-action (&optional (attr 'persistent-action))
   "If a candidate is selected then perform the associated action without quitting anything."
   (interactive)
   (anything-log "executing persistent-action")
   (save-selected-window
-    (select-window (get-buffer-window (anything-buffer-get)))
-    (select-window (setq minibuffer-scroll-window
-                         (if (one-window-p t) (split-window)
-                           (next-window (selected-window) 1))))
+    (anything-select-persistent-action-window)
     (anything-log-eval (current-buffer))
     (let ((anything-in-persistent-action t))
       (with-anything-display-same-window
@@ -3106,6 +3125,16 @@ Otherwise goto the end of minibuffer."
              (anything-get-action))
          t)
         (anything-log-run-hook 'anything-after-persistent-action-hook)))))
+
+(defun anything-select-persistent-action-window ()
+  (select-window (get-buffer-window (anything-buffer-get)))
+  (select-window (setq minibuffer-scroll-window
+                       (setq anything-persistent-action-display-window
+                             (or anything-persistent-action-display-window
+                                 (if anything-samewindow
+                                     (if (one-window-p t) (split-window)
+                                       (next-window (selected-window) 1))
+                                   (get-buffer-window anything-current-buffer)))))))
 
 (defun anything-persistent-action-display-buffer (buf &optional not-this-window)
   "Make `pop-to-buffer' and `display-buffer' display in the same window in persistent action.
@@ -5172,6 +5201,11 @@ Given pseudo `anything-sources' and `anything-pattern', returns list like
         (stub anything-get-current-source => '((name . "test")
                                                (action ("identity" . identity))))
         (anything-get-action))
+      (expect 'identity
+        (stub buffer-size => 1)
+        (stub anything-get-current-source => '((name . "test")
+                                               (action . identity)))
+        (anything-get-action))
       (expect '((("identity" . identity)) "action-transformer is called")
         (stub buffer-size => 1)
         (stub anything-get-current-source
@@ -5183,19 +5217,22 @@ Given pseudo `anything-sources' and `anything-pattern', returns list like
         (stub anything-get-selection => "action-transformer is called")
         (anything-get-action))
       (desc "anything-select-nth-action")
-      (expect "selection"
-        (stub anything-get-selection => "selection")
-        (stub anything-exit-minibuffer)
-        (let (anything-saved-selection)
-          (anything-select-nth-action 1)
-          anything-saved-selection))
+      (expect (error error *)
+        (stub anything-get-selection => nil)
+        (anything-select-nth-action 0))
+      (desc "anything-get-nth-action")
       (expect 'cadr
-        (stub anything-get-action => '(("0" . car) ("1" . cdr) ("2" . cadr)))
-        (stub anything-exit-minibuffer)
-        (stub anything-get-selection => "selection")
-        (let (anything-saved-action)
-          (anything-select-nth-action 2)
-          anything-saved-action))
+        (anything-get-nth-action 2 '(("0" . car) ("1" . cdr) ("2" . cadr))))
+      (expect (error error *)
+        (anything-get-nth-action 2 '(("0" . car))))
+      (expect 'identity
+        (anything-get-nth-action 0 'identity))
+      (expect (error error *)
+        (anything-get-nth-action 1 'identity))
+      (expect (error error *)
+        (anything-get-nth-action 0 'unbound-function-xxx))
+      (expect (error error *)
+        (anything-get-nth-action 0 "invalid data"))
       (desc "anything-funcall-foreach")
       (expect (mock (upcase "foo"))
         (stub anything-get-sources => '(((init . (lambda () (upcase "foo"))))))
@@ -6046,4 +6083,7 @@ Given pseudo `anything-sources' and `anything-pattern', returns list like
 (provide 'anything)
 ;; How to save (DO NOT REMOVE!!)
 ;; (progn (magit-push) (emacswiki-post "anything.el"))
+;; Local Variables:
+;; coding: utf-8
+;; End:
 ;;; anything.el ends here
