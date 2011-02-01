@@ -251,22 +251,6 @@
 ;;;
 
 (setq sql-product 'postgres)
-;; (setq sql-postgres-options
-;;       '("-P" "pager=off" "-p" "54320"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; tramp settings
-;;;
-
-(require 'tramp)
-(setq tramp-default-method "ssh")
-(add-to-list 'tramp-default-proxies-alist
-	     '("\\'" "\\`root\\'" "/ssh:%h:"))
-(add-to-list 'tramp-default-proxies-alist
-	     '("localhost\\'" nil nil))
-(add-to-list 'tramp-default-proxies-alist
-	     '("\\.local\\'" nil nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -373,24 +357,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; term settings
-;;;
-
-(setq shell-file-name "/opt/local/bin/zsh")
-(setenv "SHELL" shell-file-name)
-(setq explicit-shell-file-name shell-file-name)
-(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-(require 'multi-term)
-(setq multi-term-program shell-file-name)
-(setq term-unbind-key-list '("M-x" "C-z" "C-x" "C-c" "C-h" "C-y" "C-t"))
-;; (add-hook 'term-mode-hook
-;; 	  '(lambda ()
-;; 	     (term-set-escape-char ?\C-x)))
-(global-set-key "\C-x\C-t" 'multi-term-dedicated-toggle)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; org-mode settings
 ;;;
 
@@ -429,6 +395,13 @@
       '("org-latex-to-pdf.sh %s" "org-latex-to-pdf.sh %s"))
 (set-face-bold-p 'org-document-title nil)
 (set-face-attribute 'org-document-title nil :height 1.0)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; htmlize settings
+;;;
+
+(require 'htmlize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -756,13 +729,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; htmlize settings
-;;;
-
-(require 'htmlize)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; install-elisp settings
 ;;;
 
@@ -796,9 +762,6 @@
 
 (require 'emacs-init-check)
 (add-to-list 'auto-emacs-init-check-program-args "nice")
-(defadvice dvc-status (after auto-syntax-check activate)
-"dvc-status after performing a emacs-init-check is executed."
-  (emacs-init-check))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
