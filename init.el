@@ -193,7 +193,7 @@
 ;;;
 
 (add-hook 'css-mode-hook
-	   (lambda()
+	   (lambda ()
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
 
@@ -203,7 +203,7 @@
 ;;;
 
 (add-hook 'java-mode-hook
-	   (lambda()
+	   (lambda ()
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
 
@@ -213,7 +213,7 @@
 ;;;
 
 (add-hook 'javascript-mode-hook
-	   (lambda()
+	   (lambda ()
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
 
@@ -225,7 +225,7 @@
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-hook 'js2-mode-hook
-	   (lambda()
+	   (lambda ()
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
 
@@ -340,32 +340,28 @@
 ;;;
 
 (autoload 'gtags-mode "gtags" nil t)
-(setq gtags-mode-hook
-      '(lambda ()
-	 (local-set-key "\M-." 'gtags-find-tag)
-	 (local-set-key "\C-u\M-." 'gtags-pop-stack)
-	 (local-set-key "\C-u\M-r" 'gtags-find-rtag)
-	 (local-set-key "\C-u\M-s" 'gtags-find-symbol)))
+(add-hook 'gtags-mode-hook
+	  (lambda ()
+	    (local-set-key "\M-." 'gtags-find-tag)
+	    (local-set-key "\C-u\M-." 'gtags-pop-stack)
+	    (local-set-key "\C-u\M-r" 'gtags-find-rtag)
+	    (local-set-key "\C-u\M-s" 'gtags-find-symbol)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; mmm-mode settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "/mmm")))
+(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "mmm")))
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
 (set-face-background 'mmm-default-submode-face nil)
 (mmm-add-classes
  '((embedded-css
-    :submode css-mode
-    :front "<style[^>]*>"
-    :back  "</style>")))
+    :submode css-mode :front "<style[^>]*>" :back  "</style>")))
 (mmm-add-classes
  '((embedded-js
-    :submode javascript-mode
-    :front "<script[^>]*>"
-    :back  "</script>")))
+    :submode javascript-mode :front "<script[^>]*>" :back "</script>")))
 (mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-css)
 (mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-js)
 
@@ -444,8 +440,7 @@
 ;;; vc-svn settings
 ;;;
 
-(setq process-coding-system-alist
-      (cons '("svn" . utf-8) process-coding-system-alist))
+(add-to-list 'process-coding-system-alist '("svn" . utf-8))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -453,10 +448,10 @@
 ;;;
 
 (require 'psvn)
-(setq svn-status-svn-environment-var-list '("LC_MESSAGES=C"
-					    "LC_ALL="
-					    "LANG=ja_JP.UTF-8"
-					    "LC_TIME=C"))
+(add-to-list 'svn-status-svn-environment-var-list '("LC_MESSAGES=C"
+						    "LC_ALL="
+						    "LANG=ja_JP.UTF-8"
+						    "LC_TIME=C"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -492,8 +487,7 @@
 	       "# coding: utf-8-unix\n"
 	       "# End:\n")))
 (defun howm-save-and-kill-buffer ()
-"kill screen when exiting from howm-mode
-"
+"kill screen when exiting from howm-mode"
   (interactive)
   (let* ((file-name (buffer-file-name)))
     (when (and file-name (string-match "\\.howm" file-name))
@@ -507,9 +501,9 @@
           (message "(Deleted %s)" (file-name-nondirectory file-name))))
       (kill-buffer nil))))
 (add-hook 'howm-mode-hook
-	  '(lambda ()
-	     (define-key howm-mode-map "\C-c\C-q" 'howm-save-and-kill-buffer)
-	     (start-process "howm-svn-update" "*Messages*" "svn" "update"
+	  (lambda ()
+	    (define-key howm-mode-map "\C-c\C-q" 'howm-save-and-kill-buffer)
+	    (start-process "howm-svn-update" "*Messages*" "svn" "update"
 			   (expand-file-name howm-directory))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -542,7 +536,7 @@
 
 (require 'yasnippet)
 (yas/initialize)
-(yas/load-directory (expand-file-name (concat user-emacs-directory "/snippets")))
+(yas/load-directory (expand-file-name (concat user-emacs-directory "snippets")))
 (require 'dropdown-list)
 (setq yas/prompt-functions '(yas/dropdown-prompt))
 (defun yas/org-very-safe-expand ()
@@ -596,12 +590,13 @@
 (setq simple-hatena-bin (expand-file-name (concat user-emacs-directory "hw.pl")))
 (setq simple-hatena-root howm-directory)
 (add-hook 'simple-hatena-mode-hook
-	  '(lambda nil
-	     (call-process "svn" nil "*Messages*" nil "update"
-			   (expand-file-name (concat howm-directory "nanasess/diary")))))
+	  (lambda ()
+	    (call-process "svn" nil "*Messages*" nil "update"
+			  (expand-file-name (concat howm-directory
+						    "nanasess/diary")))))
 (add-hook 'simple-hatena-after-submit-hook
-	  '(lambda nil
-	     (call-process "svn" nil "*Messages*" nil "ci" "-m" " " ".")))
+	  (lambda ()
+	    (call-process "svn" nil "*Messages*" nil "ci" "-m" " " ".")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -734,7 +729,7 @@
 ;;;
 
 (require 'auto-install)
-(setq auto-install-directory "~/.emacs.d/")
+(setq auto-install-directory user-emacs-directory)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -787,7 +782,7 @@ It is automatically generated by `anything-migrate-sources'."
    "*my-anything*"))
 (global-set-key (kbd "C-;") 'my-anything)
 (global-set-key (kbd "C-x C-;") 'anything-call-source)
-(setq grep-command "grep -nHr -e ")
+(setq grep-command "grep -nHr -e ./")
 (require 'grep-edit)
 (define-key anything-map (kbd "C-v") 'anything-next-source)
 (define-key anything-map (kbd "M-v") 'anything-previous-source)
@@ -796,9 +791,9 @@ It is automatically generated by `anything-migrate-sources'."
 (global-set-key (kbd "M-m") 'anything-c-moccur-occur-by-moccur)
 (global-set-key (kbd "C-M-m") 'anything-c-moccur-dmoccur)
 (add-hook 'dired-mode-hook
-	  '(lambda ()
-	     (local-set-key (kbd "O")
-			    'anything-c-moccur-dired-do-moccur-by-moccur)))
+	  (lambda ()
+	    (local-set-key (kbd "O")
+			   'anything-c-moccur-dired-do-moccur-by-moccur)))
 (global-set-key (kbd "M-s") 'anything-c-moccur-isearch-forward)
 (global-set-key (kbd "M-r") 'anything-c-moccur-isearch-backward)
 
