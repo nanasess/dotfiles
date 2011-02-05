@@ -285,7 +285,6 @@
    ("prefix m" . e2wm:pst-window-select-main-command)
    ) e2wm:prefix-key)
 
-
 ;;; dashboard
 (setq e2wm:c-dashboard-plugins
       '((open :plugin-args (:command mew :buffer "%inbox"))
@@ -384,28 +383,15 @@
 (setq org-return-follows-link t)
 (org-remember-insinuate)
 (setq org-directory "~/howm/")
-(setq org-mobile-directory "~/Dropbox/MobileOrg/")
-(setq org-mobile-inbox-for-pull (concat org-directory "flagged.org"))
-(setq org-default-notes-file (concat org-directory "agenda.org"))
-(setq org-remember-templates
-      '(("Todo" ?t "** TODO %?\n   %i\n   %a\n   %t" nil "Inbox")
-	("Bug" ?b "** TODO %?   :bug:\n   %i\n   %a\n   %t" nil "Inbox")
-	("Idea" ?i "** %?\n   %i\n   %a\n   %t" nil "New Ideas")))
-(add-hook 'org-remember-mode-hook
-	  (lambda ()
-	    (local-set-key "\C-c\C-f" 'org-remember-finalize)))
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
 (org-defkey org-mode-map "\C-j" 'skk-mode)
 (setq org-export-latex-classes
       '(("jarticle"
-	"\\documentclass[11t,a4j,oneside]{jarticle}"
-	("\\section{%s}" . "\\section*{%s}")
-	("\\subsection{%s}" . "\\subsection*{%s}")
-	("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-	("\\paragraph{%s}" . "\\paragraph*{%s}")
-	("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+	 "\\documentclass[11t,a4j,oneside]{jarticle}"
+	 ("\\section{%s}" . "\\section*{%s}")
+	 ("\\subsection{%s}" . "\\subsection*{%s}")
+	 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+	 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+	 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 (setq org-latex-to-pdf-process
       '("org-latex-to-pdf.sh %s" "org-latex-to-pdf.sh %s"))
 (set-face-bold-p 'org-document-title nil)
@@ -744,20 +730,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; install-elisp settings
-;;;
-
-(require 'install-elisp)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; auto-install settings
 ;;;
 
 (require 'auto-install)
 (setq auto-install-directory "~/.emacs.d/")
-(auto-install-update-emacswiki-package-name t)
-(auto-install-compatibility-setup)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -772,7 +749,7 @@
 ;;;
 ;;; emacs-init-check settings
 ;;;
-;;; (install-elisp-from-emacswiki "emacs-init-check.el")
+;;; (auto-install-from-emacswiki "emacs-init-check.el")
 ;;;
 
 (require 'emacs-init-check)
@@ -936,4 +913,3 @@ which fetch older tweets on reverse-mode."
    (lambda (proc stat)
      (if (zerop (process-exit-status proc))
 	 (message "locate.updatedb...done")))))
-
