@@ -11,8 +11,8 @@
 ;;;
 
 (defun init-environment (sys-type)
-  (add-to-list 'load-path (expand-file-name
-			   (concat user-emacs-directory "/" sys-type)))
+  (add-to-list 'load-path
+	       (expand-file-name (concat user-emacs-directory sys-type)))
   (load (concat sys-type "-init")))
 
 (cond ((eq system-type 'darwin) (init-environment "darwin")
@@ -448,10 +448,9 @@
 ;;;
 
 (require 'psvn)
-(add-to-list 'svn-status-svn-environment-var-list '("LC_MESSAGES=C"
-						    "LC_ALL="
-						    "LANG=ja_JP.UTF-8"
-						    "LC_TIME=C"))
+(setq svn-status-svn-environment-var-list
+      (append '("LANG=ja_JP.UTF-8" "LC_TIME=C")
+	      svn-status-svn-environment-var-list))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -473,7 +472,7 @@
 (setq howm-view-title-header "#+TITLE:")
 (setq howm-view-use-grep nil)
 (add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "/howm")))
+(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "howm")))
 (require 'howm)
 (setq howm-template
       (concat howm-view-title-header
