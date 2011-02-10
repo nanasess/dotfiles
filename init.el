@@ -320,7 +320,7 @@
 	((wide-size-frame))))
 
 (global-set-key (kbd "M-+") 'e2wm:start-management)
-(global-set-key "\C-zs" 'toggle-size-frame)
+(global-set-key "\C-z\C-z" 'toggle-size-frame)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
