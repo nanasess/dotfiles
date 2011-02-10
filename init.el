@@ -56,6 +56,13 @@
 (setq skk-init-file (concat user-emacs-directory ".skk"))
 (setq skk-preload t)
 (setq skk-auto-save-interval 30)
+(defun toggle-skk-kutouten ()
+  "toggle skk-kutoten-type."
+  (interactive)
+  (cond ((eq skk-kutouten-type 'en)
+	 (setq skk-kutouten-type 'jp))
+	((setq skk-kutouten-type 'en)))
+  (message (format "skk-kutoten-type on set to the %s." skk-kutouten-type)))
 (defun skk-auto-save ()
   "auto save of the skk-jisyo and skk-study."
   (skk-save-jisyo)
