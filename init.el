@@ -7,22 +7,15 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; initial functions
+;;; initial load files
 ;;;
 
-(defun init-environment (sys-type)
+(dolist (sys-type (list (symbol-name system-type)
+			(symbol-name window-system)))
+
   (add-to-list 'load-path
 	       (expand-file-name (concat user-emacs-directory sys-type)))
-  (load (concat sys-type "-init")))
-
-(cond ((eq system-type 'darwin) (init-environment "darwin")
-       (cond ((eq window-system 'mac) (init-environment "mac"))
-	     ((eq window-system 'ns) (init-environment "ns"))))
-      ((eq system-type 'berkeley-unix) (init-environment "berkeley-unix")
-       (cond ((eq window-system 'x) (init-environment "x"))))
-      ((eq system-type 'usg-unix-v) (init-environment "usg-unix-v"))
-      ((eq window-system 'w32) (init-environment "win32")))
-
+  (load "init" t))
 (add-to-list 'load-path (expand-file-name user-emacs-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -377,10 +370,10 @@
 ;;; org-mode settings
 ;;;
 
-(require 'org-install)
-(require 'ob-sh)
-(require 'ob-css)
-(require 'ob-sql)
+;; (require 'org-install)
+;; (require 'ob-sh)
+;; (require 'ob-css)
+;; (require 'ob-sql)
 (setq org-startup-truncated nil)
 (setq org-startup-folded nil)
 (setq org-return-follows-link t)
@@ -397,8 +390,8 @@
 	 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 (setq org-latex-to-pdf-process
       '("org-latex-to-pdf.sh %s" "org-latex-to-pdf.sh %s"))
-(set-face-bold-p 'org-document-title nil)
-(set-face-attribute 'org-document-title nil :height 1.0)
+;; (set-face-bold-p 'org-document-title nil)
+;; (set-face-attribute 'org-document-title nil :height 1.0)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
