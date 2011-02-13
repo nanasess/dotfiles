@@ -724,6 +724,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; pdf-preview settings
+;;;
+;;; (auto-install-from-url "http://homepage.mac.com/matsuan_tamachan/emacs/pdf-preview.el")
+;;;
+
+(require 'pdf-preview)
+(setq ps-print-header nil)
+(setq pdf-preview-preview-command "open")
+(setq mew-print-function 'pdf-preview-buffer-with-faces)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; auto-install settings
 ;;;
 
