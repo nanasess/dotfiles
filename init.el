@@ -132,6 +132,7 @@
 ;;;
 
 (set-background-color "ivory")
+(set-face-foreground 'font-lock-keyword-face "#7f007f")
 
 (defface hlline-face
   '((((class color) (background light))
