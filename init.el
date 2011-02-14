@@ -80,8 +80,8 @@
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-j") 'skk-mode)
 (global-set-key (kbd "C-t") 'other-window)
-(global-set-key "\C-z\C-u" 'other-frame)
-(global-set-key "\C-z\C-j" 'toggle-skk-kutouten)
+(global-set-key (kbd "C-z C-u") 'other-frame)
+(global-set-key (kbd "C-z C-j") 'toggle-skk-kutouten)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -182,8 +182,8 @@
 (setq dired-bind-jump nil)
 (add-hook 'dired-mode-hook
 	  (lambda ()
-	    (local-set-key "\C-t" 'other-window)
-	    (local-set-key "r" 'wdired-change-to-wdired-mode)))
+	    (local-set-key (kbd "C-t") 'other-window)
+	    (local-set-key (kbd "r") 'wdired-change-to-wdired-mode)))
 (add-hook 'dired-load-hook
 	  (lambda ()
 	    (load "dired-x")))
@@ -321,7 +321,7 @@
 	((wide-size-frame))))
 
 (global-set-key (kbd "M-+") 'e2wm:start-management)
-(global-set-key "\C-z\C-z" 'toggle-size-frame)
+(global-set-key (kbd "C-z C-z") 'toggle-size-frame)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -343,10 +343,10 @@
 (autoload 'gtags-mode "gtags" nil t)
 (add-hook 'gtags-mode-hook
 	  (lambda ()
-	    (local-set-key "\M-." 'gtags-find-tag)
-	    (local-set-key "\C-u\M-." 'gtags-pop-stack)
-	    (local-set-key "\C-u\M-r" 'gtags-find-rtag)
-	    (local-set-key "\C-u\M-s" 'gtags-find-symbol)))
+	    (local-set-key (kbd "M-.") 'gtags-find-tag)
+	    (local-set-key (kbd "C-u M-.") 'gtags-pop-stack)
+	    (local-set-key (kbd "C-u M-r") 'gtags-find-rtag)
+	    (local-set-key (kbd "C-u M-s") 'gtags-find-symbol)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -380,7 +380,7 @@
 (setq org-return-follows-link t)
 (org-remember-insinuate)
 (setq org-directory "~/howm/")
-(org-defkey org-mode-map "\C-j" 'skk-mode)
+(org-defkey org-mode-map (kbd "C-j") 'skk-mode)
 (setq org-export-latex-classes
       '(("jarticle"
 	 "\\documentclass[11t,a4j,oneside]{jarticle}"
@@ -503,7 +503,7 @@
       (kill-buffer nil))))
 (add-hook 'howm-mode-hook
 	  (lambda ()
-	    (define-key howm-mode-map "\C-c\C-q" 'howm-save-and-kill-buffer)
+	    (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)
 	    (start-process "howm-svn-update" "*Messages*" "svn" "update"
 			   (expand-file-name howm-directory))))
 
