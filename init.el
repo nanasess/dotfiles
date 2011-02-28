@@ -906,6 +906,17 @@ which fetch older tweets on reverse-mode."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; id-manager settings
+;;;
+;;; (auto-install-from-url "https://github.com/kiwanami/emacs-id-manager/raw/master/id-manager.el")
+;;;
+
+(autoload 'id-manager "id-manager" nil t)
+(setenv "GPG_AGENT_INFO" nil)
+(setq idm-database-file "~/Dropbox/.idm-db.gpg")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mkpasswd settings
 ;;;
 
