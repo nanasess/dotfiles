@@ -24,21 +24,14 @@
 
 ;;; Code:
 
-(defvar mkpasswd-strings "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890."
-  "Source of the password strigs.")
-(defvar mkpasswd-length 10
-  "Password length.")
+(defvar mkpasswd-command "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
 
 (defun mkpasswd ()
   "make password strings."
   (interactive)
-  (let ((str_pass "")
-	(rand_pos 0))
-    (random t)
-    (while (< (length str_pass) mkpasswd-length)
-      (setq rand_pos (random (length mkpasswd-strings)))
-      (setq str_pass (concat str_pass
-			     (substring mkpasswd-strings
-					rand_pos (+ rand_pos 1)))))
-    (insert str_pass)
-    (kill-new str_pass)))
+  (let ((buf (get-buffer-create " *mkpasswd*")) ret)
+    (call-process-shell-command mkpasswd-command nil buf nil)
+    (with-current-buffer buf (setq ret (buffer-string)))
+    (kill-buffer buf)
+    (insert ret)
+    (kill-new ret)))
