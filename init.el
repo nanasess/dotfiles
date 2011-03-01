@@ -914,6 +914,7 @@ which fetch older tweets on reverse-mode."
 (autoload 'id-manager "id-manager" nil t)
 (setenv "GPG_AGENT_INFO" nil)
 (setq idm-database-file "~/Dropbox/.idm-db.gpg")
+(setq idm-copy-action 'kill-new)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
