@@ -906,6 +906,14 @@ which fetch older tweets on reverse-mode."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; mkpasswd settings
+;;;
+
+(defvar mkpasswd-command "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
+(autoload 'mkpasswd "mkpasswd" nil t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; id-manager settings
 ;;;
 ;;; (auto-install-from-url "https://github.com/kiwanami/emacs-id-manager/raw/master/id-manager.el")
@@ -916,13 +924,6 @@ which fetch older tweets on reverse-mode."
 (setq idm-database-file "~/Dropbox/.idm-db.gpg")
 (setq idm-copy-action 'kill-new)
 (setq idm-gen-password-cmd mkpasswd-command)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; mkpasswd settings
-;;;
-
-(autoload 'mkpasswd "mkpasswd" nil t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

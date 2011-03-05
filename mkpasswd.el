@@ -24,8 +24,6 @@
 
 ;;; Code:
 
-(defvar mkpasswd-command "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
-
 (defun mkpasswd ()
   "make password strings."
   (interactive)
