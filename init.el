@@ -195,9 +195,9 @@
 ;;;
 
 (add-hook 'css-mode-hook
-	   (lambda ()
-	     (setq tab-width 4)
-	     (setq indent-tabs-mode nil)))
+	  (lambda ()
+	    (setq tab-width 4)
+	    (setq indent-tabs-mode nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -205,9 +205,9 @@
 ;;;
 
 (add-hook 'java-mode-hook
-	   (lambda ()
-	     (setq tab-width 4)
-	     (setq indent-tabs-mode nil)))
+	  (lambda ()
+	    (setq tab-width 4)
+	    (setq indent-tabs-mode nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -215,9 +215,9 @@
 ;;;
 
 (add-hook 'javascript-mode-hook
-	   (lambda ()
-	     (setq tab-width 4)
-	     (setq indent-tabs-mode nil)))
+	  (lambda ()
+	    (setq tab-width 4)
+	    (setq indent-tabs-mode nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -227,9 +227,9 @@
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-hook 'js2-mode-hook
-	   (lambda ()
-	     (setq tab-width 4)
-	     (setq indent-tabs-mode nil)))
+	  (lambda ()
+	    (setq tab-width 4)
+	    (setq indent-tabs-mode nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -301,7 +301,7 @@
 
 (defun frame-size-greater-p ()
   (< (+ (/ (- wide-frame-width normal-frame-width) 2) normal-frame-width)
-      (frame-width (selected-frame))))
+     (frame-width (selected-frame))))
 
 (defun normal-size-frame ()
   "Resize to normal size frame."
@@ -480,16 +480,16 @@
 (setq howm-template
       (concat howm-view-title-header
 	      (concat
-	      " %title%cursor\n"
-	      "#+DATE: %date\n\n"
-	      "%file\n\n")
+	       " %title%cursor\n"
+	       "#+DATE: %date\n\n"
+	       "%file\n\n")
 	      (concat
 	       "#+LATEX_CLASS: jarticle\n"
 	       "# Local Variables:\n"
 	       "# coding: utf-8-unix\n"
 	       "# End:\n")))
 (defun howm-save-and-kill-buffer ()
-"kill screen when exiting from howm-mode"
+  "kill screen when exiting from howm-mode"
   (interactive)
   (let* ((file-name (buffer-file-name)))
     (when (and file-name (string-match "\\.howm" file-name))
@@ -694,11 +694,11 @@
      (cfw:install-howm-schedules)
      (define-key howm-mode-map (kbd "M-C") 'cfw:open-howm-calendar)
      (define-key cfw:howm-schedule-map (kbd "i") 'my-cfw-open-schedule-buffer)
-	    (define-key cfw:howm-schedule-inline-keymap (kbd "i")
-	      'my-cfw-open-schedule-buffer)))
+     (define-key cfw:howm-schedule-inline-keymap (kbd "i")
+       'my-cfw-open-schedule-buffer)))
 
 (setq cfw:howm-schedule-summary-transformer
-  (lambda (line) (split-string (replace-regexp-in-string "^[^@!\+]+[@!\+] " "" line) " / ")))
+      (lambda (line) (split-string (replace-regexp-in-string "^[^@!\+]+[@!\+] " "" line) " / ")))
 
 (setq calendar-month-name-array
       ["January(01)" "February(02)" "March(03)" "April(04)" "May(05)" "June(06)"
