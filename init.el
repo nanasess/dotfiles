@@ -371,11 +371,11 @@
 ;;;
 ;;; org-mode settings
 ;;;
-
-;; (require 'org-install)
-;; (require 'ob-sh)
-;; (require 'ob-css)
-;; (require 'ob-sql)
+(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "org")))
+(require 'org-install)
+(require 'ob-sh)
+(require 'ob-css)
+(require 'ob-sql)
 (setq org-startup-truncated nil)
 (setq org-startup-folded nil)
 (setq org-return-follows-link t)
@@ -391,9 +391,9 @@
 	 ("\\paragraph{%s}" . "\\paragraph*{%s}")
 	 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 (setq org-latex-to-pdf-process
-      '("org-latex-to-pdf.sh %s" "org-latex-to-pdf.sh %s"))
-;; (set-face-bold-p 'org-document-title nil)
-;; (set-face-attribute 'org-document-title nil :height 1.0)
+      '("org-latex-to-pdf.sh %f" "org-latex-to-pdf.sh %f"))
+(set-face-bold-p 'org-document-title nil)
+(set-face-attribute 'org-document-title nil :height 1.0)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
