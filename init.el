@@ -357,15 +357,30 @@
 (add-to-list 'load-path (expand-file-name (concat user-emacs-directory "mmm")))
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
-(set-face-background 'mmm-default-submode-face nil)
+(set-face-background 'mmm-default-submode-face "ivory2")
+(setq mmm-font-lock-available-p t)
 (mmm-add-classes
  '((embedded-css
     :submode css-mode :front "<style[^>]*>" :back  "</style>")))
 (mmm-add-classes
  '((embedded-js
     :submode javascript-mode :front "<script[^>]*>" :back "</script>")))
+(mmm-add-group
+ 'php-others
+ '((php-heredoc
+    :include-front t
+    :include-back t
+    :front-offset 0
+    :back-offset 0
+    :front "<<<\\s-*[\"\']?\\([a-zA-Z_][a-zA-Z0-9_]+\\)"
+    :back "^\\s-*~1;$"
+    :save-matches 1
+    :submode fundamental-mode
+    :face mmm-code-submode-face
+    :delimiter-mode nil)))
 (mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-css)
 (mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-js)
+(mmm-add-mode-ext-class nil "\\.php\\'" 'php-others)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
