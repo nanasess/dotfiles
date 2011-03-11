@@ -375,7 +375,7 @@
     :front "<<<\\s-*[\"\']?\\([a-zA-Z_][a-zA-Z0-9_]+\\)"
     :back "^\\s-*~1;$"
     :save-matches 1
-    :submode fundamental-mode
+    :submode sql-mode
     :face mmm-code-submode-face
     :delimiter-mode nil)))
 (mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-css)
@@ -576,6 +576,7 @@
 (ac-config-default)
 (setq ac-auto-show-menu 0.8)
 (setq ac-use-menu-map t)
+(define-key ac-completing-map [tab] 'ac-complete)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
