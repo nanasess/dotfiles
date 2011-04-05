@@ -398,12 +398,10 @@
 (setq org-directory "~/Dropbox/howm/")
 (setq org-default-notes-file (concat org-directory "agenda.howm"))
 (setq org-capture-templates
-      '(("l" "年/月/日のエントリを作成する1" entry
+      '(("l" "年/月/日のエントリを作成する" entry
 	 (file+datetree org-default-notes-file))
-	("m" "年/月/日のエントリを作成する2" item
-	 (file+datetree org-default-notes-file))
-	("o" "年/月/日のエントリを作成する prepend" entry
-	 (file+datetree org-default-notes-file) "* a" :prepend t)))
+	("m" "年/月/日のリストを作成する" item
+	 (file+datetree org-default-notes-file))))
 (global-set-key (kbd "C-z C-c") 'org-capture)
 (org-defkey org-mode-map (kbd "C-j") 'skk-mode)
 (setq org-export-latex-classes
