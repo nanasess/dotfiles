@@ -1,3 +1,12 @@
+ ;;; 標準フォント
+(set-default-font "Consolas 11")
+(set-fontset-font (frame-parameter nil 'font)
+                   'japanese-jisx0208
+                   '("ＭＳ ゴシック" . "unicode-bmp"))
+(set-fontset-font (frame-parameter nil 'font)
+                   'katakana-jisx0201
+                   '("ＭＳ ゴシック" . "unicode-bmp"))
+
 ;;----------------------- window settings ---------------------------
 (if (boundp 'window-system)
     (setq initial-frame-alist
@@ -19,6 +28,4 @@
 ;(require 'mw32script)
 ;(mw32script-init)
 
-;;; fixed-width-fontset
-(fixed-width-set-fontset "msgothic" 14)
 (provide 'win32-init)
