@@ -11,6 +11,5 @@
 (define-key w3m-mode-map (kbd "C-t a") nil)
 (define-key w3m-mode-map (kbd "C-t") nil)
 
-;; (auto-install-from-url "http://navi2ch.cvs.sourceforge.net/viewvc/navi2ch/navi2ch/contrib/izonmoji-mode.el")
-(require 'izonmoji-mode)
-(add-hook 'mew-message-mode-hook 'izonmoji-mode-on)
+;; izonmoji-mode settings
+(add-hook 'w3m-mode-hook 'izonmoji-mode-on)

@@ -42,6 +42,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; izonmoji-mode settings
+;;;
+;;; (auto-install-from-url "http://navi2ch.cvs.sourceforge.net/viewvc/navi2ch/navi2ch/contrib/izonmoji-mode.el")
+;;;
+(require 'izonmoji-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; SKK settings
 ;;;
 
