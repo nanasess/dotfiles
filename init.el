@@ -1,7 +1,7 @@
 ;;;; init.el --- Emacs initial file.
 
 ;; Author: Kentaro Ohkouchi  <nanasess@fsm.ne.jp>
-;; URL: https://launchpad.net/~nanasess/+junk/dot.emacs.d/
+;; URL: git://github.com/nanasess/dot.emacs.git
 
 ;;; Code:
 
