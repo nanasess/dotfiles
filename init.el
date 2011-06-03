@@ -590,6 +590,8 @@
 (require 'zencoding-mode)
 (add-hook 'nxml-mode-hook 'zencoding-mode)
 (define-key zencoding-mode-keymap (kbd "<C-return>") 'zencoding-expand-yas)
+(define-key zencoding-mode-keymap (kbd "<M-return>") 'zencoding-expand-line)
+(define-key zencoding-mode-keymap (kbd "C-j") 'skk-kakutei)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
