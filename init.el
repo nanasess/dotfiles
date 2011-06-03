@@ -583,6 +583,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; zencoding settings
+;;;
+
+(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "zencoding")))
+(require 'zencoding-mode)
+(add-hook 'nxml-mode-hook 'zencoding-mode)
+(define-key zencoding-mode-keymap (kbd "<C-return>") 'zencoding-expand-yas)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; auto-complete.el settings
 ;;;
 
