@@ -553,6 +553,7 @@
 	    (require 'php-completion)
 	    (php-completion-mode t)
 	    (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
+	    (define-key c-mode-base-map "*" nil)
 	    (when (require 'auto-complete nil t)
 	      (make-variable-buffer-local 'ac-sources)
 	      (add-to-list 'ac-sources

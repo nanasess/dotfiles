@@ -757,6 +757,7 @@ buffer."
                  . (lambda (record) 
                      (message (concat "Copied the password for the account ID: "
                                       (idm-record-account-id record)))
+		     (popwin:messages)
                      (funcall idm-copy-action (idm-record-password record))))
                 ("Show ID / Password" 
                  . (lambda (record) 
