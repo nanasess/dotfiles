@@ -40,13 +40,10 @@
 
 (require 'japanese-init)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; izonmoji-mode settings
-;;;
-;;; (auto-install-from-url "http://navi2ch.cvs.sourceforge.net/viewvc/navi2ch/navi2ch/contrib/izonmoji-mode.el")
-;;;
-(require 'izonmoji-mode)
+;;  (auto-install-from-url "http://nijino.homelinux.net/emacs/cp5022x.el")
+(require 'cp5022x)
+(define-coding-system-alias 'iso-2022-jp 'cp50220)
+(define-coding-system-alias 'euc-jp 'cp51932)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -555,8 +552,6 @@
 	    (require 'php-completion)
 	    (php-completion-mode t)
 	    (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
-	    (define-key c-mode-base-map "*" nil)
-	    (define-key c-mode-base-map "/" nil)
 	    (when (require 'auto-complete nil t)
 	      (make-variable-buffer-local 'ac-sources)
 	      (add-to-list 'ac-sources
