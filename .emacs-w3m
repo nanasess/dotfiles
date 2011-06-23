@@ -10,6 +10,3 @@
 (define-key w3m-mode-map (kbd "C-t R") nil)
 (define-key w3m-mode-map (kbd "C-t a") nil)
 (define-key w3m-mode-map (kbd "C-t") nil)
-
-;; izonmoji-mode settings
-(add-hook 'w3m-mode-hook 'izonmoji-mode-on)
