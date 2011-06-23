@@ -74,6 +74,7 @@
 
 (line-number-mode 1)
 (column-number-mode 1)
+(size-indication-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -198,33 +199,45 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; Indent settings
+;;;
+
+(defun basic-indent ()
+  (linum-mode 1)
+  (setq tab-width 4)
+  (setq indent-tabs-mode nil))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Emacs lisp settings
+;;;
+
+(add-hook 'emacs-lisp-mode-hook
+	  (lambda ()
+	    (linum-mode 1)
+	    (setq tab-width 8)
+	    (setq indent-tabs-mode t)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; CSS settings
 ;;;
 
-(add-hook 'css-mode-hook
-	  (lambda ()
-	    (setq tab-width 4)
-	    (setq indent-tabs-mode nil)))
+(add-hook 'css-mode-hook 'basic-indent)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Java settings
 ;;;
 
-(add-hook 'java-mode-hook
-	  (lambda ()
-	    (setq tab-width 4)
-	    (setq indent-tabs-mode nil)))
+(add-hook 'java-mode-hook 'basic-indent)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; JavaScript-mode settings
 ;;;
 
-(add-hook 'javascript-mode-hook
-	  (lambda ()
-	    (setq tab-width 4)
-	    (setq indent-tabs-mode nil)))
+(add-hook 'javascript-mode-hook 'basic-indent)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -233,10 +246,7 @@
 
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(add-hook 'js2-mode-hook
-	  (lambda ()
-	    (setq tab-width 4)
-	    (setq indent-tabs-mode nil)))
+(add-hook 'js2-mode-hook 'basic-indent)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -247,6 +257,7 @@
 	     '("\\.\\(xml\\|xsl\\|rng\\|html\\|tpl\\)\\'" . nxml-mode))
 (add-hook 'nxml-mode-hook
 	  (lambda ()
+	    (linum-mode 1)
 	    (setq auto-fill-mode -1)
 	    (setq nxml-slash-auto-complete-flag t)
 	    (setq nxml-child-indent 2)
@@ -260,6 +271,7 @@
 ;;;
 
 (setq sql-product 'postgres)
+(add-hook 'sql-mode-hook 'basic-indent)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -549,6 +561,7 @@
 (add-hook 'php-mode-hook
 	  (lambda ()
 	    (gtags-mode 1)
+	    (linum-mode 1)
 	    (require 'php-completion)
 	    (php-completion-mode t)
 	    (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
