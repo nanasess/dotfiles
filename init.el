@@ -375,35 +375,34 @@
 (setq mmm-global-mode 'maybe)
 (set-face-background 'mmm-default-submode-face "ivory2")
 (setq mmm-font-lock-available-p t)
+(require 'mmm-sample)
+(setq mmm-here-doc-mode-alist
+      (append (list '("__EOF__" . sql-mode)
+		    '("__EOS__" . sql-mode))
+	      mmm-here-doc-mode-alist))
 (mmm-add-classes
- '((embedded-css
-    :submode css-mode :front "<style[^>]*>" :back  "</style>")))
-(mmm-add-classes
- '((embedded-js
-    :submode javascript-mode :front "<script[^>]*>" :back "</script>")))
-(mmm-add-group
- 'php-others
  '((php-heredoc
-    :include-front t
-    :include-back t
-    :front-offset 0
-    :back-offset 0
     :front "<<<\\s-*[\"\']?\\([a-zA-Z_][a-zA-Z0-9_]+\\)"
+    :front-offset (end-of-line 1)
     :back "^\\s-*~1;$"
     :save-matches 1
-    :submode sql-mode
     :face mmm-code-submode-face
-    :delimiter-mode nil)))
+    :delimiter-mode nil
+    :match-submode mmm-here-doc-get-mode
+    :insert ((?d here-doc "Here-document Name: " @ "<<" str _ "\n"
+                 @ "\n" @ str "\n" @)))))
+
 (mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-css)
-(mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-js)
-;; (mmm-add-mode-ext-class nil "\\.php\\'" 'php-others)
+(mmm-add-mode-ext-class nil "\\.tpl?\\'" 'html-js)
+(mmm-add-mode-ext-class nil "\\.php\\'" 'php-heredoc)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; org-mode settings
 ;;;
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "org")))
-(require 'org-install)
+(when (<= emacs-major-version 23)
+  (add-to-list 'load-path (expand-file-name (concat user-emacs-directory "org")))
+  (require 'org-install))
 (require 'ob-sh)
 (require 'ob-css)
 (require 'ob-sql)

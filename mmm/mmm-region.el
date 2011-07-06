@@ -416,7 +416,9 @@ with point at the start of the new region."
 	(overlay-put back-ovl 'match match-back)))
     ;; Update everything and run all the hooks
     (mmm-save-all
-     (goto-char (overlay-start region-ovl))
+     (if (overlay-start region-ovl)
+         ;; This happens if a zero-width region is immediately evaporated
+         (goto-char (overlay-start region-ovl)))
      (mmm-set-current-submode submode)
      (mmm-set-local-variables submode)
      (mmm-run-submode-hook submode)
@@ -523,7 +525,8 @@ is non-nil, don't quit if the info is already there."
                     ;; Code copied from font-lock.el to detect when font-lock
                     ;; should be on via global-font-lock-mode.
                     (and (or font-lock-defaults
-                             (assq major-mode font-lock-defaults)
+                             (and (boundp 'font-lock-defaults-alist)
+                                  (assq major-mode font-lock-defaults-alist))
                              (assq major-mode font-lock-keywords-alist))
                          (or (eq font-lock-global-modes t)
                              (if (eq (car-safe font-lock-global-modes) 'not)
@@ -586,7 +589,8 @@ different keymaps, syntax tables, local variables, etc. for submodes."
       (ignore-errors (funcall func)))))
 
 (defun mmm-add-hooks ()
-  ;; (make-local-hook 'post-command-hook)
+  (if (featurep 'xemacs)
+      (make-local-hook 'post-command-hook))
   (add-hook 'post-command-hook 'mmm-update-submode-region nil 'local))
 
 (defun mmm-remove-hooks ()
