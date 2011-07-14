@@ -1,7 +1,7 @@
 ;;; howm-mkmenu.el --- Wiki-like note-taking tool
-;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010
+;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-mkmenu.el,v 1.8 2010-05-05 13:18:40 hira Exp $
+;;; $Id: howm-mkmenu.el,v 1.10 2010-12-31 15:07:59 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@
 (defvar howm-mkmenu-rules
   '(
     ;; (<var> <src> [<src-coding> <dest-coding>]) ==> <var>.el
-    (howm-menu-en "en/0000-00-00-000000.howm")
-    (howm-menu-ja "ja/0000-00-00-000000.howm" euc-jp iso-2022-7bit)
+    (howm-menu-en "en/0000-00-00-000000.txt")
+    (howm-menu-ja "ja/0000-00-00-000000.txt" euc-jp iso-2022-7bit)
     ))
 
 (put 'howm-mkmenu-insert 'lisp-indent-hook 0)

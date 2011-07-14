@@ -499,6 +499,7 @@
 
 (setq howm-menu-lang 'ja)
 (setq howm-directory org-directory)
+(setq howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.howm")
 (setq howm-history-file (concat howm-directory ".howm-history"))
 (setq howm-keyword-file (concat howm-directory ".howm-keys"))
 (setq howm-menu-schedule-days-before 30)

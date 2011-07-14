@@ -1,7 +1,7 @@
 ;;; howm-vars.el --- Wiki-like note-taking tool
-;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010
+;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-vars.el,v 1.50 2010-05-05 13:18:39 hira Exp $
+;;; $Id: howm-vars.el,v 1.58 2011-03-10 12:58:57 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -35,14 +35,37 @@
        (defmacro ,risky
          (,gsymbol &rest ,gargs)
          ,docstring
-         (let ((command ',orig)
-               (symbol ,gsymbol)
-               (args ,gargs))
-           `(progn
-              ;; (,',orig ...) doesn't work.
-              ;; So I need to bind temporal variables outside nested backquote.
-              (,command ,symbol ,@args)
-              (put ',symbol 'risky-local-variable t)))))))
+         (howm-define-risky-command-body ',orig ,gsymbol ,gargs)))))
+
+;; [2011-01-13]
+;; I split this function from howm-define-risky-command for avoiding
+;; nested backquotes. Nested backquotes are byte-compiled to
+;; old-style-backquotes, that cause warnings when *.elc is loaded.
+(defun howm-define-risky-command-body (command symbol args)
+  `(progn
+     (,command ,symbol ,@args)
+     (put ',symbol 'risky-local-variable t)))
+
+;; ;; This code is byte-compiled to old-style-backquotes. Sigh...
+;; (defmacro howm-define-risky-command (risky orig)
+;;   "Define a macro RISKY which is risky-version of ORIG."
+;;   (let* ((gsymbol (howm-cl-gensym))
+;;          (gargs (howm-cl-gensym))
+;;          (docstring (format "Do `%s' and set risky-local-variable property."
+;;                             orig)))
+;;     `(progn
+;;        (put ',risky 'lisp-indent-hook 'defun)
+;;        (defmacro ,risky
+;;          (,gsymbol &rest ,gargs)
+;;          ,docstring
+;;          (let ((command ',orig)
+;;                (symbol ,gsymbol)
+;;                (args ,gargs))
+;;            `(progn
+;;               ;; (,',orig ...) doesn't work.
+;;               ;; So I need to bind temporal variables outside nested backquote.
+;;               (,command ,symbol ,@args)
+;;               (put ',symbol 'risky-local-variable t)))))))
 
 (howm-define-risky-command howm-defvar-risky defvar)
 (howm-define-risky-command howm-defcustom-risky defcustom)
@@ -98,6 +121,25 @@ Byte-compiler says \"not known to be defined\" even for codes like
   :group 'applications)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Compatibility
+
+(defvar howm-compatible-to-ver1dot3 nil
+  "If non-nil, compatible values to howm-1.3.* are used
+as default of some variables; put (setq howm-compatible-to-ver1dot3 t)
+*before* (require 'howm) if you like.")
+
+(defgroup howm-compatibility nil
+  "Compatibility to howm-1.3.*."
+  :group 'howm)
+
+(put 'howm-if-ver1dot3 'lisp-indent-hook 1)
+(defmacro howm-if-ver1dot3 (oldval def)
+  (destructuring-bind (command var val &rest args) def
+    `(,command ,var (if howm-compatible-to-ver1dot3 ,oldval ,val)
+               ,@args
+               :group 'howm-compatibility)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Files
 
 (defgroup howm-files nil
@@ -109,18 +151,19 @@ Byte-compiler says \"not known to be defined\" even for codes like
   :type 'directory
   :group 'howm-files)
 
-(defcustom howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.howm"
-  "Name of new file. See `format-time-string'.
-For example, set as \"%Y/%m/%Y-%m-%d-%H%M%S.howm\" to separate each entry
+(let ((default-format "%Y/%m/%Y-%m-%d-%H%M%S.txt"))
+  (howm-if-ver1dot3 "%Y/%m/%Y-%m-%d-%H%M%S.howm"
+    (defcustom howm-file-name-format default-format
+      "Name of new file. See `format-time-string'.
+For example, set as \"%Y/%m/%Y-%m-%d-%H%M%S.txt\" to separate each entry
 to its own file. You must guarantee (string< oldfile newfile)."
-  :type '(radio (const :tag "One file for one entry"
-                       "%Y/%m/%Y-%m-%d-%H%M%S.howm")
-                (const :tag "One file for one day" "%Y/%m/%Y-%m-%d.howm")
-                (const :tag "One file for one month" "%Y/%Y-%m.howm")
-                (const :tag "One file for one year" "%Y.howm")
-                string)
-  :group 'howm-efficiency
-  :group 'howm-files)
+      :type `(radio (const :tag "One file for one entry" ,default-format)
+                    (const :tag "One file for one day" "%Y/%m/%Y-%m-%d.txt")
+                    (const :tag "One file for one month" "%Y/%Y-%m.txt")
+                    (const :tag "One file for one year" "%Y.txt")
+                    string)
+      :group 'howm-efficiency
+      :group 'howm-files)))
 
 (howm-defcustom-risky howm-keyword-file "~/.howm-keys"
   "*Keywords (WikiNames) are stored in this file."
@@ -208,7 +251,7 @@ A file is excluded iff this regexp matches with all the relative paths."
 (howm-defcustom-risky howm-menu-file nil
   "*Specify menu file explicitly, or set as nil to search every time."
   :type '(radio (const :tag "Search every time" nil)
-                (const "0000-00-00-000000.howm")
+                (const "0000-00-00-000000.txt")
                 file)
   :group 'howm-files
   :group 'howm-efficiency
@@ -299,6 +342,13 @@ One of elements is chosen randomly every time."
   :type '(repeat string)
   :group 'howm-reminder)
 
+(howm-defcustom-risky howm-congrats-command nil
+  "*If non-nil, this command is executed when a reminder is finished.
+Example: (\"play\" \"~/sound/fanfare.wav\") for calling the command
+\"play ~/sound/fanfare.wav\"."
+  :type '(repeat string)
+  :group 'howm-reminder)
+
 (defcustom howm-reminder-cancel-string "cancel"
   "*This string is inserted automatically when a reminder is canceled."
   :type 'string
@@ -313,6 +363,52 @@ One of elements is chosen randomly every time."
   "*Non nil if direct manipulation on reminder list should cause kill-buffer.
 Be careful that you cannot undo the result of action-lock after kill-buffer."
   :type 'boolean
+  :group 'howm-reminder)
+
+(howm-if-ver1dot3 0
+  (defcustom howm-action-lock-forward-fuzziness 5
+    "*Maximum lines of permitted inconsistency for `howm-action-lock-forward'."
+    :type 'integer
+    :group 'howm-reminder))
+
+(let* ((sep "- - - - - - - - - - - - - - - - - - -")
+       (reminder-default `((-1 . ,sep) (0 . ,sep) (nil . ,sep)))
+       (todo-default `((0 . ,sep) (nil . ,sep))))
+  (howm-if-ver1dot3 nil
+    (defcustom howm-menu-reminder-separators reminder-default
+      "Assoc list to specify positions and strings of separators in reminder
+in menu. For each element, car is days from now, and cdr is separator string.
+If car is nil, it means the border between schedule and todo.
+This option is prepared for `howm-menu-reminder'."
+      :type `(radio (const :tag "No separators" nil)
+                    (const :tag "Default separators" ,reminder-default)
+                    (alist :key-type
+                           (radio number
+                                  (const :tag "Between schedule and todo" nil))
+                           :value-type string))
+      :group 'howm-reminder))
+  (defcustom howm-todo-separators nil
+    "Assoc list to specify positions and strings of separators in todo buffer.
+For each element, car is priority and cdr is separator string.
+If car is nil, it means the border between active and sleeping reminders."
+    :type `(radio (const :tag "No separators" nil)
+                  (const :tag "Default separators" ,todo-default)
+                  (alist :key-type number
+                         :value-type string))
+    :group 'howm-reminder))
+
+(howm-if-ver1dot3 nil
+  (defcustom howm-schedule-sort-by-time t
+    "Non nil if `howm-schedule-sort-converter' should consider time part."
+    :type 'boolean
+    :group 'howm-reminder))
+
+(defcustom howm-reminder-menu-types
+  (if howm-reminder-old-format "[-+~!@ ]" "[-+~!@]")
+  "*Regular expression of reminder types which are shown in menu."
+  :get #'howm-custom-reminder-get-types
+  :set #'howm-custom-reminder-set-types
+  :type (howm-custom-reminder-list-types)
   :group 'howm-reminder)
 
 ;;;
@@ -424,6 +520,12 @@ When it is nil, `howm-view-title-regexp' is used."
 (defcustom howm-list-recent-days 7
   "*This number of days are listed by `howm-list-recent'."
   :type 'integer
+  :group 'howm-list)
+
+(defcustom howm-list-buffers-exclude
+  '("*Messages*" ".howm-keys" ".howm-history")
+  "*List of excluded buffer names for `howm-list-buffers'."
+  :type '(repeat string)
   :group 'howm-list)
 
 ;;
@@ -656,9 +758,13 @@ When the value is elisp function, it is used instead of `howm-fake-grep'."
   "*Command name for fgrep.
 This variable is obsolete and may be removed in future.")
 (defvar howm-view-grep-default-option
-  (concat "-Hnr "
-          (mapconcat (lambda (d) (concat "--exclude-dir=" d))
-                     howm-excluded-dirs " ")))
+  (labels ((ed (d) (concat "--exclude-dir=" d)))
+    (let* ((has-ed (condition-case nil
+                       (eq 0 (call-process howm-view-grep-command nil nil nil
+                                           (ed "/") "--version"))
+                     (error nil)))
+           (opts (cons "-Hnr" (and has-ed (mapcar #'ed howm-excluded-dirs)))))
+      (mapconcat #'identity opts " "))))
 (howm-defcustom-risky howm-view-grep-option howm-view-grep-default-option
   "*Common grep option for howm."
   :type `(radio (const :tag "scan all files"
@@ -667,7 +773,6 @@ This variable is obsolete and may be removed in future.")
                        ,(concat howm-view-grep-default-option
                                 " --include=*.howm"))
                 string)
-  :group 'howm-efficiency
   :group 'howm-grep)
 (howm-defcustom-risky howm-view-grep-extended-option "-E"
   "*Grep option for extended regular expression."
@@ -696,6 +801,27 @@ If this is nil, pattern is received as command line argument."
   "*Maximum length of command line for call-process."
   :type 'integer
   :group 'howm-grep)
+
+(defcustom howm-process-coding-system nil
+  "*Default coding system for grep command in howm.
+If the value is a symbol, it is used for both read and write.
+If the value is a cons pair, its car and cdr are used for read and write,
+respectively.
+
+Example:
+ (setq howm-process-coding-system 'euc-japan-unix)
+ (setq howm-process-coding-system '(utf-8-unix . sjis-unix))"
+  :type '(radio (const :tag "Off" nil)
+                coding-system
+                (cons coding-system coding-system))
+  :group 'howm-grep)
+
+(howm-if-ver1dot3 nil
+  (defcustom howm-occur-force-fake-grep t
+    "*If non-nil, force `howm-occur' to use `howm-fake-grep'
+so that highlighting works correctly."
+    :type 'boolean
+    :group 'howm-grep))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Misc
@@ -746,6 +872,13 @@ when `howm-create' is called on summary buffer."
 rather than append or prepend."
   :type '(radio (const :tag "Append or prepend" nil)
                 (const :tag "Just here" t))
+  :group 'howm-create)
+
+(defcustom howm-remember-first-line-to-title nil
+  "If non-nil, the first line in `howm-remember' is set to %title
+and the rest lines are inserted to the position at %cursor in `howm-template.
+If nil, all the lines are simply inserted at %cursor."
+  :type 'boolean
   :group 'howm-create)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -834,6 +967,14 @@ If the value is t, it means 'always'."
   "Colors and fonts."
   :group 'faces
   :group 'howm)
+
+(howm-defcustom-risky howm-user-font-lock-keywords nil
+  "Font lock keywords for all howm-related buffers.
+See help of `font-lock-keywords' for details."
+  ;;   :type '(repeat (radio (cons regexp (list (const quote) face))
+  ;;                         sexp))
+  :type 'sexp
+  :group 'howm-faces)
 
 (defcustom howm-use-color t
   "*If non-nil, highlight tags in howm-mode verbosely."
@@ -1050,77 +1191,6 @@ If the value is t, it means 'always'."
 (defgroup howm-experimental nil
   "Test of experimental features."
   :group 'howm)
-
-(defcustom howm-reminder-menu-types
-  (if howm-reminder-old-format "[-+~!@ ]" "[-+~!@]")
-  "*Regular expression of reminder types which are shown in menu."
-  :get #'howm-custom-reminder-get-types
-  :set #'howm-custom-reminder-set-types
-  :type (howm-custom-reminder-list-types)
-  :group 'howm-experimental)
-
-(defcustom howm-schedule-sort-by-time nil
-  "Non nil if `howm-schedule-sort-converter' should consider time part."
-  :type 'boolean
-  :group 'howm-experimental)
-
-(howm-defcustom-risky howm-user-font-lock-keywords nil
-  "Font lock keywords for all howm-related buffers.
-See help of `font-lock-keywords' for details."
-;;   :type '(repeat (radio (cons regexp (list (const quote) face))
-;;                         sexp))
-  :type 'sexp
-  :group 'howm-experimental)
-
-(let ((sep "-------------------------------------"))
-  (defcustom howm-menu-reminder-separators nil
-    "Assoc list to specify positions and strings of separators in reminder
-in menu. For each element, car is days from now, and cdr is separator string.
-If car is nil, it means the boarder between schedule and todo.
-This option is prepared for `howm-menu-reminder'."
-    :type `(radio (const :tag "No separators" nil)
-                  (const :tag "Standard separators"
-                         ((-1 . ,sep)
-                          (0 . ,sep)
-                          (nil . ,sep)))
-                  (alist :key-type
-                         (radio number
-                                (const :tag "Between schedule and todo" nil))
-                         :value-type string))
-    :group 'howm-experimental)
-  (defcustom howm-todo-separators nil
-    "Assoc list to specify positions and strings of separators in todo buffer.
-For each element, car is priority and cdr is separator string.
-If car is nil, it means the boarder between active and sleeping reminders."
-    :type `(radio (const :tag "No separators" nil)
-                  (const :tag "Standard separators"
-                         ((0 . ,sep)
-                          (nil . ,sep)))
-                  (alist :key-type number
-                         :value-type string))
-    :group 'howm-experimental))
-
-(defcustom howm-process-coding-system nil
-  "*Default coding system for grep command in howm.
-If the value is a symbol, it is used for both read and write.
-If the value is a cons pair, its car and cdr are used for read and write,
-respectively.
-
-Example:
- (setq howm-process-coding-system 'euc-japan-unix)
- (setq howm-process-coding-system '(utf-8-unix . sjis-unix))"
-  :type '(radio (const :tag "Off" nil)
-                coding-system
-                (cons coding-system coding-system))
-;;   :group 'howm-grep
-  :group 'howm-experimental
-  )
-
-(defcustom howm-action-lock-forward-fuzziness 0
-  "*Maximum lines of permitted inconsistency for `howm-action-lock-forward'."
-  :type 'integer
-  :group 'howm-experimental
-  )
 
 ;;;
 

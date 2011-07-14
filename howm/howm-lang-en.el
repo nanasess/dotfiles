@@ -1,7 +1,7 @@
 ;;; howm-lang-en.el --- Wiki-like note-taking tool
-;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010
+;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-lang-en.el,v 1.8 2010-05-05 13:18:40 hira Exp $
+;;; $Id: howm-lang-en.el,v 1.10 2011-01-01 06:05:40 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 
 (defvar howm-menu-command-table-en
   `(
+    ("[Remember]" howm-remember previous)
     ("[New]" (lambda () (howm-create ,howm-menu-action-arg)))
     ("[Add]" (lambda () (howm-create-here ,howm-menu-action-arg)))
     ("[Dup]" howm-dup)
@@ -38,6 +39,9 @@
     ("[Recent]" howm-list-recent)
     ("[Around]" howm-list-around)
     ("[Schedule]" howm-list-schedule)
+    ("[Occur]" (lambda () (call-interactively 'howm-occur)) previous)
+    ("[Buffers]" (lambda () (howm-list-buffers ,howm-menu-action-arg)))
+    ("[Marks]" howm-list-mark-ring previous)
     ("[History]" howm-history)
     ("[<Title]" howm-keyword-to-kill-ring)
     ("[<Name]" (lambda () (howm-keyword-to-kill-ring t)))

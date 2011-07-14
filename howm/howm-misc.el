@@ -1,7 +1,7 @@
 ;;; howm-misc.el --- Wiki-like note-taking tool
-;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-misc.el,v 1.89 2010-05-05 13:18:40 hira Exp $
+;;; $Id: howm-misc.el,v 1.91 2011-01-01 06:34:02 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -587,7 +587,6 @@ and replace a sub-expression, e.g.
   (define-key m "\C-c\C-c" 'howm-remember-submit)
   (define-key m "\C-c\C-k" 'howm-remember-discard)
   (howm-defvar-risky howm-remember-mode-map m))
-(defvar howm-remember-first-line-to-title nil)
 
 (defun howm-remember ()
   "Add text to new note in howm."
