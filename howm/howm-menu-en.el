@@ -1,18 +1,17 @@
-;;; automatically generated from en/0000-00-00-000000.howm
+;;; automatically generated from en/0000-00-00-000000.txt
 ;;; by howm-mkmenu.el.
 
 (require 'howm-vars)
 
 (howm-defconst-risky howm-menu-en "= <<< %menu%
- %\"c\"[New] Search(%\"s\"[String] %\"g\"[Regexp]) %\"D\"[Dup] %\"K\"[<Title] [<Name] %\"d\"[Date>] %\"i\"[Key>]
- %\"a\"[All] %\"l\"[Recent] %\"A\"[Around] %\"y\"[Schedule] %\"t\"[Todo] %\"r\"[Update] %\"w\"[Random Walk] [Killall]
+ %\"e\"[Remember] %\"c\"[New] %\"D\"[Dup] Search(%\"s\"[String] %\"g\"[Regexp] %\"o\"[Occur])
+ %\"a\"[All] %\"l\"[Recent] %\"A\"[Around] %\"y\"[Schedule] %\"t\"[Todo] %\"b\"[Buffers] %\"x\"[Marks]
+ %\"K\"[<Title] [<Name] %\"d\"[Date>] %\"i\"[Key>] %\"r\"[Update] %\"w\"[Random Walk] [Killall]
  %\".\"[Today] %\":\"[Yesterday] %\"h\"[History] %\"R\"[Update Menu] [Edit Menu] [Preference]
 -------------------------------------
-[Schedule] -- @schedule, !deadline (until %sdays days from now)
-%schedule
--------------------------------------
-[Todo] -- !deadline, +todo, -reminder, ~defer (top %tnum entries)
-%todo
+[Schedule, Todo] -- @schedule, !deadline (until %sdays days from now)
+!deadline, +todo, -reminder, ~defer (top %tnum entries)
+%reminder
 -------------------------------------
 Recent
 %recent
@@ -22,12 +21,12 @@ Random -- If you do not like this, [Edit Menu] to erase it.
 -------------------------------------
 
 Format of schedule and todo (Please replace {} with []):
-{2002-10-21}@  schedule -- (shown in schedule part)
-{2002-10-21}+7 todo -- float up slowly from the date in 7 days
-{2002-10-21}!7 deadline -- float up fast from 7 days before the date
-{2002-10-21}-1 reminder -- float at the date and sink slowly one unit per 1 day
+{2002-10-21}@1  schedule -- (shown in schedule part. @3 = \"3 days schedule to 10-23\")
+{2002-10-21}+7  todo -- float up slowly from the date in 7 days
+{2002-10-21}!7  deadline -- float up fast from 7 days before the date
+{2002-10-21}-1  reminder -- float at the date and sink slowly one unit per 1 day
 {2002-10-21}~30 defer -- float at the date and repeat sinking and floating with 30 days period
-{2002-10-21}. done -- sink forever
+{2002-10-21}.   done -- sink forever
 (Numbers after marks are default values.)
 
 How to remember:
@@ -57,8 +56,7 @@ You can edit this menu itself.
 As you see...
 
 * [xxx] is button.
-* %SCHEDULE (in small letters) is schedule.
-* %TODO (in small letters) is todo list.
+* %REMINDER (in small letters) is schedule and todo list.
 * %RECENT (in small letters) is list of recent entries.
 * %RANDOM (in small letters) is list of random entries.
 
@@ -102,7 +100,7 @@ Links to %xxx% open \"<< < %xxx%\" with menu-mode: >>> %menu%
 When you add new menu, [[%menu%]] may be more convenient because corresponding
 entry is generated automatically.
 
-%eval%(howm-menu-open \"00000000-000000.howm\")  -- open file with menu-mode
+%eval%(howm-menu-open \"00000000-000000.txt\")  -- open file with menu-mode
 ")
 
 (provide 'howm-menu-en)

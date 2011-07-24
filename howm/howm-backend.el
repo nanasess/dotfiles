@@ -1,7 +1,7 @@
 ;;; howm-backend.el --- Wiki-like note-taking tool
-;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010
+;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-backend.el,v 1.42 2010-05-05 13:18:40 hira Exp $
+;;; $Id: howm-backend.el,v 1.47 2011-01-19 14:22:58 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -213,9 +213,8 @@ DUMMY-EXCLUSION-CHECKER has no effect; it should be removed soon."
                   (howm-make-item (howm-make-page:buf buf) content place)))
               grep-result))))
 
-;; for test
-(defvar howm-list-buffers-exclude '("*Messages*" ".howm-keys" ".howm-history"))
 (defun howm-list-buffers (&optional all)
+  "Show buffer list. If ALL is non-nil, hidden buffers are also listed."
   (interactive "P")
   (let* ((bufs (if all
                    (buffer-list)
@@ -233,10 +232,8 @@ DUMMY-EXCLUSION-CHECKER has no effect; it should be removed soon."
          (pages (mapcar (lambda (b) (howm-make-page:buf b)) bufs))
          (folder (howm-make-folder:pages pages)))
     (howm-view-directory folder)))
-(defvar howm-occur-force-fake-grep nil
-  "If non-nil, force `howm-occur' to use `howm-fake-grep'
-so that highlighting works correctly.")
 (defun howm-occur (regexp)
+  "Show all lines in the current buffer containing a match for REGEXP."
   (interactive "sSearch (regexp): ")
   (let ((howm-view-use-grep (if howm-occur-force-fake-grep
                                 nil
@@ -245,6 +242,7 @@ so that highlighting works correctly.")
                              (howm-make-folder:pages
                               (list (howm-make-page:buf (current-buffer)))))))
 (defun howm-list-mark-ring ()
+  "Show all marks in the current buffer."
   (interactive)
   (let* ((page (howm-make-page:buf (current-buffer)))
          (items (mapcar (lambda (m)
@@ -320,108 +318,6 @@ so that highlighting works correctly.")
 (defun howm-folder-grep-internal:nest (folder pattern &optional fixed-p)
   (howm-cl-mapcan (lambda (f) (howm-folder-grep-internal f pattern fixed-p))
                   (howm-folder-subfolders folder)))
-
-;;;
-;;; rast folder: rast index directory
-;;;
-
-;; (cf.) Rast - N-gram based full-text search system http://www.netlab.jp/rast/
-;; tested with rast-0.1.1 [2005-05-15]
-
-(defcustom howm-rast-search-command
-  (expand-file-name "~/elisp/howm/ext/howm-rast-search.rb")
-  "Command to search rast database."
-  :type 'file
-  :group 'howm-experimental)
-
-(defcustom howm-rast-register-command
-  (expand-file-name "~/elisp/howm/ext/howm-rast-register.rb")
-  "Command to update rast database."
-  :type 'file
-  :group 'howm-experimental)
-
-(defcustom howm-rast-regexp-assoc
-;;   nil
-;;   '(("foobar" . ("foobar")))
-  (let ((hints (mapcar (lambda (c) (concat "]" c))
-                       (split-string "@!+-~." "")))
-        ;; below is result of
-        ;; (mapcar #'howm-reminder-regexp-grep
-        ;;         (list howm-schedule-types howm-todo-types
-        ;;               howm-schedule-menu-types howm-todo-menu-types))
-        ;; but howm-reminder-regexp is not defined at this point
-        (regs '("\\[[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9][ :0-9]*\\][!@._]"
-                "\\[[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9][ :0-9]*\\][-+~!._]"
-                "\\[[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9][ :0-9]*\\][!@_]"
-                "\\[[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9][ :0-9]*\\][-+~!._]")))
-    (mapcar (lambda (r) (cons r hints))
-            regs))
-  "Hints to accelerate regexp search in rast folder.
-Value must be list of cons pairs; car is regular expression and cdr is
-list of hint strings.
-When that regexp is searched, hint strings are searched first for filtering."
-  :type '(alist :key-type regexp :value-type sexp)
-  :group 'howm-experimental)
-
-(defun howm-make-folder:rast (index-dir &optional doc-dir)
-  (cons ':rast (cons (expand-file-name index-dir)
-                     (and doc-dir (expand-file-name doc-dir)))))
-
-(defun howm-folder-items:rast (folder &optional recursive-p)
-  (let ((files (howm-folder-files:rast folder)))
-    (howm-folder-items:files (howm-make-folder:files files))))
-
-(defun howm-folder-files:rast (folder &optional exclusion-checker)
-  (howm-call-process howm-rast-search-command (list (cadr folder))))
-
-(defun howm-folder-grep-internal:rast (folder pattern-list &optional fixed-p)
-  (if fixed-p
-      ;; fixed search
-      (let ((files (howm-rast-search (cadr folder) pattern-list)))
-        ;; grep again
-        (let ((howm-view-use-grep nil)) ;; Japanese encoding is annoying.
-          (howm-folder-grep-internal (howm-make-folder:files files)
-                                     pattern-list fixed-p)))
-    ;; regexp search
-    (let* ((hints (and (null (cdr pattern-list))
-                       (cdr (assoc (car pattern-list)
-                                   howm-rast-regexp-assoc))))
-           (files (if hints
-                      (howm-rast-search (cadr folder) hints)
-                    (howm-folder-files:rast folder))))
-      (setq files (howm-cl-remove-duplicates* files :test #'string=))
-      (howm-folder-grep-internal (howm-make-folder:files files)
-                                 pattern-list fixed-p))))
-
-(defun howm-folder-get-page-create:rast (folder page-name)
-  (let ((dir (cddr folder)))
-    (if dir
-        (howm-folder-get-page-create (howm-make-folder:dir dir) page-name)
-      (error "No document directory is specified: %s" folder))))
-
-(defun howm-folder-territory-p:rast (folder name)
-  (let ((dir (cddr folder)))
-    (if dir
-        (howm-folder-territory-p (howm-make-folder:dir dir) name)
-      (error "No document directory is specified: %s" folder))))
-
-(defun howm-rast-search (db pattern-list)
-  (howm-cl-remove-if
-   (lambda (f) (not (file-exists-p f)))
-   (howm-call-process howm-rast-search-command
-                      (list db
-                            (mapconcat (lambda (str)
-                                         (format "\"%s\"" str))
-                                       pattern-list " | ")))))
-
-(defun howm-rast-register (db file)
-  (start-process "howm-rast-register" nil
-                 howm-rast-register-command
-                 db file))
-
-(defun howm-rast-register-current-buffer (db)
-  (when (buffer-file-name)
-    (howm-rast-register db (buffer-file-name))))
 
 ;;;
 ;;; namazu folder: namazu index directory
@@ -775,7 +671,7 @@ STR can be list of strings. They are regarded as 'or' pattern of all elements."
                           (howm-make-viewer:func #'find-file ls)))
          (viewer (cdr (howm-cl-assoc-if (lambda (reg) (string-match reg page))
                                         howm-view-external-viewer-assoc))))
-    (or dir-viewer viewer
+    (or viewer dir-viewer
         (and howm-view-use-mailcap
              (let* ((ext (if (string-match "\\.[^\\.]+$" page)
                              (match-string 0 page)

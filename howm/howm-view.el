@@ -1,7 +1,7 @@
 ;;; howm-view.el --- Wiki-like note-taking tool
-;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-view.el,v 1.238 2010-05-05 13:18:39 hira Exp $
+;;; $Id: howm-view.el,v 1.243 2011-01-14 14:25:34 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@
   (let* ((path (format-time-string howm-file-name-format))
          (width (length (file-name-nondirectory path))))
     (concat "%-" (format "%s" width) "s " howm-view-summary-sep " ")))
-;;     (concat "%-" (format "%s" width) "s | ")))
 (defvar howm-view-header-format
   "\n==========================>>> %s\n"
   "Format string of header for howm-view-contents.
@@ -118,6 +117,7 @@
 (defalias 'howm-view-persistent-p  #'riffle-persistent-p)  
 (defalias 'howm-view-kill-buffer   #'riffle-kill-buffer)   
 (defalias 'howm-view-set-place     #'riffle-set-place)     
+(defalias 'howm-view-get-place     #'riffle-get-place)     
 (defalias 'howm-view-summary-current-item  #'riffle-summary-current-item)
 (defalias 'howm-view-contents-current-item #'riffle-contents-current-item)
 (defalias 'howm-view-summary-to-contents   #'riffle-summary-to-contents)
@@ -565,19 +565,8 @@ But I'm not sure for multi-byte characters on other versions of emacsen."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; dir
 
-(defcustom howm-ruby-mode-bug nil
-  "Non nil if ruby-mode.el is old and has a bug around font-lock;
-global value of font-lock-keywords is set wrongly."
-  :type 'boolean
-  :group 'howm-experimental)
-
 (defun howm-view-directory (dir &optional recursive-p)
-  (howm-view-summary "" (howm-folder-items dir recursive-p))
-  (when howm-ruby-mode-bug
-    ;; sloppy!
-    ;; (for old ruby-mode.el which sets global value of font-lock-keywords)
-    (setq font-lock-keywords nil))
-  )
+  (howm-view-summary "" (howm-folder-items dir recursive-p)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; filter
@@ -665,10 +654,11 @@ global value of font-lock-keywords is set wrongly."
         (howm-view-remove-by-contents r)
       (howm-view-search-in-result r))))
 
-(defcustom howm-view-search-in-result-correctly nil
-  "*Non nil if search-in-result should be aware of paragraph."
-  :type 'boolean
-  :group 'howm-experimental)
+(howm-if-ver1dot3 nil
+  (defcustom howm-view-search-in-result-correctly t
+    "*Non nil if search-in-result should be aware of paragraph."
+    :type 'boolean
+    :group 'howm-search))
 
 (defun howm-view-search-in-result (regexp)
 ;;   (interactive "sSearch in result (grep): ")
@@ -873,19 +863,20 @@ global value of font-lock-keywords is set wrongly."
        (t2 (format "Skip \"%s \" and \"[xxxx-xx-xx xx:xx]\""
                    howm-view-title-header))
        (r2 (format "\\(%s\\)\\|\\(^\\[[-: 0-9]+\\]\\)" r1)))
-  (defcustom howm-view-title-skip-regexp nil
-    "*Regular expression for lines which should not be titles.
+  (howm-if-ver1dot3 nil
+    (defcustom howm-view-title-skip-regexp r2
+      "*Regular expression for lines which should not be titles.
 If the original title matches this regexp, the first non-matched line
 is shown as title instead.
 Nil disables this feature.
 
 This feature does not work when `howm-view-search-in-result-correctly' is nil."
-    :type `(radio (const :tag "Off" nil)
-                  (const :tag ,t1 ,r1)
-                  (const :tag ,t2 ,r2)
-                  regexp)
-    ;;   :group 'howm-efficiency
-    :group 'howm-experimental))
+      :type `(radio (const :tag "Off" nil)
+                    (const :tag ,t1 ,r1)
+                    (const :tag ,t2 ,r2)
+                    regexp)
+      :group 'howm-title
+      :group 'howm-efficiency)))
 
 (defcustom howm-view-list-title-type 1
   "*Type of showing title in summary buffer.
@@ -1160,7 +1151,9 @@ list of items in ITEM-LIST which do not satisfy the above condition."
   (when (string-match howm-view-title-skip-regexp (howm-item-summary item))
     (let ((title-line (with-temp-buffer
                         (howm-page-insert (howm-item-page item))
-                        (howm-view-set-place (howm-item-place item))
+                        (howm-view-set-place (or (howm-item-place item)
+                                                 (howm-view-get-place
+                                                  (point-min))))
                         (howm-view-get-title-line))))
       (howm-item-set-summary item title-line))))
 

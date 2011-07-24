@@ -1,8 +1,8 @@
 ;;; action-lock.el --- invoke magic action by RET key on spell strings
 
-;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
 ;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;; $Id: action-lock.el,v 1.70 2010-05-05 13:18:40 hira Exp $
+;; $Id: action-lock.el,v 1.71 2010-12-31 15:07:59 hira Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

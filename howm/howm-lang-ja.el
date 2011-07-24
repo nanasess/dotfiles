@@ -1,8 +1,8 @@
 ;;; howm-lang-ja.el --- Wiki-like note-taking tool
 ;;; -*- Coding: iso-2022-7bit -*-
-;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010
+;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-lang-ja.el,v 1.8 2010-05-05 13:18:40 hira Exp $
+;;; $Id: howm-lang-ja.el,v 1.10 2011-01-01 06:05:40 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 
 (defvar howm-menu-command-table-ja
   `(
+    ("[速記]" howm-remember previous)
     ("[新規]" (lambda () (howm-create ,howm-menu-action-arg)))
     ("[追加]" (lambda () (howm-create-here ,howm-menu-action-arg)))
     ("[複製]" howm-dup)
@@ -37,6 +38,9 @@
     ("[最近]" howm-list-recent)
     ("[前後]" howm-list-around)
     ("[予定]" howm-list-schedule)
+    ("[バ内]" (lambda () (call-interactively 'howm-occur)) previous)
+    ("[全バ]" (lambda () (howm-list-buffers ,howm-menu-action-arg)))
+    ("[mark]" howm-list-mark-ring previous)
     ("[履歴]" howm-history)
     ("[題↑]" howm-keyword-to-kill-ring)
     ("[名↑]" (lambda () (howm-keyword-to-kill-ring t)))

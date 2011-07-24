@@ -102,16 +102,14 @@ popup window.")
 (defun* popwin:adjust-window-edges (window
                                     edges
                                     &optional
-                                    (offset '(0 0))
                                     (hfactor 1)
                                     (vfactor 1))
-  "Adjust edges of WINDOW to EDGES accoring to OFFSET, horizontal
-factor HFACTOR, and vertical factor VFACTOR."
+  "Adjust edges of WINDOW to EDGES accoring to horizontal factor
+HFACTOR, and vertical factor VFACTOR."
   (when (popwin:window-trailing-edge-adjustable-p window)
     (destructuring-bind ((left top right bottom)
-                         (cur-left cur-top cur-right cur-bottom)
-                         (left-offset top-offset))
-        (list edges (window-edges window) offset)
+                         (cur-left cur-top cur-right cur-bottom))
+        (list edges (window-edges window))
       (let ((hdelta (floor (- (* (- right left) hfactor) (- cur-right cur-left))))
             (vdelta (floor (- (* (- bottom top) vfactor) (- cur-bottom cur-top)))))
         (ignore-errors
@@ -136,25 +134,25 @@ with persistent representations."
       (window-tree)
     (list (popwin:window-config-tree-1 root) mini)))
 
-(defun popwin:replicate-window-config (window node offset hfactor vfactor)
-  "Replicate NODE of window configuration on WINDOW with OFFSET,
+(defun popwin:replicate-window-config (window node hfactor vfactor)
+  "Replicate NODE of window configuration on WINDOW with
 horizontal factor HFACTOR, and vertical factor VFACTOR."
   (if (eq (car node) 'window)
       (destructuring-bind (buffer edges selected)
           (cdr node)
-        (popwin:adjust-window-edges window edges offset hfactor vfactor)
+        (popwin:adjust-window-edges window edges hfactor vfactor)
         (with-selected-window window
-          (switch-to-buffer buffer))
-        (if selected
-            (select-window window)))
+          (switch-to-buffer buffer t))
+        (when selected
+          (select-window window)))
     (destructuring-bind (dir edges . windows) node
       (loop while windows
             for w1 = (pop windows) then w2
             for w2 = (pop windows)
             do
             (let ((new-window (split-window window nil (not dir))))
-              (popwin:replicate-window-config window w1 offset hfactor vfactor)
-              (popwin:replicate-window-config new-window w2 offset hfactor vfactor)
+              (popwin:replicate-window-config window w1 hfactor vfactor)
+              (popwin:replicate-window-config new-window w2 hfactor vfactor)
               (setq window new-window))))))
 
 (defun popwin:restore-window-outline (node outline)
@@ -175,11 +173,11 @@ which is a node of `window-tree' and OUTLINE which is a node of
    (t
     (let ((child-nodes (cddr node))
           (child-outlines (cddr outline)))
-      (if (eq (length child-nodes) (length child-outlines))
-          ;; same structure
-          (loop for child-node in child-nodes
-                for child-outline in child-outlines
-                do (popwin:restore-window-outline child-node child-outline)))))))
+      (when (eq (length child-nodes) (length child-outlines))
+        ;; same structure
+        (loop for child-node in child-nodes
+              for child-outline in child-outlines
+              do (popwin:restore-window-outline child-node child-outline)))))))
 
 (defun popwin:position-horizontal-p (position)
   "Return t if POSITION is hozirontal."
@@ -191,28 +189,22 @@ which is a node of `window-tree' and OUTLINE which is a node of
 
 (defun popwin:create-popup-window-1 (window size position)
   "Create a new window with SIZE at POSITION of WINDOW. The
-return value is a list of a master window, the popup window,
-offsets of the master window in a form of (left-offset
-top-offset)."
+return value is a list of a master window and the popup window."
   (let ((width (window-width window))
         (height (window-height window)))
     (ecase position
       ((left :left)
        (list (split-window window size t)
-             window
-             (list size 0)))
+             window))
       ((top :top)
        (list (split-window window size nil)
-             window
-             (list 0 size)))
+             window))
       ((right :right)
        (list window
-             (split-window window (- width size) t)
-             (list 0 0)))
+             (split-window window (- width size) t)))
       ((bottom :bottom)
        (list window
-             (split-window window (- height size) nil)
-             (list 0 0))))))
+             (split-window window (- height size) nil))))))
 
 (defun* popwin:create-popup-window (&optional (size 15) (position 'bottom) (adjust t))
   "Create a popup window with SIZE on the frame.  If SIZE
@@ -240,14 +232,14 @@ window-configuration."
               (setq vfactor (- 1.0 size)
                     size (round (* root-height size))))
           (if (popwin:position-horizontal-p position)
-              (setq hfactor (- 1.0 (/ (float (- root-width size)) root-width)))
-            (setq vfactor (- 1.0 (/ (float (- root-height size)) root-height))))))
-      (destructuring-bind (master-win popup-win offset)
+              (setq hfactor (/ (float (- root-width size)) root-width))
+            (setq vfactor (/ (float (- root-height size)) root-height)))))
+      (destructuring-bind (master-win popup-win)
           (popwin:create-popup-window-1 root-win size position)
         ;; Mark popup-win being a popup window.
         (with-selected-window popup-win
-          (switch-to-buffer (popwin:empty-buffer)))
-        (popwin:replicate-window-config master-win root offset hfactor vfactor)
+          (switch-to-buffer (popwin:empty-buffer) t))
+        (popwin:replicate-window-config master-win root hfactor vfactor)
         (list master-win popup-win)))))
 
 
@@ -346,9 +338,9 @@ window will not be selected."
           (delete-window popwin:popup-window))
         (popwin:restore-window-outline (car (window-tree))
                                        popwin:window-outline)
-        (if (and (not keep-selected)
-                 (window-live-p popwin:selected-window))
-            (select-window popwin:selected-window)))
+        (when (and (not keep-selected)
+                   (window-live-p popwin:selected-window))
+          (select-window popwin:selected-window)))
     (setq popwin:popup-buffer nil
           popwin:popup-window nil
           popwin:focus-window nil
@@ -373,7 +365,7 @@ immediately if possible, and the lastly selected window will be
 selected again."
   (when popwin:popup-window
     (let* ((window (selected-window))
-           (minibuf-window-p (eq window (minibuffer-window)))
+           (minibuf-window-p (window-minibuffer-p window))
            (other-window-selected
             (and (not (eq window popwin:focus-window))
                  (not (eq window popwin:popup-window))))
@@ -383,10 +375,10 @@ selected again."
            (not-stuck-or-closed
             (or (not popwin:popup-window-stuck-p)
                 (not (popwin:popup-window-live-p)))))
-      (if (and (not minibuf-window-p)
-               (or force
-                   (and not-stuck-or-closed
-                        other-window-selected)))
+      (if (or force
+              (and (not minibuf-window-p)
+                   not-stuck-or-closed
+                   other-window-selected))
           (popwin:close-popup-window
            (and other-window-selected
                 popup-buffer-still-working))))))
@@ -414,17 +406,17 @@ BUFFER."
             (popwin:create-popup-window size position adjust))
         (setq popwin:popup-window popup-win
               popwin:master-window master-win
-              popwin:window-outline win-outline)
+              popwin:window-outline win-outline
+              popwin:selected-window (selected-window))
         (popwin:start-close-popup-window-timer))))
-  (setq popwin:popup-buffer buffer
-        popwin:selected-window (selected-window)
-        popwin:focus-window (if noselect
-                                popwin:selected-window
-                              popwin:popup-window)
-        popwin:popup-window-stuck-p stick)
   (with-selected-window popwin:popup-window
     (switch-to-buffer buffer))
-  (select-window popwin:focus-window)
+  (setq popwin:popup-buffer buffer
+        popwin:popup-window-stuck-p stick)
+  (if noselect
+      (setq popwin:focus-window popwin:selected-window)
+    (setq popwin:focus-window popwin:popup-window)
+    (select-window popwin:popup-window))
   popwin:popup-window)
 
 (defun popwin:select-popup-window ()
@@ -492,8 +484,9 @@ buffers will be shown at the left of the frame with width 80."
   (let (display-buffer-function special-display-function)
     ;; Close the popup window here so that the popup window won't to
     ;; be splitted.
-    (if (eq (selected-window) popwin:popup-window)
-        (popwin:close-popup-window))
+    (when (and (eq (selected-window) popwin:popup-window)
+               (not (same-window-p (buffer-name buffer))))
+      (popwin:close-popup-window))
     (display-buffer buffer not-this-window)))
 
 (defun* popwin:display-buffer-1 (buffer-or-name &key default-config-keywords if-buffer-not-found if-config-not-found)
@@ -509,7 +502,7 @@ specifies default values of the selected config."
                           (get-buffer-create buffer-or-name)
                         (get-buffer buffer-or-name))
         with name = (buffer-name buffer)
-        with mode = (with-current-buffer buffer major-mode)
+        with mode = (buffer-local-value 'major-mode buffer)
         with win-width = popwin:popup-window-width
         with win-height = popwin:popup-window-height
         with win-position = popwin:popup-window-position
@@ -520,22 +513,20 @@ specifies default values of the selected config."
         for (pattern . keywords) in popwin:special-display-config do
         (destructuring-bind (&key regexp width height position noselect stick)
             (append keywords default-config-keywords)
-          (let ((matched
-                 (cond
-                  ((and (stringp pattern) regexp)
-                   (string-match pattern name))
-                  ((stringp pattern)
-                   (string= pattern name))
-                  ((symbolp pattern)
-                   (eq pattern mode))
-                  (t (error "Invalid pattern: %s" pattern)))))
-            (if matched
-                (setq found t
-                      win-width (or width win-width)
-                      win-height (or height win-height)
-                      win-position (or position win-position)
-                      win-noselect noselect
-                      win-stick stick))))
+          (let ((matched (cond ((and (stringp pattern) regexp)
+                                (string-match pattern name))
+                               ((stringp pattern)
+                                (string= pattern name))
+                               ((symbolp pattern)
+                                (eq pattern mode))
+                               (t (error "Invalid pattern: %s" pattern)))))
+            (when matched
+              (setq found t
+                    win-width (or width win-width)
+                    win-height (or height win-height)
+                    win-position (or position win-position)
+                    win-noselect noselect
+                    win-stick stick))))
         finally return
         (if (or found
                 (null if-config-not-found))
@@ -590,8 +581,8 @@ usual. This function can be used as a value of
   "Edit file FILENAME with popup window by `popwin:popup-buffer'."
   (interactive
    (find-file-read-args "Find file in popup window: "
-                        (if (fboundp 'confirm-nonexistent-file-or-buffer)
-                            (confirm-nonexistent-file-or-buffer))))
+                        (when (fboundp 'confirm-nonexistent-file-or-buffer)
+                          (confirm-nonexistent-file-or-buffer))))
   (popwin:popup-buffer (find-file-noselect filename wildcards)))
 
 (defun popwin:find-file-tail (file &optional wildcard)
@@ -599,8 +590,8 @@ usual. This function can be used as a value of
 `popwin:popup-buffer-tail'."
   (interactive
    (find-file-read-args "Find file in popup window: "
-                        (if (fboundp 'confirm-nonexistent-file-or-buffer)
-                            (confirm-nonexistent-file-or-buffer))))
+                        (when (fboundp 'confirm-nonexistent-file-or-buffer)
+                          (confirm-nonexistent-file-or-buffer))))
   (popwin:popup-buffer-tail (find-file-noselect file wildcard)))
 
 (defun popwin:messages ()
@@ -632,7 +623,22 @@ usual. This function can be used as a value of
     (define-key map "\C-m" 'popwin:messages)
     map)
   "Default keymap for popwin commands. Use like:
-\(global-set-key (kbd \"C-x C-p\") popwin:keymap\)")
+\(global-set-key (kbd \"C-x C-p\") popwin:keymap\)
+
+Keymap:
+
+| Key    | Command                    |
+|--------+----------------------------|
+| b, C-b | popwin:popup-buffer        |
+| M-b    | popwin:popup-buffer-tail   |
+| o, C-o | popwin:display-buffer      |
+| p, C-p | popwin:display-last-buffer |
+| f, C-f | popwin:find-file           |
+| M-f    | popwin:find-file-tail      |
+| s, C-s | popwin:select-popup-window |
+| M-s    | popwin:stick-popup-window  |
+| 0      | popwin:close-popup-window  |
+| m, C-m | popwin:messages            |")
 
 (provide 'popwin)
 ;;; popwin.el ends here

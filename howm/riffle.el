@@ -1,7 +1,7 @@
 ;;; riffle.el --- template of list browser with immediate preview
-;;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010
+;;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: riffle.el,v 1.36 2010-05-05 13:18:39 hira Exp $
+;;; $Id: riffle.el,v 1.39 2011-01-14 14:25:34 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -188,7 +188,7 @@ This function returns effective value of ITEM-LIST."
 (riffle-define-derived-mode riffle-summary-mode riffle-mode "RiffleS"
   "not yet"
   ;; make-local-hook is obsolete for emacs >= 21.1.
-  ;; (make-local-hook 'post-command-hook)
+  (howm-funcall-if-defined (make-local-hook 'post-command-hook))
   (add-hook 'post-command-hook 'riffle-post-command t t)
   )
 
