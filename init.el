@@ -645,14 +645,16 @@
 ;;;
 ;;; twitting-mode settings
 ;;;
-;;; (auto-install-from-url "http://github.com/hayamiz/twittering-mode/raw/master/twittering-mode.el")
+;;; (auto-install-from-url "https://raw.github.com/hayamiz/twittering-mode/master/twittering-mode.el")
 ;;;
 
 (require 'twittering-mode)
 (unless (load "twittering-tinyurl-api-key" t t)
-  (setq twittering-tinyurl-api-key nil))
+  (setq twittering-bitly-api-key nil))
 (setq twittering-auth-method 'xauth)
 (setq twittering-username "nanasess")
+(setq twittering-bitly-login twittering-username)
+(setq twittering-tinyurl-service 'j.mp)
 (setq twittering-status-format (concat "%i %S(%s),  %@:\n%"
 				       "FILL[  ]{%T // from %f%L%r%R}\n "))
 (setq twittering-retweet-format "RT @%s: %t")
@@ -666,26 +668,6 @@
 	    (let ((km twittering-edit-mode-map))
 	      (define-key km (kbd "C-c C-q") 'twittering-edit-cancel-status)
 	      (define-key km (kbd "C-u C-u") 'twittering-edit-replace-at-point))))
-(defun twittering-tinyurl-get (longurl)
-  "Tinyfy LONGURL."
-  (if longurl
-      (let ((buffer
-	     (twittering-url-retrieve-synchronously (concat
-						     twittering-tinyurl-api
-						     longurl))))
-	(with-current-buffer buffer
-	  (goto-char (point-min))
-	  (prog1
-	      (if (search-forward-regexp "\n\r?\n\\([^\n\r]*\\)" nil t)
-		  (match-string-no-properties 1)
-		(error "TinyURL failed: %s" longurl))
-	    (kill-buffer buffer))))
-    nil))
-(setq twittering-tinyurl-api (concat "http://api.j.mp/v3/shorten?login="
-				     twittering-username
-				     "&apiKey="
-				     twittering-tinyurl-api-key
-				     "&format=txt&uri="))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

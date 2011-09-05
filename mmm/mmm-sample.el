@@ -58,7 +58,7 @@
     :submode javascript
     :face mmm-code-submode-face
     :delimiter-mode nil
-    :front "<script\[^>\]*\\(language=\"javascript\\([0-9.]*\\)\"\\|type=\"text/javascript\"\\)\[^>\]*>"
+    :front "<script\[^>\]*\\(language=\"javascript\\([0-9.]*\\)\"\\|type=\"text/javascript\"\\|*)\[^>\]*>"
     :back"</script>"
     :insert ((?j js-tag nil @ "<script language=\"JavaScript\">"
                  @ "\n" _ "\n" @ "</script>" @))
