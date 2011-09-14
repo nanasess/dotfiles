@@ -556,6 +556,7 @@
 (setq php-search-url "http://jp2.php.net/")
 (add-hook 'php-mode-hook
 	  (lambda ()
+	    (define-key c-mode-base-map "*" nil) ; for Emacs 23
 	    (gtags-mode 1)
 	    (require 'php-completion)
 	    (php-completion-mode t)
