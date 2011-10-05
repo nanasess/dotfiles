@@ -800,6 +800,7 @@
 (require 'anything-howm)
 (require 'anything-gtags)
 (require 'anything-migemo nil t)
+(setq anything-candidate-number-limit 500)
 ;; (setq anything-use-migemo nil)
 (defun my-anything ()
   "Anything command for you.
