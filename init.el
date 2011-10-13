@@ -367,6 +367,28 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; goto-chg settings
+;;;
+;;; (auto-install-from-emacswiki "goto-chg.el")
+;;;
+
+(require 'goto-chg)
+(global-set-key (kbd "C-.") 'goto-last-change)
+(global-set-key (kbd "C-,") 'goto-last-change-reverse)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; goto-chg settings
+;;;
+;;; (auto-install-from-emacswiki "point-undo.el")
+;;;
+
+(require 'point-undo)
+(define-key global-map (kbd "C-M-,") 'point-undo)
+(define-key global-map (kbd "C-M-.") 'point-redo)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mmm-mode settings
 ;;;
 
