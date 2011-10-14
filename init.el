@@ -165,6 +165,14 @@
 (ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
 (ad-activate 'font-lock-mode)
 
+(add-hook 'diff-mode-hook
+	  (lambda ()
+	    (set-face-foreground 'diff-context-face "grey50")
+	    (set-face-foreground 'diff-hunk-header-face "medium blue")
+	    (set-face-background 'diff-removed-face "pink1")
+	    (set-face-background 'diff-added-face "light green")
+	    (set-face-background 'diff-refine-change "Thistle")))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; window-system settings
