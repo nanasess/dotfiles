@@ -1,10 +1,9 @@
 ;;; org-crypt.el --- Public key encryption for org-mode entries
 
-;; Copyright (C) 2007, 2009, 2010  Free Software Foundation, Inc.
+;; Copyright (C) 2007, 2009-2011  Free Software Foundation, Inc.
 
 ;; Emacs Lisp Archive Entry
 ;; Filename: org-crypt.el
-;; Version: 7.5
 ;; Keywords: org-mode
 ;; Author: John Wiegley <johnw@gnu.org>
 ;; Maintainer: Peter Jones <pjones@pmade.com>
@@ -56,9 +55,6 @@
 ;; 4. To automatically encrypt all necessary entries when saving a
 ;;    file, call `org-crypt-use-before-save-magic' after loading
 ;;    org-crypt.el.
-;;
-;; TODO:
-;;   - Allow symmetric encryption as well
 
 ;;; Thanks:
 
@@ -96,6 +92,58 @@ See the \"Match syntax\" section of the org manual for more details."
 This setting can also be overridden in the CRYPTKEY property."
   :type 'string 
   :group 'org-crypt)
+
+(defcustom org-crypt-disable-auto-save 'ask
+  "What org-decrypt should do if `auto-save-mode' is enabled.
+
+t        : Disable auto-save-mode for the current buffer
+           prior to decrypting an entry.
+
+nil      : Leave auto-save-mode enabled.
+           This may cause data to be written to disk unencrypted!
+
+'ask     : Ask user whether or not to disable auto-save-mode
+           for the current buffer.
+
+'encrypt : Leave auto-save-mode enabled for the current buffer,
+           but automatically re-encrypt all decrypted entries
+           *before* auto-saving.
+           NOTE: This only works for entries which have a tag
+           that matches `org-crypt-tag-matcher'."
+  :group 'org-crypt
+  :type '(choice (const :tag "Always"  t)
+                 (const :tag "Never"   nil)
+                 (const :tag "Ask"     ask)
+                 (const :tag "Encrypt" encrypt)))
+
+(defun org-crypt-check-auto-save ()
+  "Check whether auto-save-mode is enabled for the current buffer.
+
+`auto-save-mode' may cause leakage when decrypting entries, so
+check whether it's enabled, and decide what to do about it.
+
+See `org-crypt-disable-auto-save'."
+  (when buffer-auto-save-file-name
+    (cond
+     ((or
+       (eq org-crypt-disable-auto-save t)
+       (and
+	(eq org-crypt-disable-auto-save 'ask)
+	(y-or-n-p "org-decrypt: auto-save-mode may cause leakage. Disable it for current buffer? ")))
+      (message (concat "org-decrypt: Disabling auto-save-mode for " (or (buffer-file-name) (current-buffer))))
+      ; The argument to auto-save-mode has to be "-1", since
+      ; giving a "nil" argument toggles instead of disabling.
+      (auto-save-mode -1))
+     ((eq org-crypt-disable-auto-save nil)
+      (message "org-decrypt: Decrypting entry with auto-save-mode enabled. This may cause leakage."))
+     ((eq org-crypt-disable-auto-save 'encrypt)
+      (message "org-decrypt: Enabling re-encryption on auto-save.")
+      (add-hook 'auto-save-hook
+		(lambda ()
+		  (message "org-crypt: Re-encrypting all decrypted entries due to auto-save.")
+		  (org-encrypt-entries))
+		nil t))
+     (t nil))))
 
 (defun org-crypt-key-for-heading ()
   "Return the encryption key for the current heading."
@@ -156,6 +204,7 @@ This setting can also be overridden in the CRYPTKEY property."
 	       (outline-invisible-p))))
 	(forward-line)
 	(when (looking-at "-----BEGIN PGP MESSAGE-----")
+	  (org-crypt-check-auto-save)
 	  (let* ((end (save-excursion
 			(search-forward "-----END PGP MESSAGE-----")
 			(forward-line)
@@ -204,22 +253,8 @@ This setting can also be overridden in the CRYPTKEY property."
    'org-mode-hook
    (lambda () (add-hook 'before-save-hook 'org-encrypt-entries nil t))))
 
-;; FIXME Find a better way to encrypt Org auto-saved buffers?
-;; When `auto-save-default' is non-nil, make sure entries are
-;; encrypted before auto-saving
-;; (when auto-save-default
-;;    (add-hook
-;;     'org-mode-hook
-;;     (lambda () (add-hook 'auto-save-hook 'org-encrypt-entries nil t))))
-
-(when auto-save-default
-  (message "Warning: turn auto-save-mode off in Org buffers containing crypted entries.")
-  (sit-for 5))
-
 (add-hook 'org-reveal-start-hook 'org-decrypt-entry)
 
 (provide 'org-crypt)
-
-;; arch-tag: 8202ed2c-221e-4001-9e4b-54674a7e846e
 
 ;;; org-crypt.el ends here

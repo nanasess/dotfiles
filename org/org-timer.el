@@ -1,11 +1,10 @@
 ;;; org-timer.el --- The relative timer code for Org-mode
 
-;; Copyright (C) 2008, 2009, 2010 Free Software Foundation, Inc.
+;; Copyright (C) 2008-2011 Free Software Foundation, Inc.
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -207,21 +206,20 @@ it in the buffer."
 (defun org-timer-item (&optional arg)
   "Insert a description-type item with the current timer value."
   (interactive "P")
-  (let ((itemp (org-in-item-p)))
+  (let ((itemp (org-in-item-p)) (pos (point)))
     (cond
      ;; In a timer list, insert with `org-list-insert-item',
      ;; then fix the list.
-     ((and itemp
-	   (save-excursion (goto-char itemp) (org-at-item-timer-p)))
+     ((and itemp (goto-char itemp) (org-at-item-timer-p))
       (let* ((struct (org-list-struct))
 	     (prevs (org-list-prevs-alist struct))
 	     (s (concat (org-timer (when arg '(4)) t) ":: ")))
-	(setq struct (org-list-insert-item (point) struct prevs nil s))
+	(setq struct (org-list-insert-item pos struct prevs nil s))
 	(org-list-write-struct struct (org-list-parents-alist struct))
 	(looking-at org-list-full-item-re)
 	(goto-char (match-end 0))))
      ;; In a list of another type, don't break anything: throw an error.
-     (itemp (error "This is not a timer list"))
+     (itemp (goto-char pos) (error "This is not a timer list"))
      ;; Else, start a new list.
      (t
       (beginning-of-line)
@@ -374,7 +372,7 @@ replace any running timer."
 		     (org-show-entry)
 		     (or (ignore-errors (org-get-heading))
 			 (concat "File:" (file-name-nondirectory (buffer-file-name)))))))
-		((org-mode-p)
+		((eq major-mode 'org-mode)
 		 (or (ignore-errors (org-get-heading))
 		     (concat "File:" (file-name-nondirectory (buffer-file-name)))))
 		(t (error "Not in an Org buffer"))))
@@ -403,7 +401,5 @@ replace any running timer."
 	(message "No timer set"))))))
 
 (provide 'org-timer)
-
-;; arch-tag: 97538f8c-3871-4509-8f23-1e7b3ff3d107
 
 ;;; org-timer.el ends here

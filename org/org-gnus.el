@@ -1,13 +1,11 @@
 ;;; org-gnus.el --- Support for links to Gnus groups and messages from within Org-mode
 
-;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010
-;;   Free Software Foundation, Inc.
+;; Copyright (C) 2004-2011 Free Software Foundation, Inc.
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;;         Tassilo Horn <tassilo at member dot fsf dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -249,7 +247,7 @@ If `org-store-link' was called with a prefix arg the meaning of
   (when article
     (setq article (org-substring-no-properties article)))
   (cond ((and group article)
-	 (gnus-activate-group group t)
+	 (gnus-activate-group group)
 	 (condition-case nil
 	     (let* ((method (gnus-find-method-for-group group))
 		    (backend (car method))
@@ -291,6 +289,5 @@ If `org-store-link' was called with a prefix arg the meaning of
 
 (provide 'org-gnus)
 
-;; arch-tag: 512e0840-58fa-45b3-b456-71e10fa2376d
 
 ;;; org-gnus.el ends here

@@ -1,11 +1,10 @@
 ;;; ob-C.el --- org-babel functions for C and similar languages
 
-;; Copyright (C) 2010  Free Software Foundation, Inc.
+;; Copyright (C) 2010-2011  Free Software Foundation, Inc.
 
 ;; Author: Eric Schulte
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
 
 ;; This file is part of GNU Emacs.
 
@@ -38,6 +37,8 @@
 (declare-function org-entry-get "org"
 		  (pom property &optional inherit literal-nil))
 
+
+(defvar org-babel-tangle-lang-exts)
 (add-to-list 'org-babel-tangle-lang-exts '("C++" . "cpp"))
 
 (defvar org-babel-default-header-args:C '())
@@ -178,7 +179,7 @@ of the same value."
       (format "int %S = %S;" var val))
      ((floatp val)
       (format "double %S = %S;" var val))
-     ((or (characterp val))
+     ((or (integerp val))
       (format "char %S = '%S';" var val))
      ((stringp val)
       (format "char %S[%d] = \"%s\";"
@@ -189,6 +190,6 @@ of the same value."
 
 (provide 'ob-C)
 
-;; arch-tag: 8f49e462-54e3-417b-9a8d-423864893b37
+
 
 ;;; ob-C.el ends here

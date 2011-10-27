@@ -1,12 +1,11 @@
 ;;; org-colview-xemacs.el --- Column View in Org-mode, XEmacs-specific version
 
-;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010
+;; Copyright (C) 2004-2011
 ;;   Free Software Foundation, Inc.
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -322,7 +321,9 @@ This is the compiled version of the format.")
 				  (get-text-property (point-at-bol) 'face))
 			     'default) :foreground))))
 	 (face (if (featurep 'xemacs) color (list color 'org-column)))
-	 (pl (or (get-text-property (point-at-bol) 'prefix-length) 0))
+	 (pl (- (point)
+		(or (text-property-any (point-at-bol) (point-at-eol) 'org-heading t)
+		    (point))))
 	 (cphr (get-text-property (point-at-bol) 'org-complex-heading-regexp))
 	 pom property ass width f string ov column val modval s2 title calc)
     ;; Check if the entry is in another buffer.
@@ -352,11 +353,9 @@ This is the compiled version of the format.")
 			  (funcall org-columns-modify-value-for-display-function
 				   title val))
 			 ((equal property "ITEM")
-			  (if (org-mode-p)
+			  (if (eq major-mode 'org-mode)
 			      (org-columns-cleanup-item
-			       val org-columns-current-fmt-compiled)
-			    (org-agenda-columns-cleanup-item
-			     val pl cphr org-columns-current-fmt-compiled)))
+			       val org-columns-current-fmt-compiled)))
 			 ((and calc (functionp calc)
 			       (not (string= val ""))
 			       (not (get-text-property 0 'org-computed val)))
@@ -533,20 +532,6 @@ This is the compiled version of the format.")
 	     t t s)))
   s)
 
-(defvar org-agenda-columns-remove-prefix-from-item)
-
-(defun org-agenda-columns-cleanup-item (item pl cphr fmt)
-  "Cleanup the time property for agenda column view.
-See also the variable `org-agenda-columns-remove-prefix-from-item'."
-  (let* ((org-complex-heading-regexp cphr)
-	 (prefix (substring item 0 pl))
-	 (rest (substring item pl))
-	 (fake (concat "* " rest))
-	 (cleaned (org-trim (substring (org-columns-cleanup-item fake fmt) 1))))
-    (if org-agenda-columns-remove-prefix-from-item
-	cleaned
-      (concat prefix cleaned))))
-
 (defun org-columns-show-value ()
   "Show the full value of the property."
   (interactive)
@@ -672,7 +657,7 @@ Where possible, use the standard interface for changing this line."
 		(org-columns-eval eval))
 	    (org-columns-display-here)))
 	(org-move-to-column col)
-	(if (and (org-mode-p)
+	(if (and (eq major-mode 'org-mode)
 		 (nth 3 (assoc key org-columns-current-fmt-compiled)))
 	    (org-columns-update key)))))))
 
@@ -876,7 +861,7 @@ around it."
 	  (save-restriction
 	    (narrow-to-region beg end)
 	    (org-clock-sum))))
-      (while (re-search-forward (concat "^" outline-regexp) end t)
+      (while (re-search-forward org-outline-regexp-bol end t)
 	(if (and org-columns-skip-archived-trees
 		 (looking-at (concat ".*:" org-archive-tag ":")))
 	    (org-end-of-subtree t)
@@ -1111,7 +1096,7 @@ Don't set this, this is meant for dynamic scoping.")
 (defun org-columns-compute (property)
   "Sum the values of property PROPERTY hierarchically, for the entire buffer."
   (interactive)
-  (let* ((re (concat "^" outline-regexp))
+  (let* ((re org-outline-regexp-bol)
 	 (lmax 30) ; Does anyone use deeper levels???
 	 (lvals (make-vector lmax nil))
 	 (lflag (make-vector lmax nil))
@@ -1181,7 +1166,7 @@ Don't set this, this is meant for dynamic scoping.")
     (if (marker-position org-columns-begin-marker)
 	(goto-char org-columns-begin-marker))
     (org-columns-remove-overlays)
-    (if (org-mode-p)
+    (if (eq major-mode 'org-mode)
 	(call-interactively 'org-columns)
       (org-agenda-redo)
       (call-interactively 'org-agenda-columns)))
@@ -1332,12 +1317,13 @@ of fields."
   (if (featurep 'xemacs)
       (save-excursion
         (let* ((title (mapcar 'cadr org-columns-current-fmt-compiled))
-	       (re-comment (concat "\\*+[ \t]+" org-comment-string "\\>"))
+	       (re-comment (format org-heading-keyword-regexp-format
+				   org-comment-string))
 	       (re-archive (concat ".*:" org-archive-tag ":"))
                (n (length title)) row tbl)
           (goto-char (point-min))
 
-	  (while (re-search-forward "^\\(\\*+\\) " nil t)
+	  (while (re-search-forward org-heading-regexp nil t)
 	    (catch 'next
 	      (when (and (or (null maxlevel)
 			     (>= maxlevel

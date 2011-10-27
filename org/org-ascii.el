@@ -1,12 +1,10 @@
 ;;; org-ascii.el --- ASCII export for Org-mode
 
-;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010
-;;   Free Software Foundation, Inc.
+;; Copyright (C) 2004-2011 Free Software Foundation, Inc.
 
 ;; Author: Carsten Dominik <carsten at orgmode dot org>
 ;; Keywords: outlines, hypermedia, calendar, wp
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
 ;;
 ;; This file is part of GNU Emacs.
 ;;
@@ -96,29 +94,30 @@ utf8      Use all UTF-8 characters")
 (defun org-export-as-latin1 (&rest args)
   "Like `org-export-as-ascii', use latin1 encoding for special symbols."
   (interactive)
-  (org-export-as-encoding 'org-export-as-ascii (interactive-p)
+  (org-export-as-encoding 'org-export-as-ascii (org-called-interactively-p 'any)
 			  'latin1 args))
 
 ;;;###autoload
 (defun org-export-as-latin1-to-buffer (&rest args)
   "Like `org-export-as-ascii-to-buffer', use latin1 encoding for symbols."
   (interactive)
-  (org-export-as-encoding 'org-export-as-ascii-to-buffer (interactive-p)
-			  'latin1 args))
+  (org-export-as-encoding 'org-export-as-ascii-to-buffer
+			  (org-called-interactively-p 'any) 'latin1 args))
 
 ;;;###autoload
 (defun org-export-as-utf8 (&rest args)
-  "Like `org-export-as-ascii', use use encoding for special symbols."
+  "Like `org-export-as-ascii', use encoding for special symbols."
   (interactive)
-  (org-export-as-encoding 'org-export-as-ascii (interactive-p)
+  (org-export-as-encoding 'org-export-as-ascii 
+			  (org-called-interactively-p 'any)
 			  'utf8 args))
 
 ;;;###autoload
 (defun org-export-as-utf8-to-buffer (&rest args)
   "Like `org-export-as-ascii-to-buffer', use utf8 encoding for symbols."
   (interactive)
-  (org-export-as-encoding 'org-export-as-ascii-to-buffer (interactive-p)
-			  'utf8 args))
+  (org-export-as-encoding 'org-export-as-ascii-to-buffer
+			  (org-called-interactively-p 'any) 'utf8 args))
 
 (defun org-export-as-encoding (command interactivep encoding &rest args)
   (let ((org-export-ascii-entities encoding))
@@ -145,7 +144,7 @@ command to convert it."
   (interactive "r")
   (let (reg ascii buf pop-up-frames)
     (save-window-excursion
-      (if (org-mode-p)
+      (if (eq major-mode 'org-mode)
 	  (setq ascii (org-export-region-as-ascii
 		      beg end t 'string))
 	(setq reg (buffer-substring beg end)
@@ -176,7 +175,7 @@ a Lisp program could call this function in the following way:
 When called interactively, the output buffer is selected, and shown
 in a window.  A non-interactive call will only return the buffer."
   (interactive "r\nP")
-  (when (interactive-p)
+  (when (org-called-interactively-p 'any)
     (setq buffer "*Org ASCII Export*"))
   (let ((transient-mark-mode t) (zmacs-regions t)
 	ext-plist rtn)
@@ -188,7 +187,7 @@ in a window.  A non-interactive call will only return the buffer."
 	       nil nil ext-plist
 	       buffer body-only))
     (if (fboundp 'deactivate-mark) (deactivate-mark))
-    (if (and (interactive-p) (bufferp rtn))
+    (if (and (org-called-interactively-p 'any) (bufferp rtn))
 	(switch-to-buffer-other-window rtn)
       rtn)))
 
@@ -284,13 +283,15 @@ publishing directory."
 		    "UNTITLED"))
 	 (email (plist-get opt-plist :email))
 	 (language (plist-get opt-plist :language))
-	 (quote-re0 (concat "^[ \t]*" org-quote-string "\\>"))
+	 (quote-re0 (concat "^\\(" org-quote-string "\\)\\( +\\|[ \t]*$\\)"))
 	 (todo nil)
 	 (lang-words nil)
 	 (region
 	  (buffer-substring
 	   (if (org-region-active-p) (region-beginning) (point-min))
 	   (if (org-region-active-p) (region-end) (point-max))))
+	 (org-export-footnotes-seen nil)
+	 (org-export-footnotes-data (org-footnote-all-labels 'with-defs))
 	 (lines (org-split-string
 		 (org-export-preprocess-string
 		  region
@@ -303,6 +304,7 @@ publishing directory."
 		  :footnotes (plist-get opt-plist :footnotes)
 		  :timestamps (plist-get opt-plist :timestamps)
 		  :todo-keywords (plist-get opt-plist :todo-keywords)
+		  :tasks (plist-get opt-plist :tasks)
 		  :verbatim-multiline t
 		  :select-tags (plist-get opt-plist :select-tags)
 		  :exclude-tags (plist-get opt-plist :exclude-tags)
@@ -370,7 +372,7 @@ publishing directory."
 	  (push (concat (nth 3 lang-words) "\n") thetoc)
 	  (push (concat (make-string (string-width (nth 3 lang-words)) ?=)
 			"\n") thetoc)
-	  (mapc '(lambda (line)
+	  (mapc #'(lambda (line)
 		   (if (string-match org-todo-line-regexp
 				     line)
 		       ;; This is a headline
@@ -404,7 +406,7 @@ publishing directory."
 				   txt))
 			     (setq txt (replace-match "" t t txt)))
 			 (if (string-match quote-re0 txt)
-			     (setq txt (replace-match "" t t txt)))
+			     (setq txt (replace-match "" t t txt 1)))
 
 			 (if org-export-with-section-numbers
 			     (setq txt (concat (org-section-number level)
@@ -424,7 +426,7 @@ publishing directory."
 
     (org-init-section-numbers)
     (while (setq line (pop lines))
-      (when (and link-buffer (string-match "^\\*+ " line))
+      (when (and link-buffer (string-match org-outline-regexp-bol line))
 	(org-export-ascii-push-links (nreverse link-buffer))
 	(setq link-buffer nil))
       (setq wrap nil)
@@ -625,7 +627,9 @@ publishing directory."
       (save-match-data
 	(if (save-excursion
 	      (re-search-backward
-	       "^\\(\\([ \t]*\\)\\|\\(\\*+ \\)\\)[^ \t\n]" nil t))
+	       (concat "^\\(\\([ \t]*\\)\\|\\("
+		       org-outline-regexp
+		       "\\)\\)[^ \t\n]") nil t))
 	    (setq ind (or (match-string 2)
 			  (make-string (length (match-string 3)) ?\ )))))
       (mapc (lambda (x) (insert ind "[" (car x) "]: " (cdr x) "\n"))
@@ -720,5 +724,4 @@ publishing directory."
 
 (provide 'org-ascii)
 
-;; arch-tag: aa96f882-f477-4e13-86f5-70d43e7adf3c
 ;;; org-ascii.el ends here

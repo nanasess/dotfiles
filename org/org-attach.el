@@ -1,10 +1,9 @@
 ;;; org-attach.el --- Manage file attachments to org-mode tasks
 
-;; Copyright (C) 2008, 2009, 2010 Free Software Foundation, Inc.
+;; Copyright (C) 2008-2011 Free Software Foundation, Inc.
 
 ;; Author: John Wiegley <johnw@newartisans.com>
 ;; Keywords: org data task
-;; Version: 7.5
 
 ;; This file is part of GNU Emacs.
 ;;
@@ -102,7 +101,10 @@ ln    create a hard link.  Note that this is not supported
 (defcustom org-attach-store-link-p nil
   "Non-nil means store a link to a file when attaching it."
   :group 'org-attach
-  :type 'boolean)
+  :type '(choice
+	  (const :tag "Don't store link" nil)
+	  (const :tag "Link to origin location" t)
+	  (const :tag "Link to the attach-dir location" 'attached)))
 
 ;;;###autoload
 (defun org-attach ()
@@ -250,7 +252,7 @@ This checks for the existence of a \".git\" directory in that directory."
 	(cd dir)
 	(shell-command "git add .")
 	(shell-command "git ls-files --deleted" t)
-	(mapc '(lambda (file)
+	(mapc #'(lambda (file)
 		 (unless (string= file "")
 		   (shell-command
 		    (concat "git rm \"" file "\""))))
@@ -294,8 +296,10 @@ METHOD may be `cp', `mv', or `ln', default taken from `org-attach-method'."
        ((eq method 'ln) (add-name-to-file file fname)))
       (org-attach-commit)
       (org-attach-tag)
-      (when org-attach-store-link-p 
-	(org-attach-store-link file))
+      (cond ((eq org-attach-store-link-p 'attached)
+	     (org-attach-store-link fname))
+	    ((eq org-attach-store-link-p t)
+	     (org-attach-store-link file)))
       (if visit-dir
 	  (dired attach-dir)
 	(message "File \"%s\" is now a task attachment." basename)))))
@@ -432,5 +436,4 @@ prefix."
 
 (provide 'org-attach)
 
-;; arch-tag: fce93c2e-fe07-4fa3-a905-e10dcc7a6248
 ;;; org-attach.el ends here

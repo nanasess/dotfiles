@@ -1,10 +1,9 @@
 ;;; org-docbook.el --- DocBook exporter for org-mode
 ;;
-;; Copyright (C) 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
+;; Copyright (C) 2007-2011 Free Software Foundation, Inc.
 ;;
 ;; Emacs Lisp Archive Entry
 ;; Filename: org-docbook.el
-;; Version: 7.5
 ;; Author: Baoqiu Cui <cbaoqiu AT yahoo DOT com>
 ;; Maintainer: Baoqiu Cui <cbaoqiu AT yahoo DOT com>
 ;; Keywords: org, wp, docbook
@@ -145,6 +144,11 @@ people work on the same document."
   "The prefix of footnote IDs used during exporting.
 Like `org-export-docbook-section-id-prefix', this variable can help
 avoid same set of footnote IDs being used multiple times."
+  :group 'org-export-docbook
+  :type 'string)
+
+(defcustom org-export-docbook-footnote-separator "<superscript>, </superscript>"
+  "Text used to separate footnotes."
   :group 'org-export-docbook
   :type 'string)
 
@@ -289,7 +293,7 @@ then use this command to convert it."
   (interactive "r")
   (let (reg docbook buf)
     (save-window-excursion
-      (if (org-mode-p)
+      (if (eq major-mode 'org-mode)
 	  (setq docbook (org-export-region-as-docbook
 			 beg end t 'string))
 	(setq reg (buffer-substring beg end)
@@ -320,7 +324,7 @@ could call this function in the following way:
 When called interactively, the output buffer is selected, and shown
 in a window.  A non-interactive call will only return the buffer."
   (interactive "r\nP")
-  (when (interactive-p)
+  (when (org-called-interactively-p 'any)
     (setq buffer "*Org DocBook Export*"))
   (let ((transient-mark-mode t)
 	(zmacs-regions t)
@@ -332,7 +336,7 @@ in a window.  A non-interactive call will only return the buffer."
 	       nil nil
 	       buffer body-only))
     (if (fboundp 'deactivate-mark) (deactivate-mark))
-    (if (and (interactive-p) (bufferp rtn))
+    (if (and (org-called-interactively-p 'any) (bufferp rtn))
 	(switch-to-buffer-other-window rtn)
       rtn)))
 
@@ -494,8 +498,9 @@ publishing directory."
 	 ;; We will use HTML table formatter to export tables to DocBook
 	 ;; format, so need to set html-table-tag here.
 	 (html-table-tag (plist-get opt-plist :html-table-tag))
-	 (quote-re0   (concat "^[ \t]*" org-quote-string "\\>"))
-	 (quote-re    (concat "^\\(\\*+\\)\\([ \t]+" org-quote-string "\\>\\)"))
+	 (quote-re0   (concat "^ *" org-quote-string "\\( +\\|[ \t]*$\\)"))
+	 (quote-re    (format org-heading-keyword-regexp-format
+			      org-quote-string))
 	 (inquote     nil)
 	 (infixed     nil)
 	 (inverse     nil)
@@ -519,6 +524,8 @@ publishing directory."
 	  (buffer-substring
 	   (if region-p (region-beginning) (point-min))
 	   (if region-p (region-end) (point-max))))
+	 (org-export-footnotes-seen nil)
+	 (org-export-footnotes-data (org-footnote-all-labels 'with-defs))
 	 (lines
 	  (org-split-string
 	   (org-export-preprocess-string
@@ -529,6 +536,7 @@ publishing directory."
 	    (plist-get opt-plist :skip-before-1st-heading)
 	    :drawers (plist-get opt-plist :drawers)
 	    :todo-keywords (plist-get opt-plist :todo-keywords)
+	    :tasks (plist-get opt-plist :tasks)
 	    :tags (plist-get opt-plist :tags)
 	    :priority (plist-get opt-plist :priority)
 	    :footnotes (plist-get opt-plist :footnotes)
@@ -643,7 +651,7 @@ publishing directory."
 	(catch 'nextline
 
 	  ;; End of quote section?
-	  (when (and inquote (string-match "^\\*+ " line))
+	  (when (and inquote (string-match org-outline-regexp-bol line))
 	    (insert "]]></programlisting>\n")
 	    (org-export-docbook-open-para)
 	    (setq inquote nil))
@@ -928,7 +936,10 @@ publishing directory."
 	  (when org-export-with-footnotes
 	    (setq start 0)
 	    (while (string-match "\\([^* \t].*?\\)\\[\\([0-9]+\\)\\]" line start)
-	      (if (get-text-property (match-beginning 2) 'org-protected line)
+	      ;; Discard protected matches not clearly identified as
+	      ;; footnote markers.
+	      (if (or (get-text-property (match-beginning 2) 'org-protected line)
+		      (not (get-text-property (match-beginning 2) 'org-footnote line)))
 		  (setq start (match-end 2))
 		(let* ((num (match-string 2 line))
 		       (footnote-def (assoc num footnote-list)))
@@ -939,19 +950,27 @@ publishing directory."
 					  org-export-docbook-footnote-id-prefix num)
 				  t t line))
 		    (setq line (replace-match
-				(format "%s<footnote xml:id=\"%s%s\"><para>%s</para></footnote>"
-					(match-string 1 line)
-					org-export-docbook-footnote-id-prefix
-					num
-					(if footnote-def
-					    (save-match-data
-					      (org-docbook-expand (cdr footnote-def)))
-					  (format "FOOTNOTE DEFINITION NOT FOUND: %s" num)))
+				(concat
+				 (format "%s<footnote xml:id=\"%s%s\"><para>%s</para></footnote>"
+					 (match-string 1 line)
+					 org-export-docbook-footnote-id-prefix
+					 num
+					 (if footnote-def
+					     (save-match-data
+					       (org-docbook-expand (cdr footnote-def)))
+					   (format "FOOTNOTE DEFINITION NOT FOUND: %s" num)))
+				 ;; If another footnote is following the
+				 ;; current one, add a separator.
+				 (if (save-match-data
+				       (string-match "\\`\\[[0-9]+\\]"
+						     (substring line (match-end 0))))
+				     org-export-docbook-footnote-separator
+				   ""))
 				t t line))
 		    (push (cons num 1) footref-seen))))))
 
 	  (cond
-	   ((string-match "^\\(\\*+\\)[ \t]+\\(.*\\)" line)
+	   ((string-match "^\\(\\*+\\)\\(?: +\\(.*?\\)\\)?[ \t]*$" line)
 	    ;; This is a headline
 	    (setq level (org-tr-level (- (match-end 1) (match-beginning 1)
 					 level-offset))
@@ -1371,15 +1390,17 @@ the alist of previous items."
 			  "</listitem></varlistentry>\n"
 			"</listitem>\n"))
 	      ;; We're ending last item of the list: end list.
-	      (when lastp (insert (format "</%slist>\n" type)))))
+	      (when lastp
+		(insert (format "</%slist>\n" type))
+		(org-export-docbook-open-para))))
 	  (funcall get-closings pos))
     (cond
      ;; At an item: insert appropriate tags in export buffer.
      ((assq pos struct)
-      (string-match (concat "[ \t]*\\(\\S-+[ \t]+\\)"
-			    "\\(?:\\[@\\(?:start:\\)?\\([0-9]+\\|[a-zA-Z]\\)\\]\\)?"
+      (string-match (concat "[ \t]*\\(\\S-+[ \t]*\\)"
+			    "\\(?:\\[@\\(?:start:\\)?\\([0-9]+\\|[a-zA-Z]\\)\\][ \t]*\\)?"
 			    "\\(?:\\(\\[[ X-]\\]\\)[ \t]+\\)?"
-			    "\\(?:\\(.*\\)[ \t]+::[ \t]+\\)?"
+			    "\\(?:\\(.*\\)[ \t]+::\\(?:[ \t]+\\|$\\)\\)?"
 			    "\\(.*\\)")
 		    line)
       (let* ((checkbox (match-string 3 line))
@@ -1424,5 +1445,4 @@ the alist of previous items."
 
 (provide 'org-docbook)
 
-;; arch-tag: a24a127c-d365-4c2a-9e9b-f7dcb0ebfdc3
 ;;; org-docbook.el ends here

@@ -1,11 +1,10 @@
 ;;; ob-latex.el --- org-babel functions for latex "evaluation"
 
-;; Copyright (C) 2009, 2010  Free Software Foundation, Inc.
+;; Copyright (C) 2009-2011  Free Software Foundation, Inc.
 
 ;; Author: Eric Schulte
 ;; Keywords: literate programming, reproducible research
 ;; Homepage: http://orgmode.org
-;; Version: 7.5
 
 ;; This file is part of GNU Emacs.
 
@@ -37,6 +36,7 @@
 (declare-function org-splice-latex-header "org"
 		  (tpl def-pkg pkg snippets-p &optional extra))
 (declare-function org-export-latex-fix-inputenc "org-latex" ())
+(defvar org-babel-tangle-lang-exts)
 (add-to-list 'org-babel-tangle-lang-exts '("latex" . "tex"))
 
 (defvar org-format-latex-header)
@@ -175,6 +175,6 @@ Extracted from `org-export-as-pdf' in org-latex.el."
 
 (provide 'ob-latex)
 
-;; arch-tag: 1f13f7e2-26de-4c24-9274-9f331d4c6ff3
+
 
 ;;; ob-latex.el ends here
