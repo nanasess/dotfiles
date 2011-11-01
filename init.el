@@ -830,7 +830,7 @@
 ;;; anything.el settings
 ;;;
 ;;; (auto-install-batch "anything")
-;;; (auto-install-from-url "https://github.com/kitokitoki/anything-howm/raw/master/anything-howm.el")
+;;; (auto-install-from-url "https://raw.github.com/wakaran/anything-howm/master/anything-howm.el")
 ;;;
 
 (require 'anything-startup)
