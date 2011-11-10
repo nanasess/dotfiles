@@ -523,11 +523,11 @@
 ;;;
 ;;; psvn settings
 ;;;
+;;; (auto-install-from-url "http://svn.apache.org/repos/asf/subversion/trunk/contrib/client-side/emacs/dsvn.el")
+;;;
 
-(require 'psvn)
-(setq svn-status-svn-environment-var-list
-      (append '("LANG=ja_JP.UTF-8" "LC_TIME=C")
-	      svn-status-svn-environment-var-list))
+(autoload 'svn-status "dsvn" "Run `svn status'." t)
+(autoload 'svn-update "dsvn" "Run `svn update'." t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
