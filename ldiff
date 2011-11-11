@@ -1,0 +1,3 @@
+#!/bin/sh
+export LANG=ja_JP.UTF-8
+diff --strip-trailing-cr -uNr "$@" | lv
