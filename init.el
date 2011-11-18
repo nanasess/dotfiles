@@ -375,10 +375,7 @@
 (autoload 'gtags-mode "gtags" nil t)
 (add-hook 'gtags-mode-hook
 	  (lambda ()
-	    (local-set-key (kbd "M-.") 'gtags-find-tag)
-	    (local-set-key (kbd "C-u M-.") 'gtags-pop-stack)
-	    (local-set-key (kbd "C-u M-r") 'gtags-find-rtag)
-	    (local-set-key (kbd "C-u M-s") 'gtags-find-symbol)))
+	    (local-set-key (kbd "M-.") 'gtags-find-tag)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
