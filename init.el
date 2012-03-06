@@ -210,7 +210,8 @@
 ;;;
 
 ;; (define-key c-mode-base-map "*" nil) ; for Emacs 23
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "cc")))
+(when (<= emacs-major-version 23)
+  (add-to-list 'load-path (expand-file-name (concat user-emacs-directory "cc"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
