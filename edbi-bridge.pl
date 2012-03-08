@@ -17,6 +17,7 @@ sub edbi_connect {
     }
   }
   our $dbh = DBI->connect($data_source, $username, $auth);
+  $dbh->do("SET CLIENT_ENCODING TO 'UTF8'");
   return $dbh->get_info(18);
 }
 
