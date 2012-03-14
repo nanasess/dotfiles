@@ -5,18 +5,28 @@
 
 ;;; Code:
 
+(defvar user-initial-directory (concat user-emacs-directory "init.d/"))
+(defvar user-site-lisp-directory (concat user-emacs-directory "site-lisp/"))
+(defvar user-misc-directory (concat user-emacs-directory "etc/"))
+(defvar user-bin-directory (concat user-emacs-directory "bin/"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; initial load files
 ;;;
 
+
+
 (dolist (sys-type (list (symbol-name system-type)
 			(symbol-name window-system)))
 
   (add-to-list 'load-path
-	       (expand-file-name (concat user-emacs-directory sys-type)))
+	       (expand-file-name
+		(concat user-initial-directory "arch/" sys-type)))
   (load "init" t))
 (add-to-list 'load-path (expand-file-name user-emacs-directory))
+(add-to-list 'load-path (expand-file-name user-initial-directory))
+(add-to-list 'load-path (expand-file-name user-site-lisp-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -26,7 +36,7 @@
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
 		   "/opt/local/sbin" "/opt/local/bin"
 		   (expand-file-name "~/bin")
-		   (expand-file-name "~/.emacs.d")
+		   (expand-file-name "~/.emacs.d/bin")
 		   (expand-file-name "~/Applications/pTeX.app/teTeX/bin")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
@@ -51,7 +61,7 @@
 ;;;
 
 (setq skk-user-directory "~/Dropbox/ddskk")
-(setq skk-init-file (concat user-emacs-directory ".skk"))
+(setq skk-init-file (concat user-initial-directory "skk-init.el"))
 (setq skk-preload t)
 (setq skk-auto-save-interval 30)
 (defun toggle-skk-kutouten ()
@@ -211,7 +221,7 @@
 
 ;; (define-key c-mode-base-map "*" nil) ; for Emacs 23
 (when (<= emacs-major-version 23)
-  (add-to-list 'load-path (expand-file-name (concat user-emacs-directory "cc"))))
+  (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "cc"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -368,7 +378,7 @@
 ;;; mmm-mode settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "mmm")))
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "mmm")))
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
 (set-face-background 'mmm-default-submode-face "ivory2")
@@ -399,7 +409,7 @@
 ;;; org-mode settings
 ;;;
 (when (<= emacs-major-version 23)
-  (add-to-list 'load-path (expand-file-name (concat user-emacs-directory "org")))
+  (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "org")))
   (require 'org-install))
 (require 'ob-sh)
 (require 'ob-css)
@@ -469,7 +479,7 @@
 ;;; dvc settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "dvc")))
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "dvc")))
 (require 'dvc-autoloads)
 (setq dvc-tips-enabled nil)
 
@@ -511,7 +521,7 @@
 (setq howm-view-title-header "#+TITLE:")
 (setq howm-view-use-grep nil)
 (add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "howm")))
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "howm")))
 (require 'howm)
 (setq howm-template
       (concat howm-view-title-header
@@ -579,7 +589,7 @@
 
 (require 'yasnippet)
 (yas/initialize)
-(yas/load-directory (expand-file-name (concat user-emacs-directory "snippets")))
+(yas/load-directory (expand-file-name (concat user-misc-directory "snippets")))
 (require 'dropdown-list)
 (setq yas/prompt-functions '(yas/dropdown-prompt))
 (defun yas/org-very-safe-expand ()
@@ -598,7 +608,7 @@
 ;;; zencoding settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "zencoding")))
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "zencoding")))
 (require 'zencoding-mode)
 (add-hook 'nxml-mode-hook 'zencoding-mode)
 (define-key zencoding-mode-keymap (kbd "<C-return>") 'zencoding-expand-yas)
@@ -611,7 +621,7 @@
 ;;;
 
 (require 'auto-complete)
-(add-to-list 'ac-dictionary-directories (concat user-emacs-directory "dict"))
+(add-to-list 'ac-dictionary-directories (concat user-misc-directory "dict"))
 (require 'auto-complete-config)
 (ac-config-default)
 (setq ac-auto-show-menu 0.8)
@@ -634,7 +644,7 @@
 ;;;
 
 (autoload 'w3m "w3m" "Visit the www page using w3m" t)
-(setq w3m-init-file (concat user-emacs-directory ".emacs-w3m"))
+(setq w3m-init-file (concat user-initial-directory "emacs-w3m-init.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -643,7 +653,7 @@
 
 (require 'simple-hatena-mode)
 (setq simple-hatena-default-id "nanasess")
-(setq simple-hatena-bin (expand-file-name (concat user-emacs-directory "hw.pl")))
+(setq simple-hatena-bin (expand-file-name (concat user-bin-directory "hw.pl")))
 (setq simple-hatena-root howm-directory)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -711,7 +721,7 @@
 ;;;
 
 (require 'auto-install)
-(setq auto-install-directory user-emacs-directory)
+(setq auto-install-directory user-site-lisp-directory)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -908,7 +918,7 @@ It is automatically generated by `anything-migrate-sources'."
 
 (setq locate-home-database  (expand-file-name "~/locate.database"))
 (setq locate-update-command (expand-file-name
-			     (concat user-emacs-directory "locate.updatedb.sh")))
+			     (concat user-bin-directory "locate.updatedb.sh")))
 (setq locate-update-command-program-args
       (list "nice" "-n" "19" locate-update-command))
 
