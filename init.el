@@ -346,7 +346,8 @@
 ;;; gtags settings
 ;;;
 
-(autoload 'gtags-mode "gtags" nil t)
+(require 'gtags)
+(setq gtags-path-style 'relative)
 (add-hook 'gtags-mode-hook
 	  (lambda ()
 	    (local-set-key (kbd "M-.") 'gtags-find-tag)))
