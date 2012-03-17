@@ -1,5 +1,5 @@
-SITE_DIR=~/.emacs.d
-EMACS=~/Applications/Emacs.app/Contents/MacOS/Emacs
+SITE_DIR=C:/Users/Kentaro\ Ohkouchi/.emacs.d
+EMACS=C:/emacs-23.4/bin/emacs.exe
 
 all: compile
 compile:

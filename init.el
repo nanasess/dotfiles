@@ -323,13 +323,17 @@
 ;;; migemo settings
 ;;;
 
-(setq migemo-dictionary "/usr/local/share/migemo/euc-jp/migemo-dict")
-(when (file-exists-p migemo-dictionary)
-  (setq migemo-command "cmigemo")
-  (setq migemo-options '("-q" "--emacs" "-i" "\a"))
-  (setq migemo-user-dictionary nil)
-  (setq migemo-regex-dictionary nil)
-  (require 'migemo))
+(setq migemo-command "~/Documents/gnupack_basic-7.02/app/cmigemo/cmigemo.exe")
+(setq migemo-options '("-q" "--emacs" "-i" "\a"))
+(setq migemo-dictionary (expand-file-name (concat "~/Documents/gnupack_basic-7.02/app/cmigemo/dict/cp932/migemo-dict")))
+(setq migemo-user-dictionary nil)
+(setq migemo-regex-dictionary nil)
+(setq migemo-use-pattern-alist t)
+(setq migemo-use-frequent-pattern-alist t)
+(setq migemo-pattern-alist-length 1024)
+(setq migemo-coding-system 'sjis-unix)
+(load-library "migemo")
+(migemo-init)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
