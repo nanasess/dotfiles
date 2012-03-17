@@ -5,18 +5,28 @@
 
 ;;; Code:
 
+(defvar user-initial-directory (concat user-emacs-directory "init.d/"))
+(defvar user-site-lisp-directory (concat user-emacs-directory "site-lisp/"))
+(defvar user-misc-directory (concat user-emacs-directory "etc/"))
+(defvar user-bin-directory (concat user-emacs-directory "bin/"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; initial load files
 ;;;
 
+
+
 (dolist (sys-type (list (symbol-name system-type)
 			(symbol-name window-system)))
 
   (add-to-list 'load-path
-	       (expand-file-name (concat user-emacs-directory sys-type)))
+	       (expand-file-name
+		(concat user-initial-directory "arch/" sys-type)))
   (load "init" t))
 (add-to-list 'load-path (expand-file-name user-emacs-directory))
+(add-to-list 'load-path (expand-file-name user-initial-directory))
+(add-to-list 'load-path (expand-file-name user-site-lisp-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -26,7 +36,7 @@
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
 		   "/opt/local/sbin" "/opt/local/bin"
 		   (expand-file-name "~/bin")
-		   (expand-file-name "~/.emacs.d")
+		   (expand-file-name "~/.emacs.d/bin")
 		   (expand-file-name "~/Applications/pTeX.app/teTeX/bin")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
@@ -51,7 +61,7 @@
 ;;;
 
 (setq skk-user-directory "~/Dropbox/ddskk")
-(setq skk-init-file (concat user-emacs-directory ".skk"))
+(setq skk-init-file (concat user-initial-directory "skk-init.el"))
 (setq skk-preload t)
 (setq skk-auto-save-interval 30)
 (defun toggle-skk-kutouten ()
@@ -210,7 +220,8 @@
 ;;;
 
 ;; (define-key c-mode-base-map "*" nil) ; for Emacs 23
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "cc")))
+(when (<= emacs-major-version 23)
+  (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "cc"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -315,7 +326,6 @@
   (cond ((frame-size-greater-p) (normal-size-frame))
 	((wide-size-frame))))
 
-(global-set-key (kbd "M-+") 'e2wm:start-management)
 (global-set-key (kbd "C-z C-z") 'toggle-size-frame)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -340,7 +350,8 @@
 ;;; gtags settings
 ;;;
 
-(autoload 'gtags-mode "gtags" nil t)
+(require 'gtags)
+(setq gtags-path-style 'relative)
 (add-hook 'gtags-mode-hook
 	  (lambda ()
 	    (local-set-key (kbd "M-.") 'gtags-find-tag)))
@@ -372,7 +383,7 @@
 ;;; mmm-mode settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "mmm")))
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "mmm")))
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
 (set-face-background 'mmm-default-submode-face "ivory2")
@@ -403,7 +414,7 @@
 ;;; org-mode settings
 ;;;
 (when (<= emacs-major-version 23)
-  (add-to-list 'load-path (expand-file-name (concat user-emacs-directory "org")))
+  (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "org")))
   (require 'org-install))
 (require 'ob-sh)
 (require 'ob-css)
@@ -473,7 +484,7 @@
 ;;; dvc settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "dvc")))
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "dvc")))
 (require 'dvc-autoloads)
 (setq dvc-tips-enabled nil)
 
@@ -515,7 +526,7 @@
 (setq howm-view-title-header "#+TITLE:")
 (setq howm-view-use-grep nil)
 (add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "howm")))
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "howm")))
 (require 'howm)
 (setq howm-template
       (concat howm-view-title-header
@@ -583,7 +594,7 @@
 
 (require 'yasnippet)
 (yas/initialize)
-(yas/load-directory (expand-file-name (concat user-emacs-directory "snippets")))
+(yas/load-directory (expand-file-name (concat user-misc-directory "snippets")))
 (require 'dropdown-list)
 (setq yas/prompt-functions '(yas/dropdown-prompt))
 (defun yas/org-very-safe-expand ()
@@ -602,7 +613,7 @@
 ;;; zencoding settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "zencoding")))
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "zencoding")))
 (require 'zencoding-mode)
 (add-hook 'nxml-mode-hook 'zencoding-mode)
 (define-key zencoding-mode-keymap (kbd "<C-return>") 'zencoding-expand-yas)
@@ -615,7 +626,7 @@
 ;;;
 
 (require 'auto-complete)
-(add-to-list 'ac-dictionary-directories (concat user-emacs-directory "dict"))
+(add-to-list 'ac-dictionary-directories (concat user-misc-directory "dict"))
 (require 'auto-complete-config)
 (ac-config-default)
 (setq ac-auto-show-menu 0.8)
@@ -638,7 +649,7 @@
 ;;;
 
 (autoload 'w3m "w3m" "Visit the www page using w3m" t)
-(setq w3m-init-file (concat user-emacs-directory ".emacs-w3m"))
+(setq w3m-init-file (concat user-initial-directory "emacs-w3m-init.el"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -647,7 +658,7 @@
 
 (require 'simple-hatena-mode)
 (setq simple-hatena-default-id "nanasess")
-(setq simple-hatena-bin (expand-file-name (concat user-emacs-directory "hw.pl")))
+(setq simple-hatena-bin (expand-file-name (concat user-bin-directory "hw.pl")))
 (setq simple-hatena-root howm-directory)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -715,7 +726,7 @@
 ;;;
 
 (require 'auto-install)
-(setq auto-install-directory user-emacs-directory)
+(setq auto-install-directory user-site-lisp-directory)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -743,6 +754,7 @@
 ;;; (auto-install-batch "anything")
 ;;; (auto-install-from-url "https://raw.github.com/wakaran/anything-howm/master/anything-howm.el")
 ;;;
+(setq w3m-command "/opt/local/bin/w3m")
 (require 'anything-startup)
 (require 'anything-howm)
 (require 'anything-gtags)
@@ -785,6 +797,22 @@ It is automatically generated by `anything-migrate-sources'."
 (defun anything-howm-display-buffer (buf)
   (pop-to-buffer buf))
 (global-set-key (kbd "C-z ,") 'anything-howm-menu-command)
+(global-set-key (kbd "C-z .") 'anything-howm-resume)
+
+(require 'anything-gist)
+
+;; anything in dired
+;; see. http://d.hatena.ne.jp/syohex/20120105/1325770778
+(defun my/anything-dired ()
+  ""
+  (interactive)
+  (let ((curbuf (current-buffer)))
+    (if (anything-other-buffer
+         '(anything-c-source-files-in-current-dir+)
+         " *anything-dired*")
+        (kill-buffer curbuf))))
+
+(define-key dired-mode-map (kbd "p") 'my/anything-dired)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -809,8 +837,7 @@ It is automatically generated by `anything-migrate-sources'."
 (setq anything-samewindow nil)
 (setq popwin:special-display-config
       (append
-       '((" *auto-async-byte-compile*"		:noselect t)
-	 ("*anything complete*"			:height 10)
+       '(("*anything complete*"			:height 10)
 	 ("*anything*"				:height 30)
 	 ("*my-anything*"			:height 30)
 	 ("*anything-howm-menu*"		:height 30)
@@ -845,6 +872,32 @@ It is automatically generated by `anything-migrate-sources'."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; Emacs DBI settings
+;;;
+;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-deferred/master/concurrent.el")
+;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-ctable/master/ctable.el")
+;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-epc/master/epc.el")
+;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-edbi/master/edbi.el")
+;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-edbi/master/edbi-bridge.pl")
+;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-window-layout/master/window-layout.el")
+;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-window-manager/master/e2wm.el")
+;;; (auto-install-from-url "https://raw.github.com/gist/1842966/98b5f0596096b138009bffcd5d2e3609719fb5d5/e2wm-edbi-pre.el")
+;;; cpan RPC::EPC::Service DBI DBD::SQLite DBD::Pg DBD::mysql
+;;;
+
+(require 'edbi)
+(autoload 'edbi:open-db-viewer "edbi")
+
+(require 'e2wm)
+(global-set-key (kbd "M-+") 'e2wm:start-management)
+(load "e2wm-edbi")
+(global-set-key (kbd "C-z C-c") 'e2wm:dp-code)
+(global-set-key (kbd "C-z C-d") 'e2wm:dp-edbi)
+(global-set-key (kbd "C-z 2") 'e2wm:dp-doc)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mkpasswd settings
 ;;;
 
@@ -871,7 +924,7 @@ It is automatically generated by `anything-migrate-sources'."
 
 (setq locate-home-database  (expand-file-name "~/locate.database"))
 (setq locate-update-command (expand-file-name
-			     (concat user-emacs-directory "locate.updatedb.sh")))
+			     (concat user-bin-directory "locate.updatedb.sh")))
 (setq locate-update-command-program-args
       (list "nice" "-n" "19" locate-update-command))
 
@@ -887,3 +940,54 @@ It is automatically generated by `anything-migrate-sources'."
    (lambda (proc stat)
      (if (zerop (process-exit-status proc))
 	 (message "locate.updatedb...done")))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; apachectl settings
+;;;
+;;;
+
+(defvar apachectl-program-command "/opt/local/apache2/bin/apachectl")
+(defvar apachectl-buffer-name "*apachectl*")
+(defun executable-apachectl (args)
+"Executable apachectl command.
+required setting with sudoers.
+
+e.g.)
+username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
+         /opt/local/apache2/bin/apachectl start,\\
+         /opt/local/apache2/bin/apachectl stop,\\
+         /opt/local/apache2/bin/apachectl graceful,\\
+         /opt/local/apache2/bin/apachectl restart
+"
+  (interactive)
+  (let ((apachectl-command (list "sudo" apachectl-program-command args)))
+    (with-current-buffer (get-buffer-create apachectl-buffer-name)
+      (erase-buffer)
+      (buffer-disable-undo)
+      (set-process-sentinel
+       (apply 'start-process (format "apachectl %s" args) (current-buffer)
+	      apachectl-command)
+       (lambda (proc stat)
+	 (cond ((zerop (process-exit-status proc))
+		(message "%s... successful!" proc))
+	       ((popwin:popup-buffer-tail apachectl-buffer-name)
+		(error "%s... failur!" proc))))))))
+(defun apachectl/start ()
+  (interactive)
+  (executable-apachectl "start"))
+(defun apachectl/stop ()
+  (interactive)
+  (executable-apachectl "stop"))
+(defun apachectl/restart ()
+  (interactive)
+  (executable-apachectl "restart"))
+(defun apachectl/configtest ()
+  (interactive)
+  (executable-apachectl "configtest"))
+(defun apachectl/graceful ()
+  (interactive)
+  (executable-apachectl "graceful"))
+
+(global-set-key (kbd "C-z C-a c") 'apachectl/configtest)
+(global-set-key (kbd "C-z C-a g") 'apachectl/graceful)

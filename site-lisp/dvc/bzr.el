@@ -348,7 +348,7 @@ TODO: DONT-SWITCH is currently ignored."
     (dvc-save-some-buffers root)
     (dvc-run-dvc-async
      'bzr `("diff" ,@(when against
-                       (list (concat "--using=" (expand-file-name (concat user-emacs-directory  "ldiff"))) "--revision"
+                       (list (concat "--using=" (expand-file-name (concat user-bin-directory  "ldiff"))) "--revision"
                              (bzr-revision-id-to-string
                               against))))
      :finished
@@ -398,7 +398,7 @@ TODO: dont-switch is currently ignored."
                   (t default-directory))))
       (dvc-run-dvc-async
        'bzr `("diff"
-              ,(concat "--using=" (expand-file-name (concat user-emacs-directory  "ldiff")))
+              ,(concat "--using=" (expand-file-name (concat user-bin-directory  "ldiff")))
               "--revision" ,(concat base-str ".." modified-str)
               ,extra-arg)
        :finished

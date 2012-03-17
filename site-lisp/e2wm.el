@@ -1,9 +1,9 @@
-;;; e2wm.el --- simple window manager for emacs
 
-;; Copyright (C) 2010  SAKURAI Masashi
+;;; e2wm.el --- simple window manager for emacs
+;; Copyright (C) 2010, 2011  SAKURAI Masashi
 
 ;; Author: SAKURAI Masashi <m.sakurai atmark kiwanami.net>
-;; Version: 1.1
+;; Version: 1.2
 ;; Keywords: tools, window manager
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -90,9 +90,10 @@
 
 ;;; 更新履歴
 
-;; Revision 1.2  2010/07/24  sakurai
-;; moccurの検索結果のカーソール移動がうまくいかない問題の修正。
-;; <<continue...>>
+;; Revision 1.2  2011/01/28  sakurai
+;; elscreen対応, e2wm開始・終了時のウインドウ保存改善
+;; subウインドウがたまに残ってしまう問題の改善と動作速度改善
+;; faceのバグ修正など
 ;; 
 ;; Revision 1.1  2010/06/07  sakurai
 ;; 名前の変更 (ewm.el -> e2wm.el)
@@ -239,12 +240,8 @@
   ;;switch-to-buffer, pop-to-bufferが無限ループにならないようにするマクロ。
   ;;ユーザーのアクションではなくて、内部の動作なのでこれらの関数を
   ;;本来の動きにしたい場合はこのマクロで囲む。
-  `(if e2wm:ad-now-overriding
-       (progn ,@body) ; 再帰している場合
-     (setq e2wm:ad-now-overriding t) ; 初回
-     (unwind-protect 
-         (progn ,@body) 
-       (setq e2wm:ad-now-overriding nil))))
+  `(let ((e2wm:ad-now-overriding t))
+     ,@body))
 
 ;; text / string
 
@@ -268,16 +265,19 @@ from the given string."
     (format-time-string   "%Y/%m/%d %H:%M:%S" time)))
 
 (defface e2wm:face-title 
-  '((((type tty pc) (class color) (background light))
-     :foreground "green" :weight bold)
-    (((type tty pc) (class color) (background dark))
-     :foreground "yellow" :weight bold)
+  '((((class color) (background light))
+     :foreground "Deeppink2" :height 1.5 :inherit variable-pitch)
+    (((class color) (background dark))
+     :foreground "yellow" :weight bold :height 1.5 :inherit variable-pitch)
     (t :height 1.5 :weight bold :inherit variable-pitch))
   "Face for e2wm titles at level 1."
   :group 'e2wm)
 
 (defface e2wm:face-subtitle
-  '((((type tty pc) (class color)) :foreground "lightblue" :weight bold)
+  '((((class color) (background light))
+     (:foreground "Gray10" :height 1.2 :inherit variable-pitch))
+    (((class color) (background dark))
+     (:foreground "Gray90" :height 1.2 :inherit variable-pitch))
     (t :height 1.2 :inherit variable-pitch))
   "Face for e2wm titles at level 2."
   :group 'e2wm)
@@ -305,7 +305,8 @@ from the given string."
   text)
 
 (defun e2wm:format-byte-unit (size)
-  (cond ((> size (* 1048576 4))
+  (cond ((null size) "NA")
+        ((> size (* 1048576 4))
          (format "%s Mb" (e2wm:num (round (/ size 1048576)))))
         ((> size (* 1024 4))
          (format "%s Kb" (e2wm:num (round (/ size 1024)))))
@@ -527,7 +528,15 @@ from the given string."
     ;;継承元がシンボルだったらオブジェクトに入れ替える
     (setf (e2wm:$pst-class-extend pst-class)
           (e2wm:pst-class-get (e2wm:$pst-class-extend pst-class))))
+  (e2wm:pst-class-remove pst-class)
   (push pst-class e2wm:pst-list))
+
+(defun e2wm:pst-class-remove (pst-class)
+  (setq e2wm:pst-list
+        (loop with name = (e2wm:$pst-class-name pst-class)
+              for i in e2wm:pst-list
+              unless (equal name (e2wm:$pst-class-name i))
+              collect i)))
 
 (defun e2wm:pst-class-get (name)
   ;;パースペクティブクラスの取得
@@ -622,8 +631,10 @@ from the given string."
    (let* ((instance (e2wm:pst-get-instance))
           (wm (e2wm:$pst-wm instance)))
      ;;(e2wm:debug-windows (e2wm:pst-get-wm))
+     (unless rebuild-windows
+       (wlf:wset-fix-windows wm))
      (when (or rebuild-windows 
-               (not (wlf:wset-live-p wm 1)))
+               (not (wlf:wset-live-p wm)))
        (e2wm:message "  #PST-UPDATE > REBUILD")
        (wlf:refresh wm)
        (e2wm:aif (e2wm:$pst-main instance)
@@ -771,13 +782,17 @@ from the given string."
       (wlf:select wm main))))
 
 (defun e2wm:pst-window-toggle (window-name &optional selectp next-window)
-  ;;指定したウインドウの表示をトグルする
+  "Toggle visibility of the window specified by WINDOW-NAME.
+If SELECTP is non-nil, it selects that window when opening it.
+NEXT-WINDOW specifies the window to select when closing the
+WINDOW-NAME window.  This function returns the name of the
+selected window, or nil if none is selected."
   (let ((wm (e2wm:pst-get-wm)))
     (when (wlf:window-name-p wm window-name)
       (wlf:toggle wm window-name)
       (if (wlf:window-displayed-p wm window-name)
-          (and selectp (wlf:select wm window-name))
-        (and next-window (wlf:select wm next-window))))))
+          (when selectp (wlf:select wm window-name) window-name)
+        (when next-window (wlf:select wm next-window) next-window)))))
 
 (defun e2wm:pst-show-history-main ()
   ;;パースペクティブの「メイン」ウインドウ（もしあれば）に履歴のトップ
@@ -791,9 +806,11 @@ from the given string."
      (e2wm:pst-update-windows))))
 
 (defun e2wm:pst-after-save-hook ()
-  (e2wm:message "$$ AFTER SAVE HOOK")
-  (e2wm:pst-method-call e2wm:$pst-class-save (e2wm:pst-get-instance))
-  (e2wm:pst-update-windows))
+  (e2wm:message "$$ AFTER SAVE HOOK %S" this-command)
+  ;; 自動保存などで save-hook が呼ばれた場合は無視する
+  (when this-command
+    (e2wm:pst-method-call e2wm:$pst-class-save (e2wm:pst-get-instance))
+    (e2wm:pst-update-windows)))
 
 ;;; Commands / Key bindings / Minor Mode
 ;;;--------------------------------------------------
@@ -814,8 +831,9 @@ from the given string."
   (interactive)
   (when (e2wm:managed-p)
     (e2wm:with-advice
-     (wlf:reset-window-sizes (e2wm:pst-get-wm))
-     (e2wm:pst-update-windows))))
+     (let ((livep (wlf:wset-live-p (e2wm:pst-get-wm))))
+       (wlf:reset-window-sizes (e2wm:pst-get-wm))
+       (e2wm:pst-update-windows (not livep))))))
 (defun e2wm:pst-change-prev-pst-command ()
   (interactive)
   (when (e2wm:managed-p)
@@ -833,13 +851,12 @@ from the given string."
 (defalias 'e2wm:pst-history-up-command 'e2wm:pst-history-forward-command)
 (defalias 'e2wm:pst-history-down-command 'e2wm:pst-history-back-command)
 
-(defvar e2wm:pst-minor-mode-hook nil)
+(defvar e2wm:pst-minor-mode-setup-hook nil "This hook is called at end of setting up pst-minor-mode.")
+(defvar e2wm:pst-minor-mode-abort-hook nil "This hook is called at end of aborting pst-minor-mode.")
 
 (defvar e2wm:pst-minor-mode nil) ; dummy
 
 ;;グローバルでマイナーモードを定義
-;;→フレームはひとつしかないことを仮定
-;;→elscreenなどに対応する必要がある
 (define-minor-mode e2wm:pst-minor-mode
   "Perspective mode"
   :init-value nil
@@ -852,8 +869,9 @@ from the given string."
   (if e2wm:pst-minor-mode
       (progn
         (e2wm:pst-minor-mode-setup)
-        (run-hooks 'e2wm:pst-minor-mode-hook))
-    (e2wm:pst-minor-mode-abort)))
+        (run-hooks 'e2wm:pst-minor-mode-setup-hook))
+    (e2wm:pst-minor-mode-abort)
+    (run-hooks 'e2wm:pst-minor-mode-abort-hook)))
 
 (defun e2wm:pst-minor-mode-setup ()
   (add-to-list 'after-make-frame-functions 'e2wm:override-after-make-frame)
@@ -886,8 +904,10 @@ from the given string."
                'e2wm:override-window-cfg-change)
   (remove-hook 'completion-setup-hook 'e2wm:override-setup-completion)
   (remove-hook 'after-save-hook 'e2wm:pst-after-save-hook)
+  (remove-hook 'next-error-hook 'e2wm:select-window-point)
   (setq display-buffer-function nil)
-  (ad-deactivate-regexp "^e2wm:ad-override$"))
+  (ad-deactivate-regexp "^e2wm:ad-override$")
+  )
 
 (defun e2wm:pst-minor-mode-enable-frame ()
   (e2wm:message "## PST MM ENABLED")
@@ -901,6 +921,7 @@ from the given string."
             'e2wm:override-window-cfg-change)
   (add-hook 'completion-setup-hook 'e2wm:override-setup-completion)
   (add-hook 'after-save-hook 'e2wm:pst-after-save-hook)
+  (add-hook 'next-error-hook 'e2wm:select-window-point)
   (setq display-buffer-function 'e2wm:override-special-display-function))
 
 (defun e2wm:pst-minor-mode-switch-frame (frame)
@@ -981,7 +1002,7 @@ from the given string."
 
 (defadvice switch-to-buffer (around
                              e2wm:ad-override
-                             (buf &optional norecord))
+                             (buf &optional norecord force-same-window))
   (e2wm:message "#SWITCH-TO-BUFFER %s" buf)
   (let (overrided)
     (when (and buf 
@@ -994,7 +1015,7 @@ from the given string."
     (if overrided
         (progn
           (set-buffer buf)
-          (setq ad-return-value buf))
+          (setq ad-return-value (get-buffer-create buf)))
       ad-do-it))) ; それ以外はもとの関数へ（画面更新はしないので必要な場合は自分でする）
 
 (defadvice pop-to-buffer (around 
@@ -1012,11 +1033,11 @@ from the given string."
     (if overrided
         (progn 
           (set-buffer buf)
-          (setq ad-return-value buf))
+          (setq ad-return-value (get-buffer-create buf)))
       ad-do-it))) ; それ以外はもとの関数へ（画面更新はしないので必要な場合は自分でする）
 
 (defun e2wm:override-special-display-function (buf &optional args)
-  (e2wm:message "#SPECIAL-DISPLAY-FUNC %s" buf)
+  (e2wm:message "#SPECIAL-DISPLAY-FUNC %s / %S - %S" buf (not e2wm:ad-now-overriding) (e2wm:managed-p))
   (let (overrided)
     (when (and 
            buf 
@@ -1025,16 +1046,17 @@ from the given string."
       (e2wm:with-advice
        (e2wm:message "#AD-SPECIAL-DISPLAY-FUNC %s" buf)
        (e2wm:history-add buf)
-       (setq overrided (e2wm:pst-pop-to-buffer (get-buffer-create buf)))))
+       (save-excursion
+         (setq overrided (e2wm:pst-pop-to-buffer (get-buffer-create buf))))))
     (if overrided
         (progn 
-          (set-buffer buf)
+          ;(set-buffer buf)
           (get-buffer-window buf)) ;return value
       (cond
        ((e2wm:managed-p)
         (e2wm:message "#DISPLAY-BUFFER / managed frame") ;;適当な場所に表示する
         (set-window-buffer (selected-window) buf)
-        (set-buffer buf) 
+        ;(set-buffer buf) 
         (selected-window)) ;return value
        (t
         (e2wm:message "#DISPLAY-BUFFER / Non managed frame ") ;;適当な場所に表示する
@@ -1049,7 +1071,49 @@ from the given string."
              (e2wm:managed-p))
     ;; killされたら履歴からも消す
     (e2wm:history-delete (current-buffer))
-    (e2wm:pst-show-history-main)))
+    (when this-command
+      ;; 自動実行だったら画面を更新しない
+      (e2wm:pst-show-history-main))))
+
+;; delete-other-windows対策
+
+(defvar e2wm:delete-other-windows-permission nil "[internal] If this
+value is t, one can execute `delete-other-windows' under the e2wm
+management. For window-layout.el.")
+
+(defadvice wlf:clear-windows (around e2wm:ad-override)
+  (let ((e2wm:delete-other-windows-permission t))
+    ad-do-it))
+
+(defadvice delete-other-windows (around e2wm:ad-override)
+  (when (or e2wm:delete-other-windows-permission (not (e2wm:managed-p)))
+    ad-do-it))
+
+;; コンパイルエラーのような他のウインドウへの表示をする拡張への対応
+;; compile-goto-error の仕組みを使うものについては next-error-hook で実行
+
+(defun e2wm:move-window-point (&optional buf)
+  ;; ウインドウの表示位置のみを更新
+  (let ((buf (or buf (current-buffer))))
+    (when (and
+           (e2wm:managed-p)
+           (eq (wlf:get-window (e2wm:pst-get-wm) 'sub) (selected-window))
+           (not (eql (selected-window) (get-buffer-window buf))))
+      (set-window-point 
+       (get-buffer-window buf)
+       (with-current-buffer buf (point))))))
+
+(defun e2wm:select-window-point (&optional buf)
+  ;; ウインドウを選択して表示位置を更新
+  (let ((buf (or buf (current-buffer))))
+    (when (and
+           (e2wm:managed-p)
+           (eq (wlf:get-window (e2wm:pst-get-wm) 'sub) (selected-window))
+           (not (eql (selected-window) (get-buffer-window buf))))
+      (set-window-point 
+       (get-buffer-window buf)
+       (with-current-buffer buf (point)))
+      (select-window (get-buffer-window buf)))))
 
 ;; set-window-configuration 対策
 ;; いろいろ試行錯誤中。
@@ -1185,6 +1249,7 @@ from the given string."
 
 (defun e2wm:plugin-register (name title update-function)
   ;;プラグインの登録
+  (e2wm:plugin-delete name)
   (push (make-e2wm:$plugin
          :name name
          :title title
@@ -1352,6 +1417,7 @@ from the given string."
       (with-current-buffer buf
         (e2wm:def-plugin-history-list-mode)
         (setq buffer-read-only t)
+        (setq truncate-lines t)
         (buffer-disable-undo buf)
         (hl-line-mode 1)))
     (with-current-buffer buf
@@ -1460,6 +1526,7 @@ from the given string."
       (with-current-buffer buf
         (e2wm:def-plugin-history-list2-mode)
         (setq buffer-read-only t)
+        (setq truncate-lines t)
         (buffer-disable-undo buf)
         (hl-line-mode 1)))
     (with-current-buffer buf
@@ -1587,13 +1654,6 @@ from the given string."
 ;;; imenu / Imenuで概要参照
 ;;;--------------------------------------------------
 
-;; メインとプラグインの相互作用的なデモ
-;; anything-config.el の imenu を参考に実装
-;; （文字列で比較しているのがちょっとダサイ）
-
-(defvar e2wm:def-plugin-imenu-delimiter " / ")
-(defvar e2wm:def-plugin-imenu-cached-alist nil)
-(make-variable-buffer-local 'e2wm:def-plugin-imenu-cached-alist)
 (defvar e2wm:def-plugin-imenu-cached-entries nil)
 (make-variable-buffer-local 'e2wm:def-plugin-imenu-cached-entries)
 (defvar e2wm:def-plugin-imenu-cached-tick nil)
@@ -1608,6 +1668,7 @@ from the given string."
       (with-current-buffer buf
         (e2wm:def-plugin-imenu-mode)
         (setq buffer-read-only t)
+        (setq truncate-lines t)
         (buffer-disable-undo buf)
         (hl-line-mode 1))
       (e2wm:def-plugin-imenu-start-timer))
@@ -1618,7 +1679,7 @@ from the given string."
             (setq pos (point))
             (erase-buffer)
             (loop for i in entries
-                  do (insert (format "%s\n" i)))
+                  do (insert i "\n"))
             (setq mode-line-format 
                   '("-" mode-line-mule-info
                     " " mode-line-position "-%-"))
@@ -1631,6 +1692,7 @@ from the given string."
     (set-window-point (wlf:get-window wm wname) pos)))
 
 (defun e2wm:def-plugin-imenu-entries ()
+  "[internal] Return a list of imenu items to insert the imenu buffer."
   (with-current-buffer (e2wm:history-get-main-buffer)
     (let ((tick (buffer-modified-tick)))
       (if (and (eq e2wm:def-plugin-imenu-cached-tick tick)
@@ -1640,46 +1702,56 @@ from the given string."
         (setq e2wm:def-plugin-imenu-cached-tick tick
               e2wm:def-plugin-imenu-cached-entries
               (condition-case nil
-                  (mapcan
-                   'e2wm:def-plugin-imenu-create-entries
-                   (setq e2wm:def-plugin-imenu-cached-alist (imenu--make-index-alist)))
-                (error nil)))
-        (setq e2wm:def-plugin-imenu-cached-entries
-              (loop for x in e2wm:def-plugin-imenu-cached-entries
-                    collect (if (stringp x) x (car x))))))))
+                  (nreverse
+                   (e2wm:def-plugin-imenu-create-entries
+                    (imenu--make-index-alist) "" nil))
+                (error nil)))))))
 
-(defun e2wm:def-plugin-imenu-create-entries (entry)
-  (if (listp (cdr entry))
-      (mapcan 
-       (lambda (sub)
-         (if (consp (cdr sub))
-             (mapcar
-              (lambda (subentry)
-                (concat (car entry) e2wm:def-plugin-imenu-delimiter subentry))
-              (e2wm:def-plugin-imenu-create-entries sub))
-           (list (concat (car entry) e2wm:def-plugin-imenu-delimiter (car sub)))))
-       (cdr entry))
-    (list entry)))
+(defun e2wm:def-plugin-imenu-create-entries (entries indent result)
+  "[internal] Make a menu item from the imenu object and return a
+string object to insert the imenu buffer."
+  (loop for i in entries do
+        (cond
+         ;; item
+         ((number-or-marker-p (cdr i))
+          (let ((title (concat indent (car i)))
+                (mark (cdr i)))
+            (push (propertize title 'e2wm:imenu-mark mark) result)))
+         ;; overlay
+         ((overlayp (cdr i))
+          (let ((title (concat indent (car i)))
+                (mark (overlay-start (cdr i))))
+            (push (propertize title 'e2wm:imenu-mark mark) result)))
+         ;; cascade
+         ((listp (cdr i))
+          ;; title
+          (push (e2wm:rt (concat indent (car i)) 'e2wm:face-subtitle) result)
+          ;; contents
+          (setq result
+                (e2wm:def-plugin-imenu-create-entries
+                 (cdr i) (concat "  " indent) result)))
+         ;; ? 
+         (t nil)))
+  result)
   
 (setq imenu-default-goto-function 'imenu-default-goto-function)
 
 (defun e2wm:def-plugin-imenu-jump (elm)
-  (let ((path (split-string elm e2wm:def-plugin-imenu-delimiter))
-        (alist e2wm:def-plugin-imenu-cached-alist))
-    (if (> (length path) 1)
-        (progn
-          (setq alist (assoc (car path) alist))
-          (setq elm (cadr path))
-          (imenu (assoc elm alist)))
-      (imenu (assoc elm alist)))))
+  "[internal] Jump to the selected imenu item."
+  (let ((mark (get-text-property 0 'e2wm:imenu-mark elm)))
+    (when mark
+      (push-mark)
+      (imenu-default-goto-function elm mark))))
 
 (defun e2wm:def-plugin-imenu-jump-command ()
+  "Jump to the selected imenu item on the main window."
   (interactive)
   (let ((elm (e2wm:string-trim (thing-at-point 'line))))
     (select-window (get-buffer-window (e2wm:history-get-main-buffer)))
     (e2wm:def-plugin-imenu-jump elm)))
 
 (defun e2wm:def-plugin-imenu-show-command ()
+  "Show the selected imenu item on the main window."
   (interactive)
   (let ((elm (e2wm:string-trim (thing-at-point 'line)))
         (cwin (selected-window)))
@@ -1705,34 +1777,17 @@ from the given string."
 (define-derived-mode e2wm:def-plugin-imenu-mode fundamental-mode "Imenu")
 
 (defun e2wm:def-plugin-imenu-which-func ()
-  ;; which-func-modes から拝借
-  (let ((alist e2wm:def-plugin-imenu-cached-alist)
-        (minoffset (point-max)) name
-        offset pair mark imstack namestack)
-    (while (or alist imstack)
-      (if alist
-          (progn
-            (setq pair (car-safe alist)
-                  alist (cdr-safe alist))
-            (cond ((atom pair))
-                  ((imenu--subalist-p pair)
-                   (setq imstack   (cons alist imstack)
-                         namestack (cons (car pair) namestack)
-                         alist     (cdr pair)))
-                  ((number-or-marker-p (setq mark (cdr pair)))
-                   (if (>= (setq offset (- (point) mark)) 0)
-                       (if (< offset minoffset)
-                           (setq minoffset offset
-                                 name (mapconcat 
-                                       'identity
-                                       (reverse (cons 
-                                                 (car pair)
-                                                 namestack)) 
-                                       e2wm:def-plugin-imenu-delimiter)))))))
-        (setq alist     (car imstack)
-              namestack (cdr namestack)
-              imstack   (cdr imstack))))
-    name))
+  (loop with which-func = nil
+        with minoffset = (point-max)
+        for i in e2wm:def-plugin-imenu-cached-entries
+        for mark = (get-text-property 0 'e2wm:imenu-mark i)
+        if (number-or-marker-p mark)
+        do (let ((offset (- (point) mark)))
+             (if (>= offset 0)
+                 (when (< offset minoffset)
+                   (setq which-func i
+                         minoffset offset))))
+        finally return which-func))
 
 (defvar e2wm:def-plugin-imenu-timer nil)
 
@@ -1766,7 +1821,7 @@ from the given string."
          (when (and name (window-live-p imenu-win))
            (with-current-buffer imenu-buf
              (goto-char (point-min))
-             (let ((ps (re-search-forward (concat "^" name "$"))))
+             (let ((ps (re-search-forward (concat "^" (regexp-quote name) "$"))))
                (when ps
                  (beginning-of-line)
                  (set-window-point imenu-win (point))
@@ -1827,7 +1882,7 @@ from the given string."
         (buffer-disable-undo buf)))
     (let (proc)
       (condition-case err
-          (setq proc (start-process "WM:top" tmpbuf "top" "-b -n 1"))
+          (setq proc (start-process "WM:top" tmpbuf "top" "-b" "-n" "1"))
         (nil 
          (with-current-buffer buf
            (erase-buffer)
@@ -2071,6 +2126,7 @@ from the given string."
         (set (make-local-variable 'e2wm:def-plugin-files-sort-key) opt-sort-key)
         (set (make-local-variable 'e2wm:def-plugin-files-hide-hidden-files) opt-hide-hidden)
         (setq buffer-read-only t)
+        (setq truncate-lines t)
         (buffer-disable-undo dbuf)
         (setq pos (point-min))
         (hl-line-mode 1)))
@@ -2189,7 +2245,7 @@ from the given string."
                      (format-time-string "%Y/%m/%d %H:%M:%S" (nth 7 f))
                      (nth 8 f)
                      (if (cadr f) "d" "f")
-                     (format "%014d" (nth 8 f))
+                     (if (nth 8 f) (format "%014d" (nth 8 f)) (make-string 14 ?\ ))
                      (float-time (nth 7 f))))
            e2wm:def-plugin-files-sort-key)) rows-file rows-time rows-size rows)
     (loop for i in files
@@ -2218,10 +2274,15 @@ from the given string."
     (setq mode-line-format 
           '("-" mode-line-mule-info
             " " mode-line-position "-%-"))
-    (setq header-line-format
-          (format "[%i] %s"
-                  (length files)
-                  (expand-file-name dir)))))
+    (let* ((win (get-buffer-window (current-buffer)))
+           (width (- (or (and win (window-width win)) 90) 7)) ; 9 <= num and ellipse "..."
+           (dirname (expand-file-name dir))
+           (namelen (string-width dirname))
+           (startcol (max 0 (- namelen width))))
+      (setq header-line-format
+            (format "[%2i] %s%s"
+                    (length files) (if (< 0 startcol) "..." "")
+                    (truncate-string-to-width dirname namelen startcol))))))
 
 (defun e2wm:def-plugin-files-insert-by-name (rows-file rows-time rows-size)
   (loop for i from 0 below (length rows-file)
@@ -2467,9 +2528,11 @@ from the given string."
     code-wm))
 
 (defun e2wm:dp-code-switch (buf)
-  (e2wm:message "#DP CODE switch : %s" buf)
+  (e2wm:message "#DP CODE switch : %s / %S" buf (e2wm:history-recordable-p buf))
   (if (e2wm:history-recordable-p buf)
-      (e2wm:pst-show-history-main)
+      (progn
+        (e2wm:pst-show-history-main)
+        (e2wm:pst-window-select-main))
     nil))
 
 (defun e2wm:dp-code-popup (buf)
@@ -2609,23 +2672,29 @@ from the given string."
   (e2wm:message "#DP TWO switch : %s" buf)
   (let ((wm (e2wm:pst-get-wm))
         (curwin (selected-window)))
-    (if (or (eql curwin (wlf:get-window wm 'left))
-            (eql curwin (wlf:get-window wm 'right)))
-        ;;メイン画面の場合
-        (cond 
-         ((eql (get-buffer buf) (wlf:get-buffer wm 'left))
-          ;;メインと同じなら並べる
-          (e2wm:pst-update-windows)
-          (e2wm:pst-buffer-set 'right buf)
-          t)
-         ((e2wm:history-recordable-p buf)
-          ;;普通の編集対象なら履歴につっこんで更新
-          (e2wm:pst-show-history-main)
-          t)
-         (t 
-          ;;それ以外ならとりあえず表示してみる
-          nil))
-      nil)))
+    (cond
+     ((eql curwin (wlf:get-window wm 'left))
+      ;; left画面の場合
+      (cond 
+       ((eql (get-buffer buf) (wlf:get-buffer wm 'left))
+        ;; leftと同じなら並べる
+        (e2wm:pst-update-windows)
+        (e2wm:pst-buffer-set 'right buf)
+        t)
+       ((e2wm:history-recordable-p buf)
+        ;; 普通の編集対象なら履歴につっこんで更新
+        (e2wm:pst-show-history-main)
+        t)
+       (t 
+        ;; それ以外ならとりあえず表示してみる
+        nil)))
+
+     ((eql curwin (wlf:get-window wm 'right))
+      ;; right画面の場合
+      (e2wm:pst-buffer-set 'right buf)
+      (e2wm:dp-two-update-history-list)
+      nil)
+     (t nil))))
 
 (defun e2wm:dp-two-popup (buf)
   ;;記録バッファ以外はsubで表示してみる
