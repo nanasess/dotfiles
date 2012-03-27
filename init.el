@@ -750,6 +750,8 @@
 ;;; (auto-install-batch "anything")
 ;;; (auto-install-from-url "https://raw.github.com/wakaran/anything-howm/master/anything-howm.el")
 ;;;
+
+(setq anything-howm-use-migemo t)
 (setq w3m-command "/opt/local/bin/w3m")
 (require 'anything-startup)
 (require 'anything-howm)
