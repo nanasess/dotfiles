@@ -625,6 +625,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; markdown-mode settings
+;;;
+;;; (auto-install-from-url "http://jblevins.org/git/markdown-mode.git/plain/markdown-mode.el")
+;;;
+
+(require 'markdown-mode)
+(add-to-list 'auto-mode-alist '("\\.markdown$" . gfm-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; auto-complete.el settings
 ;;;
 
