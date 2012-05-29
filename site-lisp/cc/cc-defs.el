@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 1985, 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
 ;;   1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
-;;   2010, 2011   Free Software Foundation, Inc.
+;;   2010, 2011, 2012   Free Software Foundation, Inc.
 
 ;; Authors:    2003- Alan Mackenzie
 ;;	       1998- Martin Stjernholm
@@ -99,7 +99,7 @@
 
 ;;; Variables also used at compile time.
 
-(defconst c-version "5.32.2"
+(defconst c-version "5.32.3"
   "CC Mode version number.")
 
 (defconst c-version-sym (intern c-version))
