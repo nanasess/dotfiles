@@ -1,7 +1,7 @@
 ;;; howm-date.el --- Wiki-like note-taking tool
-;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
+;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-date.el,v 1.33 2010-12-31 15:07:59 hira Exp $
+;;; $Id: howm-date.el,v 1.35 2011-12-31 15:07:29 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -173,17 +173,17 @@
        (setq ys "2000"))
      (let* ((given-ymd (mapcar #'string-to-number (list ys ms ds)))
             (carry nil) ;; to force future date
-            (dmy (mapcar* (lambda (ox nx)
-                         (when future-p
-                           (when (and carry (= nx 0))
-                             (setq ox (+ ox 1)))
-                           (setq carry
-                                 (cond ((= nx 0) nil)
-                                       ((= nx ox) carry)
-                                       ((< nx ox) t)
-                                       (t nil))))
-                         (if (= nx 0) ox nx))
-                       (reverse base-ymd) (reverse given-ymd)))
+            (dmy (howm-cl-mapcar* (lambda (ox nx)
+                                    (when future-p
+                                      (when (and carry (= nx 0))
+                                        (setq ox (+ ox 1)))
+                                      (setq carry
+                                            (cond ((= nx 0) nil)
+                                                  ((= nx ox) carry)
+                                                  ((< nx ox) t)
+                                                  (t nil))))
+                                    (if (= nx 0) ox nx))
+                                  (reverse base-ymd) (reverse given-ymd)))
          (d (car dmy))
          (m (second dmy))
          (y (third dmy)))

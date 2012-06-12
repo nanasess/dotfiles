@@ -1,7 +1,7 @@
 ;;; howm.el --- Wiki-like note-taking tool
-;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
+;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm.el,v 1.20 2010-12-31 15:07:58 hira Exp $
+;;; $Id: howm.el,v 1.22 2011-12-31 15:07:29 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -78,7 +78,7 @@
 (howm-require-lang 'ja)
 
 ;;; security fix [2006-12-16]
-(mapcar (lambda (symbol) (put symbol 'risky-local-variable t))
-        (howm-symbols))
+(mapc (lambda (symbol) (put symbol 'risky-local-variable t))
+      (howm-symbols))
 
 ;;; howm.el ends here

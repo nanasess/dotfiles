@@ -1,8 +1,8 @@
 ;;; honest-report.el --- make bug report with screenshot and keylog
 
-;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011
+;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
 ;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;; $Id: honest-report.el,v 1.11 2010-12-31 15:07:59 hira Exp $
+;; $Id: honest-report.el,v 1.13 2011-12-31 15:07:29 hira Exp $
 ;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -43,15 +43,15 @@
         (msg (honest-report-message))
         (scr (honest-report-screenshot)))
     (honest-report-setup)
-    (mapcar (lambda (a) (apply #'honest-report-insert a))
-            `(
-              ("Header"          ,header)
-              ("Emacs version"   ,ver)
-              ("Recent keys"     ,key)
-              ("Recent messages" ,msg)
-              ("Screen shot"     ,scr)
-              ("Footer"          ,footer)
-              ))
+    (mapc (lambda (a) (apply #'honest-report-insert a))
+          `(
+            ("Header"          ,header)
+            ("Emacs version"   ,ver)
+            ("Recent keys"     ,key)
+            ("Recent messages" ,msg)
+            ("Screen shot"     ,scr)
+            ("Footer"          ,footer)
+            ))
     (goto-char (point-max))))
 
 (defun honest-report-insert (title content)

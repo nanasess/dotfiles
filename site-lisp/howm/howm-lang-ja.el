@@ -1,8 +1,8 @@
 ;;; howm-lang-ja.el --- Wiki-like note-taking tool
 ;;; -*- Coding: iso-2022-7bit -*-
-;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011
+;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-lang-ja.el,v 1.10 2011-01-01 06:05:40 hira Exp $
+;;; $Id: howm-lang-ja.el,v 1.11 2011-12-31 15:07:29 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
