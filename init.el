@@ -16,8 +16,6 @@
 ;;; initial load files
 ;;;
 
-
-
 (dolist (sys-type (list (symbol-name system-type)
 			(symbol-name window-system)))
 
@@ -428,13 +426,6 @@
 (setq org-return-follows-link t)
 (org-remember-insinuate)
 (setq org-directory (concat dropbox-directory "howm/"))
-(setq org-default-notes-file (concat org-directory "agenda.howm"))
-(setq org-capture-templates
-      '(("l" "年/月/日のエントリを作成する" entry
-	 (file+datetree org-default-notes-file))
-	("m" "年/月/日のリストを作成する" item
-	 (file+datetree org-default-notes-file))))
-(global-set-key (kbd "C-z C-c") 'org-capture)
 (org-defkey org-mode-map (kbd "C-j") 'skk-mode)
 (setq org-export-latex-classes
       '(("jarticle"
@@ -671,6 +662,8 @@
 ;;;
 
 (require 'simple-hatena-mode)
+(require 'html-helper-mode)
+(require 'hatena)
 (setq simple-hatena-default-id "nanasess")
 (setq simple-hatena-bin (expand-file-name (concat user-bin-directory "hw.pl")))
 (setq simple-hatena-root howm-directory)
