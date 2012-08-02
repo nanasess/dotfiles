@@ -1044,3 +1044,38 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (defun apachectl/graceful ()
   (interactive)
   (executable-apachectl "graceful"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; convert to path settings
+;;;
+
+(defun convert-win-to-mac-path()
+  (interactive)
+  (let ((buf (get-buffer-create "*convert*")) str)
+    (setq str (buffer-substring (region-beginning) (region-end)))
+    (with-current-buffer
+	buf (setq ret (buffer-string))
+	(setq str (replace-regexp-in-string
+		   "\\\\\\\\[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+" "/Volumes" str))
+	(setq str (replace-regexp-in-string "\\\\" "/" str))
+	(insert str))
+    (kill-buffer buf)
+    (message "%s" str)
+    (kill-new str)))
+
+(defun convert-smb-to-win-path()
+  (interactive)
+  (let ((buf (get-buffer-create "*convert*")) str)
+    (setq str (buffer-substring (region-beginning) (region-end)))
+    (with-current-buffer
+	buf (setq ret (buffer-string))
+	(setq str (ucs-normalize-NFC-string str))
+	(setq str (replace-regexp-in-string "smb://" "\\\\\\\\" str))
+	(setq str (replace-regexp-in-string "/" "\\\\" str))
+	(insert str))
+    (kill-buffer buf)
+    (message "%s" str)
+    (kill-new str)
+    (delete-region (region-beginning) (region-end))
+    (insert str)))
