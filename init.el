@@ -1062,7 +1062,9 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 	(insert str))
     (kill-buffer buf)
     (message "%s" str)
-    (kill-new str)))
+    (kill-new str)
+    (delete-region (region-beginning) (region-end))
+    (insert str)))
 
 (defun convert-smb-to-win-path()
   (interactive)
