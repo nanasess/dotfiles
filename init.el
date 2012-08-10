@@ -628,13 +628,11 @@
 
 (autoload 'markdown-mode "markdown-mode" nil t)
 (autoload 'gfm-mode "markdown-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.markdown$" . gfm-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; csv-mode settings
-;;;
-;;; (auto-install-from-url "http://jblevins.org/git/markdown-mode.git/plain/markdown-mode.el")
 ;;;
 
 (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
@@ -1081,3 +1079,12 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
     (kill-new str)
     (delete-region (region-beginning) (region-end))
     (insert str)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; redmine.el settings
+;;;
+;;; (auto-install-from-url "https://raw.github.com/nanasess/redmine-el/master/redmine.el")
+;;;
+
+(load "redmine-config" t t)
