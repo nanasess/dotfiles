@@ -465,6 +465,13 @@
 (set-face-bold-p 'org-document-title nil)
 (set-face-attribute 'org-document-title nil :height 1.0)
 
+;;; org-export-generic
+;; (auto-install-from-url "http://orgmode.org/w/?p=org-mode.git;a=blob_plain;f=contrib/lisp/org-export-generic.el;hb=HEAD")
+(load "org-export-generic" t t)
+;;; orgmode-markdown
+;; (auto-install-from-url "https://raw.github.com/alexhenning/ORGMODE-Markdown/master/markdown.el")
+(load "markdown" t t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; htmlize settings
