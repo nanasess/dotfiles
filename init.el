@@ -63,6 +63,7 @@
 (setq skk-init-file (concat user-initial-directory "skk-init.el"))
 (setq skk-preload t)
 (setq skk-auto-save-interval 30)
+(setq skk-isearch-start-mode 'latin)
 (defun toggle-skk-kutouten ()
   "toggle skk-kutoten-type."
   (interactive)
