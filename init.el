@@ -254,8 +254,7 @@
 
 (defun basic-indent ()
   (setq tab-width 4)
-  (setq indent-tabs-mode nil)
-  (add-hook 'before-save-hook 'delete-trailing-whitespace))
+  (setq indent-tabs-mode nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -290,12 +289,25 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; js2-mode settings
+;;; js3-mode settings
+;;;
+;;; (auto-install-from-url "https://raw.github.com/thomblake/js3-mode/master/js3.el")
 ;;;
 
-(autoload 'js2-mode "js2" nil t)
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(add-hook 'js2-mode-hook 'basic-indent)
+(setq js3-mirror-mode t)
+(autoload 'js3-mode "js3" nil t)
+(add-to-list 'auto-mode-alist '("\\.js$" . js3-mode))
+(add-hook 'js3-mode-hook
+	  (lambda ()
+	    (setq js3-indent-level 4)
+	    (setq js3-mode-dev-mode-p t)
+	    (setq js3-auto-indent-p t)
+	    (setq js3-enter-indents-newline t)
+	    (setq js3-indent-on-enter-key t)
+	    (when (require 'auto-complete nil t)
+	      (make-variable-buffer-local 'ac-sources)
+	      (add-to-list 'ac-sources 'ac-source-yasnippet)
+	      (auto-complete-mode t))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -607,7 +619,6 @@
 	    (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
 	    (c-set-style "php-style")
 	    (setq c-auto-newline t)
-	    (add-hook 'before-save-hook 'delete-trailing-whitespace)
 	    (when (require 'auto-complete nil t)
 	      (make-variable-buffer-local 'ac-sources)
 	      (add-to-list 'ac-sources
