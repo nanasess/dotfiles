@@ -1,4 +1,5 @@
 (add-to-list 'load-path (expand-file-name user-emacs-directory))
+(add-to-list 'load-path (expand-file-name (concat user-emacs-directory "site-lisp")))
 (set-keyboard-coding-system 'cp932)
 
 (prefer-coding-system 'utf-8-dos)

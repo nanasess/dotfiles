@@ -42,6 +42,8 @@
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
     (setq exec-path (append (list dir) exec-path))))
 
+(setq dropbox-directory (expand-file-name "C:/Users/nanasess/Dropbox"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Japanesed settings
@@ -353,17 +355,17 @@
 ;;; migemo settings
 ;;;
 
-(setq migemo-command "~/Documents/gnupack_basic-7.02/app/cmigemo/cmigemo.exe")
-(setq migemo-options '("-q" "--emacs" "-i" "\a"))
-(setq migemo-dictionary (expand-file-name (concat "~/Documents/gnupack_basic-7.02/app/cmigemo/dict/cp932/migemo-dict")))
-(setq migemo-user-dictionary nil)
-(setq migemo-regex-dictionary nil)
-(setq migemo-use-pattern-alist t)
-(setq migemo-use-frequent-pattern-alist t)
-(setq migemo-pattern-alist-length 1024)
-(setq migemo-coding-system 'sjis-unix)
-(load-library "migemo")
-(migemo-init)
+;; (setq migemo-command "~/Documents/gnupack_basic-7.02/app/cmigemo/cmigemo.exe")
+;; (setq migemo-options '("-q" "--emacs" "-i" "\a"))
+;; (setq migemo-dictionary (expand-file-name (concat "~/Documents/gnupack_basic-7.02/app/cmigemo/dict/cp932/migemo-dict")))
+;; (setq migemo-user-dictionary nil)
+;; (setq migemo-regex-dictionary nil)
+;; (setq migemo-use-pattern-alist t)
+;; (setq migemo-use-frequent-pattern-alist t)
+;; (setq migemo-pattern-alist-length 1024)
+;; (setq migemo-coding-system 'sjis-unix)
+;; (load-library "migemo")
+;; (migemo-init)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
