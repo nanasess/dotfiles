@@ -71,6 +71,7 @@
 ;; - C-c q    : kill buffer
 ;; - M-p      : SQL history back
 ;; - M-n      : SQL history forward
+;; - C-c C-k  : Clear buffer
 
 ;; * Query result viewer
 ;; You can browser the results for executed SQL.
@@ -1319,6 +1320,7 @@ This function kills the old buffer if it exists."
      ("C-c q"   . edbi:dbview-query-editor-quit-command)
      ("M-p"     . edbi:dbview-query-editor-history-back-command)
      ("M-n"     . edbi:dbview-query-editor-history-forward-command)
+     ("C-c C-k" . edbi:dbview-query-editor-clear-buffer-command)
      )) "Keymap for the `edbi:sql-mode'.")
 
 (defvar edbi:sql-mode-hook nil  "edbi:sql-mode-hook.")
@@ -1406,6 +1408,9 @@ that the current buffer is the query editor buffer."
   "[internal] Reset the history counter `edbi:history-index'."
   (setq edbi:history-index 0))
 
+(defun edbi:dbview-query-editor-clear-buffer-command ()
+  (interactive)
+  (erase-buffer))
 
 (defun edbi:dbview-query-editor-create-buffer (conn &optional force-create-p)
   "[internal] Create a buffer for query editor."
@@ -1426,7 +1431,10 @@ that the current buffer is the query editor buffer."
         buf)))))
 
 (defun* edbi:dbview-query-editor-open (conn &key init-sql executep force-create-p)
-  "[internal] "
+  "[internal] Open a query-editor buffer and display the buffer by the switch-to-buffer.
+INIT-SQL is a string which is inserted in the buffer.
+If EXECUTEP is non-nil, the INIT-SQL is executed after the displaying the buffer.
+If FORCE-CREATE-P is non-nil, this function creates a new buffer."
   (let ((buf (edbi:dbview-query-editor-create-buffer conn force-create-p)))
     (with-current-buffer buf
       (set (make-local-variable 'edbi:connection) conn)
@@ -1470,10 +1478,14 @@ that the current buffer is the query editor buffer."
           " " "-%-")))
 
 (defun edbi:dbview-query-editor-execute-command ()
-  "Execute SQL and show result buffer."
-  (interactive)
+  "Execute SQL and show result buffer.
+If the region is active in the query buffer, the selected string is executed."
+  (interactive) 
   (when edbi:connection
-    (let ((sql (buffer-substring-no-properties (point-min) (point-max)))
+    (let ((sql
+           (if (region-active-p)
+               (buffer-substring-no-properties (region-beginning) (region-end))
+             (buffer-substring-no-properties (point-min) (point-max))))
           (result-buf edbi:result-buffer))
       (edbi:dbview-query-editor-history-reset-index)
       (unless (and result-buf (buffer-live-p result-buf))

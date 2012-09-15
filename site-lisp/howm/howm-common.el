@@ -1,7 +1,7 @@
 ;;; howm-common.el --- Wiki-like note-taking tool
-;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
+;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-common.el,v 1.86 2010-12-31 15:07:59 hira Exp $
+;;; $Id: howm-common.el,v 1.88 2011-12-31 15:07:29 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -505,10 +505,10 @@ examples:
            (limit (apply #'- howm-command-length-limit
                          (mapcar len (cons command common-args))))
            (as (div rest-args limit len)))
-      (mapcan (lambda (args)
-                (apply #'howm-call-process
-                       command (append common-args args) options))
-              as))))
+      (howm-cl-mapcan (lambda (args)
+                        (apply #'howm-call-process
+                               command (append common-args args) options))
+                      as))))
 
 ;;; schedule-interval & reminder-setting (clean me)
 

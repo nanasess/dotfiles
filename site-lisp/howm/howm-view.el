@@ -1,7 +1,7 @@
 ;;; howm-view.el --- Wiki-like note-taking tool
-;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
+;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-view.el,v 1.243 2011-01-14 14:25:34 hira Exp $
+;;; $Id: howm-view.el,v 1.245 2011-12-31 15:07:29 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -920,7 +920,7 @@ to see file names."
                               hit-items
                             (append hit-items nohit-items))))
           (when howm-view-title-skip-regexp
-            (mapcar #'howm-view-change-title all-items))
+            (mapc #'howm-view-change-title all-items))
           all-items)
       (let* ((pages (howm-cl-remove-duplicates* (mapcar #'howm-item-page
                                                         item-list)))

@@ -1,4 +1,4 @@
-;;;; init.el --- Emacs initial file.
+;;; init.el --- Emacs initialization file.
 
 ;; Author: Kentaro Ohkouchi  <nanasess@fsm.ne.jp>
 ;; URL: git://github.com/nanasess/dot.emacs.git
@@ -9,13 +9,12 @@
 (defvar user-site-lisp-directory (concat user-emacs-directory "site-lisp/"))
 (defvar user-misc-directory (concat user-emacs-directory "etc/"))
 (defvar user-bin-directory (concat user-emacs-directory "bin/"))
+(defvar dropbox-directory (expand-file-name "~/Dropbox/"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; initial load files
 ;;;
-
-
 
 (dolist (sys-type (list (symbol-name system-type)
 			(symbol-name window-system)))
@@ -37,7 +36,7 @@
 		   "/opt/local/sbin" "/opt/local/bin"
 		   (expand-file-name "~/bin")
 		   (expand-file-name "~/.emacs.d/bin")
-		   (expand-file-name "~/Applications/pTeX.app/teTeX/bin")))
+		   (expand-file-name "~/Applications/UpTeX.app/teTeX/bin")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
@@ -60,10 +59,11 @@
 ;;; SKK settings
 ;;;
 
-(setq skk-user-directory "~/Dropbox/ddskk")
+(setq skk-user-directory (concat dropbox-directory "ddskk"))
 (setq skk-init-file (concat user-initial-directory "skk-init.el"))
 (setq skk-preload t)
 (setq skk-auto-save-interval 30)
+(setq skk-isearch-start-mode 'latin)
 (defun toggle-skk-kutouten ()
   "toggle skk-kutoten-type."
   (interactive)
@@ -140,7 +140,7 @@
 ;;; show EOF settings
 ;;;
 
-(setq default-indicate-empty-lines t)
+(setq indicate-empty-lines t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -265,12 +265,25 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; js2-mode settings
+;;; js3-mode settings
+;;;
+;;; (auto-install-from-url "https://raw.github.com/thomblake/js3-mode/master/js3.el")
 ;;;
 
-(autoload 'js2-mode "js2" nil t)
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(add-hook 'js2-mode-hook 'basic-indent)
+(setq js3-mirror-mode t)
+(autoload 'js3-mode "js3" nil t)
+(add-to-list 'auto-mode-alist '("\\.js$" . js3-mode))
+(add-hook 'js3-mode-hook
+	  (lambda ()
+	    (setq js3-indent-level 4)
+	    (setq js3-mode-dev-mode-p t)
+	    (setq js3-auto-indent-p t)
+	    (setq js3-enter-indents-newline t)
+	    (setq js3-indent-on-enter-key t)
+	    (when (require 'auto-complete nil t)
+	      (make-variable-buffer-local 'ac-sources)
+	      (add-to-list 'ac-sources 'ac-source-yasnippet)
+	      (auto-complete-mode t))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -326,6 +339,13 @@
   (cond ((frame-size-greater-p) (normal-size-frame))
 	((wide-size-frame))))
 
+(defun toggle-fullscreen ()
+  (interactive)
+  (if (frame-parameter nil 'fullscreen)
+      (set-frame-parameter nil 'fullscreen nil)
+    (set-frame-parameter nil 'fullscreen 'fullscreen)))
+
+(global-set-key (kbd "C-z C-a") 'toggle-fullscreen)
 (global-set-key (kbd "C-z C-z") 'toggle-size-frame)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -403,7 +423,7 @@
     :delimiter-mode nil
     :match-submode mmm-here-doc-get-mode
     :insert ((?d here-doc "Here-document Name: " @ "<<" str _ "\n"
-                 @ "\n" @ str "\n" @)))))
+		 @ "\n" @ str "\n" @)))))
 
 (mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-css)
 (mmm-add-mode-ext-class nil "\\.tpl?\\'" 'html-js)
@@ -423,14 +443,7 @@
 (setq org-startup-folded nil)
 (setq org-return-follows-link t)
 (org-remember-insinuate)
-(setq org-directory "~/Dropbox/howm/")
-(setq org-default-notes-file (concat org-directory "agenda.howm"))
-(setq org-capture-templates
-      '(("l" "年/月/日のエントリを作成する" entry
-	 (file+datetree org-default-notes-file))
-	("m" "年/月/日のリストを作成する" item
-	 (file+datetree org-default-notes-file))))
-(global-set-key (kbd "C-z C-c") 'org-capture)
+(setq org-directory (concat dropbox-directory "howm/"))
 (org-defkey org-mode-map (kbd "C-j") 'skk-mode)
 (setq org-export-latex-classes
       '(("jarticle"
@@ -445,12 +458,24 @@
 (set-face-bold-p 'org-document-title nil)
 (set-face-attribute 'org-document-title nil :height 1.0)
 
+;;; org-export-generic
+;; (auto-install-from-url "http://orgmode.org/w/?p=org-mode.git;a=blob_plain;f=contrib/lisp/org-export-generic.el;hb=HEAD")
+(load "org-export-generic" t t)
+;;; orgmode-markdown
+;; (auto-install-from-url "https://raw.github.com/alexhenning/ORGMODE-Markdown/master/markdown.el")
+(load "markdown" t t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; htmlize settings
 ;;;
 
-(require 'htmlize)
+(autoload 'htmlize-buffer "htmlize"
+  "Convert BUFFER to HTML, preserving colors and decorations.")
+(autoload 'htmlize-region "htmlize"
+  "Convert the region to HTML, preserving colors and decorations.")
+(autoload 'htmlize-file "htmlize"
+  "Load FILE, fontify it, convert it to HTML, and save the result.")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -467,7 +492,6 @@
 ;;;
 
 (require 'color-moccur)
-(require 'moccur-edit)
 (setq moccur-use-migemo t)
 (setq moccur-split-word t)
 
@@ -563,22 +587,98 @@
 ;;;
 
 (require 'php-mode)
+
+(defconst php-style
+  `((c-recognize-knr-p . nil)
+    (c-enable-xemacs-performance-kludge-p . t) ; speed up indentation in XEmacs
+    (c-basic-offset . 4)
+    (indent-tabs-mode . nil)
+    (c-comment-only-line-offset . 0)
+    (c-hanging-braces-alist . ((defun-open after)
+                               (defun-close before after)
+                               (class-open after)
+                               (class-close before after)
+                               (namespace-open after)
+                               (inline-open after)
+                               (inline-close before after)
+                               (block-open after)
+                               (block-close . c-snug-do-while)
+                               (extern-lang-open after)
+                               (extern-lang-close after)
+                               (statement-case-open after)
+                               (substatement-open after)))
+    (c-hanging-colons-alist . ((case-label)
+                               (label after)
+                               (access-label after)
+                               (member-init-intro before)
+                               (inher-intro)))
+    (c-hanging-semi&comma-criteria
+     . (c-semi&comma-no-newlines-for-oneline-inliners
+        c-semi&comma-inside-parenlist
+        c-semi&comma-no-newlines-before-nonblanks))
+    (c-indent-comments-syntactically-p . nil)
+    (comment-column . 40)
+    (c-cleanup-list . (brace-else-brace
+                       brace-elseif-brace
+                       brace-catch-brace
+                       empty-defun-braces
+                       defun-close-semi
+                       list-close-comma
+                       scope-operator))
+    (c-offsets-alist . ((func-decl-cont . ++)
+                        (member-init-intro . ++)
+                        (inher-intro . ++)
+                        (comment-intro . 0)
+                        (arglist-close . c-lineup-arglist)
+                        (topmost-intro . 0)
+                        (block-open . 0)
+                        (inline-open . 0)
+                        (substatement-open . 0)
+                        (statement-cont
+                         .
+                         (,(when (fboundp 'c-no-indent-after-java-annotations)
+                             'c-no-indent-after-java-annotations)
+                          ,(when (fboundp 'c-lineup-assignments)
+                             'c-lineup-assignments)
+                          ++))
+                        (label . /)
+                        (case-label . +)
+                        (statement-case-open . +)
+                        (statement-case-intro . +) ; case w/o {
+                        (access-label . /)
+                        (innamespace . 0))))
+  "
+My PHP Programming Style
+see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
+
+(defun php-c-style ()
+  (interactive)
+  (make-local-variable 'c-tab-always-indent)
+  (setq c-tab-always-indent t)
+  (gtags-mode 1)
+  (electric-pair-mode 1)
+  (electric-indent-mode 1)
+  (electric-layout-mode 1)
+  (c-toggle-auto-hungry-state 1)
+  ;; (make-variable-buffer-local 'electric-layout-rules) '((?\{ . after)
+  ;; 							(?\; . after))
+  (require 'php-completion)
+  (php-completion-mode t)
+  (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
+  (when (require 'auto-complete nil t)
+    (make-variable-buffer-local 'ac-sources)
+    (add-to-list 'ac-sources
+		 'ac-source-php-completion
+		 'ac-source-yasnippet)
+    (auto-complete-mode t))
+  (c-add-style "php-style" php-style t))
+
 (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)" . php-mode))
 (setq php-mode-force-pear t)
 (setq php-manual-url "http://jp2.php.net/manual/ja/")
 (setq php-search-url "http://jp2.php.net/")
-(add-hook 'php-mode-hook
-	  (lambda ()
-	    (gtags-mode 1)
-	    (require 'php-completion)
-	    (php-completion-mode t)
-	    (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
-	    (when (require 'auto-complete nil t)
-	      (make-variable-buffer-local 'ac-sources)
-	      (add-to-list 'ac-sources
-			   'ac-source-php-completion
-			   'ac-source-yasnippet)
-	      (auto-complete-mode t))))
+
+(add-hook 'php-mode-hook 'php-c-style)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -622,6 +722,26 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; markdown-mode settings
+;;;
+;;; (auto-install-from-url "http://jblevins.org/git/markdown-mode.git/plain/markdown-mode.el")
+;;;
+
+(autoload 'markdown-mode "markdown-mode" nil t)
+(autoload 'gfm-mode "markdown-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; csv-mode settings
+;;;
+
+(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
+(autoload 'csv-mode "csv-mode"
+  "Major mode for editing comma-separated value files." t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; auto-complete.el settings
 ;;;
 
@@ -629,9 +749,10 @@
 (add-to-list 'ac-dictionary-directories (concat user-misc-directory "dict"))
 (require 'auto-complete-config)
 (ac-config-default)
-(setq ac-auto-show-menu 0.8)
+(setq ac-auto-show-menu 0.3)
 (setq ac-use-menu-map t)
 (define-key ac-completing-map [tab] 'ac-complete)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -656,10 +777,14 @@
 ;;; simple-hatena-mode settings
 ;;;
 
-(require 'simple-hatena-mode)
-(setq simple-hatena-default-id "nanasess")
-(setq simple-hatena-bin (expand-file-name (concat user-bin-directory "hw.pl")))
-(setq simple-hatena-root howm-directory)
+(require 'html-helper-mode)
+(autoload 'simple-hatena "simple-hatena-mode" nil t)
+(add-hook 'simple-hatena-mode-hook
+	  (lambda ()
+	    (require 'hatena)
+	    (setq simple-hatena-default-id "nanasess")
+	    (setq simple-hatena-bin (expand-file-name (concat user-bin-directory "hw.pl")))
+	    (setq simple-hatena-root howm-directory)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -668,7 +793,7 @@
 ;;; (auto-install-from-url "https://raw.github.com/hayamiz/twittering-mode/master/twittering-mode.el")
 ;;;
 
-(require 'twittering-mode)
+(autoload 'twit "twittering-mode" nil t)
 (unless (load "twittering-tinyurl-api-key" t t)
   (setq twittering-bitly-api-key nil))
 (setq twittering-auth-method 'xauth)
@@ -704,9 +829,12 @@
 (setq mark-holidays-in-calendar t)
 (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
 (setq calendar-weekend-marker 'diary)
-(require 'japanese-holidays)
-(setq calendar-holidays
-      (append japanese-holidays local-holidays other-holidays))
+(add-hook 'calendar-load-hook
+	  (lambda ()
+	    (require 'japanese-holidays)
+	    (setq calendar-holidays
+		  (append japanese-holidays holiday-local-holidays
+			  holiday-other-holidays))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -715,7 +843,8 @@
 ;;; (auto-install-from-url "http://homepage.mac.com/matsuan_tamachan/emacs/pdf-preview.el")
 ;;;
 
-(require 'pdf-preview)
+(autoload 'pdf-preview-buffer "pdf-preview" nil t)
+(autoload 'pdf-preview-buffer-with-faces "pdf-preview" nil t)
 (setq ps-print-header nil)
 (setq pdf-preview-preview-command "open")
 (setq mew-print-function 'pdf-preview-buffer-with-faces)
@@ -754,6 +883,8 @@
 ;;; (auto-install-batch "anything")
 ;;; (auto-install-from-url "https://raw.github.com/wakaran/anything-howm/master/anything-howm.el")
 ;;;
+
+(setq anything-howm-use-migemo t)
 (setq w3m-command "/opt/local/bin/w3m")
 (require 'anything-startup)
 (require 'anything-howm)
@@ -837,18 +968,14 @@ It is automatically generated by `anything-migrate-sources'."
 (setq anything-samewindow nil)
 (setq popwin:special-display-config
       (append
-       '(("*anything complete*"			:height 10)
-	 ("*anything*"				:height 30)
-	 ("*my-anything*"			:height 30)
-	 ("*anything-howm-menu*"		:height 30)
-	 ("*One-Key*"				:noselect t)
-	 ("^\*.*-status.*\*"			:regexp t :height 20)
+       '(("*Async Shell Command*"		:noselect t)
 	 ("^\*dvc-commit.*\*"			:regexp t :noselect t)
-	 ("^\*dvc-error.*\*"			:regexp t :noselect t)
-	 ("*Async Shell Command*"		:noselect t))
+	 ("^\*bzr-status.*\*"			:regexp t :noselect t)
+	 ("^\*xgit-status.*\*"			:regexp t :noselect t)
+	 ("^\*dvc-error.*\*"			:regexp t :noselect t))
        popwin:special-display-config))
 
-(global-set-key (kbd "C-x C-p") popwin:keymap)
+;; (global-set-key (kbd "C-x C-p") popwin:keymap)
 (setq auto-async-byte-compile-display-function 'popwin:popup-buffer-tail)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -872,6 +999,44 @@ It is automatically generated by `anything-migrate-sources'."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; e2wm settings
+;;;
+;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-window-layout/master/window-layout.el")
+;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-window-manager/master/e2wm.el")
+;;; (auto-install-from-url "https://raw.github.com/gist/1842966/98b5f0596096b138009bffcd5d2e3609719fb5d5/e2wm-edbi-pre.el")
+;;;
+
+(autoload 'e2wm:start-management "e2wm" nil t)
+(setq e2wm:def-plugin-clock-text t)
+(global-set-key (kbd "M-+") 'e2wm:start-management)
+
+(add-hook 'e2wm:pre-start-hook
+	  (lambda ()
+	    (load "e2wm-edbi")
+	    (global-set-key (kbd "C-z C-c") 'e2wm:dp-code)
+	    (global-set-key (kbd "C-z C-d") 'e2wm:dp-edbi)
+	    (global-set-key (kbd "C-z 2") 'e2wm:dp-two)
+	    (global-set-key (kbd "C-z 1")
+			    'e2wm:dp-code-main-maximize-toggle-command)
+	    (global-set-key (kbd "C-z Q") 'e2wm:stop-management)))
+
+(defun e2wm:current-buffer ()
+  (cond
+   ((e2wm:managed-p)
+    (e2wm:history-get-main-buffer))
+   ((featurep 'elscreen)
+    (let* ((frame-confs (elscreen-get-frame-confs (selected-frame)))
+           (num (nth 1 (assoc 'screen-history frame-confs)))
+           (cur-window-conf (cadr (assoc num (assoc 'screen-property frame-confs))))
+           (marker (nth 2 cur-window-conf)))
+      (marker-buffer marker)))
+   (t
+    (nth 1
+         (assoc 'buffer-list
+                (nth 1 (nth 1 (current-frame-configuration))))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; Emacs DBI settings
 ;;;
 ;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-deferred/master/concurrent.el")
@@ -879,29 +1044,20 @@ It is automatically generated by `anything-migrate-sources'."
 ;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-epc/master/epc.el")
 ;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-edbi/master/edbi.el")
 ;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-edbi/master/edbi-bridge.pl")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-window-layout/master/window-layout.el")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-window-manager/master/e2wm.el")
-;;; (auto-install-from-url "https://raw.github.com/gist/1842966/98b5f0596096b138009bffcd5d2e3609719fb5d5/e2wm-edbi-pre.el")
 ;;; cpan RPC::EPC::Service DBI DBD::SQLite DBD::Pg DBD::mysql
+;;; dbi:Pg:dbname=dbname;host=hostname;password=password
 ;;;
 
-(require 'edbi)
-(autoload 'edbi:open-db-viewer "edbi")
-
-(require 'e2wm)
-(global-set-key (kbd "M-+") 'e2wm:start-management)
-(load "e2wm-edbi")
-(global-set-key (kbd "C-z C-c") 'e2wm:dp-code)
-(global-set-key (kbd "C-z C-d") 'e2wm:dp-edbi)
-(global-set-key (kbd "C-z 2") 'e2wm:dp-doc)
-
+(autoload 'e2wm:dp-edbi "edbi" nil t)
+(setq edbi:query-result-fix-header nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; mkpasswd settings
 ;;;
 
-(defvar mkpasswd-command "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
+(defvar mkpasswd-command
+  "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
 (autoload 'mkpasswd "mkpasswd" nil t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -913,7 +1069,7 @@ It is automatically generated by `anything-migrate-sources'."
 
 (autoload 'id-manager "id-manager" nil t)
 (setenv "GPG_AGENT_INFO" nil)
-(setq idm-database-file "~/Dropbox/.idm-db.gpg")
+(setq idm-database-file (concat dropbox-directory ".idm-db.gpg"))
 (setq idm-copy-action 'kill-new)
 (setq idm-gen-password-cmd mkpasswd-command)
 
@@ -922,14 +1078,14 @@ It is automatically generated by `anything-migrate-sources'."
 ;;; locate settings
 ;;;
 
-(setq locate-home-database  (expand-file-name "~/locate.database"))
-(setq locate-update-command (expand-file-name
-			     (concat user-bin-directory "locate.updatedb.sh")))
-(setq locate-update-command-program-args
-      (list "nice" "-n" "19" locate-update-command))
+(defvar locate-home-database (expand-file-name "~/locate.database"))
+(defvar locate-update-command
+  (expand-file-name (concat user-bin-directory "locate.updatedb.sh")))
+(defvar locate-update-command-program-args
+  (list "nice" "-n" "19" locate-update-command))
 
 (setq anything-c-locate-command
-      (concat "locate -i -d " locate-home-database " %s"))
+  (concat "locate -i -d " locate-home-database " %s"))
 
 (defun locate-update-home ()
   "offer to update the locate database in home."
@@ -989,5 +1145,48 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
   (interactive)
   (executable-apachectl "graceful"))
 
-(global-set-key (kbd "C-z C-a c") 'apachectl/configtest)
-(global-set-key (kbd "C-z C-a g") 'apachectl/graceful)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; convert to path settings
+;;;
+
+(defun convert-win-to-mac-path()
+  (interactive)
+  (let ((buf (get-buffer-create "*convert*")) str)
+    (setq str (buffer-substring (region-beginning) (region-end)))
+    (with-current-buffer
+	buf (setq ret (buffer-string))
+	(setq str (replace-regexp-in-string
+		   "\\\\\\\\[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+" "/Volumes" str))
+	(setq str (replace-regexp-in-string "\\\\" "/" str))
+	(insert str))
+    (kill-buffer buf)
+    (message "%s" str)
+    (kill-new str)
+    (delete-region (region-beginning) (region-end))
+    (insert str)))
+
+(defun convert-smb-to-win-path()
+  (interactive)
+  (let ((buf (get-buffer-create "*convert*")) str)
+    (setq str (buffer-substring (region-beginning) (region-end)))
+    (with-current-buffer
+	buf (setq ret (buffer-string))
+	(setq str (ucs-normalize-NFC-string str))
+	(setq str (replace-regexp-in-string "smb://" "\\\\\\\\" str))
+	(setq str (replace-regexp-in-string "/" "\\\\" str))
+	(insert str))
+    (kill-buffer buf)
+    (message "%s" str)
+    (kill-new str)
+    (delete-region (region-beginning) (region-end))
+    (insert str)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; redmine.el settings
+;;;
+;;; (auto-install-from-url "https://raw.github.com/nanasess/redmine-el/master/redmine.el")
+;;;
+
+(load "redmine-config" t t)

@@ -1,7 +1,7 @@
 ;;; cc-fonts.el --- font lock support for CC Mode
 
 ;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
-;;   2010, 2011  Free Software Foundation, Inc.
+;;   2010, 2011, 2012  Free Software Foundation, Inc.
 
 ;; Authors:    2003- Alan Mackenzie
 ;;             2002- Martin Stjernholm
@@ -407,10 +407,12 @@
 	      ;; `parse-sexp-lookup-properties' (when it exists).
 	      (parse-sexp-lookup-properties
 	       (cc-eval-when-compile
-		 (boundp 'parse-sexp-lookup-properties))))
+		 (boundp 'parse-sexp-lookup-properties)))
+	      (BOD-limit
+	       (c-determine-limit 1000)))
 	  (goto-char
 	   (let ((here (point)))
-	     (if (eq (car (c-beginning-of-decl-1)) 'same)
+	     (if (eq (car (c-beginning-of-decl-1 BOD-limit)) 'same)
 		 (point)
 	       here)))
 	  ,(c-make-font-lock-search-form regexp highlights))
@@ -1206,6 +1208,7 @@ casts and declarations are fontified.  Used on level 2 and higher."
 	  ;; it finds any.  That's necessary so that we later will
 	  ;; stop inside them to fontify types there.
 	  (c-parse-and-markup-<>-arglists t)
+	  lbrace ; position of some {.
 	  ;; The font-lock package in Emacs is known to clobber
 	  ;; `parse-sexp-lookup-properties' (when it exists).
 	  (parse-sexp-lookup-properties
@@ -1317,7 +1320,6 @@ casts and declarations are fontified.  Used on level 2 and higher."
 	      (or (looking-at c-typedef-key)
 		  (goto-char start-pos)))
 
-	    ;; Now analyze the construct.
 	    ;; In QT, "more" is an irritating keyword that expands to nothing.
 	    ;; We skip over it to prevent recognition of "more slots: <symbol>"
 	    ;; as a bitfield declaration.
@@ -1326,6 +1328,8 @@ casts and declarations are fontified.  Used on level 2 and higher."
 			(concat "\\(more\\)\\([^" c-symbol-chars "]\\|$\\)")))
 	      (goto-char (match-end 1))
 	      (c-forward-syntactic-ws))
+
+	    ;; Now analyze the construct.
 	    (setq decl-or-cast (c-forward-decl-or-cast-1
 				match-pos context last-cast-end))
 
@@ -1394,15 +1398,67 @@ casts and declarations are fontified.  Used on level 2 and higher."
 	      (c-fontify-recorded-types-and-refs)
 	      nil)
 
+	     ;; Restore point, since at this point in the code it has been
+	     ;; left undefined by c-forward-decl-or-cast-1 above.
+	     ((progn (goto-char start-pos) nil))
+
+	     ;; If point is inside a bracelist, there's no point checking it
+	     ;; being at a declarator.
+	     ((let ((paren-state (c-parse-state)))
+		(setq lbrace (c-cheap-inside-bracelist-p paren-state)))
+	      ;; Move past this bracelist to prevent an endless loop.
+	      (goto-char lbrace)
+	      (unless (c-safe (progn (forward-list) t))
+		(goto-char start-pos)
+		(c-forward-token-2))
+	      nil)
+
+	     ;; If point is just after a ")" which is followed by an
+	     ;; identifier which isn't a label, or at the matching "(", we're
+	     ;; at either a macro invocation, a cast, or a
+	     ;; for/while/etc. statement.  The cast case is handled above.
+	     ;; None of these cases can contain a declarator.
+	     ((or (and (eq (char-before match-pos) ?\))
+	     	       (c-on-identifier)
+	     	       (save-excursion (not (c-forward-label))))
+	     	  (and (eq (char-after) ?\()
+	     	       (save-excursion
+	     		 (and
+	     		  (progn (c-backward-token-2) (c-on-identifier))
+	     		  (save-excursion (not (c-forward-label)))
+	     		  (progn (c-backward-token-2)
+	     			 (eq (char-after) ?\())))))
+	      (c-forward-token-2)	; Must prevent looping.
+	      nil)
+
+	     ((and (not c-enums-contain-decls)
+		   ;; An optimisation quickly to eliminate scans of long enum
+		   ;; declarations in the next cond arm.
+		   (let ((paren-state (c-parse-state)))
+		     (and
+		      (numberp (car paren-state))
+		      (save-excursion
+			(goto-char (car paren-state))
+			(c-backward-token-2)
+			(or (looking-at c-brace-list-key)
+			    (progn
+			      (c-backward-token-2)
+			      (looking-at c-brace-list-key)))))))
+	      (c-forward-token-2)
+	      nil)
+
 	     (t
 	      ;; Are we at a declarator?  Try to go back to the declaration
 	      ;; to check this.  If we get there, check whether a "typedef"
 	      ;; is there, then fontify the declarators accordingly.
-	      (let ((decl-search-lim (max (- (point) 50000) (point-min)))
+	      (let ((decl-search-lim (c-determine-limit 1000))
 		    paren-state bod-res encl-pos is-typedef 
 		    c-recognize-knr-p) ; Strictly speaking, bogus, but it
 				       ; speeds up lisp.h tremendously.
 		(save-excursion
+		  (unless (or (eobp)
+			      (looking-at "\\s(\\|\\s)"))
+		    (forward-char))
 		  (setq bod-res (car (c-beginning-of-decl-1 decl-search-lim)))
 		  (if (and (eq bod-res 'same)
 			   (progn
@@ -1502,24 +1558,8 @@ casts and declarations are fontified.  Used on level 2 and higher."
   ;; prevent a repeat invocation.  See elisp/lispref page "Search-based
   ;; Fontification".
   (let* ((paren-state (c-parse-state))
-	 (start (point))
-	 decl-context bo-decl in-typedef type-type ps-elt)
-
-    ;; First, are we actually in a "local" declaration?
-    (setq decl-context (c-beginning-of-decl-1)
-	  bo-decl (point)
-	  in-typedef (looking-at c-typedef-key))
-    (if in-typedef (c-forward-token-2))
-    (when (and (eq (car decl-context) 'same)
-	       (< bo-decl start))
-      ;; Are we genuinely at a type?
-      (setq type-type (c-forward-type t))
-      (if (and type-type
-	       (or (not (eq type-type 'maybe))
-		   (looking-at c-symbol-key)))
-	  (c-font-lock-declarators limit t in-typedef)))
-
-    ;; Secondly, are we in any nested struct/union/class/etc. braces?
+	 decl-context in-typedef ps-elt)
+    ;; Are we in any nested struct/union/class/etc. braces?
     (while paren-state
       (setq ps-elt (car paren-state)
 	    paren-state (cdr paren-state))

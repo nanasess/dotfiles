@@ -1,7 +1,7 @@
 ;;; howm-reminder.el --- Wiki-like note-taking tool
-;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
+;;; Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: howm-reminder.el,v 1.80 2011-01-01 04:32:43 hira Exp $
+;;; $Id: howm-reminder.el,v 1.82 2011-12-31 15:07:29 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -868,12 +868,14 @@ or TODO is t."
          (reminder-menu (or schedule-menu todo-menu)))
     ;; Don't modify howm-reminder-marks.
     ;; Otherwise, defcustom will be confused for howm-reminder-menu-types, etc.
-    (mapcar* (lambda (var flag) (howm-modify-reminder-types var letter flag))
-             '(howm-reminder-types
-               howm-schedule-types howm-todo-types
-               howm-schedule-menu-types howm-todo-menu-types
-               howm-reminder-menu-types)
-             (list t schedule todo schedule-menu todo-menu reminder-menu))))
+    (howm-cl-mapcar* (lambda (var flag)
+                       (howm-modify-reminder-types var letter flag))
+                     '(howm-reminder-types
+                       howm-schedule-types howm-todo-types
+                       howm-schedule-menu-types howm-todo-menu-types
+                       howm-reminder-menu-types)
+                     (list t schedule todo
+                           schedule-menu todo-menu reminder-menu))))
 
 (defun howm-modify-reminder-types (var letter flag)
   "Modify variable VAR whose value is \"[...]\".

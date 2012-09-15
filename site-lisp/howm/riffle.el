@@ -1,7 +1,7 @@
 ;;; riffle.el --- template of list browser with immediate preview
-;;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
+;;; Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: riffle.el,v 1.39 2011-01-14 14:25:34 hira Exp $
+;;; $Id: riffle.el,v 1.41 2011-12-31 15:07:29 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -458,7 +458,10 @@ snap://Info-mode/emacs#File Variables
         (split-window nil size howm-view-split-horizontally))
       (let ((even-window-heights (if size
                                      nil
-                                   even-window-heights)))
+                                   even-window-heights))
+            ;; Don't split windows further even when
+            ;; riffle-pop-to-buffer is called twice.
+            (pop-up-windows nil))
         (pop-to-buffer buf)))))
 
 ;; 'Place' is line number at now

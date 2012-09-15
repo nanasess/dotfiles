@@ -1,7 +1,7 @@
 ;;; illusion.el --- load, edit, and submit something which is not pure file
-;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011
+;;; Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
 ;;;   HIRAOKA Kazuyuki <khi@users.sourceforge.jp>
-;;; $Id: illusion.el,v 1.13 2010-12-31 15:07:58 hira Exp $
+;;; $Id: illusion.el,v 1.14 2011-12-31 15:07:29 hira Exp $
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
