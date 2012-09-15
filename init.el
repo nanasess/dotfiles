@@ -223,6 +223,30 @@
 (when (<= emacs-major-version 23)
   (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "cc"))))
 
+;; Create my personal style.
+(defconst php-style
+  '((c-tab-always-indent        . t)
+    (c-comment-only-line-offset . 0)
+    (c-hanging-braces-alist     . ((substatement-open after)
+                                   (brace-list-open)))
+    (c-hanging-colons-alist     . ((member-init-intro before)
+                                   (inher-intro)
+                                   (case-label after)
+                                   (label after)
+                                   (access-label after)))
+    (c-cleanup-list             . (scope-operator
+                                   empty-defun-braces
+                                   defun-close-semi))
+    (c-offsets-alist            . ((arglist-close . c-lineup-arglist)
+                                   (substatement-open . 0)
+                                   (case-label        . 4)
+                                   (block-open        . 0)
+                                   (knr-argdecl-intro . -)))
+    (c-echo-syntactic-information-p . t))
+  "My PHP Programming Style")
+
+(c-add-style "php-style" php-style)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Indent settings
@@ -230,7 +254,8 @@
 
 (defun basic-indent ()
   (setq tab-width 4)
-  (setq indent-tabs-mode nil))
+  (setq indent-tabs-mode nil)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -580,6 +605,9 @@
 	    (require 'php-completion)
 	    (php-completion-mode t)
 	    (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
+	    (c-set-style "php-style")
+	    (setq c-auto-newline t)
+	    (add-hook 'before-save-hook 'delete-trailing-whitespace)
 	    (when (require 'auto-complete nil t)
 	      (make-variable-buffer-local 'ac-sources)
 	      (add-to-list 'ac-sources
@@ -656,9 +684,10 @@
 (add-to-list 'ac-dictionary-directories (concat user-misc-directory "dict"))
 (require 'auto-complete-config)
 (ac-config-default)
-(setq ac-auto-show-menu 0.8)
+(setq ac-auto-show-menu 0.3)
 (setq ac-use-menu-map t)
 (define-key ac-completing-map [tab] 'ac-complete)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
