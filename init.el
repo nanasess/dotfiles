@@ -9,7 +9,7 @@
 (defvar user-site-lisp-directory (concat user-emacs-directory "site-lisp/"))
 (defvar user-misc-directory (concat user-emacs-directory "etc/"))
 (defvar user-bin-directory (concat user-emacs-directory "bin/"))
-(defvar dropbox-directory (expand-file-name "~/Dropbox/"))
+(defvar dropbox-directory (expand-file-name "~/SparkleShare/share/"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -655,10 +655,11 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   (setq c-tab-always-indent t)
   (gtags-mode 1)
   (php-electric-mode 1)
-  (c-toggle-auto-hungry-state 1)
+  ;; (c-toggle-auto-hungry-state 1)
   (require 'php-completion)
   (php-completion-mode t)
   (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
+  (define-key php-mode-map [return] 'newline-and-indent)
   (when (require 'auto-complete nil t)
     (make-variable-buffer-local 'ac-sources)
     (add-to-list 'ac-sources
