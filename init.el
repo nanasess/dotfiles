@@ -655,6 +655,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   (setq c-tab-always-indent t)
   (gtags-mode 1)
   (php-electric-mode 1)
+  (c-toggle-hungry-state 1)
   ;; (c-toggle-auto-hungry-state 1)
   (require 'php-completion)
   (php-completion-mode t)
@@ -747,7 +748,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq ac-auto-show-menu 0.3)
 (setq ac-use-menu-map t)
 (define-key ac-completing-map [tab] 'ac-complete)
-
+(define-key ac-completing-map [return] 'ac-complete)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
