@@ -42,8 +42,6 @@
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
     (setq exec-path (append (list dir) exec-path))))
 
-(setq dropbox-directory (expand-file-name "C:/Users/nanasess/Dropbox"))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Japanesed settings
@@ -61,6 +59,7 @@
 ;;; SKK settings
 ;;;
 
+(setq skk-cdb-large-jisyo (concat dropbox-directory "SKK-JISYO.ALL.cdb"))
 (setq skk-user-directory (concat dropbox-directory "ddskk"))
 (setq skk-init-file (concat user-initial-directory "skk-init.el"))
 (setq skk-preload t)

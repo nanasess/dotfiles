@@ -1,4 +1,4 @@
-SITE_DIR=C:/cygwin/home/nanasess/.emacs.d
+SITE_DIR=C:/Users/nanasess/.emacs.d
 EMACS=C:/emacs-24.2/bin/emacs.exe
 
 all: compile
