@@ -601,8 +601,8 @@
 (quickrun-add-command "phpunit" '((:command . "phpunit")
                                   (:exec . "%c %s")
                                   (:outputter . quickrun/phpunit-outputter)))
-(add-to-list 'quickrun-file-alist '("Test\\.php$" . "phpunit"))
-
+(add-to-list 'quickrun-file-alist
+	     '("\\(Test\\.php\\|TestSuite\\.php\\|AllTests\\.php\\)\\'" . "phpunit"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
