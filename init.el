@@ -674,6 +674,18 @@
 My PHP Programming Style
 see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
+(require 'flymake)
+(defun flymake-php-init ()
+  "Use php to check the syntax of the current file."
+  (let* ((temp (flymake-init-create-temp-buffer-copy
+		'flymake-create-temp-inplace))
+	 (local (file-relative-name temp (file-name-directory buffer-file-name))))
+    (list "php" (list "-f" local "-l"))))
+
+(add-to-list 'flymake-err-line-patterns
+	     '("\\(Parse\\|Fatal\\) error: +\\(.*?\\) in \\(.*?\\) on line \\([0-9]+\\)$" 3 4 nil 2))
+(add-to-list 'flymake-allowed-file-name-masks '("\\.php$" flymake-php-init))
+
 ;; (auto-install-from-url "http://stcamp.net/share/php-electric.el")
 (require 'php-electric)
 (defun php-c-style ()
@@ -684,11 +696,14 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   (php-electric-mode 1)
   (c-toggle-hungry-state 1)
   ;; (c-toggle-auto-hungry-state 1)
+  (flymake-mode 1)
   (require 'php-completion)
   (php-completion-mode t)
   (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
   (define-key php-mode-map [return] 'newline-and-indent)
   (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
+  (define-key php-mode-map (kbd "M-p") 'flymake-goto-prev-error)
+  (define-key php-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (make-local-variable 'comment-start)
   (setq comment-start "// ")
   (make-local-variable 'comment-start-skip)
