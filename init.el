@@ -501,6 +501,15 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; expand-region settings
+;;;
+
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "expand-region")))
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; dvc settings
 ;;;
 
