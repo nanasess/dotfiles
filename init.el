@@ -748,11 +748,16 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; yasnippet settings
 ;;;
 
+(add-to-list 'load-path (expand-file-name
+			 (concat user-site-lisp-directory "yasnippet")))
 (require 'yasnippet)
-(yas/initialize)
-(yas/load-directory (expand-file-name (concat user-misc-directory "snippets")))
+(setq yas-snippet-dirs '("~/.emacs.d/etc/snippets"
+			 "~/.emacs.d/site-lisp/yasnippet/snippets"))
+(yas-global-mode 1)
 (require 'dropdown-list)
-(setq yas/prompt-functions '(yas/dropdown-prompt))
+(setq yas-prompt-functions '(yas-dropdown-prompt
+			     yas-ido-prompt
+			     yas-completing-prompt))
 (defun yas/org-very-safe-expand ()
   (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
 (add-hook 'org-mode-hook
