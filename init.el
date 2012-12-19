@@ -800,11 +800,15 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 ;;; auto-complete.el settings
 ;;;
+;;; (auto-install-from-url "https://raw.github.com/auto-complete/popup-el/master/popup.el")
+;;; (auto-install-from-url "https://raw.github.com/auto-complete/fuzzy-el/master/fuzzy.el")
+;;;
 
-;; (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "auto-complete")))
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "auto-complete")))
 (require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories (concat user-misc-directory "dict"))
-
+(add-to-list 'ac-dictionary-directories
+	     (expand-file-name
+	      (concat user-site-lisp-directory "auto-complete/dict")))
 (ac-config-default)
 (setq ac-auto-show-menu 0.3)
 (setq ac-use-menu-map t)
