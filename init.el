@@ -354,6 +354,7 @@
 ;;;
 
 (setq migemo-dictionary "/usr/local/share/migemo/euc-jp/migemo-dict")
+(setq isearch-lax-whitespace nil)
 (when (file-exists-p migemo-dictionary)
   (setq migemo-command "cmigemo")
   (setq migemo-options '("-q" "--emacs" "-i" "\a"))
