@@ -1,19 +1,17 @@
-;;; php-mode.el --- major mode for editing PHP code
+;;; php-mode.el --- Major mode for editing PHP code
 
 ;; Copyright (C) 1999, 2000, 2001, 2003, 2004 Turadg Aleahmad
 ;;               2008 Aaron S. Hawley
-;;               2011, 2012 Eric James Michael Ritz
+;;               2011, 2012, 2013 Eric James Michael Ritz
 
-;; Maintainer: Eric James Michael Ritz <lobbyjones at gmail dot com>
-;; Original Author: Turadg Aleahmad, 1999-2004
-;; Keywords: php languages oop
-;; Created: 1999-05-17
-;; X-URL:   https://github.com/ejmr/php-mode
+;;; Author: Eric James Michael Ritz
+;;; URL: https://github.com/ejmr/php-mode
+;;; Version: 1.9
 
-(defconst php-mode-version-number "1.7"
+(defconst php-mode-version-number "1.9"
   "PHP Mode version number.")
 
-(defconst php-mode-modified "2012-10-15"
+(defconst php-mode-modified "2013-01-09"
   "PHP Mode build date.")
 
 ;;; License
@@ -63,18 +61,22 @@
 
 ;;; Code:
 
-(require 'add-log)
-(require 'speedbar)
 (require 'font-lock)
 (require 'cc-mode)
 (require 'cc-langs)
 (require 'custom)
-(require 'etags)
+(require 'flymake)
 (eval-when-compile
+  (unless (require 'cl-lib nil t)
+    (require 'cl))
   (require 'regexp-opt)
   (defvar c-vsemi-status-unknown-p)
   (defvar syntax-propertize-via-font-lock))
-(require 'flymake)
+
+;;; Emacs 24.3 obsoletes flet in favor of cl-flet.  So if we are not
+;;; using that version then we revert to using flet.
+(unless (fboundp 'cl-flet)
+  (defalias 'cl-flet 'flet))
 
 ;; Local variables
 ;;;###autoload
@@ -219,6 +221,16 @@ You can replace \"en\" with your ISO language code."
   :type 'hook
   :group 'php)
 
+(defcustom php-mode-drupal-hook nil
+  "Hook called when a Drupal file is opened with `php-mode'."
+  :type 'hook
+  :group 'php)
+
+(defcustom php-mode-wordpress-hook nil
+  "Hook called when a WordPress file is opened with `php-mode'."
+  :type 'hook
+  :group 'php)
+
 (defcustom php-mode-force-pear nil
   "Normally PEAR coding rules are enforced only when the filename contains \"PEAR.\"
 Turning this on will force PEAR rules on all PHP files."
@@ -232,6 +244,77 @@ buffer before warning, but this is is not very smart; e.g. if you
 have any tags inside a PHP string, it will be fooled."
   :type '(choice (const :tag "Warg" t) (const "Don't warn" nil))
   :group 'php)
+
+(defcustom php-mode-coding-style 'pear
+  "Select default coding style to use with php-mode.
+This variable can take one of the following symbol values:
+
+`PEAR' - use coding styles preferred for PEAR code and modules.
+
+`Drupal' - use coding styles preferred for working with Drupal projects.
+
+`WordPress' - use coding styles preferred for working with WordPress projects."
+  :type '(choice (const :tag "PEAR" pear)
+				 (const :tag "Drupal" drupal)
+				 (const :tag "WordPress" wordpress))
+  :group 'php
+  :set 'php-mode-custom-coding-style-set
+  :initialize 'custom-initialize-default)
+
+(defun php-mode-custom-coding-style-set (sym value)
+  (set         sym value)
+  (set-default sym value)
+  (cond ((eq value 'pear)
+  		 (php-enable-pear-coding-style))
+		((eq value 'drupal)
+  		 (php-enable-drupal-coding-style))
+		((eq value 'wordpress)
+		 (php-enable-wordpress-coding-style))))
+
+
+(defun php-enable-pear-coding-style ()
+  "Sets up php-mode to use the coding styles preferred for PEAR
+code and modules."
+  (interactive)
+  (set (make-local-variable 'tab-width) 4)
+  (set (make-local-variable 'c-basic-offset) 4)
+  (set (make-local-variable 'indent-tabs-mode) nil)
+  (c-set-offset 'block-open '-)
+  (c-set-offset 'block-close 0)
+  (c-set-offset 'statement-cont '+))
+
+(defun php-enable-drupal-coding-style ()
+  "Makes php-mode use coding styles that are preferable for
+working with Drupal."
+  (interactive)
+  (setq tab-width 2)
+  (setq c-basic-offset 2)
+  (setq indent-tabs-mode nil)
+  (setq fill-column 78)
+  (setq show-trailing-whitespace t)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (c-set-offset 'case-label '+)
+  (c-set-offset 'arglist-close 0)
+  (c-set-offset 'arglist-intro '+)
+  (c-set-offset 'arglist-cont-nonempty 'c-lineup-math)
+  (c-set-offset 'statement-cont '+))
+
+(defun php-enable-wordpress-coding-style ()
+  "Makes php-mode use coding styles that are preferable for
+working with Wordpress."
+  (interactive)
+  (setq indent-tabs-mode t)
+  (setq fill-column 78)
+  (setq tab-width 4)
+  (setq c-basic-offset tab-width)
+  (setq c-indent-comments-syntactically-p t)
+  (c-set-offset 'arglist-cont 0)
+  (c-set-offset 'arglist-intro '+)
+  (c-set-offset 'case-label 2)
+  (c-set-offset 'arglist-close 0)
+  (c-set-offset 'defun-close 0)
+  (c-set-offset 'defun-block-intro tab-width)
+  (c-set-offset 'statement-cont '+))
 
 
 (defun php-mode-version ()
@@ -303,7 +386,7 @@ See `php-beginning-of-defun'."
              (base-msg
               (concat
                "Indentation fails badly with mixed HTML/PHP in the HTML part in
-pla�n `php-mode'.  To get indentation to work you must use an
+plain `php-mode'.  To get indentation to work you must use an
 Emacs library that supports 'multiple major modes' in a buffer.
 Parts of the buffer will then be in `php-mode' and parts in for
 example `html-mode'.  Known such libraries are:\n\t"
@@ -435,6 +518,20 @@ This is was done due to the problem reported here:
 (c-set-offset 'arglist-intro 'php-lineup-arglist-intro)
 (c-set-offset 'arglist-close 'php-lineup-arglist-close)
 
+(defun php-unindent-closure ()
+  (let ((syntax (mapcar 'car c-syntactic-context)))
+    (if (and (member 'arglist-cont-nonempty syntax)
+             (or
+              (member 'statement-block-intro syntax)
+              (member 'brace-list-intro syntax)
+              (member 'brace-list-close syntax)
+              (member 'block-close syntax)))
+        (save-excursion
+          (let ((count-func (if (fboundp 'cl-count) #'cl-count #'count)))
+            (beginning-of-line)
+            (delete-char (* (funcall count-func 'arglist-cont-nonempty syntax)
+                            c-basic-offset)))))))
+
 ;;;###autoload
 (define-derived-mode php-mode c-mode "PHP"
   "Major mode for editing PHP code.\n\n\\{php-mode-map}"
@@ -475,6 +572,8 @@ This is was done due to the problem reported here:
   (modify-syntax-entry ?_    "_" php-mode-syntax-table)
   (modify-syntax-entry ?`    "\"" php-mode-syntax-table)
   (modify-syntax-entry ?\"   "\"" php-mode-syntax-table)
+  (modify-syntax-entry ?#    "< b" php-mode-syntax-table)
+  (modify-syntax-entry ?\n   "> b" php-mode-syntax-table)
 
   (set (make-local-variable 'syntax-propertize-via-font-lock)
        '(("\\(\"\\)\\(\\\\.\\|[^\"\n\\]\\)*\\(\"\\)" (1 "\"") (3 "\""))
@@ -493,13 +592,23 @@ This is was done due to the problem reported here:
   (set (make-local-variable 'next-line-add-newlines) nil)
 
   ;; PEAR coding standards
-  (add-hook 'php-mode-pear-hook
-            (lambda ()
-              (set (make-local-variable 'tab-width) 4)
-              (set (make-local-variable 'c-basic-offset) 4)
-              (set (make-local-variable 'indent-tabs-mode) nil)
-              (c-set-offset 'block-open' - )
-              (c-set-offset 'block-close' 0 )) nil t)
+  (add-hook 'php-mode-pear-hook 'php-enable-pear-coding-style
+             nil t)
+
+  ;; ;; Drupal coding standards
+  (add-hook 'php-mode-drupal-hook 'php-enable-drupal-coding-style
+             nil t)
+
+  ;; ;; WordPress coding standards
+  (add-hook 'php-mode-wordpress-hook 'php-enable-wordpress-coding-style
+             nil t)
+
+  (cond ((eq php-mode-coding-style 'pear)
+  		 (run-hooks 'php-mode-pear-hook))
+  		((eq php-mode-coding-style 'drupal)
+  		 (run-hooks 'php-mode-drupal-hook))
+  		((eq php-mode-coding-style 'wordpress)
+  		 (run-hooks 'php-mode-wordpress-hook)))
 
   (if (or php-mode-force-pear
           (and (stringp buffer-file-name)
@@ -510,7 +619,7 @@ This is was done due to the problem reported here:
 
   (setq indent-line-function 'php-cautious-indent-line)
   (setq indent-region-function 'php-cautious-indent-region)
-  (setq c-special-indent-hook nil)
+  (add-hook 'c-special-indent-hook 'php-unindent-closure)
   (setq c-at-vsemi-p-fn 'php-c-at-vsemi-p)
   (setq c-vsemi-status-unknown-p 'php-c-vsemi-status-unknown-p)
 
@@ -525,9 +634,7 @@ This is was done due to the problem reported here:
   (set (make-local-variable 'defun-prompt-regexp)
        "^\\s-*function\\s-+&?\\s-*\\(\\(\\sw\\|\\s_\\)+\\)\\s-*")
   (set (make-local-variable 'add-log-current-defun-header-regexp)
-       php-beginning-of-defun-regexp)
-
-  (run-hooks 'php-mode-hook))
+       php-beginning-of-defun-regexp))
 
 ;; Make a menu keymap (with a prompt string)
 ;; and make it the menu bar item's definition.
@@ -680,7 +787,7 @@ current `tags-file-name'."
 for the word at point.  The function returns t if the requested
 documentation exists, and nil otherwise."
   (interactive)
-  (flet ((php-function-file-for (name)
+  (cl-flet ((php-function-file-for (name)
                                 (expand-file-name
                                  (format "function.%s.html"
                                          (replace-regexp-in-string "_" "-" name))
@@ -698,7 +805,7 @@ will first try searching the local documentation.  If the
 requested documentation does not exist it will fallback to
 searching the PHP website."
   (interactive)
-  (flet ((php-search-web-documentation ()
+  (cl-flet ((php-search-web-documentation ()
                                        (browse-url (concat php-search-url (current-word)))))
     (if (and (stringp php-manual-path)
              (not (string= php-manual-path "")))
@@ -816,7 +923,15 @@ searching the PHP website."
        "LOCK_UN"
        "HTML_SPECIALCHARS"
        "ENT_COMPAT"
+       "ENT_QUOTES"
        "ENT_NOQUOTES"
+       "ENT_IGNORE"
+       "ENT_SUBSTITUTE"
+       "ENT_DISALLOWED"
+       "ENT_HTML401"
+       "ENT_XML1"
+       "ENT_XHTML"
+       "ENT_HTML5"
        "INFO_CREDITS"
        "INFO_MODULES"
        "INFO_VARIABLES"
@@ -939,6 +1054,10 @@ searching the PHP website."
        "FILTER_FLAG_NO_RES_RANGE"
        "FILTER_FLAG_NO_PRIV_RANGE"
 
+       ;; Password constants
+       "PASSWORD_DEFAULT"
+       "PASSWORD_BCRYPT"
+
        ;; IMAP constants
        "NIL"
        "OP_DEBUG"
@@ -1015,13 +1134,55 @@ searching the PHP website."
     (regexp-opt
      ;; "class", "new" and "extends" get special treatment
      ;; "case" gets special treatment elsewhere
-     '("and" "break" "continue" "declare" "default" "die" "do" "echo" "else" "elseif"
-       "endfor" "endforeach" "endif" "endswitch" "endwhile" "exit"
-       "extends" "for" "foreach" "global" "if" "include" "include_once"
-       "or" "require" "require_once" "return" "return new" "static" "switch"
-       "then" "var" "while" "xor" "throw" "catch" "try"
-       "instanceof" "catch all" "finally" "insteadof" "use" "as"
-       "clone")))
+     '("and"
+       "array"
+       "as"
+       "break"
+       "catch all"
+       "catch"
+       "clone"
+       "continue"
+       "declare"
+       "default"
+       "die"
+       "do"
+       "echo"
+       "else"
+       "elseif"
+       "empty"
+       "endfor"
+       "endforeach"
+       "endif"
+       "endswitch"
+       "endwhile"
+       "exit"
+       "extends"
+       "finally"
+       "for"
+       "foreach"
+       "global"
+       "if"
+       "include"
+       "include_once"
+       "instanceof"
+       "insteadof"
+       "isset"
+       "list"
+       "or"
+       "require"
+       "require_once"
+       "return"
+       "static"
+       "switch"
+       "then"
+       "throw"
+       "try"
+       "unset"
+       "use"
+       "var"
+       "while"
+       "xor"
+       "yield")))
   "PHP keywords.")
 
 (defconst php-identifier
@@ -1031,7 +1192,7 @@ searching the PHP website."
 
 (defconst php-types
   (eval-when-compile
-    (regexp-opt '("array" "bool" "boolean" "char" "const" "double" "float"
+    (regexp-opt '("array" "bool" "boolean" "callable" "char" "const" "double" "float"
                   "int" "integer" "long" "mixed" "object" "real"
                   "string")))
   "PHP types.")
@@ -1045,7 +1206,7 @@ searching the PHP website."
 ;; Set up font locking
 (defconst php-font-lock-keywords-1
   (list
-   '("#.*" . font-lock-comment-face)
+
    ;; Fontify constants
    (cons
     (concat "[^_$]?\\<\\(" php-constants "\\)\\>[^_]?")
@@ -1166,6 +1327,10 @@ searching the PHP website."
     `("[(,]\\(?:\\s-\\|\n\\)*\\(\\(?:\\sw\\|\\\\\\)+\\)\\s-+&?\\$\\sw+\\>"
       1 font-lock-type-face)
 
+    ;; Function calls qualified by namespaces
+    '("\\(?:\\(\\sw+\\)\\\\\\)+\\sw+("
+      (1 font-lock-type-face))
+
     ;; Fontify variables and function calls
     '("\\$\\(this\\|that\\)\\W" (1 font-lock-constant-face nil nil))
 
@@ -1237,7 +1402,7 @@ The output will appear in the buffer *PHP*."
     ;; Calling 'php -r' will fail if we send it code that starts with
     ;; '<?php', which is likely.  So we run the code through this
     ;; function to check for that prefix and remove it.
-    (flet ((clean-php-code (code)
+    (cl-flet ((clean-php-code (code)
                            (if (string-prefix-p "<?php" code t)
                                (substring code 5)
                              code)))
