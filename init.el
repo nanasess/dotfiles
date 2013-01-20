@@ -443,9 +443,8 @@
 (setq org-startup-truncated nil)
 (setq org-startup-folded nil)
 (setq org-return-follows-link t)
-(org-remember-insinuate)
 (setq org-directory (concat dropbox-directory "howm/"))
-(org-defkey org-mode-map (kbd "C-j") 'skk-mode)
+;; (org-defkey org-mode-map (kbd "C-j") 'skk-mode)
 (setq org-export-latex-classes
       '(("jarticle"
 	 "\\documentclass[11t,a4j,oneside]{jarticle}"
@@ -456,8 +455,8 @@
 	 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 (setq org-latex-to-pdf-process
       '("org-latex-to-pdf.sh %f" "org-latex-to-pdf.sh %f"))
-(set-face-bold-p 'org-document-title nil)
-(set-face-attribute 'org-document-title nil :height 1.0)
+;; (set-face-bold-p 'org-document-title nil)
+;; (set-face-attribute 'org-document-title nil :height 1.0)
 
 ;;; org-export-generic
 ;; (auto-install-from-url "http://orgmode.org/w/?p=org-mode.git;a=blob_plain;f=contrib/lisp/org-export-generic.el;hb=HEAD")
@@ -465,6 +464,10 @@
 ;;; orgmode-markdown
 ;; (auto-install-from-url "https://raw.github.com/alexhenning/ORGMODE-Markdown/master/markdown.el")
 (load "markdown" t t)
+
+;; org-html5presentation
+(autoload 'org-export-as-html5presentation-and-open "org-html5presentation" nil t)
+(autoload 'org-export-as-html5presentation "org-html5presentation" nil t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -506,6 +509,15 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; expand-region settings
+;;;
+
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "expand-region")))
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; dvc settings
 ;;;
 
@@ -529,6 +541,15 @@
 
 (autoload 'svn-status "dsvn" "Run `svn status'." t)
 (autoload 'svn-update "dsvn" "Run `svn update'." t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; magit settings
+;;;
+;;; http://github.com/magit/magit
+;;;
+
+(require 'magit)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -584,7 +605,36 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; quickrun.el settings
+;;;
+;;; (auto-install-from-url "https://raw.github.com/syohex/emacs-quickrun/master/quickrun.el")
+;;;
+
+(require 'quickrun)
+(defface phpunit-pass
+  '((t (:foreground "white" :background "green" :weight bold))) nil)
+(defface phpunit-fail
+  '((t (:foreground "white" :background "red" :weight bold))) nil)
+
+(defun quickrun/phpunit-outputter ()
+  (save-excursion
+    (goto-char (point-min))
+    (while (replace-regexp "" "")
+      nil))
+  (highlight-phrase "^OK.*$" 'phpunit-pass)
+  (highlight-phrase "^FAILURES.*$" 'phpunit-fail))
+
+(quickrun-add-command "phpunit" '((:command . "phpunit")
+                                  (:exec . "%c %s")
+                                  (:outputter . quickrun/phpunit-outputter)))
+(add-to-list 'quickrun-file-alist
+	     '("\\(Test\\.php\\|TestSuite\\.php\\|AllTests\\.php\\)\\'" . "phpunit"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; PHP settings
+;;;
+;;; (auto-install-from-url "https://raw.github.com/ejmr/php-mode/master/php-mode.el")
 ;;;
 
 (require 'php-mode)
@@ -662,10 +712,20 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   (php-electric-mode 1)
   (c-toggle-hungry-state 1)
   ;; (c-toggle-auto-hungry-state 1)
+  (flymake-mode 1)
   (require 'php-completion)
   (php-completion-mode t)
   (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
   (define-key php-mode-map [return] 'newline-and-indent)
+  (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
+  (define-key php-mode-map (kbd "M-p") 'flymake-goto-prev-error)
+  (define-key php-mode-map (kbd "M-n") 'flymake-goto-next-error)
+  (make-local-variable 'comment-start)
+  (setq comment-start "// ")
+  (make-local-variable 'comment-start-skip)
+  (setq comment-start-skip "// *")
+  (make-local-variable 'comment-end)
+  (setq comment-end "")
   (when (require 'auto-complete nil t)
     (make-variable-buffer-local 'ac-sources)
     (add-to-list 'ac-sources
@@ -693,11 +753,16 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; yasnippet settings
 ;;;
 
+(add-to-list 'load-path (expand-file-name
+			 (concat user-site-lisp-directory "yasnippet")))
 (require 'yasnippet)
-(yas/initialize)
-(yas/load-directory (expand-file-name (concat user-misc-directory "snippets")))
+(setq yas-snippet-dirs '("~/.emacs.d/etc/snippets"
+			 "~/.emacs.d/site-lisp/yasnippet/snippets"))
+(yas-global-mode 1)
 (require 'dropdown-list)
-(setq yas/prompt-functions '(yas/dropdown-prompt))
+(setq yas-prompt-functions '(yas-dropdown-prompt
+			     yas-ido-prompt
+			     yas-completing-prompt))
 (defun yas/org-very-safe-expand ()
   (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
 (add-hook 'org-mode-hook
@@ -745,10 +810,15 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 ;;; auto-complete.el settings
 ;;;
+;;; (auto-install-from-url "https://raw.github.com/auto-complete/popup-el/master/popup.el")
+;;; (auto-install-from-url "https://raw.github.com/auto-complete/fuzzy-el/master/fuzzy.el")
+;;;
 
-(require 'auto-complete)
-(add-to-list 'ac-dictionary-directories (concat user-misc-directory "dict"))
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "auto-complete")))
 (require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories
+	     (expand-file-name
+	      (concat user-site-lisp-directory "auto-complete/dict")))
 (ac-config-default)
 (setq ac-auto-show-menu 0.3)
 (setq ac-use-menu-map t)
@@ -912,6 +982,7 @@ It is automatically generated by `anything-migrate-sources'."
 (global-set-key (kbd "C-;") 'my-anything)
 (global-set-key (kbd "C-x C-;") 'anything-call-source)
 (global-set-key (kbd "C-z C-r") 'anything-resume)
+(setq grep-host-defaults-alist nil)
 (setq grep-command "ack -af | xargs grep -Hin ")
 
 (define-key anything-map (kbd "C-v") 'anything-next-source)
@@ -933,6 +1004,11 @@ It is automatically generated by `anything-migrate-sources'."
 
 (require 'anything-gist)
 
+(setq shell-history-file "~/.zsh/.zsh-history")
+(require 'shell-history)
+(require 'anything-c-shell-history)
+(setq anything-c-shell-history-file shell-history-file)
+
 ;; anything in dired
 ;; see. http://d.hatena.ne.jp/syohex/20120105/1325770778
 (defun my/anything-dired ()
@@ -951,11 +1027,11 @@ It is automatically generated by `anything-migrate-sources'."
 ;;; one-key settings
 ;;;
 
-(require 'one-key)
-(require 'one-key-config)
-(require 'my-one-key-config)
-(require 'one-key-default)
-(one-key-default-setup-keys)
+;; (require 'one-key)
+;; (require 'one-key-config)
+;; (require 'my-one-key-config)
+;; (require 'one-key-default)
+;; (one-key-default-setup-keys)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -973,10 +1049,11 @@ It is automatically generated by `anything-migrate-sources'."
 	 ("^\*dvc-commit.*\*"			:regexp t :noselect t)
 	 ("^\*bzr-status.*\*"			:regexp t :noselect t)
 	 ("^\*xgit-status.*\*"			:regexp t :noselect t)
-	 ("^\*dvc-error.*\*"			:regexp t :noselect t))
+	 ("^\*dvc-error.*\*"			:regexp t :noselect t)
+	 ("*quickrun*"				:noselect t))
        popwin:special-display-config))
 
-;; (global-set-key (kbd "C-x C-p") popwin:keymap)
+(global-set-key (kbd "C-x C-p") popwin:keymap)
 (setq auto-async-byte-compile-display-function 'popwin:popup-buffer-tail)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1051,6 +1128,7 @@ It is automatically generated by `anything-migrate-sources'."
 
 (autoload 'e2wm:dp-edbi "edbi" nil t)
 (setq edbi:query-result-fix-header nil)
+(setq edbi:ds-history-list-num 50)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1073,6 +1151,35 @@ It is automatically generated by `anything-migrate-sources'."
 (setq idm-database-file (concat dropbox-directory ".idm-db.gpg"))
 (setq idm-copy-action 'kill-new)
 (setq idm-gen-password-cmd mkpasswd-command)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; term+.el
+;;;
+;;; https://github.com/tarao/term-plus-el
+;;; https://raw.github.com/tarao/dotfiles/master/.zsh/eterm.zsh
+;;;
+
+(add-to-list 'load-path (expand-file-name
+			 (concat user-site-lisp-directory "term-plus")))
+(add-to-list 'load-path (expand-file-name
+			 (concat user-site-lisp-directory "evil")))
+(add-to-list 'load-path (expand-file-name
+			 (concat user-site-lisp-directory "multi-mode-util")))
+
+(require 'term+mux)
+(require 'xterm-256color)
+(require 'key-intercept)
+(require 'multi-mode-util)
+(require 'term+evil)
+(require 'term+anything-shell-history)
+
+(add-hook 'term+char-mode-hook
+	  (lambda ()
+	    (define-key term+char-map (kbd "M-w") #'term+mark-or-copy)
+	    (define-key term+char-map (kbd "C-t C-t") #'other-window)))
+
+(setq undo-tree-mode-lighter " uT")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

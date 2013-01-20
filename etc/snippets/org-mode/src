@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+#contributor : Jonathan Arkell <jonnay@jonnay.net>
+#name : Source Code Block
+# --
+#+BEGIN_SRC $1$>
+$0$>
+#+END_SRC$>

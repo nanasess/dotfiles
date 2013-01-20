@@ -161,7 +161,7 @@
   (self-insert-command (prefix-numeric-value arg))
   (if (php-electric-is-code-at-point-p)
       (save-excursion
-	(insert (cdr (assoc last-command-char
+	(insert (cdr (assoc last-command-event
 			    php-electric-matching-delimeter-alist))))))
 
 ;; checks if the current pointer situated in a piece of code
