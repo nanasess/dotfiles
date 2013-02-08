@@ -367,11 +367,11 @@
 ;;; gtags settings
 ;;;
 
-(require 'gtags)
-(setq gtags-path-style 'relative)
-(add-hook 'gtags-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "M-.") 'gtags-find-tag)))
+;; (require 'gtags)
+;; (setq gtags-path-style 'relative)
+;; (add-hook 'gtags-mode-hook
+;; 	  (lambda ()
+;; 	    (local-set-key (kbd "M-.") 'gtags-find-tag)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -715,14 +715,14 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   (interactive)
   (make-local-variable 'c-tab-always-indent)
   (setq c-tab-always-indent t)
-  (gtags-mode 1)
+  ;; (gtags-mode 1)
   (php-electric-mode 1)
   (c-toggle-hungry-state 1)
   ;; (c-toggle-auto-hungry-state 1)
   (flymake-mode 1)
-  (require 'php-completion)
-  (php-completion-mode t)
-  (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
+  ;; (require 'php-completion)
+  ;; (php-completion-mode t)
+  ;; (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
   (define-key php-mode-map [return] 'newline-and-indent)
   (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
   (define-key php-mode-map (kbd "M-p") 'flymake-goto-prev-error)
@@ -974,6 +974,16 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;; (setq w3m-command "/opt/local/bin/w3m")
 ;; (require 'anything-startup)
 (require 'helm-howm)
+
+;; (auto-install-from-url "https://raw.github.com/syohex/emacs-helm-gtags/master/helm-gtags.el")
+(require 'helm-gtags)
+(add-hook 'helm-gtags-mode-hook
+              '(lambda ()
+                 (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
+                 ;; (local-set-key (kbd "M-r") 'helm-gtags-find-rtag)
+                 ;; (local-set-key (kbd "M-s") 'helm-gtags-find-symbol)
+                 ;; (local-set-key (kbd "C-t") 'helm-gtags-pop-stack)
+                 ;; (local-set-key (kbd "C-c C-f") 'helm-gtags-find-files)))
 ;; (require 'anything-gtags)
 ;; (setq anything-candidate-number-limit 500)
 
