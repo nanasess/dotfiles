@@ -982,11 +982,18 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (helm-mode 1)
 
 (require 'helm-migemo)
-
+(setq helm-use-migemo t)
 (setq helm-howm-use-migemo t)
+
 ;; (setq w3m-command "/opt/local/bin/w3m")
 ;; (require 'anything-startup)
 (require 'helm-howm)
+
+;; see. http://sleepboy-zzz.blogspot.jp/2013/02/helm-migemo.html
+(defadvice helm-c-apropos
+  (around ad-helm-apropos activate)
+  (let ((helm-use-migemo nil))
+    ad-do-it))
 
 ;; (auto-install-from-url "https://raw.github.com/syohex/emacs-helm-gtags/master/helm-gtags.el")
 (require 'helm-gtags)
