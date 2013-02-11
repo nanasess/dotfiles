@@ -525,6 +525,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; all-ext settings
+;;;
+;;; requireds to all.el
+;;; (auto-install-from-emacswiki "all-ext.el")
+;;;
+
+(require 'all-ext)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; dvc settings
 ;;;
 
