@@ -726,6 +726,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   (make-local-variable 'c-tab-always-indent)
   (setq c-tab-always-indent t)
   ;; (gtags-mode 1)
+  (helm-gtags-mode 1)
   (php-electric-mode 1)
   (c-toggle-hungry-state 1)
   ;; (c-toggle-auto-hungry-state 1)
@@ -970,6 +971,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 ;;; (auto-install-batch "anything")
 ;;; (auto-install-from-url "https://raw.github.com/wakaran/anything-howm/master/anything-howm.el")
+;;; (auto-install-from-url "https://raw.github.com/emacs-helm/helm-migemo/master/helm-migemo.el")
 ;;;
 
 (add-to-list 'load-path (expand-file-name
@@ -978,6 +980,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (global-set-key (kbd "C-;") 'helm-mini)
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (helm-mode 1)
+
 (require 'helm-migemo)
 
 (setq helm-howm-use-migemo t)
