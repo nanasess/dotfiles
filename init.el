@@ -638,6 +638,7 @@
 ;;;
 
 (require 'php-mode)
+(setq php-executable "c:/Program Files (x86)/IIS Express/PHP/v5.3/php.exe")
 
 (defconst php-style
   `((c-recognize-knr-p . nil)
