@@ -152,7 +152,7 @@
 
 (defface hlline-face
   '((((class color) (background light))
-     (:background "honeydew"))) nil)
+     (:background "Beige"))) nil)
 (setq hl-line-face 'hlline-face)
 (global-hl-line-mode)
 
