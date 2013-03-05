@@ -575,6 +575,7 @@
 ;;; http://github.com/magit/magit
 ;;;
 
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "magit")))
 (require 'magit)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
