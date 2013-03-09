@@ -1313,3 +1313,17 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 ;;;
 
 (load "redmine-config" t t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; po-mode.el settings
+;;;
+
+(autoload 'po-mode "po-mode"
+  "Major mode for translators to edit PO files" t)
+(setq auto-mode-alist (cons '("\\.po\\'\\|\\.po\\." . po-mode)
+			    auto-mode-alist))
+
+(autoload 'po-find-file-coding-system "po-compat")
+(modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
+			    'po-find-file-coding-system)
