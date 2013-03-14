@@ -1,11 +1,15 @@
 ;;; helm-migemo.el --- Migemo plug-in for helm
-;; $Id: helm-migemo.el,v 1.18 2009-06-07 17:52:22 rubikitch Exp $
 
-;; Copyright (C) 2007, 2008, 2009  rubikitch
-
+;; Copyright (C) 2007-2012 rubikitch
+;; Copyright (C) 2012 Yuhei Maeda <yuhei.maeda_at_gmail.com>
 ;; Author: rubikitch <rubikitch@ruby-lang.org>
-;; Keywords: helm, convenience, tools, i18n, japanese
-;; URL: http://www.emacswiki.org/cgi-bin/wiki/download/helm-migemo.el
+;; Maintainer: Yuhei Maeda <yuhei.maeda_at_gmail.com>
+;; Version: 1.19
+;; Package-version: 1.19
+;; Package-Requires: ((helm "20120811"))
+;; Created: 2009-04-13 
+;; Keywords: matching, convenience, tools, i18n
+;; URL: https://github.com/myuhe/helm-migemo.el
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -23,7 +27,7 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
-
+;;
 ;; Migemo extension of `helm'. Use `helm-migemo' instead of
 ;; `helm'. If `helm-migemo' is invoked with prefix argument,
 ;; `helm' is migemo-ized. This means that pattern matching of
@@ -47,7 +51,6 @@
 
 ;;; Setting:
 
-;; (require 'helm-config)
 ;; (require 'helm-migemo)
 ;; (define-key global-map [(control ?:)] 'helm-migemo)
 
@@ -60,6 +63,10 @@
 ;;; History:
 
 ;; $Log: helm-migemo.el,v $
+
+;; Revision 1.19  2012-08-18 02:16:22  myuhe
+;; Port to helm.
+;;
 ;; Revision 1.18  2009-06-07 17:52:22  rubikitch
 ;; New macro `helm-migemize-command'.
 ;;
@@ -117,10 +124,10 @@
 ;;
 
 ;;; Code:
+
 (eval-when-compile (require 'helm))
 (require 'migemo nil t)
 (require 'helm-match-plugin nil t)
-
 (defvar helm-use-migemo nil
   "[Internal] If non-nil, `helm' is migemo-ized.")
 (defun helm-migemo (with-migemo &rest helm-args)
@@ -152,7 +159,7 @@ With prefix arugument, `helm-pattern' is migemo-ized, otherwise normal `helm'."
 (defun helm-compile-source--migemo (source)
   (if (not (featurep 'migemo))
       source
-    (let* ((match-identity-p
+    (let* ((match-identity-p 
             (or (assoc 'candidates-in-buffer source)
                 (equal '(identity) (assoc-default 'match source))))
            (use-match-plugin
@@ -184,11 +191,17 @@ With prefix arugument, `helm-pattern' is migemo-ized, otherwise normal `helm'."
             (t source)))))
 (add-to-list 'helm-compile-source-functions 'helm-compile-source--migemo t)
 
+(defvar helm-migemize-command-idle-delay 0.1
+  "`helm-idle-delay' for migemized command.")
 (defmacro helm-migemize-command (command)
   "Use migemo in COMMAND when selectiong candidate by `helm'.
-Bind `helm-use-migemo' = t in COMMAND."
+Bind `helm-use-migemo' = t in COMMAND.
+`helm-migemize-command-idle-delay' is used instead of  `helm-idle-delay'."
   `(defadvice ,command (around helm-use-migemo activate)
-     (let ((helm-use-migemo t)) ad-do-it)))
+     (let ((helm-use-migemo t)
+           (helm-idle-delay helm-migemize-command-idle-delay))
+       ad-do-it)))
+
 
 (provide 'helm-migemo)
 

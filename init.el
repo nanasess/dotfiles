@@ -736,6 +736,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   (make-local-variable 'c-tab-always-indent)
   (setq c-tab-always-indent t)
   ;; (gtags-mode 1)
+  (helm-gtags-mode 1)
   (php-electric-mode 1)
   (c-toggle-hungry-state 1)
   ;; (c-toggle-auto-hungry-state 1)
@@ -979,7 +980,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; anything.el settings
 ;;;
 ;;; (auto-install-batch "anything")
-;;; (auto-install-from-url "https://raw.github.com/mori-dev/anything-howm/master/anything-howm.el")
+;;; (auto-install-from-url "https://raw.github.com/emacs-helm/helm-migemo/master/helm-migemo.el")
 ;;;
 
 (add-to-list 'load-path (expand-file-name
@@ -995,6 +996,12 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;; (setq w3m-command "/opt/local/bin/w3m")
 ;; (require 'anything-startup)
 (require 'helm-howm)
+
+;; see. http://sleepboy-zzz.blogspot.jp/2013/02/helm-migemo.html
+(defadvice helm-c-apropos
+  (around ad-helm-apropos activate)
+  (let ((helm-use-migemo nil))
+    ad-do-it))
 
 ;; (auto-install-from-url "https://raw.github.com/syohex/emacs-helm-gtags/master/helm-gtags.el")
 (require 'helm-gtags)
