@@ -959,7 +959,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; anything.el settings
 ;;;
 ;;; (auto-install-batch "anything")
-;;; (auto-install-from-url "https://raw.github.com/wakaran/anything-howm/master/anything-howm.el")
+;;; (auto-install-from-url "https://raw.github.com/mori-dev/anything-howm/master/anything-howm.el")
 ;;;
 
 (add-to-list 'load-path (expand-file-name
@@ -969,8 +969,9 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (helm-mode 1)
 (require 'helm-migemo)
+(setq helm-use-migemo t)
+(setq ah:use-migemo t)
 
-(setq helm-howm-use-migemo t)
 ;; (setq w3m-command "/opt/local/bin/w3m")
 ;; (require 'anything-startup)
 (require 'helm-howm)
@@ -1020,12 +1021,12 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
         ("s [検索]" . "(howm-list-grep-fixed)")
         ("l [一覧]" . "(howm-list-recent)")))
 
-(setq helm-howm-recent-menu-number-limit 100)
+(setq ah:recent-menu-number-limit 600)
 (setq helm-howm-data-directory howm-directory)
 (defun helm-howm-display-buffer (buf)
   (pop-to-buffer buf))
-(global-set-key (kbd "C-z ,") 'helm-howm-menu-command)
-(global-set-key (kbd "C-z .") 'helm-howm-resume)
+(global-set-key (kbd "C-z ,") 'ah:menu-command)
+(global-set-key (kbd "C-z .") 'ah:resume)
 
 ;; (require 'anything-gist)
 
