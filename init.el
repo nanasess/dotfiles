@@ -152,7 +152,7 @@
 
 (defface hlline-face
   '((((class color) (background light))
-     (:background "honeydew"))) nil)
+     (:background "Beige"))) nil)
 (setq hl-line-face 'hlline-face)
 (global-hl-line-mode)
 
@@ -360,6 +360,10 @@
   (setq migemo-options '("-q" "--emacs" "-i" "\a"))
   (setq migemo-user-dictionary nil)
   (setq migemo-regex-dictionary nil)
+  ;; (setq migemo-use-pattern-alist t)
+  ;; (setq migemo-use-frequent-pattern-alist t)
+  ;; (setq migemo-pattern-alist-length 1000)
+  ;; (setq migemo-coding-system 'utf-8-unix)
   (require 'migemo))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -461,9 +465,14 @@
 ;; (auto-install-from-url "https://raw.github.com/alexhenning/ORGMODE-Markdown/master/markdown.el")
 (load "markdown" t t)
 
-;; org-html5presentation
+;;; org-html5presentation
 (autoload 'org-export-as-html5presentation-and-open "org-html5presentation" nil t)
 (autoload 'org-export-as-html5presentation "org-html5presentation" nil t)
+
+;;; org-tree-slide
+;; (auto-install-from-url "https://raw.github.com/takaxp/org-tree-slide/master/org-tree-slide.el")
+;; http://pastelwill.jp/wiki/doku.php?id=emacs:org-tree-slide
+(require 'org-tree-slide)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -525,6 +534,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; all-ext settings
+;;;
+;;; requireds to all.el
+;;; (auto-install-from-emacswiki "all-ext.el")
+;;;
+
+(require 'all-ext)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; dvc settings
 ;;;
 
@@ -556,6 +575,7 @@
 ;;; http://github.com/magit/magit
 ;;;
 
+(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "magit")))
 (require 'magit)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1047,6 +1067,8 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;         (kill-buffer curbuf))))
 
 ;; (define-key dired-mode-map (kbd "p") 'my/anything-dired)
+;; (define-key dired-mode-map (kbd "p") 'my/anything-dired)
+(setq anything-selection-face 'hlline-face)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1323,3 +1345,17 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 ;;;
 
 (load "redmine-config" t t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; po-mode.el settings
+;;;
+
+(autoload 'po-mode "po-mode"
+  "Major mode for translators to edit PO files" t)
+(setq auto-mode-alist (cons '("\\.po\\'\\|\\.po\\." . po-mode)
+			    auto-mode-alist))
+
+(autoload 'po-find-file-coding-system "po-compat")
+(modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
+			    'po-find-file-coding-system)

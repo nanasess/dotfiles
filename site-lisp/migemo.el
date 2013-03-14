@@ -1,4 +1,4 @@
-;; -*- mode: Emacs-Lisp; coding: euc-jp-unix -*-
+;; -*- mode: Emacs-Lisp; coding: euc-jp-unix lexical-binding: t -*-
 ;;; migemo.el - Japanese incremental search trough dynamic pattern expansion
 
 ;; $Id: migemo.el.in,v 1.8 2006/09/22 08:43:33 shirai Exp $
