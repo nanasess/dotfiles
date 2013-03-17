@@ -1,0 +1,5 @@
+(:name cp5022x
+       :description "cp50220, cp50221, cp50222 coding system"
+       :type github
+       :pkgname "awasira/cp5022x.el"
+       :features "cp5022x")

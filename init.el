@@ -13,6 +13,27 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; el-get settings
+;;;
+
+(add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+    (let (el-get-master-branch)
+      (goto-char (point-max))
+      (eval-print-last-sexp))))
+(add-to-list 'el-get-recipe-path (locate-user-emacs-file "recipes"))
+(el-get 'sync)
+
+(el-get 'sync 'cp5022x)
+(require 'cp5022x)
+(define-coding-system-alias 'iso-2022-jp 'cp50220)
+(define-coding-system-alias 'euc-jp 'cp51932)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; initial load files
 ;;;
 
@@ -48,11 +69,6 @@
 ;;;
 
 (require 'japanese-init)
-
-;;  (auto-install-from-url "http://nijino.homelinux.net/emacs/cp5022x.el")
-(require 'cp5022x)
-(define-coding-system-alias 'iso-2022-jp 'cp50220)
-(define-coding-system-alias 'euc-jp 'cp51932)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -118,6 +134,7 @@
 ;;; (auto-install-from-emacswiki "recentf-ext.el")
 ;;;
 
+(el-get 'sync 'recentf-ext)
 (require 'recentf-ext)
 (setq recentf-max-saved-items 50000)
 
@@ -270,6 +287,7 @@
 ;;; (auto-install-from-url "https://raw.github.com/thomblake/js3-mode/master/js3.el")
 ;;;
 
+(el-get 'sync 'js3-mode)
 (setq js3-mirror-mode t)
 (autoload 'js3-mode "js3" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js3-mode))
@@ -353,6 +371,7 @@
 ;;; migemo settings
 ;;;
 
+(el-get 'sync 'migemo)
 (setq migemo-dictionary "/usr/local/share/migemo/euc-jp/migemo-dict")
 (setq isearch-lax-whitespace nil)
 (when (file-exists-p migemo-dictionary)
@@ -371,6 +390,7 @@
 ;;; gtags settings
 ;;;
 
+(el-get 'sync 'gtags)
 (require 'gtags)
 (setq gtags-path-style 'relative)
 (add-hook 'gtags-mode-hook
@@ -384,17 +404,19 @@
 ;;; (auto-install-from-emacswiki "goto-chg.el")
 ;;;
 
+(el-get 'sync 'goto-chg)
 (require 'goto-chg)
 (global-set-key (kbd "C-.") 'goto-last-change)
 (global-set-key (kbd "C-,") 'goto-last-change-reverse)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; goto-chg settings
+;;; point-undo settings
 ;;;
 ;;; (auto-install-from-emacswiki "point-undo.el")
 ;;;
 
+(el-get 'sync 'point-undo)
 (require 'point-undo)
 (define-key global-map (kbd "C-M-,") 'point-undo)
 (define-key global-map (kbd "C-M-.") 'point-redo)
@@ -404,7 +426,7 @@
 ;;; mmm-mode settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "mmm")))
+(el-get 'sync 'mmm-mode)
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
 (set-face-background 'mmm-default-submode-face "ivory2")
@@ -435,7 +457,7 @@
 ;;; org-mode settings
 ;;;
 (when (<= emacs-major-version 23)
-  (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "org")))
+  (el-get 'sync 'org-mode)
   (require 'org-install))
 (require 'ob-sh)
 (require 'ob-css)
@@ -463,15 +485,18 @@
 (load "org-export-generic" t t)
 ;;; orgmode-markdown
 ;; (auto-install-from-url "https://raw.github.com/alexhenning/ORGMODE-Markdown/master/markdown.el")
+(el-get 'sync 'markdown-mode)
 (load "markdown" t t)
 
 ;;; org-html5presentation
+(el-get 'sync 'org-html5presentation)
 (autoload 'org-export-as-html5presentation-and-open "org-html5presentation" nil t)
 (autoload 'org-export-as-html5presentation "org-html5presentation" nil t)
 
 ;;; org-tree-slide
 ;; (auto-install-from-url "https://raw.github.com/takaxp/org-tree-slide/master/org-tree-slide.el")
 ;; http://pastelwill.jp/wiki/doku.php?id=emacs:org-tree-slide
+(el-get 'sync 'org-tree-slide)
 (require 'org-tree-slide)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -479,6 +504,7 @@
 ;;; htmlize settings
 ;;;
 
+(el-get 'sync 'htmlize)
 (autoload 'htmlize-buffer "htmlize"
   "Convert BUFFER to HTML, preserving colors and decorations.")
 (autoload 'htmlize-region "htmlize"
@@ -491,6 +517,7 @@
 ;;; session settings
 ;;;
 
+(el-get 'sync 'session)
 (require 'session)
 (add-hook 'after-init-hook 'session-initialize)
 (setq session-globals-max-size 500)
@@ -500,6 +527,8 @@
 ;;; moccur settings
 ;;;
 
+(el-get 'sync 'color-moccur)
+(el-get 'sync 'moccur-edit)
 (require 'color-moccur)
 (setq moccur-use-migemo t)
 (setq moccur-split-word t)
@@ -517,7 +546,7 @@
 ;;; expand-region settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "expand-region")))
+(el-get 'sync 'expand-region)
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
@@ -528,6 +557,7 @@
 ;;; http://www.dr-qubit.org/undo-tree/undo-tree.el
 ;;;
 
+(el-get 'sync 'undo-tree)
 (require 'undo-tree)
 (global-undo-tree-mode)
 (setq undo-tree-mode-lighter " uT")
@@ -540,6 +570,8 @@
 ;;; (auto-install-from-emacswiki "all-ext.el")
 ;;;
 
+(el-get 'sync 'all)
+(el-get 'sync 'all-ext)
 (require 'all-ext)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -547,6 +579,7 @@
 ;;; dvc settings
 ;;;
 
+;; (el-get 'sync 'dvc)
 (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "dvc")))
 (require 'dvc-autoloads)
 (setq dvc-tips-enabled nil)
@@ -565,6 +598,7 @@
 ;;; (auto-install-from-url "http://svn.apache.org/repos/asf/subversion/trunk/contrib/client-side/emacs/dsvn.el")
 ;;;
 
+(el-get 'sync 'dsvn)
 (autoload 'svn-status "dsvn" "Run `svn status'." t)
 (autoload 'svn-update "dsvn" "Run `svn update'." t)
 
@@ -575,7 +609,7 @@
 ;;; http://github.com/magit/magit
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "magit")))
+(el-get 'sync 'magit)
 (require 'magit)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -583,6 +617,7 @@
 ;;; howm settings
 ;;;
 
+(el-get 'sync 'howm)
 (setq howm-menu-lang 'ja)
 (setq howm-directory org-directory)
 (setq howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.howm")
@@ -599,7 +634,6 @@
 (setq howm-view-title-header "#+TITLE:")
 (setq howm-view-use-grep nil)
 (add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "howm")))
 (require 'howm)
 (setq howm-template
       (concat howm-view-title-header
@@ -637,6 +671,7 @@
 ;;; (auto-install-from-url "https://raw.github.com/syohex/emacs-quickrun/master/quickrun.el")
 ;;;
 
+(el-get 'sync 'quickrun)
 (require 'quickrun)
 (defface phpunit-pass
   '((t (:foreground "white" :background "green" :weight bold))) nil)
@@ -664,6 +699,7 @@
 ;;; (auto-install-from-url "https://raw.github.com/ejmr/php-mode/master/php-mode.el")
 ;;;
 
+(el-get 'sync 'php-mode)
 (require 'php-mode)
 
 (defconst php-style
@@ -730,6 +766,8 @@ My PHP Programming Style
 see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 ;; (auto-install-from-url "http://stcamp.net/share/php-electric.el")
+(el-get 'sync 'php-electric)
+(el-get 'sync 'php-completion)
 (require 'php-electric)
 (defun php-c-style ()
   (interactive)
@@ -770,18 +808,10 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; geben settings
-;;;
-
-(autoload 'geben "geben" "DBGp protocol front-end" t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; yasnippet settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name
-			 (concat user-site-lisp-directory "yasnippet")))
+(el-get 'sync 'yasnippet)
 (require 'yasnippet)
 (setq yas-snippet-dirs '("~/.emacs.d/etc/snippets"
 			 "~/.emacs.d/site-lisp/yasnippet/snippets"))
@@ -801,17 +831,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
             (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
             (define-key yas/keymap [tab] 'yas/next-field)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; zencoding settings
-;;;
-
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "zencoding")))
-(require 'zencoding-mode)
-(add-hook 'nxml-mode-hook 'zencoding-mode)
-(define-key zencoding-mode-keymap (kbd "<C-return>") 'zencoding-expand-yas)
-(define-key zencoding-mode-keymap (kbd "<M-return>") 'zencoding-expand-line)
-(define-key zencoding-mode-keymap (kbd "C-j") 'skk-kakutei)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -820,6 +839,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; (auto-install-from-url "http://jblevins.org/git/markdown-mode.git/plain/markdown-mode.el")
 ;;;
 
+(el-get 'sync 'markdown-mode)
 (autoload 'markdown-mode "markdown-mode" nil t)
 (autoload 'gfm-mode "markdown-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode))
@@ -829,6 +849,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; csv-mode settings
 ;;;
 
+(el-get 'sync 'csv-mode)
 (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 (autoload 'csv-mode "csv-mode"
   "Major mode for editing comma-separated value files." t)
@@ -841,7 +862,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; (auto-install-from-url "https://raw.github.com/auto-complete/fuzzy-el/master/fuzzy.el")
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "auto-complete")))
+(el-get 'sync 'auto-complete)
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories
 	     (expand-file-name
@@ -870,19 +891,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (autoload 'w3m "w3m" "Visit the www page using w3m" t)
 (setq w3m-init-file (concat user-initial-directory "emacs-w3m-init.el"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; simple-hatena-mode settings
-;;;
-
-(require 'html-helper-mode)
-(autoload 'simple-hatena "simple-hatena-mode" nil t)
-(add-hook 'simple-hatena-mode-hook
-	  (lambda ()
-	    (require 'hatena)
-	    (setq simple-hatena-default-id "nanasess")
-	    (setq simple-hatena-bin (expand-file-name (concat user-bin-directory "hw.pl")))
-	    (setq simple-hatena-root howm-directory)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -891,6 +899,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; (auto-install-from-url "https://raw.github.com/hayamiz/twittering-mode/master/twittering-mode.el")
 ;;;
 
+(el-get 'sync 'twittering-mode)
 (autoload 'twit "twittering-mode" nil t)
 (unless (load "twittering-tinyurl-api-key" t t)
   (setq twittering-bitly-api-key nil))
@@ -921,21 +930,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Japanese-holiays settings
-;;;
-
-(setq mark-holidays-in-calendar t)
-(add-hook 'today-visible-calendar-hook 'calendar-mark-today)
-(setq calendar-weekend-marker 'diary)
-(add-hook 'calendar-load-hook
-	  (lambda ()
-	    (require 'japanese-holidays)
-	    (setq calendar-holidays
-		  (append japanese-holidays holiday-local-holidays
-			  holiday-other-holidays))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; pdf-preview settings
 ;;;
 ;;; (auto-install-from-url "http://homepage.mac.com/matsuan_tamachan/emacs/pdf-preview.el")
@@ -952,6 +946,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; auto-install settings
 ;;;
 
+(el-get 'sync 'auto-install)
 (require 'auto-install)
 (setq auto-install-directory user-site-lisp-directory)
 
@@ -960,6 +955,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; auto-async-byte-compile settings
 ;;;
 
+(el-get 'sync 'auto-async-byte-compile)
 (require 'auto-async-byte-compile)
 (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
 (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
@@ -971,6 +967,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; (auto-install-from-emacswiki "emacs-init-check.el")
 ;;;
 
+(el-get 'sync 'emacs-init-check)
 (require 'emacs-init-check)
 (add-to-list 'auto-emacs-init-check-program-args "nice")
 
@@ -982,11 +979,16 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; (auto-install-from-url "https://raw.github.com/wakaran/anything-howm/master/anything-howm.el")
 ;;;
 
-(setq anything-howm-use-migemo t)
+(el-get 'sync 'anything)
+(el-get 'sync 'anything-howm)
+(el-get 'sync 'anything-gtags)
+(el-get 'sync 'anything-grep)
+(setq ah:use-migemo t)
 (setq w3m-command "/opt/local/bin/w3m")
 (require 'anything-startup)
 (require 'anything-howm)
 (require 'anything-gtags)
+
 (setq anything-candidate-number-limit 500)
 
 (defun my-anything ()
@@ -994,20 +996,21 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 It is automatically generated by `anything-migrate-sources'."
   (interactive)
   (anything-other-buffer
-   '(anything-c-source-ffap-line
+   '(
+     anything-c-source-ffap-line
      anything-c-source-ffap-guesser
      anything-c-source-buffers+-howm-title
-     anything-c-source-recentf
      anything-c-source-files-in-current-dir+
      anything-c-source-file-cache
      anything-c-source-filelist
+     anything-c-source-recentf
      anything-c-source-locate
      anything-c-source-gtags-select
      anything-c-source-bookmarks
      anything-c-source-kill-ring)
    "*my-anything*"))
 
-(global-set-key (kbd "C-;") 'my-anything)
+(global-set-key (kbd "C-;") 'anything-for-files)
 (global-set-key (kbd "C-x C-;") 'anything-call-source)
 (global-set-key (kbd "C-z C-r") 'anything-resume)
 (global-set-key (kbd "M-y") 'anything-show-kill-ring)
@@ -1018,27 +1021,19 @@ It is automatically generated by `anything-migrate-sources'."
 (define-key anything-map (kbd "C-v") 'anything-next-source)
 (define-key anything-map (kbd "M-v") 'anything-previous-source)
 
-
-(setq anything-howm-menu-list
+(setq ah:menu-list
       '(("m [メニュー]" . "(howm-menu)")
 	("c [メモを作成]" . "(anything-howm-create-new-memo nil)")
         ("cr[リージョンからメモを作成]" . "(anything-howm-create-new-memo (anything-howm-set-selected-text))")
         ("s [検索]" . "(howm-list-grep-fixed)")
         ("l [一覧]" . "(howm-list-recent)")))
 
-(setq anything-howm-recent-menu-number-limit 100)
-(setq anything-howm-data-directory howm-directory)
+(setq ah:recent-menu-number-limit 100)
+(setq ah:howm-data-directory howm-directory)
 (defun anything-howm-display-buffer (buf)
   (pop-to-buffer buf))
-(global-set-key (kbd "C-z ,") 'anything-howm-menu-command)
-(global-set-key (kbd "C-z .") 'anything-howm-resume)
-
-(require 'anything-gist)
-
-(setq shell-history-file "~/.zsh/.zsh-history")
-(require 'shell-history)
-(require 'anything-c-shell-history)
-(setq anything-c-shell-history-file shell-history-file)
+(global-set-key (kbd "C-z ,") 'ah:menu-command)
+(global-set-key (kbd "C-z .") 'ah:howm-resume)
 
 ;; anything in dired
 ;; see. http://d.hatena.ne.jp/syohex/20120105/1325770778
@@ -1056,22 +1051,12 @@ It is automatically generated by `anything-migrate-sources'."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; one-key settings
-;;;
-
-;; (require 'one-key)
-;; (require 'one-key-config)
-;; (require 'my-one-key-config)
-;; (require 'one-key-default)
-;; (one-key-default-setup-keys)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; popwin settings
 ;;;
 ;;; (auto-install-from-url "https://raw.github.com/m2ym/popwin-el/master/popwin.el")
 ;;;
 
+(el-get 'sync 'popwin)
 (require 'popwin)
 (setq display-buffer-function 'popwin:display-buffer)
 (setq anything-samewindow nil)
@@ -1096,6 +1081,8 @@ It is automatically generated by `anything-migrate-sources'."
 ;;; (auto-install-from-url "http://github.com/kiwanami/emacs-inertial-scroll/raw/master/inertial-scroll.el")
 ;;;
 
+(el-get 'sync 'deferred)
+(el-get 'sync 'inertial-scroll)
 (require 'deferred)
 (require 'inertial-scroll)
 (setq inertias-initial-velocity 50)
@@ -1116,6 +1103,7 @@ It is automatically generated by `anything-migrate-sources'."
 ;;; (auto-install-from-url "https://raw.github.com/gist/1842966/98b5f0596096b138009bffcd5d2e3609719fb5d5/e2wm-edbi-pre.el")
 ;;;
 
+(el-get 'sync 'e2wm)
 (autoload 'e2wm:start-management "e2wm" nil t)
 (setq e2wm:def-plugin-clock-text t)
 (global-set-key (kbd "M-+") 'e2wm:start-management)
@@ -1158,6 +1146,7 @@ It is automatically generated by `anything-migrate-sources'."
 ;;; dbi:Pg:dbname=dbname;host=hostname;password=password
 ;;;
 
+(el-get 'sync 'edbi)
 (autoload 'e2wm:dp-edbi "edbi" nil t)
 (setq edbi:query-result-fix-header nil)
 (setq edbi:ds-history-list-num 50)
@@ -1178,38 +1167,12 @@ It is automatically generated by `anything-migrate-sources'."
 ;;; (auto-install-from-url "https://github.com/kiwanami/emacs-id-manager/raw/master/id-manager.el")
 ;;;
 
+(el-get 'sync 'id-manager)
 (autoload 'id-manager "id-manager" nil t)
 (setenv "GPG_AGENT_INFO" nil)
 (setq idm-database-file (concat dropbox-directory ".idm-db.gpg"))
 (setq idm-copy-action 'kill-new)
 (setq idm-gen-password-cmd mkpasswd-command)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; term+.el
-;;;
-;;; https://github.com/tarao/term-plus-el
-;;; https://raw.github.com/tarao/dotfiles/master/.zsh/eterm.zsh
-;;;
-
-(add-to-list 'load-path (expand-file-name
-			 (concat user-site-lisp-directory "term-plus")))
-(add-to-list 'load-path (expand-file-name
-			 (concat user-site-lisp-directory "evil")))
-(add-to-list 'load-path (expand-file-name
-			 (concat user-site-lisp-directory "multi-mode-util")))
-
-(require 'term+mux)
-(require 'xterm-256color)
-(require 'key-intercept)
-(require 'multi-mode-util)
-(require 'term+evil)
-(require 'term+anything-shell-history)
-
-(add-hook 'term+char-mode-hook
-	  (lambda ()
-	    (define-key term+char-map (kbd "M-w") #'term+mark-or-copy)
-	    (define-key term+char-map (kbd "C-t C-t") #'other-window)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1322,18 +1285,10 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; redmine.el settings
-;;;
-;;; (auto-install-from-url "https://raw.github.com/nanasess/redmine-el/master/redmine.el")
-;;;
-
-(load "redmine-config" t t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; po-mode.el settings
 ;;;
 
+(el-get 'sync 'po-mode)
 (autoload 'po-mode "po-mode"
   "Major mode for translators to edit PO files" t)
 (setq auto-mode-alist (cons '("\\.po\\'\\|\\.po\\." . po-mode)
