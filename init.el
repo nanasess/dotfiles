@@ -980,6 +980,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 
 (el-get 'sync 'anything)
+(el-get 'sync 'anything-startup)
 (el-get 'sync 'anything-howm)
 (el-get 'sync 'anything-gtags)
 (el-get 'sync 'anything-grep)
