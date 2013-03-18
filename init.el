@@ -699,6 +699,7 @@
 
 (el-get 'sync 'yasnippet)
 (require 'yasnippet)
+(setq yas-trigger-key [TAB])
 (yas-global-mode 1)
 (require 'dropdown-list)
 (setq yas-prompt-functions '(yas-dropdown-prompt
