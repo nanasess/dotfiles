@@ -699,7 +699,6 @@
 
 (el-get 'sync 'yasnippet)
 (require 'yasnippet)
-(setq yas-trigger-key [TAB])
 (yas-global-mode 1)
 (require 'dropdown-list)
 (setq yas-prompt-functions '(yas-dropdown-prompt
@@ -828,6 +827,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
   (define-key php-mode-map (kbd "M-p") 'flymake-goto-prev-error)
   (define-key php-mode-map (kbd "M-n") 'flymake-goto-next-error)
+  (define-key php-mode-map (kbd "<tab>") 'yas-expand)
   (make-local-variable 'comment-start)
   (setq comment-start "// ")
   (make-local-variable 'comment-start-skip)
