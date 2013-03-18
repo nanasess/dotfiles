@@ -694,6 +694,48 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; yasnippet settings
+;;;
+
+(el-get 'sync 'yasnippet)
+(require 'yasnippet)
+(yas-global-mode 1)
+(require 'dropdown-list)
+(setq yas-prompt-functions '(yas-dropdown-prompt
+			     yas-ido-prompt
+			     yas-completing-prompt))
+(defun yas/org-very-safe-expand ()
+  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
+(add-hook 'org-mode-hook
+          (lambda ()
+            ;; yasnippet (using the new org-cycle hooks)
+            (setq ac-use-overriding-local-map t)
+            (make-variable-frame-local 'yas/trigger-key)
+            (setq  yas/trigger-key [tab])
+            (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
+            (define-key yas/keymap [tab] 'yas/next-field)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; auto-complete.el settings
+;;;
+;;; (auto-install-from-url "https://raw.github.com/auto-complete/popup-el/master/popup.el")
+;;; (auto-install-from-url "https://raw.github.com/auto-complete/fuzzy-el/master/fuzzy.el")
+;;;
+
+(el-get 'sync 'auto-complete)
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories
+	     (expand-file-name
+	      (concat user-site-lisp-directory "auto-complete/dict")))
+(ac-config-default)
+(setq ac-auto-show-menu 0.3)
+(setq ac-use-menu-map t)
+(define-key ac-completing-map [tab] 'ac-complete)
+(define-key ac-completing-map [return] 'ac-complete)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; PHP settings
 ;;;
 ;;; (auto-install-from-url "https://raw.github.com/ejmr/php-mode/master/php-mode.el")
@@ -808,32 +850,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; yasnippet settings
-;;;
-
-(el-get 'sync 'yasnippet)
-(require 'yasnippet)
-(setq yas-snippet-dirs '("~/.emacs.d/etc/snippets"
-			 "~/.emacs.d/site-lisp/yasnippet/snippets"))
-(yas-global-mode 1)
-(require 'dropdown-list)
-(setq yas-prompt-functions '(yas-dropdown-prompt
-			     yas-ido-prompt
-			     yas-completing-prompt))
-(defun yas/org-very-safe-expand ()
-  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
-(add-hook 'org-mode-hook
-          (lambda ()
-            ;; yasnippet (using the new org-cycle hooks)
-            (setq ac-use-overriding-local-map t)
-            (make-variable-frame-local 'yas/trigger-key)
-            (setq  yas/trigger-key [tab])
-            (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-            (define-key yas/keymap [tab] 'yas/next-field)))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; markdown-mode settings
 ;;;
 ;;; (auto-install-from-url "http://jblevins.org/git/markdown-mode.git/plain/markdown-mode.el")
@@ -853,25 +869,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 (autoload 'csv-mode "csv-mode"
   "Major mode for editing comma-separated value files." t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; auto-complete.el settings
-;;;
-;;; (auto-install-from-url "https://raw.github.com/auto-complete/popup-el/master/popup.el")
-;;; (auto-install-from-url "https://raw.github.com/auto-complete/fuzzy-el/master/fuzzy.el")
-;;;
-
-(el-get 'sync 'auto-complete)
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories
-	     (expand-file-name
-	      (concat user-site-lisp-directory "auto-complete/dict")))
-(ac-config-default)
-(setq ac-auto-show-menu 0.3)
-(setq ac-use-menu-map t)
-(define-key ac-completing-map [tab] 'ac-complete)
-(define-key ac-completing-map [return] 'ac-complete)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
