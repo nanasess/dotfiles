@@ -876,6 +876,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; mew settings
 ;;;
 
+(el-get 'sync 'mew)
 (autoload 'mew "mew" nil t)
 (autoload 'mew-send "mew" nil t)
 ;; mm-version
@@ -886,6 +887,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; w3m seettings
 ;;;
 
+(el-get 'sync 'emacs-w3m)
 (autoload 'w3m "w3m" "Visit the www page using w3m" t)
 (setq w3m-init-file (concat user-initial-directory "emacs-w3m-init.el"))
 
@@ -924,6 +926,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; navi2ch settings
 ;;;
 
+(el-get 'sync 'navi2ch)
 (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
