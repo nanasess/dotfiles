@@ -535,11 +535,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; sense-region settings
+;;; cua-mode settings
 ;;;
 
-(require 'sense-region)
-(sense-region-on)
+(cua-mode t)
+(setq cua-enable-cua-keys nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -819,7 +819,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   ;; (php-electric-mode 1)
   (c-toggle-hungry-state 1)
   ;; (c-toggle-auto-hungry-state 1)
-  (flymake-mode 1)
+  ;; (flymake-mode 1)
   (require 'php-completion)
   (php-completion-mode t)
   (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
