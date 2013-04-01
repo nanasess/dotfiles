@@ -10,3 +10,6 @@ tramp
 .edbi-ds-history
 el-get/*
 .session
+elpa
+tutorial
+.DS_Store
