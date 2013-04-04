@@ -5,6 +5,10 @@
 
 ;;; Code:
 
+(when load-file-name
+  (setq user-emacs-directory (file-name-directory load-file-name)))
+(add-to-list 'load-path user-emacs-directory)
+
 (defvar user-initial-directory (locate-user-emacs-file "init.d/"))
 (defvar user-site-lisp-directory (locate-user-emacs-file "site-lisp/"))
 (defvar user-misc-directory (locate-user-emacs-file "etc/"))
