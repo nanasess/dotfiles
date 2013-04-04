@@ -79,6 +79,7 @@
 ;;; SKK settings
 ;;;
 
+(el-get 'sync 'ddskk)
 (setq skk-user-directory (concat dropbox-directory "ddskk"))
 (setq skk-init-file (concat user-initial-directory "skk-init.el"))
 (setq skk-preload t)
