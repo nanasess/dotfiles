@@ -979,6 +979,15 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; ag.el settings
+;;;
+
+(el-get 'sync 'ag)
+(require 'ag)
+(setq ag-highlight-search t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; anything.el settings
 ;;;
 ;;; (auto-install-batch "anything")
