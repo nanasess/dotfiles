@@ -984,6 +984,8 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 (el-get 'sync 'ag)
 (require 'ag)
+(setq ag-arguments
+      (list "-u" "--smart-case" "--nogroup" "--column" "--"))
 (setq ag-highlight-search t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
