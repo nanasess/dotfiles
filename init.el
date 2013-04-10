@@ -616,6 +616,8 @@
 
 (el-get 'sync 'magit)
 (require 'magit)
+(set-face-attribute 'magit-item-highlight nil
+		    :inherit nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
