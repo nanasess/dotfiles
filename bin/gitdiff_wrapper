@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# ~/.gitconfig
+#
+# [diff]
+#  external = gitdiff_wrapper
+#
+
+export LANG=ja_JP.UTF-8
+git diff "$2" "$5" | lv | cat
