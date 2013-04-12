@@ -616,78 +616,12 @@
 
 (el-get 'sync 'magit)
 (require 'magit)
+(require 'magit-svn)
 (setq magit-git-log-options
   (list
    "--pretty=format:* %h %s"
    (format "--abbrev=%s" magit-sha1-abbrev-length)
    "--ext-diff"))
-
-;; (defun magit-diff-U-arg ()
-;;   (format "--ext-diff -U%d" magit-diff-context-lines))
-
-(defun magit-refresh-commit-buffer (commit)
-  (magit-configure-have-abbrev)
-  (magit-configure-have-decorate)
-  (magit-create-buffer-sections
-    (apply #'magit-git-section nil nil
-           'magit-wash-commit
-           "log"
-	   "--ext-diff"
-           "--max-count=1"
-           "--pretty=medium"
-           `(,@(if magit-have-abbrev (list "--no-abbrev-commit"))
-             ,@(if magit-have-decorate (list "--decorate=full"))
-             ,@(if magit-show-diffstat (list "--stat"))
-             "--cc"
-             "-p" ,commit))))
-
-(defun magit-refresh-status ()
-  (magit-create-buffer-sections
-    (magit-with-section 'status nil
-      (let* ((branch (magit-get-current-branch))
-             (remote (and branch (magit-get "branch" branch "remote")))
-             (remote-rebase (and branch (magit-get-boolean "branch" branch "rebase")))
-             (remote-branch (or (and branch (magit-remote-branch-for branch)) branch))
-             (remote-string (magit-remote-string remote remote-branch remote-rebase))
-             (head (magit-git-string
-                    "log"
-		    "--ext-diff"
-                    "--max-count=1"
-                    "--abbrev-commit"
-                    (format "--abbrev=%s" magit-sha1-abbrev-length)
-                    "--pretty=oneline"))
-             (no-commit (not head)))
-        (when remote-string
-          (insert "Remote:   " remote-string "\n"))
-        (insert (format "Local:    %s %s\n"
-                        (propertize (magit--bisect-info-for-status branch)
-                                    'face 'magit-branch)
-                        (abbreviate-file-name default-directory)))
-        (insert (format "Head:     %s\n"
-                        (if no-commit "nothing commited (yet)" head)))
-        (let ((merge-heads (magit-file-lines (concat (magit-git-dir)
-                                                     "MERGE_HEAD"))))
-          (if merge-heads
-              (insert (format "Merging:   %s\n"
-                              (mapconcat 'identity
-                                         (mapcar 'magit-name-rev merge-heads)
-                                         ", ")))))
-        (let ((rebase (magit-rebase-info)))
-          (if rebase
-              (insert (apply 'format "Rebasing: onto %s (%s of %s); Press \"R\" to Abort, Skip, or Continue\n" rebase))))
-        (insert "\n")
-        (magit-git-exit-code "update-index" "--refresh")
-        (magit-insert-stashes)
-        (magit-insert-untracked-files)
-        (magit-insert-pending-changes)
-        (magit-insert-pending-commits)
-        (magit-insert-unpulled-commits remote remote-branch)
-        (let ((staged (or no-commit (magit-anything-staged-p))))
-          (magit-insert-unstaged-changes
-           (if staged "Unstaged changes:" "Changes:"))
-          (magit-insert-staged-changes staged no-commit))
-        (magit-insert-unpushed-commits remote remote-branch))))
-  (run-hooks 'magit-refresh-status-hook))
 
 (set-face-attribute 'magit-item-highlight nil
 		    :inherit nil)
