@@ -625,6 +625,9 @@
 
 (set-face-attribute 'magit-item-highlight nil
 		    :inherit nil)
+(global-set-key (kbd "C-z m") 'magit-status)
+(define-key magit-log-mode-map (kbd "j") 'magit-goto-next-section)
+(define-key magit-log-mode-map (kbd "k") 'magit-goto-previous-section)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
