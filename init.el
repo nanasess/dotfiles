@@ -236,14 +236,6 @@
 (add-hook 'dired-load-hook
 	  (lambda ()
 	    (load "dired-x")))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; cc-mode settings
-;;;
-
-;; (define-key c-mode-base-map "*" nil) ; for Emacs 23
-(when (<= emacs-major-version 23)
-  (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "cc"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
