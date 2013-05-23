@@ -993,6 +993,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (global-set-key (kbd "C-;") 'helm-mini)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (el-get 'sync 'helm-migemo)
+(setq helm-use-migemo t)
 
 ;; (helm-dired-bindings 1)
 
@@ -1029,8 +1030,8 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 ;; (global-set-key (kbd "C-;") 'my-anything)
 ;; (global-set-key (kbd "C-x C-;") 'anything-call-source)
-;; (global-set-key (kbd "C-z C-r") 'anything-resume)
-;; (global-set-key (kbd "M-y") 'anything-show-kill-ring)
+(global-set-key (kbd "C-z C-r") 'helm-resume)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
 
 ;; (setq grep-host-defaults-alist nil)
 ;; (setq grep-command "ack -af | xargs grep -Hin ")
@@ -1038,12 +1039,12 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;; (define-key anything-map (kbd "C-v") 'anything-next-source)
 ;; (define-key anything-map (kbd "M-v") 'anything-previous-source)
 
-;; (setq ah:menu-list
-;;       '(("m [メニュー]" . "(howm-menu)")
-;; 	("c [メモを作成]" . "(ah:create-new-memo nil)")
-;;         ("cr[リージョンからメモを作成]" . "(ah:create-new-memo (ah:set-selected-text))")
-;;         ("s [検索]" . "(howm-list-grep-fixed)")
-;;         ("l [一覧]" . "(howm-list-recent)")))
+(setq hh:menu-list
+      '(("m [メニュー]" . "(howm-menu)")
+	("c [メモを作成]" . "(ah:create-new-memo nil)")
+        ("cr[リージョンからメモを作成]" . "(hh:create-new-memo (hh:set-selected-text))")
+        ("s [検索]" . "(howm-list-grep-fixed)")
+        ("l [一覧]" . "(howm-list-recent)")))
 
 (setq hh:recent-menu-number-limit 100)
 (setq hh:howm-data-directory howm-directory)
