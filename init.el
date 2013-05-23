@@ -993,7 +993,11 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (global-set-key (kbd "C-;") 'helm-mini)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (el-get 'sync 'helm-migemo)
-(setq helm-use-migemo t)
+;; (setq helm-use-migemo nil)
+(el-get 'sync 'helm-ag)
+(setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+(setq helm-ag-command-option "--all-text")
+(setq helm-ag-thing-at-point 'symbol)
 
 ;; (helm-dired-bindings 1)
 
