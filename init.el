@@ -378,9 +378,9 @@
 (el-get 'sync 'gtags)
 (require 'gtags)
 (setq gtags-path-style 'relative)
-(add-hook 'gtags-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "M-.") 'gtags-find-tag)))
+;; (add-hook 'gtags-mode-hook
+;; 	  (lambda ()
+;; 	    (local-set-key (kbd "M-.") 'gtags-find-tag)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -812,7 +812,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   (interactive)
   (make-local-variable 'c-tab-always-indent)
   (setq c-tab-always-indent t)
-  (gtags-mode 1)
   ;; (php-electric-mode 1)
   (c-toggle-hungry-state 1)
   ;; (c-toggle-auto-hungry-state 1)
@@ -845,6 +844,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq php-search-url "http://jp2.php.net/")
 
 (add-hook 'php-mode-hook 'php-c-style)
+(add-hook 'php-mode-hook 'helm-gtags-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -999,6 +999,14 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq helm-ag-command-option "--all-text")
 (setq helm-ag-thing-at-point 'symbol)
 
+(el-get 'sync 'helm-gtags)
+(setq helm-gtags-path-style 'relative)
+(setq helm-gtags-ignore-case t)
+(setq helm-gtags-read-only t)
+(add-hook 'helm-gtags-mode-hook
+	  (lambda ()
+	    (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
+
 ;; (helm-dired-bindings 1)
 
 ;; (el-get 'sync 'anything)
@@ -1034,9 +1042,14 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 ;; (global-set-key (kbd "C-;") 'my-anything)
 ;; (global-set-key (kbd "C-x C-;") 'anything-call-source)
+
+(add-hook 'helm-before-initialize-hook
+	  (lambda ()
+	    (push '(migemo) helm-source-kill-ring)))
+
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(push '(migemo) helm-source-kill-ring)
+
 ;; (push '(migemo) helm-ag-source)
 
 ;; (setq grep-host-defaults-alist nil)
