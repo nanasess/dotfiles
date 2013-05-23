@@ -1036,6 +1036,8 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;; (global-set-key (kbd "C-x C-;") 'anything-call-source)
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(push '(migemo) helm-source-kill-ring)
+;; (push '(migemo) helm-ag-source)
 
 ;; (setq grep-host-defaults-alist nil)
 ;; (setq grep-command "ack -af | xargs grep -Hin ")
