@@ -21,6 +21,7 @@
 ;;;
 
 (add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
+(add-to-list 'load-path (concat user-emacs-directory "el-get/ddskk"))
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
       (url-retrieve-synchronously
