@@ -117,6 +117,7 @@
 (global-unset-key (kbd "C-z"))
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-j") 'skk-mode)
+(global-set-key (kbd "C-x C-j") 'skk-mode)
 (global-set-key (kbd "C-t") 'other-window)
 (global-set-key (kbd "C-z C-u") 'other-frame)
 (global-set-key (kbd "C-z C-j") 'toggle-skk-kutouten)
