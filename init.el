@@ -999,6 +999,9 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq helm-ag-command-option "--all-text")
 (setq helm-ag-thing-at-point 'symbol)
 
+(el-get 'sync 'wgrep)
+(setq wgrep-enable-key "r")
+
 (el-get 'sync 'helm-gtags)
 (setq helm-gtags-path-style 'relative)
 (setq helm-gtags-ignore-case t)
@@ -1029,7 +1032,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq hh:recent-menu-number-limit 100)
 (setq hh:howm-data-directory howm-directory)
 (global-set-key (kbd "C-z ,") 'hh:menu-command)
-(global-set-key (kbd "C-z .") 'hh:howm-resume)
+(global-set-key (kbd "C-z .") 'hh:resume)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
