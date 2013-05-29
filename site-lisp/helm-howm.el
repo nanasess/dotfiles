@@ -111,11 +111,18 @@ With prefix arg HERE, insert it at point."
     (if here
       (insert version))))
 
+;; see https://github.com/emacs-jp/emacs-jp.github.com/issues/30
+(defun helm-migemo-match-fn (candidate)
+  (or (string-match (regexp-quote helm-input) candidate)
+      (string-match helm-pattern candidate)))
 
 (defvar helm-c-source-howm-recent
   '((name    . "最近のメモ")
     (init    . helm-c-howm-recent-init)
     (candidates-in-buffer)
+    (candidate . helm-candidates-in-buffer)
+    (volatile)
+    (match helm-migemo-match-fn)
     (candidate-number-limit . 10000000)
     (action .
       (("Open howm file(s)" . hh:find-files)
