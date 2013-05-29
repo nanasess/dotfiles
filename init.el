@@ -989,6 +989,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 (el-get 'sync 'helm)
 (helm-mode 1)
+(setq helm-buffer-max-length 40)
 (global-set-key (kbd "C-;") 'helm-mini)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (el-get 'sync 'helm-migemo)
