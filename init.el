@@ -1013,7 +1013,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 	  (lambda ()
 	    (push '(migemo) helm-source-kill-ring)))
 
-(el-get 'sync 'helm-git-ls)
+(el-get 'sync 'helm-ls-git)
 
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
