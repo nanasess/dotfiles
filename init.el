@@ -990,7 +990,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (el-get 'sync 'helm)
 (helm-mode 1)
 (setq helm-buffer-max-length 40)
-(global-set-key (kbd "C-;") 'helm-mini)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (el-get 'sync 'helm-migemo)
 ;; (setq helm-use-migemo t)
@@ -1025,17 +1024,27 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (require 'helm-migemo)
 (require 'helm-howm)
 
-(setq hh:menu-list
-      '(("m [メニュー]" . "(howm-menu)")
-	("c [メモを作成]" . "(hh:create-new-memo nil)")
-        ("cr[リージョンからメモを作成]" . "(hh:create-new-memo (hh:set-selected-text))")
-        ("s [検索]" . "(howm-list-grep-fixed)")
-        ("l [一覧]" . "(howm-list-recent)")))
-
+(setq hh:menu-list nil)
 (setq hh:recent-menu-number-limit 100)
 (setq hh:howm-data-directory howm-directory)
 (global-set-key (kbd "C-z ,") 'hh:menu-command)
 (global-set-key (kbd "C-z .") 'hh:resume)
+
+(defun my-helm ()
+  "My helm"
+  (interactive)
+  (require 'helm-files)
+  (helm-other-buffer '(helm-source-buffers-list
+		       helm-source-recentf
+		       helm-source-bookmarks
+		       helm-source-file-cache
+		       helm-source-files-in-current-dir
+		       helm-source-buffer-not-found)
+		     "*helm mini*"))
+
+(global-set-key (kbd "C-;") 'my-helm)
+(define-key helm-map (kbd "C-v") 'helm-next-source)
+(define-key helm-map (kbd "M-v") 'helm-previous-source)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
