@@ -468,10 +468,8 @@
 ;; (set-face-attribute 'org-document-title nil :height 1.0)
 
 ;;; org-export-generic
-;; (auto-install-from-url "http://orgmode.org/w/?p=org-mode.git;a=blob_plain;f=contrib/lisp/org-export-generic.el;hb=HEAD")
 (load "org-export-generic" t t)
 ;;; orgmode-markdown
-;; (auto-install-from-url "https://raw.github.com/alexhenning/ORGMODE-Markdown/master/markdown.el")
 (el-get 'sync 'markdown-mode)
 (load "markdown" t t)
 
@@ -481,7 +479,6 @@
 (autoload 'org-export-as-html5presentation "org-html5presentation" nil t)
 
 ;;; org-tree-slide
-;; (auto-install-from-url "https://raw.github.com/takaxp/org-tree-slide/master/org-tree-slide.el")
 ;; http://pastelwill.jp/wiki/doku.php?id=emacs:org-tree-slide
 (el-get 'sync 'org-tree-slide)
 (require 'org-tree-slide)
@@ -541,8 +538,6 @@
 ;;;
 ;;; undo-tree settings
 ;;;
-;;; http://www.dr-qubit.org/undo-tree/undo-tree.el
-;;;
 
 (el-get 'sync 'undo-tree)
 (require 'undo-tree)
@@ -552,9 +547,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; all-ext settings
-;;;
-;;; requireds to all.el
-;;; (auto-install-from-emacswiki "all-ext.el")
 ;;;
 
 (el-get 'sync 'all)
@@ -582,8 +574,6 @@
 ;;;
 ;;; psvn settings
 ;;;
-;;; (auto-install-from-url "http://svn.apache.org/repos/asf/subversion/trunk/contrib/client-side/emacs/dsvn.el")
-;;;
 
 (el-get 'sync 'dsvn)
 (autoload 'svn-status "dsvn" "Run `svn status'." t)
@@ -592,8 +582,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; magit settings
-;;;
-;;; http://github.com/magit/magit
 ;;;
 
 (el-get 'sync 'magit)
@@ -667,8 +655,6 @@
 ;;;
 ;;; quickrun.el settings
 ;;;
-;;; (auto-install-from-url "https://raw.github.com/syohex/emacs-quickrun/master/quickrun.el")
-;;;
 
 (el-get 'sync 'quickrun)
 (require 'quickrun)
@@ -718,9 +704,6 @@
 ;;;
 ;;; auto-complete.el settings
 ;;;
-;;; (auto-install-from-url "https://raw.github.com/auto-complete/popup-el/master/popup.el")
-;;; (auto-install-from-url "https://raw.github.com/auto-complete/fuzzy-el/master/fuzzy.el")
-;;;
 
 (el-get 'sync 'auto-complete)
 (require 'auto-complete-config)
@@ -736,8 +719,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; PHP settings
-;;;
-;;; (auto-install-from-url "https://raw.github.com/ejmr/php-mode/master/php-mode.el")
 ;;;
 
 (el-get 'sync 'php-mode)
@@ -806,7 +787,6 @@
 My PHP Programming Style
 see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
-;; (auto-install-from-url "http://stcamp.net/share/php-electric.el")
 (el-get 'sync 'php-electric)
 (el-get 'sync 'php-completion)
 (require 'php-electric)
@@ -852,8 +832,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 ;;; markdown-mode settings
 ;;;
-;;; (auto-install-from-url "http://jblevins.org/git/markdown-mode.git/plain/markdown-mode.el")
-;;;
 
 (el-get 'sync 'markdown-mode)
 (autoload 'markdown-mode "markdown-mode" nil t)
@@ -895,8 +873,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 ;;; twitting-mode settings
 ;;;
-;;; (auto-install-from-url "https://raw.github.com/hayamiz/twittering-mode/master/twittering-mode.el")
-;;;
 
 (el-get 'sync 'twittering-mode)
 (autoload 'twit "twittering-mode" nil t)
@@ -932,8 +908,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 ;;; pdf-preview settings
 ;;;
-;;; (auto-install-from-url "http://homepage.mac.com/matsuan_tamachan/emacs/pdf-preview.el")
-;;;
 
 (autoload 'pdf-preview-buffer "pdf-preview" nil t)
 (autoload 'pdf-preview-buffer-with-faces "pdf-preview" nil t)
@@ -963,8 +937,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; emacs-init-check settings
-;;;
-;;; (auto-install-from-emacswiki "emacs-init-check.el")
 ;;;
 
 (el-get 'sync 'emacs-init-check)
@@ -1050,8 +1022,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 ;;; popwin settings
 ;;;
-;;; (auto-install-from-url "https://raw.github.com/m2ym/popwin-el/master/popwin.el")
-;;;
 
 (el-get 'sync 'popwin)
 (require 'popwin)
@@ -1074,9 +1044,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 ;;; UI async settings
 ;;;
-;;; (auto-install-from-url "http://github.com/kiwanami/emacs-deferred/raw/master/deferred.el")
-;;; (auto-install-from-url "http://github.com/kiwanami/emacs-inertial-scroll/raw/master/inertial-scroll.el")
-;;;
 
 (el-get 'sync 'deferred)
 (el-get 'sync 'inertial-scroll)
@@ -1094,10 +1061,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; e2wm settings
-;;;
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-window-layout/master/window-layout.el")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-window-manager/master/e2wm.el")
-;;; (auto-install-from-url "https://raw.github.com/gist/1842966/98b5f0596096b138009bffcd5d2e3609719fb5d5/e2wm-edbi-pre.el")
 ;;;
 
 (el-get 'sync 'e2wm)
@@ -1134,13 +1097,8 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 ;;; Emacs DBI settings
 ;;;
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-deferred/master/concurrent.el")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-ctable/master/ctable.el")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-epc/master/epc.el")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-edbi/master/edbi.el")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-edbi/master/edbi-bridge.pl")
 ;;; cpan RPC::EPC::Service DBI DBD::SQLite DBD::Pg DBD::mysql
-;;; dbi:Pg:dbname=dbname;host=hostname;password=password
+;;; e.g.) dbi:Pg:dbname=dbname;host=hostname;password=password
 ;;;
 
 (el-get 'sync 'edbi)
@@ -1160,8 +1118,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; id-manager settings
-;;;
-;;; (auto-install-from-url "https://github.com/kiwanami/emacs-id-manager/raw/master/id-manager.el")
 ;;;
 
 (el-get 'sync 'id-manager)
