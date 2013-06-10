@@ -13,3 +13,5 @@ el-get/*
 elpa
 tutorial
 .DS_Store
+srecode-map.el
+semanticdb/*

@@ -271,6 +271,17 @@
 ;;;
 
 (add-hook 'java-mode-hook 'basic-indent)
+(require 'cedet)
+(el-get 'sync 'malabar-mode)
+(add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
+(setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
+                                  global-semanticdb-minor-mode
+                                  global-semantic-idle-summary-mode
+                                  global-semantic-mru-bookmark-mode))
+(semantic-mode 1)
+;; (add-hook 'malabar-mode-hook
+;;      (lambda ()
+;;        (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -683,7 +694,7 @@
 ;;;
 
 (el-get 'sync 'yasnippet)
-(require 'yasnippet)
+(el-get 'sync 'dropdown-list)
 (yas-global-mode 1)
 (require 'dropdown-list)
 (setq yas-prompt-functions '(yas-dropdown-prompt
