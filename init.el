@@ -115,6 +115,7 @@
 
 (global-unset-key (kbd "C-M-t"))
 (global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-\\"))
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-j") 'skk-mode)
 (global-set-key (kbd "C-x C-j") 'skk-mode)
