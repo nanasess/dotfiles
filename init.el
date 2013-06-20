@@ -1030,6 +1030,8 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (define-key helm-map (kbd "C-v") 'helm-next-source)
 (define-key helm-map (kbd "M-v") 'helm-previous-source)
 
+(setq enable-recursive-minibuffers t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; popwin settings
