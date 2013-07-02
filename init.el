@@ -1032,6 +1032,9 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 (setq enable-recursive-minibuffers t)
 
+(set-face-background 'helm-source-header "Khaki")
+(set-face-background 'helm-selection "Beige")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; popwin settings
