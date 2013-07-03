@@ -209,6 +209,9 @@
 	    (set-face-background 'diff-refine-change "Thistle1")
 	    (set-face-bold-p 'diff-refine-change t)))
 
+;; use solarized.
+(el-get 'sync 'solarized-theme)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; window-system settings
@@ -1032,7 +1035,8 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 (setq enable-recursive-minibuffers t)
 
-(set-face-background 'helm-source-header "Khaki")
+(set-face-background 'helm-source-header "azure2")
+(set-face-attribute 'helm-source-header nil :height 1.1 :weight 'normal)
 (set-face-background 'helm-selection "Beige")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
