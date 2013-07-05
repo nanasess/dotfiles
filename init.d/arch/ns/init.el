@@ -32,7 +32,7 @@
     (setq initial-frame-alist
 	  (append (list
 		   '(width . 82)
-		   '(height . 50)
+		   '(height . 45)
 		   '(font . "fontset-ricty")
 		   )
 		  initial-frame-alist)))

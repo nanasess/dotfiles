@@ -335,7 +335,7 @@
 ;;;
 
 (defvar normal-frame-width 82)
-(defvar wide-frame-width 175)
+(defvar wide-frame-width 155)
 
 (defun frame-size-greater-p ()
   (< (+ (/ (- wide-frame-width normal-frame-width) 2) normal-frame-width)
