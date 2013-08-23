@@ -331,6 +331,25 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; view-mode settings
+;;;
+
+(add-hook 'view-mode-hook
+	  (lambda ()
+	    (setq view-read-only t)
+	    (auto-revert-mode 1)
+	    (setq line-move-visual nil)
+	    (define-key view-mode-map (kbd "h") 'backward-word)
+	    (define-key view-mode-map (kbd "l") 'forward-word)
+	    (define-key view-mode-map (kbd "j") 'next-line)
+	    (define-key view-mode-map (kbd "k") 'previous-line)
+	    (define-key view-mode-map " " 'scroll-up)
+	    (define-key view-mode-map (kbd "b") 'scroll-down)))
+
+(add-to-list 'auto-mode-alist '("\\.log$" . view-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; frame-size settings
 ;;;
 
