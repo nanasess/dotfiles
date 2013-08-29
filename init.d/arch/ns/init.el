@@ -46,6 +46,8 @@
 		   '(font . "fontset-ns"))
 		  initial-frame-alist)))
 (setq default-frame-alist initial-frame-alist)
-(server-start)
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
 (provide 'ns-init)

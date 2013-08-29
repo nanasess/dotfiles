@@ -5,6 +5,7 @@
 
 ;;; Code:
 
+(setq gc-cons-threshold 134217728)
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
 (add-to-list 'load-path user-emacs-directory)
@@ -31,6 +32,9 @@
       (eval-print-last-sexp))))
 (add-to-list 'el-get-recipe-path (locate-user-emacs-file "recipes"))
 (el-get 'sync)
+
+;; (el-get 'sync 'esup)
+;; (require 'esup)
 
 (el-get 'sync 'cp5022x)
 (require 'cp5022x)
@@ -275,14 +279,14 @@
 ;;;
 
 (add-hook 'java-mode-hook 'basic-indent)
-(require 'cedet)
-(el-get 'sync 'malabar-mode)
-(add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
-(setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
-                                  global-semanticdb-minor-mode
-                                  global-semantic-idle-summary-mode
-                                  global-semantic-mru-bookmark-mode))
-(semantic-mode 1)
+;; (require 'cedet)
+;; (el-get 'sync 'malabar-mode)
+;; (add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
+;; (setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
+;;                                   global-semanticdb-minor-mode
+;;                                   global-semantic-idle-summary-mode
+;;                                   global-semantic-mru-bookmark-mode))
+;; (semantic-mode 1)
 ;; (add-hook 'malabar-mode-hook
 ;;      (lambda ()
 ;;        (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)))
@@ -593,9 +597,9 @@
 ;;;
 
 ;; (el-get 'sync 'dvc)
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "dvc")))
-(require 'dvc-autoloads)
-(setq dvc-tips-enabled nil)
+;; (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "dvc")))
+;; (require 'dvc-autoloads)
+;; (setq dvc-tips-enabled nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1103,35 +1107,35 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; e2wm settings
 ;;;
 
-(el-get 'sync 'e2wm)
-(autoload 'e2wm:start-management "e2wm" nil t)
-(setq e2wm:def-plugin-clock-text t)
-(global-set-key (kbd "M-+") 'e2wm:start-management)
+;; (el-get 'sync 'e2wm)
+;; (autoload 'e2wm:start-management "e2wm" nil t)
+;; (setq e2wm:def-plugin-clock-text t)
+;; (global-set-key (kbd "M-+") 'e2wm:start-management)
 
-(add-hook 'e2wm:pre-start-hook
-	  (lambda ()
-	    (load "e2wm-edbi")
-	    (global-set-key (kbd "C-z C-c") 'e2wm:dp-code)
-	    (global-set-key (kbd "C-z C-d") 'e2wm:dp-edbi)
-	    (global-set-key (kbd "C-z 2") 'e2wm:dp-two)
-	    (global-set-key (kbd "C-z 1")
-			    'e2wm:dp-code-main-maximize-toggle-command)
-	    (global-set-key (kbd "C-z Q") 'e2wm:stop-management)))
+;; (add-hook 'e2wm:pre-start-hook
+;; 	  (lambda ()
+;; 	    (load "e2wm-edbi")
+;; 	    (global-set-key (kbd "C-z C-c") 'e2wm:dp-code)
+;; 	    (global-set-key (kbd "C-z C-d") 'e2wm:dp-edbi)
+;; 	    (global-set-key (kbd "C-z 2") 'e2wm:dp-two)
+;; 	    (global-set-key (kbd "C-z 1")
+;; 			    'e2wm:dp-code-main-maximize-toggle-command)
+;; 	    (global-set-key (kbd "C-z Q") 'e2wm:stop-management)))
 
-(defun e2wm:current-buffer ()
-  (cond
-   ((e2wm:managed-p)
-    (e2wm:history-get-main-buffer))
-   ((featurep 'elscreen)
-    (let* ((frame-confs (elscreen-get-frame-confs (selected-frame)))
-           (num (nth 1 (assoc 'screen-history frame-confs)))
-           (cur-window-conf (cadr (assoc num (assoc 'screen-property frame-confs))))
-           (marker (nth 2 cur-window-conf)))
-      (marker-buffer marker)))
-   (t
-    (nth 1
-         (assoc 'buffer-list
-                (nth 1 (nth 1 (current-frame-configuration))))))))
+;; (defun e2wm:current-buffer ()
+;;   (cond
+;;    ((e2wm:managed-p)
+;;     (e2wm:history-get-main-buffer))
+;;    ((featurep 'elscreen)
+;;     (let* ((frame-confs (elscreen-get-frame-confs (selected-frame)))
+;;            (num (nth 1 (assoc 'screen-history frame-confs)))
+;;            (cur-window-conf (cadr (assoc num (assoc 'screen-property frame-confs))))
+;;            (marker (nth 2 cur-window-conf)))
+;;       (marker-buffer marker)))
+;;    (t
+;;     (nth 1
+;;          (assoc 'buffer-list
+;;                 (nth 1 (nth 1 (current-frame-configuration))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
