@@ -307,7 +307,6 @@
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-hook 'js2-mode-hook 'basic-indent)
 (add-hook 'js-mode-hook 'js2-minor-mode)
-(add-hook 'javascript-mode-hook 'js2-minor-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

@@ -40,7 +40,7 @@
 ;; than a simple regexp.
 (mmm-add-classes
  '((embedded-css
-    :submode css
+    :submode css-mode
     :face mmm-declaration-submode-face
     :delimiter-mode nil
     :front "<style[^>]*>"
@@ -55,7 +55,7 @@
 (mmm-add-group
  'html-js
  '((js-tag
-    :submode javascript
+    :submode js-mode
     :face mmm-code-submode-face
     :delimiter-mode nil
     :front "<script[^>]*>"
@@ -64,13 +64,13 @@
                  @ "\n" _ "\n" @ "</script>" @))
     )
    (js-inline
-    :submode javascript
+    :submode js-mode
     :face mmm-code-submode-face
     :delimiter-mode nil
     :front "on\\w+=\""
     :back "\"")
    (js-inline2
-    :submode javascript
+    :submode js-mode
     :face mmm-code-submode-face
     :delimiter-mode nil
     :front "on\\w+='"
