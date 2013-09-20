@@ -12,6 +12,8 @@
 (create-fontset-from-ascii-font "Menlo-12:weight=normal:slant=normal" nil "ns")
 (set-fontset-font "fontset-ns" 'unicode
 		  (font-spec :family "Hiragino Kaku Gothic ProN" ) nil 'append)
+(set-fontset-font "fontset-ns" '(#x0080 .  #x024F)
+		  (font-spec :family "Menlo") nil 'prepend)
 (setq face-font-rescale-alist '((".*Hiragino.*" . 1.2) (".*Menlo.*" . 1.0)))
 
 (setq mac-allow-anti-aliasing t)
