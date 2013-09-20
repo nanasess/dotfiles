@@ -9,21 +9,10 @@
 		    "grep -nH -e  {} /dev/null \\;") 59))
 
 ;; font settings
-
-(cond ((find-font (font-spec :family "Ricty"))
-       (create-fontset-from-ascii-font "Ricty-15:weight=normal:slant=normal" nil
-				       "ns")
-       (set-fontset-font "fontset-ns"
-			 'unicode (font-spec :family "Ricty" ) nil
-			 'append))
-      ((create-fontset-from-ascii-font "Menlo-12:weight=normal:slant=normal" nil
-				       "ns")
-       (set-fontset-font "fontset-ns"
-			 'unicode
-			 (font-spec :family "Hiragino Kaku Gothic ProN" ) nil
-			 'append)
-       (setq face-font-rescale-alist '((".*Hiragino.*" . 1.2)
-				       (".*Menlo.*" . 1.0)))))
+(create-fontset-from-ascii-font "Menlo-12:weight=normal:slant=normal" nil "ns")
+(set-fontset-font "fontset-ns" 'unicode
+		  (font-spec :family "Hiragino Kaku Gothic ProN" ) nil 'append)
+(setq face-font-rescale-alist '((".*Hiragino.*" . 1.2) (".*Menlo.*" . 1.0)))
 
 (setq mac-allow-anti-aliasing t)
 
