@@ -1007,6 +1007,9 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq helm-ag-command-option "--all-text")
 (setq helm-ag-thing-at-point 'symbol)
 
+(el-get 'sync 'helm-ack)
+(setq helm-c-ack-thing-at-point 'symbol)
+
 (el-get 'sync 'wgrep)
 (setq wgrep-enable-key "r")
 
