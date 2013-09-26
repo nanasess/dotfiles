@@ -6,7 +6,7 @@
 ;; grep-find で .svn を除外
 (setq grep-find-command
       (cons (concat "find . -type f -path '*.svn*' -prune -o -exec "
-		    "grep -nH -e  {} /dev/null \\;") 59))
+		    "lgrep -kn  {} /dev/null \\;") 57))
 
 ;; font settings
 (create-fontset-from-ascii-font "Menlo-12:weight=normal:slant=normal" nil "ns")
