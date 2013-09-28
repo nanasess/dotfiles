@@ -1061,6 +1061,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (global-set-key (kbd "C-;") 'my-helm)
 (define-key helm-map (kbd "C-v") 'helm-next-source)
 (define-key helm-map (kbd "M-v") 'helm-previous-source)
+(define-key helm-map (kbd "C-o") 'helm-previous-line)
 
 (setq enable-recursive-minibuffers t)
 
