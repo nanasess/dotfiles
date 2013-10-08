@@ -1156,6 +1156,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (autoload 'e2wm:dp-edbi "edbi" nil t)
 (setq edbi:query-result-fix-header nil)
 (setq edbi:ds-history-list-num 50)
+(setq edbi:query-result-column-max-width nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
