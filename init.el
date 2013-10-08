@@ -1031,6 +1031,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (global-set-key (kbd "C-z l") 'helm-ls-git-ls)
 
 ;; (setq hh:use-migemo t)
+;; (setq helm-use-migemo t)
 (require 'helm-config)
 (require 'helm-match-plugin)
 (require 'helm-migemo)
@@ -1041,6 +1042,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq hh:howm-data-directory howm-directory)
 (global-set-key (kbd "C-z ,") 'hh:menu-command)
 (global-set-key (kbd "C-z .") 'hh:resume)
+;; (helm-migemize-command hh:menu-command)
 
 (defun my-helm ()
   "My helm"

@@ -119,11 +119,10 @@ With prefix arg HERE, insert it at point."
 (defvar helm-c-source-howm-recent
   '((name    . "最近のメモ")
     (init    . helm-c-howm-recent-init)
-    (candidates-in-buffer)
-    (candidate . helm-candidates-in-buffer)
+    (candidates . helm-candidates-in-buffer)
     (volatile)
     (match helm-migemo-match-fn)
-    (candidate-number-limit . 10000000)
+    (candidate-number-limit . 9999)
     (action .
       (("Open howm file(s)" . hh:find-files)
        ("Open howm file in other window" .
