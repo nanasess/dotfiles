@@ -1000,6 +1000,13 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (helm-mode 1)
 (setq helm-buffer-max-length 40)
 (setq helm-ff-auto-update-initial-value nil)
+(setq helm-grep-default-command "lgrep +i -n%c -Au8 -Ia - %p %f /dev/null")
+(setq helm-grep-default-recurse-command
+      (concat "find %f -type d \\( -name '.svn' -o -name '.git' \\) -prune "
+	      "-o -type f -name `echo -n '%e' | sed 's/--include=//' | "
+	      "sed 's/--exclude.*//' | sed 's/\\\\\\\\//g'` -print0 | "
+	      "xargs -0 lgrep +i -n%c -Au8 -Ia - %p /dev/null"))
+
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (el-get 'sync 'helm-migemo)
 (el-get 'sync 'helm-ag)
