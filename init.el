@@ -688,6 +688,8 @@
 	  (lambda ()
 	    (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
 
+(global-set-key (kbd "C-z c") 'howm-create)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; quickrun.el settings
@@ -1046,8 +1048,15 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq hh:menu-list nil)
 (setq hh:recent-menu-number-limit 100)
 (setq hh:howm-data-directory howm-directory)
+
+(defun helm-howm-do-grep ()
+  (interactive)
+  (helm-do-grep-1
+   (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.howm")))
+
 (global-set-key (kbd "C-z ,") 'hh:menu-command)
 (global-set-key (kbd "C-z .") 'hh:resume)
+(global-set-key (kbd "C-z s") 'helm-howm-do-grep)
 
 (defun my-helm ()
   "My helm"

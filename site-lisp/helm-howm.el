@@ -133,10 +133,6 @@ With prefix arg HERE, insert it at point."
           (lambda (candidate)
             (find-file-other-frame
              (hh:select-file-by-title candidate))))
-       ;; ("Grep File(s) `M-g s, C-u Recurse'" .
-       ;;    (lambda (candidate)
-       ;; 	    (helm-do-grep-1 (hh:select-file-by-title candidate))))
-       ("howm-list-grep" . howm-list-grep)
        ("Create new memo" .
           (lambda (template)
             (hh:create-new-memo "")))
