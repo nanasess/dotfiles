@@ -1058,7 +1058,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   "My helm"
   (interactive)
   (require 'helm-files)
-  (helm-other-buffer '(helm-c-source-buffers+-howm-title
+  (helm-other-buffer '(helm-source-buffers-list
 		       helm-source-recentf
 		       helm-source-bookmarks
 		       helm-source-file-cache
