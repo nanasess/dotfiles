@@ -1005,9 +1005,9 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq helm-grep-default-command "lgrep +i -n%c -Au8 -Ia - %p %f /dev/null")
 (setq helm-grep-default-recurse-command
       (concat "find %f -type d \\( -name '.svn' -o -name '.git' \\) -prune "
-	      "-o -type f -name `echo -n '%e' | sed 's/--include=//' | "
-	      "sed 's/--exclude.*//' | sed 's/\\\\\\\\//g'` -print0 | "
-	      "xargs -0 lgrep +i -n%c -Au8 -Ia - %p /dev/null"))
+	      "-o -type f -name `echo -n '%e' | sed 's/--include=//' "
+	      "| sed 's/--exclude.*//' | sed 's/\\\\\\\\//g'` -print0 "
+	      "| xargs -0 lgrep +i -n%c -Au8 -Ia - %p /dev/null"))
 
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (el-get 'sync 'helm-migemo)
@@ -1029,9 +1029,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (add-hook 'helm-gtags-mode-hook
 	  (lambda ()
 	    (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
-(add-hook 'helm-before-initialize-hook
-	  (lambda ()
-	    (push '(migemo) helm-source-kill-ring)))
 
 (el-get 'sync 'helm-ls-git)
 
@@ -1042,7 +1039,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq hh:use-migemo t)
 (require 'helm-config)
 (require 'helm-match-plugin)
-(require 'helm-migemo)
 (require 'helm-howm)
 
 (setq hh:menu-list nil)
@@ -1062,7 +1058,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   "My helm"
   (interactive)
   (require 'helm-files)
-  (helm-other-buffer '(helm-source-buffers-list
+  (helm-other-buffer '(helm-c-source-buffers+-howm-title
 		       helm-source-recentf
 		       helm-source-bookmarks
 		       helm-source-file-cache
@@ -1074,6 +1070,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (define-key helm-map (kbd "C-v") 'helm-next-source)
 (define-key helm-map (kbd "M-v") 'helm-previous-source)
 
+(helm-migemize-command helm-source-kill-ring)
 (setq enable-recursive-minibuffers t)
 
 (set-face-background 'helm-source-header "azure2")
