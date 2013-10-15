@@ -1025,22 +1025,20 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (el-get 'sync 'helm-gtags)
 (setq helm-gtags-path-style 'relative)
 (setq helm-gtags-ignore-case t)
-(setq helm-gtags-read-only t)
 (add-hook 'helm-gtags-mode-hook
 	  (lambda ()
 	    (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
 
 (el-get 'sync 'helm-ls-git)
 
+(global-set-key (kbd "C-;") 'helm-for-files)
+(define-key helm-map (kbd "C-v") 'helm-next-source)
+(define-key helm-map (kbd "M-v") 'helm-previous-source)
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-z l") 'helm-ls-git-ls)
 
-(setq hh:use-migemo t)
-(require 'helm-config)
-(require 'helm-match-plugin)
 (require 'helm-howm)
-
 (setq hh:menu-list nil)
 (setq hh:recent-menu-number-limit 100)
 (setq hh:howm-data-directory howm-directory)
@@ -1054,23 +1052,9 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (global-set-key (kbd "C-z .") 'hh:resume)
 (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
 
-(defun my-helm ()
-  "My helm"
-  (interactive)
-  (require 'helm-files)
-  (helm-other-buffer '(helm-source-buffers-list
-		       helm-source-recentf
-		       helm-source-bookmarks
-		       helm-source-file-cache
-		       helm-source-files-in-current-dir
-		       helm-source-buffer-not-found)
-		     "*helm mini*"))
-
-(global-set-key (kbd "C-;") 'my-helm)
-(define-key helm-map (kbd "C-v") 'helm-next-source)
-(define-key helm-map (kbd "M-v") 'helm-previous-source)
-
 (helm-migemize-command helm-source-kill-ring)
+(helm-migemize-command helm-for-files)
+(helm-migemize-command hh:menu-command)
 (setq enable-recursive-minibuffers t)
 
 (set-face-background 'helm-source-header "azure2")
