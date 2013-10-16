@@ -203,13 +203,13 @@
 (ad-activate 'font-lock-mode)
 
 (add-hook 'diff-mode-hook
-	  (lambda ()
-	    (set-face-foreground 'diff-context-face "grey50")
-	    (set-face-foreground 'diff-hunk-header-face "medium blue")
-	    (set-face-background 'diff-removed-face "#ffdddd")
-	    (set-face-background 'diff-added-face "#ddffdd")
-	    (set-face-background 'diff-refine-change "Thistle1")
-	    (set-face-bold-p 'diff-refine-change t)))
+	  #'(lambda ()
+	      (set-face-foreground 'diff-context-face "grey50")
+	      (set-face-foreground 'diff-hunk-header-face "medium blue")
+	      (set-face-background 'diff-removed-face "#ffdddd")
+	      (set-face-background 'diff-added-face "#ddffdd")
+	      (set-face-background 'diff-refine-change "Thistle1")
+	      (set-face-bold-p 'diff-refine-change t)))
 
 ;; use solarized.
 ;; (el-get 'sync 'solarized-theme)
@@ -238,12 +238,12 @@
 
 (setq dired-bind-jump nil)
 (add-hook 'dired-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "C-t") 'other-window)
-	    (local-set-key (kbd "r") 'wdired-change-to-wdired-mode)))
+	  #'(lambda ()
+	      (local-set-key (kbd "C-t") 'other-window)
+	      (local-set-key (kbd "r") 'wdired-change-to-wdired-mode)))
 (add-hook 'dired-load-hook
-	  (lambda ()
-	    (load "dired-x")))
+	  #'(lambda ()
+	      (load "dired-x")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -260,9 +260,9 @@
 ;;;
 
 (add-hook 'emacs-lisp-mode-hook
-	  (lambda ()
-	    (setq tab-width 8)
-	    (setq indent-tabs-mode t)))
+	  #'(lambda ()
+	      (setq tab-width 8)
+	      (setq indent-tabs-mode t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -286,8 +286,8 @@
 ;;                                   global-semantic-mru-bookmark-mode))
 ;; (semantic-mode 1)
 ;; (add-hook 'malabar-mode-hook
-;;      (lambda ()
-;;        (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)))
+;; 	  #'(lambda ()
+;; 	      (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -314,13 +314,13 @@
 (add-to-list 'auto-mode-alist
 	     '("\\.\\(xml\\|xsl\\|rng\\|html\\|tpl\\)\\'" . nxml-mode))
 (add-hook 'nxml-mode-hook
-	  (lambda ()
-	    (setq auto-fill-mode -1)
-	    (setq nxml-slash-auto-complete-flag t)
-	    (setq nxml-child-indent 2)
-	    (rng-validate-mode 0)
-	    (setq indent-tabs-mode nil)
-	    (setq tab-width 2)))
+	  #'(lambda ()
+	      (setq auto-fill-mode -1)
+	      (setq nxml-slash-auto-complete-flag t)
+	      (setq nxml-child-indent 2)
+	      (rng-validate-mode 0)
+	      (setq indent-tabs-mode nil)
+	      (setq tab-width 2)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -336,16 +336,16 @@
 ;;;
 
 (add-hook 'view-mode-hook
-	  (lambda ()
-	    (setq view-read-only t)
-	    (auto-revert-mode 1)
-	    (setq line-move-visual nil)
-	    (define-key view-mode-map (kbd "h") 'backward-word)
-	    (define-key view-mode-map (kbd "l") 'forward-word)
-	    (define-key view-mode-map (kbd "j") 'next-line)
-	    (define-key view-mode-map (kbd "k") 'previous-line)
-	    (define-key view-mode-map " " 'scroll-up)
-	    (define-key view-mode-map (kbd "b") 'scroll-down)))
+	  #'(lambda ()
+	      (setq view-read-only t)
+	      (auto-revert-mode 1)
+	      (setq line-move-visual nil)
+	      (define-key view-mode-map (kbd "h") 'backward-word)
+	      (define-key view-mode-map (kbd "l") 'forward-word)
+	      (define-key view-mode-map (kbd "j") 'next-line)
+	      (define-key view-mode-map (kbd "k") 'previous-line)
+	      (define-key view-mode-map " " 'scroll-up)
+	      (define-key view-mode-map (kbd "b") 'scroll-down)))
 
 (add-to-list 'auto-mode-alist '("\\.log$" . view-mode))
 
@@ -416,8 +416,8 @@
 (require 'gtags)
 (setq gtags-path-style 'relative)
 ;; (add-hook 'gtags-mode-hook
-;; 	  (lambda ()
-;; 	    (local-set-key (kbd "M-.") 'gtags-find-tag)))
+;; 	  #'(lambda ()
+;; 	      (local-set-key (kbd "M-.") 'gtags-find-tag)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -683,8 +683,8 @@
           (message "(Deleted %s)" (file-name-nondirectory file-name))))
       (kill-buffer nil))))
 (add-hook 'howm-mode-hook
-	  (lambda ()
-	    (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
+	  #'(lambda ()
+	      (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
 
 (global-set-key (kbd "C-z c") 'howm-create)
 
@@ -729,13 +729,13 @@
 (defun yas/org-very-safe-expand ()
   (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
 (add-hook 'org-mode-hook
-          (lambda ()
-            ;; yasnippet (using the new org-cycle hooks)
-            (setq ac-use-overriding-local-map t)
-            (make-variable-frame-local 'yas/trigger-key)
-            (setq  yas/trigger-key [tab])
-            (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-            (define-key yas/keymap [tab] 'yas/next-field)))
+          #'(lambda ()
+	      ;; yasnippet (using the new org-cycle hooks)
+	      (setq ac-use-overriding-local-map t)
+	      (make-variable-frame-local 'yas/trigger-key)
+	      (setq  yas/trigger-key [tab])
+	      (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
+	      (define-key yas/keymap [tab] 'yas/next-field)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -925,13 +925,13 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq twittering-display-remaining t)
 (setq twittering-allow-insecure-server-cert t)
 (add-hook 'twittering-mode-hook
-	  (lambda ()
-	    (let ((km twittering-mode-map))
-	      (define-key km (kbd "s") 'twittering-current-timeline)
-	      (define-key km (kbd "w") 'twittering-update-status-interactive))
-	    (let ((km twittering-edit-mode-map))
-	      (define-key km (kbd "C-c C-q") 'twittering-edit-cancel-status)
-	      (define-key km (kbd "C-u C-u") 'twittering-edit-replace-at-point))))
+	  #'(lambda ()
+	      (let ((km twittering-mode-map))
+		(define-key km (kbd "s") 'twittering-current-timeline)
+		(define-key km (kbd "w") 'twittering-update-status-interactive))
+	      (let ((km twittering-edit-mode-map))
+		(define-key km (kbd "C-c C-q") 'twittering-edit-cancel-status)
+		(define-key km (kbd "C-u C-u") 'twittering-edit-replace-at-point))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1030,8 +1030,8 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq helm-gtags-path-style 'relative)
 (setq helm-gtags-ignore-case t)
 (add-hook 'helm-gtags-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
+	  #'(lambda ()
+	      (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
 
 (el-get 'sync 'helm-ls-git)
 
@@ -1170,9 +1170,9 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   (set-process-sentinel
    (apply 'start-process "locate-update-home" "*Messages*"
 	  locate-update-command-program-args)
-   (lambda (proc stat)
-     (if (zerop (process-exit-status proc))
-	 (message "locate.updatedb...done")))))
+   #'(lambda (proc stat)
+       (if (zerop (process-exit-status proc))
+	   (message "locate.updatedb...done")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1201,11 +1201,11 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
       (set-process-sentinel
        (apply 'start-process (format "apachectl %s" args) (current-buffer)
 	      apachectl-command)
-       (lambda (proc stat)
-	 (cond ((zerop (process-exit-status proc))
-		(message "%s... successful!" proc))
-	       ((popwin:popup-buffer-tail apachectl-buffer-name)
-		(error "%s... failur!" proc))))))))
+       #'(lambda (proc stat)
+	   (cond ((zerop (process-exit-status proc))
+		  (message "%s... successful!" proc))
+		 ((popwin:popup-buffer-tail apachectl-buffer-name)
+		  (error "%s... failur!" proc))))))))
 (defun apachectl/start ()
   (interactive)
   (executable-apachectl "start"))
