@@ -143,8 +143,6 @@
 ;;;
 ;;; recentf settings
 ;;;
-;;; (auto-install-from-emacswiki "recentf-ext.el")
-;;;
 
 (el-get 'sync 'recentf-ext)
 (require 'recentf-ext)
@@ -214,7 +212,7 @@
 	    (set-face-bold-p 'diff-refine-change t)))
 
 ;; use solarized.
-(el-get 'sync 'solarized-theme)
+;; (el-get 'sync 'solarized-theme)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1008,8 +1006,14 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 	      "-o -type f -name `echo -n '%e' | sed 's/--include=//' "
 	      "| sed 's/--exclude.*//' | sed 's/\\\\\\\\//g'` -print0 "
 	      "| xargs -0 lgrep +i -n%c -Au8 -Ia - %p /dev/null"))
+(setq helm-for-files-preferred-list
+      '(helm-source-buffers-list
+	helm-source-recentf
+	helm-source-bookmarks
+	helm-source-file-cache
+	helm-source-files-in-current-dir
+	helm-source-buffer-not-found))
 
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
 (el-get 'sync 'helm-migemo)
 (el-get 'sync 'helm-ag)
 (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
@@ -1034,6 +1038,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (global-set-key (kbd "C-;") 'helm-for-files)
 (define-key helm-map (kbd "C-v") 'helm-next-source)
 (define-key helm-map (kbd "M-v") 'helm-previous-source)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-z l") 'helm-ls-git-ls)
@@ -1100,41 +1105,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (global-set-key (kbd "M-v") 'inertias-down)
 (global-set-key [wheel-up] 'inertias-down-wheel)
 (global-set-key [wheel-down] 'inertias-up-wheel)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; e2wm settings
-;;;
-
-;; (el-get 'sync 'e2wm)
-;; (autoload 'e2wm:start-management "e2wm" nil t)
-;; (setq e2wm:def-plugin-clock-text t)
-;; (global-set-key (kbd "M-+") 'e2wm:start-management)
-
-;; (add-hook 'e2wm:pre-start-hook
-;; 	  (lambda ()
-;; 	    (load "e2wm-edbi")
-;; 	    (global-set-key (kbd "C-z C-c") 'e2wm:dp-code)
-;; 	    (global-set-key (kbd "C-z C-d") 'e2wm:dp-edbi)
-;; 	    (global-set-key (kbd "C-z 2") 'e2wm:dp-two)
-;; 	    (global-set-key (kbd "C-z 1")
-;; 			    'e2wm:dp-code-main-maximize-toggle-command)
-;; 	    (global-set-key (kbd "C-z Q") 'e2wm:stop-management)))
-
-;; (defun e2wm:current-buffer ()
-;;   (cond
-;;    ((e2wm:managed-p)
-;;     (e2wm:history-get-main-buffer))
-;;    ((featurep 'elscreen)
-;;     (let* ((frame-confs (elscreen-get-frame-confs (selected-frame)))
-;;            (num (nth 1 (assoc 'screen-history frame-confs)))
-;;            (cur-window-conf (cadr (assoc num (assoc 'screen-property frame-confs))))
-;;            (marker (nth 2 cur-window-conf)))
-;;       (marker-buffer marker)))
-;;    (t
-;;     (nth 1
-;;          (assoc 'buffer-list
-;;                 (nth 1 (nth 1 (current-frame-configuration))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1303,15 +1273,3 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
 			    'po-find-file-coding-system)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(safe-local-variable-values (quote ((eval ignore-errors "Write-contents-functions is a buffer-local alternative to before-save-hook" (add-hook (quote write-contents-functions) (lambda nil (delete-trailing-whitespace) nil)) (require (quote whitespace)) "Sometimes the mode needs to be toggled off and on." (whitespace-mode 0) (whitespace-mode 1)) (whitespace-line-column . 80) (whitespace-style face trailing lines-tail) (require-final-newline . t)))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
