@@ -1000,6 +1000,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (helm-mode 1)
 (setq helm-buffer-max-length 40)
 (setq helm-ff-auto-update-initial-value nil)
+(setq helm-truncate-lines t)
 (setq helm-grep-default-command "lgrep +i -n%c -Au8 -Ia - %p %f /dev/null")
 (setq helm-grep-default-recurse-command
       (concat "find %f -type d \\( -name '.svn' -o -name '.git' \\) -prune "
