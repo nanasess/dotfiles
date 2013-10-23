@@ -14,7 +14,7 @@
 (defvar user-site-lisp-directory (locate-user-emacs-file "site-lisp/"))
 (defvar user-misc-directory (locate-user-emacs-file "etc/"))
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
-(defvar dropbox-directory (expand-file-name "~/SparkleShare/share/"))
+(defvar external-directory (expand-file-name "~/SparkleShare/share/"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -85,7 +85,7 @@
 ;;;
 
 (el-get 'sync 'ddskk)
-(setq skk-user-directory (concat dropbox-directory "ddskk"))
+(setq skk-user-directory (concat external-directory "ddskk"))
 (setq skk-init-file (concat user-initial-directory "skk-init.el"))
 (setq skk-preload t)
 (setq skk-auto-save-interval 30)
@@ -487,7 +487,7 @@
 (setq org-startup-truncated nil)
 (setq org-startup-folded nil)
 (setq org-return-follows-link t)
-(setq org-directory (concat dropbox-directory "howm/"))
+(setq org-directory (concat external-directory "howm/"))
 ;; (org-defkey org-mode-map (kbd "C-j") 'skk-mode)
 (setq org-export-latex-classes
       '(("jarticle"
@@ -1013,6 +1013,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 	helm-source-bookmarks
 	helm-source-file-cache
 	helm-source-files-in-current-dir
+	helm-source-mac-spotlight
 	helm-source-buffer-not-found))
 
 (el-get 'sync 'helm-migemo)
@@ -1036,11 +1037,18 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 (el-get 'sync 'helm-ls-git)
 
+(defun helm-mac-spotlight ()
+  "Preconfigured `helm' for `mdfind'."
+  (interactive)
+  (let ((helm-ff-transformer-show-only-basename nil))
+    (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))
+
 (global-set-key (kbd "C-;") 'helm-for-files)
 (define-key helm-map (kbd "C-v") 'helm-next-source)
 (define-key helm-map (kbd "M-v") 'helm-previous-source)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-z C-r") 'helm-resume)
+(global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-z l") 'helm-ls-git-ls)
 
@@ -1138,7 +1146,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (el-get 'sync 'id-manager)
 (autoload 'id-manager "id-manager" nil t)
 (setenv "GPG_AGENT_INFO" nil)
-(setq idm-database-file (concat dropbox-directory ".idm-db.gpg"))
+(setq idm-database-file (concat external-directory ".idm-db.gpg"))
 (setq idm-copy-action 'kill-new)
 (setq idm-gen-password-cmd mkpasswd-command)
 
