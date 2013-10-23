@@ -14,7 +14,7 @@
 (defvar user-site-lisp-directory (locate-user-emacs-file "site-lisp/"))
 (defvar user-misc-directory (locate-user-emacs-file "etc/"))
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
-(defvar dropbox-directory (expand-file-name "~/SparkleShare/share/"))
+(defvar external-directory (expand-file-name "~/SparkleShare/share/"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -85,7 +85,7 @@
 ;;;
 
 (el-get 'sync 'ddskk)
-(setq skk-user-directory (concat dropbox-directory "ddskk"))
+(setq skk-user-directory (concat external-directory "ddskk"))
 (setq skk-init-file (concat user-initial-directory "skk-init.el"))
 (setq skk-preload t)
 (setq skk-auto-save-interval 30)
@@ -487,7 +487,7 @@
 (setq org-startup-truncated nil)
 (setq org-startup-folded nil)
 (setq org-return-follows-link t)
-(setq org-directory (concat dropbox-directory "howm/"))
+(setq org-directory (concat external-directory "howm/"))
 ;; (org-defkey org-mode-map (kbd "C-j") 'skk-mode)
 (setq org-export-latex-classes
       '(("jarticle"
@@ -1146,7 +1146,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (el-get 'sync 'id-manager)
 (autoload 'id-manager "id-manager" nil t)
 (setenv "GPG_AGENT_INFO" nil)
-(setq idm-database-file (concat dropbox-directory ".idm-db.gpg"))
+(setq idm-database-file (concat external-directory ".idm-db.gpg"))
 (setq idm-copy-action 'kill-new)
 (setq idm-gen-password-cmd mkpasswd-command)
 
