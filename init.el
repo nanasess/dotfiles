@@ -1013,6 +1013,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 	helm-source-bookmarks
 	helm-source-file-cache
 	helm-source-files-in-current-dir
+	helm-source-mac-spotlight
 	helm-source-buffer-not-found))
 
 (el-get 'sync 'helm-migemo)
@@ -1036,11 +1037,18 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 (el-get 'sync 'helm-ls-git)
 
+(defun helm-mac-spotlight ()
+  "Preconfigured `helm' for `mdfind'."
+  (interactive)
+  (let ((helm-ff-transformer-show-only-basename nil))
+    (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))
+
 (global-set-key (kbd "C-;") 'helm-for-files)
 (define-key helm-map (kbd "C-v") 'helm-next-source)
 (define-key helm-map (kbd "M-v") 'helm-previous-source)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-z C-r") 'helm-resume)
+(global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-z l") 'helm-ls-git-ls)
 
