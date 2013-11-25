@@ -470,8 +470,8 @@
     :insert ((?d here-doc "Here-document Name: " @ "<<" str _ "\n"
 		 @ "\n" @ str "\n" @)))))
 
-(mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-css)
-(mmm-add-mode-ext-class nil "\\.tpl?\\'" 'html-js)
+(mmm-add-mode-ext-class nil "\\.\\(html\\|tpl\\)\\'" 'embedded-css)
+(mmm-add-mode-ext-class nil "\\.\\(html\\|tpl\\)\\'" 'html-js)
 (mmm-add-mode-ext-class nil "\\.php\\'" 'php-heredoc)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
