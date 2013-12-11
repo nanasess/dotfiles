@@ -1,4 +1,4 @@
-;;; helm-howm.el --- Helm completion for howm
+;;; helm-howm.el --- Helm completion for howm  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2009-2011 kitokitoki
 ;;               2012-2030 mori_dev
@@ -81,7 +81,7 @@
 
 ;;; Code:
 
-(require 'cl)
+(require 'cl-lib)
 (require 'helm)
 (require 'helm-match-plugin)
 (require 'helm-migemo nil t)
@@ -119,7 +119,11 @@ With prefix arg HERE, insert it at point."
 (defvar helm-c-source-howm-recent
   '((name    . "最近のメモ")
     (init    . helm-c-howm-recent-init)
-    (candidates . helm-candidates-in-buffer)
+    (candidates . (lambda()
+    		    (hh:get-recent-title-list
+    		     (howm-recent-menu hh:recent-menu-number-limit))))
+    ;; (candidates-in-buffer)
+    ;; (candidates . helm-candidates-in-buffer)
     (volatile)
     (match helm-migemo-match-fn)
     (candidate-number-limit . 9999)
@@ -167,7 +171,7 @@ With prefix arg HERE, insert it at point."
   (push '(migemo) helm-c-source-howm-recent))
 
 (defun hh:select-file-by-title (title)
-  (loop for recent-menu-x in (howm-recent-menu hh:recent-menu-number-limit)
+  (cl-loop for recent-menu-x in (howm-recent-menu hh:recent-menu-number-limit)
         for list-item-file  = (first recent-menu-x)
         for list-item-name  = (second recent-menu-x)
         if (string-equal title list-item-name)
@@ -180,14 +184,12 @@ With prefix arg HERE, insert it at point."
     (find-file (hh:select-file-by-title candidate))))
 
 (defun hh:get-recent-title-list (recent-menu-list)
-  (loop for recent-menu-x in recent-menu-list
+  (cl-loop for recent-menu-x in recent-menu-list
         for list-item-name  = (second recent-menu-x)
         collect list-item-name))
 
 (defun hh:create-new-memo (text)
-  (let (memo-text str
-        (cbuf (current-buffer)))
-    (setq str text)
+  (let ((str text))
     (howm-create-file-with-title hh:default-title nil nil nil nil)
     (save-excursion
       (goto-char (point-max))
@@ -278,10 +280,10 @@ With prefix arg HERE, insert it at point."
     (persistent-help . "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
 
 ;; helm-c-buffers-persistent-kill and helm-c-switch-to-buffer are defined at helm-config.el.
-(defun helm-c-buffers+-persistent-action (candidate)
-  (if current-prefix-arg
-      (helm-c-buffers-persistent-kill candidate)
-    (helm-c-switch-to-buffer candidate)))
+;; (defun helm-c-buffers+-persistent-action (candidate)
+;;   (if current-prefix-arg
+;;       (helm-c-buffers-persistent-kill candidate)
+;;     (helm-c-switch-to-buffer candidate)))
 
 (defun hh:title-real-to-display (file-name)
   (with-current-buffer (get-buffer file-name)
@@ -315,27 +317,27 @@ With prefix arg HERE, insert it at point."
 
 ;; experimental code
 ;(hh:get-filename (list howm-directory))
-(defun hh:get-filename (file-list)
-    (loop for x in file-list
-          with path-list = nil
-          when (file-directory-p x)
-            for path-list =
-              (append
-                (hh:get-filename
-                 (remove-if
-                  (lambda(y) (string-match "\\.$\\|\\.svn" y))
-                  (directory-files x t)))
-                path-list)
-          else
-            collect x into path-list
-          end
-          finally return path-list))
+;; (defun hh:get-filename (file-list)
+;;     (cl-loop for x in file-list
+;;           with path-list = nil
+;;           when (file-directory-p x)
+;;             for path-list =
+;;               (append
+;;                 (hh:get-filename
+;;                  (cl-remove-if
+;;                   (lambda(y) (string-match "\\.$\\|\\.svn" y))
+;;                   (directory-files x t)))
+;;                 path-list)
+;;           else
+;;             collect x into path-list
+;;           end
+;;           finally return path-list))
 
-(defvar helm-c-source-howm-contents-grep
-  `((name . "helm-howm-contents-grep")
-    (grep-candidates . ,(hh:get-filename (list howm-directory)))
-    (header-name . (lambda (x) (concat x ": " helm-pattern)))
-    (candidate-number-limit . 99999)))
+;; (defvar helm-c-source-howm-contents-grep
+;;   `((name . "helm-howm-contents-grep")
+;;     (grep-candidates . ,(hh:get-filename (list howm-directory)))
+;;     (header-name . (lambda (x) (concat x ": " helm-pattern)))
+;;     (candidate-number-limit . 99999)))
 ;; (helm 'helm-c-source-howm-contents-grep)
 
 (provide 'helm-howm)
