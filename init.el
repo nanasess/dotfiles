@@ -569,6 +569,17 @@
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
+(el-get 'sync 'multiple-cursors)
+(el-get 'sync 'smartrep)
+(require 'multiple-cursors)
+(require 'smartrep)
+
+(global-set-key (kbd "<C-M-return>") 'mc/edit-lines)
+(smartrep-define-key
+    global-map "C-z" '(("C-n" . 'mc/mark-next-like-this)
+		       ("C-p" . 'mc/mark-previous-like-this)
+		       ("*"   . 'mc/mark-all-like-this)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; undo-tree settings
