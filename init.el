@@ -127,6 +127,10 @@
 (global-set-key (kbd "C-z C-u") 'other-frame)
 (global-set-key (kbd "C-z C-j") 'toggle-skk-kutouten)
 
+(global-set-key (kbd "<M-up>") 'beginning-of-buffer)
+(global-set-key (kbd "<M-down>") 'end-of-buffer)
+(global-set-key (kbd "C-o") 'previous-line)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; backup files settings
@@ -277,6 +281,8 @@
 ;;;
 
 (add-hook 'java-mode-hook 'basic-indent)
+(add-to-list 'auto-mode-alist
+	     '("\\.\\(cls\\|trigger\\)\\'" . java-mode))
 ;; (require 'cedet)
 ;; (el-get 'sync 'malabar-mode)
 ;; (add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
