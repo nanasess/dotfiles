@@ -283,6 +283,8 @@
 ;;;
 
 (add-hook 'java-mode-hook 'basic-indent)
+(add-to-list 'auto-mode-alist
+	     '("\\.\\(cls\\|trigger\\)\\'" . java-mode))
 ;; (require 'cedet)
 ;; (el-get 'sync 'malabar-mode)
 ;; (add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
