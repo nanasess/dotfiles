@@ -31,3 +31,16 @@
            (append skk-rom-kana-rule-list
                    '(("@" nil "@"))))
 (setq skk-jisyo-code "euc-jisx0213-unix")
+(defvar skk-auto-save-interval 30)
+(defun toggle-skk-kutouten ()
+  "toggle skk-kutoten-type."
+  (interactive)
+  (cond ((eq skk-kutouten-type 'en)
+	 (setq skk-kutouten-type 'jp))
+	((setq skk-kutouten-type 'en)))
+  (message (format "skk-kutoten-type on set to the %s." skk-kutouten-type)))
+(defun skk-auto-save ()
+  "auto save of the skk-jisyo and skk-study."
+  (skk-save-jisyo)
+  (skk-study-save))
+(run-with-idle-timer skk-auto-save-interval t 'skk-auto-save)

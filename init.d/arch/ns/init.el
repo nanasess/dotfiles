@@ -3,11 +3,6 @@
   (setq locale-coding-system 'utf-8-hfs)
   (prefer-coding-system 'utf-8-hfs))
 
-;; grep-find で .svn を除外
-(setq grep-find-command
-      (cons (concat "find . -type f -path '*.svn*' -prune -o -exec "
-		    "lgrep -kn  {} /dev/null \\;") 57))
-
 ;; font settings
 (create-fontset-from-ascii-font "Menlo-12:weight=normal:slant=normal" nil "ns")
 (set-fontset-font "fontset-ns" 'unicode

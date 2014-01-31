@@ -16,11 +16,24 @@
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
 (defvar external-directory (expand-file-name "~/GoogleDrive/share/"))
 
+;; Silence the warning.
+(defun el-get (&optional sync &rest packages))
+(defun smartrep-define-key (keymap prefix alist))
+(defun global-undo-tree-mode () ())
+(defun quickrun-add-command (key alist))
+(defun yas-global-mode (arg))
+(defun yas/expand () ())
+(defun c-toggle-hungry-state (arg))
+(defun php-completion-mode (arg))
+(defun helm-do-grep-1 (targets recurse zgrep exts))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; el-get settings
 ;;;
-
+(eval-after-load "el-get"
+  '(progn
+     (add-to-list 'el-get-recipe-path (locate-user-emacs-file "recipes"))))
 (add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
 (add-to-list 'load-path (concat user-emacs-directory "el-get/ddskk"))
 (unless (require 'el-get nil 'noerror)
@@ -30,14 +43,12 @@
     (let (el-get-master-branch)
       (goto-char (point-max))
       (eval-print-last-sexp))))
-(add-to-list 'el-get-recipe-path (locate-user-emacs-file "recipes"))
+
 (el-get 'sync)
 
 ;; (el-get 'sync 'esup)
 ;; (require 'esup)
-
 (el-get 'sync 'cp5022x)
-(require 'cp5022x)
 (define-coding-system-alias 'iso-2022-jp 'cp50220)
 (define-coding-system-alias 'euc-jp 'cp51932)
 
@@ -85,23 +96,11 @@
 ;;;
 
 (el-get 'sync 'ddskk)
-(setq skk-user-directory (concat external-directory "ddskk"))
-(setq skk-init-file (concat user-initial-directory "skk-init.el"))
-(setq skk-preload t)
-(setq skk-auto-save-interval 30)
-(setq skk-isearch-start-mode 'latin)
-(defun toggle-skk-kutouten ()
-  "toggle skk-kutoten-type."
-  (interactive)
-  (cond ((eq skk-kutouten-type 'en)
-	 (setq skk-kutouten-type 'jp))
-	((setq skk-kutouten-type 'en)))
-  (message (format "skk-kutoten-type on set to the %s." skk-kutouten-type)))
-(defun skk-auto-save ()
-  "auto save of the skk-jisyo and skk-study."
-  (skk-save-jisyo)
-  (skk-study-save))
-(run-with-idle-timer skk-auto-save-interval t 'skk-auto-save)
+(custom-set-variables
+ '(skk-user-directory (concat external-directory "ddskk"))
+ '(skk-init-file (concat user-initial-directory "skk-init.el"))
+ '(skk-preload t)
+ '(skk-isearch-start-mode 'latin))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -127,21 +126,24 @@
 (global-set-key (kbd "C-z C-u") 'other-frame)
 (global-set-key (kbd "C-z C-j") 'toggle-skk-kutouten)
 
-(global-set-key (kbd "<M-up>") 'beginning-of-buffer)
-(global-set-key (kbd "<M-down>") 'end-of-buffer)
-(global-set-key (kbd "C-o") 'previous-line)
+(global-set-key (kbd "C-M-g") 'end-of-buffer)
+(global-set-key (kbd "C-M-j") 'next-line)
+(global-set-key (kbd "C-M-k") 'previous-line)
+(global-set-key (kbd "C-M-h") 'backward-char)
+(global-set-key (kbd "C-M-l") 'forward-char)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; backup files settings
 ;;;
 
-(setq make-backup-files t)
-(setq backup-directory-alist
-      (cons (cons "\\.*$" (expand-file-name "~/.bak/"))
-	    backup-directory-alist))
-(setq version-control t)
-(setq delete-old-versions t)
+(custom-set-variables
+ '(make-backup-files t)
+ '(backup-directory-alist
+   (cons (cons "\\.*$" (expand-file-name "~/.bak/"))
+	 backup-directory-alist))
+ '(version-control t)
+ '(delete-old-versions t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -149,8 +151,8 @@
 ;;;
 
 (el-get 'sync 'recentf-ext)
-(require 'recentf-ext)
-(setq recentf-max-saved-items 50000)
+(custom-set-variables
+ '(recentf-max-saved-items 50000))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -171,7 +173,7 @@
 ;;; show EOF settings
 ;;;
 
-(setq indicate-empty-lines t)
+(custom-set-variables '(indicate-empty-lines t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -183,15 +185,20 @@
 
 (defface hlline-face
   '((((class color) (background light))
-     (:background "Beige"))) nil)
-(setq hl-line-face 'hlline-face)
+     (:background "Beige"))) nil :group 'font-lock-highlighting-faces)
+(custom-set-variables
+ '(hl-line-face 'hlline-face))
 (global-hl-line-mode)
 
-(setq whitespace-style '(spaces tabs newline space-mark tab-mark newline-mark))
+(custom-set-variables
+ '(whitespace-style '(spaces tabs newline space-mark tab-mark newline-mark)))
 
-(defface my-mark-whitespace '((t (:background "gray"))) nil)
-(defface my-mark-tabs '((t (:background "white smoke"))) nil)
-(defface my-mark-lineendsspaces '((t (:foreground "SteelBlue" :underline t))) nil)
+(defface my-mark-whitespace '((t (:background "gray"))) nil
+  :group 'font-lock-highlighting-faces)
+(defface my-mark-tabs '((t (:background "white smoke"))) nil
+  :group 'font-lock-highlighting-faces)
+(defface my-mark-lineendsspaces '((t (:foreground "SteelBlue" :underline t))) nil
+  :group 'font-lock-highlighting-faces)
 (defvar my-mark-whitespace 'my-mark-whitespace)
 (defvar my-mark-tabs 'my-mark-tabs)
 (defvar my-mark-lineendsspaces 'my-mark-lineendsspaces)
@@ -201,8 +208,7 @@
    major-mode
    '(("\t" 0 my-mark-tabs append)
      ("　" 0 my-mark-whitespace append)
-     ("[ \t]+$" 0 my-mark-lineendsspaces append)
-     )))
+     ("[ \t]+$" 0 my-mark-lineendsspaces append))))
 (ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
 (ad-activate 'font-lock-mode)
 
@@ -223,8 +229,7 @@
 ;;; window-system settings
 ;;;
 
-(cond (window-system
-       (tool-bar-mode 0)))
+(cond (window-system (tool-bar-mode 0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -232,15 +237,16 @@
 ;;;
 
 (require 'uniquify)
-(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
-(setq uniquify-ignore-buffers-re "*[^*]+*")
+(custom-set-variables
+ '(uniquify-buffer-name-style 'post-forward-angle-brackets)
+ '(uniquify-ignore-buffers-re "*[^*]+*"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; dired-x settings
 ;;;
 
-(setq dired-bind-jump nil)
+(custom-set-variables '(dired-bind-jump nil))
 (add-hook 'dired-mode-hook
 	  #'(lambda ()
 	      (local-set-key (kbd "C-t") 'other-window)
@@ -281,6 +287,9 @@
 ;;;
 
 (add-hook 'java-mode-hook 'basic-indent)
+(eval-after-load "cc-mode"
+  '(progn
+     (define-key java-mode-map [return] 'newline-and-indent)))
 (add-to-list 'auto-mode-alist
 	     '("\\.\\(cls\\|trigger\\)\\'" . java-mode))
 ;; (require 'cedet)
@@ -321,19 +330,20 @@
 	     '("\\.\\(xml\\|xsl\\|rng\\|html\\|tpl\\)\\'" . nxml-mode))
 (add-hook 'nxml-mode-hook
 	  #'(lambda ()
-	      (setq auto-fill-mode -1)
-	      (setq nxml-slash-auto-complete-flag t)
-	      (setq nxml-child-indent 2)
 	      (rng-validate-mode 0)
-	      (setq indent-tabs-mode nil)
-	      (setq tab-width 2)))
+	      (custom-set-variables
+	       '(auto-fill-mode -1)
+	       '(nxml-slash-auto-complete-flag t)
+	       '(nxml-child-indent 2)
+	       '(indent-tabs-mode nil)
+	       '(tab-width 2))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; SQL settings
 ;;;
 
-(setq sql-product 'postgres)
+(custom-set-variables '(sql-product 'postgres))
 (add-hook 'sql-mode-hook 'basic-indent)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -345,14 +355,15 @@
 	  #'(lambda ()
 	      (setq view-read-only t)
 	      (auto-revert-mode 1)
-	      (setq line-move-visual nil)
-	      (define-key view-mode-map (kbd "h") 'backward-word)
-	      (define-key view-mode-map (kbd "l") 'forward-word)
-	      (define-key view-mode-map (kbd "j") 'next-line)
-	      (define-key view-mode-map (kbd "k") 'previous-line)
-	      (define-key view-mode-map " " 'scroll-up)
-	      (define-key view-mode-map (kbd "b") 'scroll-down)))
-
+	      (setq line-move-visual nil)))
+(eval-after-load "view"
+  '(progn
+     (define-key view-mode-map (kbd "h") 'backward-word)
+     (define-key view-mode-map (kbd "l") 'forward-word)
+     (define-key view-mode-map (kbd "j") 'next-line)
+     (define-key view-mode-map (kbd "k") 'previous-line)
+     (define-key view-mode-map " " 'scroll-up)
+     (define-key view-mode-map (kbd "b") 'scroll-down)))
 (add-to-list 'auto-mode-alist '("\\.log$" . view-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -362,6 +373,7 @@
 
 (defvar normal-frame-width 82)
 (defvar wide-frame-width 175)
+(defvar toggle-frame-flag t)
 
 (defun frame-size-greater-p ()
   (< (+ (/ (- wide-frame-width normal-frame-width) 2) normal-frame-width)
@@ -400,30 +412,20 @@
 ;;;
 
 (el-get 'sync 'migemo)
-(setq migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
-(setq isearch-lax-whitespace nil)
+(defvar migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
+(custom-set-variables
+ '(isearch-lax-whitespace nil))
 (when (file-exists-p migemo-dictionary)
-  (setq migemo-command "cmigemo")
-  (setq migemo-options '("-q" "--emacs" "-i" "\a"))
-  (setq migemo-user-dictionary nil)
-  (setq migemo-regex-dictionary nil)
-  (setq migemo-use-pattern-alist t)
-  (setq migemo-use-frequent-pattern-alist t)
-  (setq migemo-pattern-alist-length 1000)
-  (setq migemo-coding-system 'utf-8-unix)
+  (custom-set-variables
+   '(migemo-command "cmigemo")
+   '(migemo-options '("-q" "--emacs" "-i" "\a"))
+   '(migemo-user-dictionary nil)
+   '(migemo-regex-dictionary nil)
+   '(migemo-use-pattern-alist t)
+   '(migemo-use-frequent-pattern-alist t)
+   '(migemo-pattern-alist-length 1000)
+   '(migemo-coding-system 'utf-8-unix))
   (require 'migemo))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; gtags settings
-;;;
-
-(el-get 'sync 'gtags)
-(require 'gtags)
-(setq gtags-path-style 'relative)
-;; (add-hook 'gtags-mode-hook
-;; 	  #'(lambda ()
-;; 	      (local-set-key (kbd "M-.") 'gtags-find-tag)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -433,7 +435,6 @@
 ;;;
 
 (el-get 'sync 'goto-chg)
-(require 'goto-chg)
 (global-set-key (kbd "C-.") 'goto-last-change)
 (global-set-key (kbd "C-,") 'goto-last-change-reverse)
 
@@ -458,7 +459,7 @@
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
 (set-face-background 'mmm-default-submode-face "ivory2")
-(setq mmm-font-lock-available-p t)
+(custom-set-variables '(mmm-font-lock-available-p t))
 (require 'mmm-sample)
 (setq mmm-here-doc-mode-alist
       (append (list '("__EOF__" . sql-mode)
@@ -484,27 +485,25 @@
 ;;;
 ;;; org-mode settings
 ;;;
-(when (<= emacs-major-version 23)
-  (el-get 'sync 'org-mode)
-  (require 'org-install))
 (require 'ob-sh)
 (require 'ob-css)
 (require 'ob-sql)
-(setq org-startup-truncated nil)
-(setq org-startup-folded nil)
-(setq org-return-follows-link t)
-(setq org-directory (concat external-directory "howm/"))
+(custom-set-variables
+ '(org-startup-truncated nil)
+ '(org-startup-folded nil)
+ '(org-return-follows-link t)
+ '(org-directory (concat external-directory "howm/")))
 ;; (org-defkey org-mode-map (kbd "C-j") 'skk-mode)
-(setq org-export-latex-classes
-      '(("jarticle"
-	 "\\documentclass[11t,a4j,oneside]{jarticle}"
-	 ("\\section{%s}" . "\\section*{%s}")
-	 ("\\subsection{%s}" . "\\subsection*{%s}")
-	 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-	 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-	 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-(setq org-latex-to-pdf-process
-      '("org-latex-to-pdf.sh %f" "org-latex-to-pdf.sh %f"))
+(defvar org-export-latex-classes
+  '(("jarticle"
+     "\\documentclass[11t,a4j,oneside]{jarticle}"
+     ("\\section{%s}" . "\\section*{%s}")
+     ("\\subsection{%s}" . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+(defvar org-latex-to-pdf-process
+  '("org-latex-to-pdf.sh %f" "org-latex-to-pdf.sh %f"))
 ;; (set-face-bold-p 'org-document-title nil)
 ;; (set-face-attribute 'org-document-title nil :height 1.0)
 
@@ -522,7 +521,6 @@
 ;;; org-tree-slide
 ;; http://pastelwill.jp/wiki/doku.php?id=emacs:org-tree-slide
 (el-get 'sync 'org-tree-slide)
-(require 'org-tree-slide)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -549,22 +547,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; moccur settings
-;;;
-
-(el-get 'sync 'color-moccur)
-(el-get 'sync 'moccur-edit)
-(require 'color-moccur)
-(setq moccur-use-migemo t)
-(setq moccur-split-word t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; cua-mode settings
 ;;;
 
 (cua-mode t)
-(setq cua-enable-cua-keys nil)
+(custom-set-variables '(cua-enable-cua-keys nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -572,13 +559,10 @@
 ;;;
 
 (el-get 'sync 'expand-region)
-(require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 (el-get 'sync 'multiple-cursors)
 (el-get 'sync 'smartrep)
-(require 'multiple-cursors)
-(require 'smartrep)
 
 (global-set-key (kbd "<C-M-return>") 'mc/edit-lines)
 (smartrep-define-key
@@ -592,28 +576,8 @@
 ;;;
 
 (el-get 'sync 'undo-tree)
-(require 'undo-tree)
 (global-undo-tree-mode)
-(setq undo-tree-mode-lighter " uT")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; all-ext settings
-;;;
-
-(el-get 'sync 'all)
-(el-get 'sync 'all-ext)
-(require 'all-ext)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; dvc settings
-;;;
-
-;; (el-get 'sync 'dvc)
-;; (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "dvc")))
-;; (require 'dvc-autoloads)
-;; (setq dvc-tips-enabled nil)
+(custom-set-variables '(undo-tree-mode-lighter " uT"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -637,7 +601,6 @@
 ;;;
 
 (el-get 'sync 'magit)
-(require 'magit)
 (require 'magit-svn)
 (setq magit-git-log-options
   (list
@@ -657,21 +620,21 @@
 ;;;
 
 (el-get 'sync 'howm)
-(setq howm-menu-lang 'ja)
-(setq howm-directory org-directory)
-(setq howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.howm")
-(setq howm-history-file (concat howm-directory ".howm-history"))
-(setq howm-keyword-file (concat howm-directory ".howm-keys"))
-(setq howm-menu-schedule-days-before 30)
-(setq howm-menu-schedule-days 30)
-(setq howm-menu-expiry-hours 2)
-(setq howm-menu-refresh-after-save nil)
-(setq howm-refresh-after-save nil)
-(setq howm-list-all-title t)
-(setq howm-schedule-menu-types "[!@\+]")
+(defvar howm-menu-lang 'ja)
+(defvar howm-directory org-directory)
+(defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.howm")
+(defvar howm-history-file (concat howm-directory ".howm-history"))
+(defvar howm-keyword-file (concat howm-directory ".howm-keys"))
+(defvar howm-menu-schedule-days-before 30)
+(defvar howm-menu-schedule-days 30)
+(defvar howm-menu-expiry-hours 2)
+(defvar howm-menu-refresh-after-save nil)
+(defvar howm-refresh-after-save nil)
+(defvar howm-list-all-title t)
+(defvar howm-schedule-menu-types "[!@\+]")
 (add-hook 'org-mode-hook 'howm-mode)
-(setq howm-view-title-header "#+TITLE:")
-(setq howm-view-use-grep nil)
+(defvar howm-view-title-header "#+TITLE:")
+(defvar howm-view-use-grep nil)
 (add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
 (require 'howm)
 (setq howm-template
@@ -711,25 +674,31 @@
 ;;;
 
 (el-get 'sync 'quickrun)
-(require 'quickrun)
 (defface phpunit-pass
-  '((t (:foreground "white" :background "green" :weight bold))) nil)
+  '((t (:foreground "white" :background "green" :weight bold))) nil
+  :group 'font-lock-highlighting-faces)
 (defface phpunit-fail
-  '((t (:foreground "white" :background "red" :weight bold))) nil)
+  '((t (:foreground "white" :background "red" :weight bold))) nil
+  :group 'font-lock-highlighting-faces)
 
 (defun quickrun/phpunit-outputter ()
   (save-excursion
     (goto-char (point-min))
-    (while (replace-regexp "" "")
-      nil))
+    ;; (while (replace-regexp "" "")
+    ;;   nil)
+    )
   (highlight-phrase "^OK.*$" 'phpunit-pass)
   (highlight-phrase "^FAILURES.*$" 'phpunit-fail))
 
 (quickrun-add-command "phpunit" '((:command . "phpunit")
                                   (:exec . "%c %s")
                                   (:outputter . quickrun/phpunit-outputter)))
-(add-to-list 'quickrun-file-alist
-	     '("\\(Test\\.php\\|TestSuite\\.php\\|AllTests\\.php\\)\\'" . "phpunit"))
+
+(eval-after-load "quickrun"
+  '(progn
+     (add-to-list
+      'quickrun-file-alist
+      '("\\(Test\\.php\\|TestSuite\\.php\\|AllTests\\.php\\)\\'" . "phpunit"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -740,19 +709,19 @@
 (el-get 'sync 'dropdown-list)
 (yas-global-mode 1)
 (require 'dropdown-list)
-(setq yas-prompt-functions '(yas-dropdown-prompt
-			     yas-ido-prompt
-			     yas-completing-prompt))
+(custom-set-variables '(yas-prompt-functions '(yas-dropdown-prompt
+					       yas-ido-prompt
+					       yas-completing-prompt)))
 (defun yas/org-very-safe-expand ()
   (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
 (add-hook 'org-mode-hook
           #'(lambda ()
 	      ;; yasnippet (using the new org-cycle hooks)
-	      (setq ac-use-overriding-local-map t)
-	      (make-variable-frame-local 'yas/trigger-key)
-	      (setq  yas/trigger-key [tab])
-	      (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-	      (define-key yas/keymap [tab] 'yas/next-field)))
+	      (custom-set-variables '(ac-use-overriding-local-map t))
+	      (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)))
+(eval-after-load "yasnippet"
+  '(progn
+     (define-key yas/keymap [tab] 'yas/next-field)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -776,7 +745,6 @@
 ;;;
 
 (el-get 'sync 'php-mode)
-(require 'php-mode)
 
 (defconst php-style
   `((c-recognize-knr-p . nil)
@@ -843,31 +811,18 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 (el-get 'sync 'php-electric)
 (el-get 'sync 'php-completion)
-(require 'php-electric)
 (defun php-c-style ()
   (interactive)
-  (make-local-variable 'c-tab-always-indent)
-  (setq c-tab-always-indent t)
   ;; (php-electric-mode 1)
   (c-toggle-hungry-state 1)
   ;; (c-toggle-auto-hungry-state 1)
   ;; (flymake-mode 1)
   (require 'php-completion)
   (php-completion-mode t)
-  (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
-  (define-key php-mode-map [return] 'newline-and-indent)
-  (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
-  (define-key php-mode-map (kbd "M-p") 'flymake-goto-prev-error)
-  (define-key php-mode-map (kbd "M-n") 'flymake-goto-next-error)
-  (setq yas-trigger-key (kbd "<tab>"))
-  (make-local-variable 'comment-start)
-  (setq comment-start "// ")
-  (make-local-variable 'comment-start-skip)
-  (setq comment-start-skip "// *")
-  (make-local-variable 'comment-end)
-  (setq comment-end "")
+  (set (make-local-variable 'comment-start) "// ")
+  (set (make-local-variable 'comment-start-skip) "// *")
+  (set (make-local-variable 'comment-end) "")
   (when (require 'auto-complete nil t)
-    (make-variable-buffer-local 'ac-sources)
     (add-to-list 'ac-sources
 		 'ac-source-php-completion
 		 'ac-source-yasnippet)
@@ -875,12 +830,22 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
   (c-add-style "php-style" php-style t))
 
 (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)" . php-mode))
-(setq php-mode-force-pear t)
-(setq php-manual-url "http://jp2.php.net/manual/ja/")
-(setq php-search-url "http://jp2.php.net/")
+(custom-set-variables '(php-mode-force-pear t)
+		      '(php-manual-url "http://jp2.php.net/manual/ja/")
+		      '(php-search-url "http://jp2.php.net/"))
 
 (add-hook 'php-mode-hook 'php-c-style)
 (add-hook 'php-mode-hook 'helm-gtags-mode)
+
+(eval-after-load "php-mode"
+  '(progn
+     (setq yas-trigger-key (kbd "<tab>"))
+     (setq c-tab-always-indent t)
+     (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
+     (define-key php-mode-map [return] 'newline-and-indent)
+     (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
+     (define-key php-mode-map (kbd "M-p") 'flymake-goto-prev-error)
+     (define-key php-mode-map (kbd "M-n") 'flymake-goto-next-error)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -920,7 +885,8 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 (el-get 'sync 'emacs-w3m)
 (autoload 'w3m "w3m" "Visit the www page using w3m" t)
-(setq w3m-init-file (concat user-initial-directory "emacs-w3m-init.el"))
+(custom-set-variables
+ '(w3m-init-file (concat user-initial-directory "emacs-w3m-init.el")))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -931,24 +897,27 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (el-get 'sync 'twittering-mode)
 (autoload 'twit "twittering-mode" nil t)
 (unless (load "twittering-tinyurl-api-key" t t)
-  (setq twittering-bitly-api-key nil))
-(setq twittering-auth-method 'xauth)
-(setq twittering-username "nanasess")
-(setq twittering-bitly-login twittering-username)
-(setq twittering-tinyurl-service 'j.mp)
-(setq twittering-status-format (concat "%i %S(%s),  %@:\n%"
-				       "FILL[  ]{%T // from %f%L%r%R}\n "))
-(setq twittering-retweet-format "RT @%s: %t")
-(setq twittering-display-remaining t)
-(setq twittering-allow-insecure-server-cert t)
-(add-hook 'twittering-mode-hook
-	  #'(lambda ()
-	      (let ((km twittering-mode-map))
-		(define-key km (kbd "s") 'twittering-current-timeline)
-		(define-key km (kbd "w") 'twittering-update-status-interactive))
-	      (let ((km twittering-edit-mode-map))
-		(define-key km (kbd "C-c C-q") 'twittering-edit-cancel-status)
-		(define-key km (kbd "C-u C-u") 'twittering-edit-replace-at-point))))
+  (defvar twittering-bitly-api-key nil))
+(custom-set-variables
+ '(twittering-auth-method 'xauth)
+ '(twittering-username "nanasess")
+ '(twittering-bitly-login twittering-username)
+ '(twittering-tinyurl-service 'j.mp)
+ '(twittering-status-format (concat "%i %S(%s),  %@:\n%"
+	     "FILL[  ]{%T // from %f%L%r%R}\n "))
+ '(twittering-retweet-format "RT @%s: %t")
+ '(twittering-display-remaining t)
+ '(twittering-allow-insecure-server-cert t))
+(eval-after-load "twittering-mode"
+  '(progn
+     (define-key twittering-mode-map
+       (kbd "s") 'twittering-current-timeline)
+     (define-key twittering-mode-map
+       (kbd "w") 'twittering-update-status-interactive)
+     (define-key twittering-edit-mode-map
+       (kbd "C-c C-q") 'twittering-edit-cancel-status)
+     (define-key twittering-edit-mode-map
+       (kbd "C-u C-u") 'twittering-edit-replace-at-point)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -965,18 +934,9 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 (autoload 'pdf-preview-buffer "pdf-preview" nil t)
 (autoload 'pdf-preview-buffer-with-faces "pdf-preview" nil t)
-(setq ps-print-header nil)
-(setq pdf-preview-preview-command "open")
-(setq mew-print-function 'pdf-preview-buffer-with-faces)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; auto-install settings
-;;;
-
-(el-get 'sync 'auto-install)
-(require 'auto-install)
-(setq auto-install-directory user-site-lisp-directory)
+(defvar ps-print-header nil)
+(defvar pdf-preview-preview-command "open")
+(defvar mew-print-function 'pdf-preview-buffer-with-faces)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -999,80 +959,73 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; ag.el settings
-;;;
-
-(el-get 'sync 'ag)
-(require 'ag)
-(setq ag-arguments
-      (list "-u" "--smart-case" "--nogroup" "--column" "--"))
-(setq ag-highlight-search t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; helm settings
 ;;;
 
 (el-get 'sync 'helm)
-(helm-mode 1)
-(setq helm-buffer-max-length 40)
-(setq helm-ff-auto-update-initial-value nil)
-(setq helm-truncate-lines t)
-(setq helm-grep-default-command "lgrep +i -n%c -Au8 -Ia - %p %f /dev/null")
-(setq helm-grep-default-recurse-command
+(el-get 'sync 'helm-migemo)
+(el-get 'sync 'helm-ag)
+(el-get 'sync 'helm-ack)
+(el-get 'sync 'helm-gtags)
+(el-get 'sync 'helm-ls-git)
+
+(custom-set-variables
+ '(helm-mode t)
+ '(helm-buffer-max-length 40)
+ '(helm-ff-auto-update-initial-value nil)
+ '(helm-truncate-lines t)
+ '(helm-grep-default-command "lgrep +i -n%c -Au8 -Ia - %p %f /dev/null")
+ '(helm-grep-default-recurse-command
       (concat "find %f -type d \\( -name '.svn' -o -name '.git' \\) -prune "
 	      "-o -type f -name `echo -n '%e' | sed 's/--include=//' "
 	      "| sed 's/--exclude.*//' | sed 's/\\\\\\\\//g'` -print0 "
 	      "| xargs -0 lgrep +i -n%c -Au8 -Ia - %p /dev/null"))
-(setq helm-for-files-preferred-list
-      '(helm-source-buffers-list
+ '(helm-for-files-preferred-list
+   '(helm-source-buffers-list
 	helm-source-recentf
 	helm-source-bookmarks
 	helm-source-file-cache
 	helm-source-files-in-current-dir
 	helm-source-mac-spotlight
 	helm-source-buffer-not-found))
-
-(el-get 'sync 'helm-migemo)
-(el-get 'sync 'helm-ag)
-(setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
-(setq helm-ag-command-option "--all-text")
-(setq helm-ag-thing-at-point 'symbol)
-
-(el-get 'sync 'helm-ack)
-(setq helm-c-ack-thing-at-point 'symbol)
+ '(helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+ '(helm-ag-command-option "--all-text")
+ '(helm-ag-thing-at-point 'symbol)
+ '(helm-c-ack-thing-at-point 'symbol)
+ '(helm-gtags-path-style 'relative)
+ '(helm-gtags-ignore-case t)
+ '(enable-recursive-minibuffers t))
 
 (el-get 'sync 'wgrep)
-(setq wgrep-enable-key "r")
+(custom-set-variables
+ '(wgrep-enable-key "r"))
 
-(el-get 'sync 'helm-gtags)
-(setq helm-gtags-path-style 'relative)
-(setq helm-gtags-ignore-case t)
 (add-hook 'helm-gtags-mode-hook
 	  #'(lambda ()
 	      (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
 
-(el-get 'sync 'helm-ls-git)
-
-(defun helm-mac-spotlight ()
-  "Preconfigured `helm' for `mdfind'."
-  (interactive)
-  (let ((helm-ff-transformer-show-only-basename nil))
-    (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))
-
 (global-set-key (kbd "C-;") 'helm-for-files)
-(define-key helm-map (kbd "C-v") 'helm-next-source)
-(define-key helm-map (kbd "M-v") 'helm-previous-source)
+(global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-z l") 'helm-ls-git-ls)
+(eval-after-load "helm"
+  '(progn
+     (define-key helm-map (kbd "C-v") 'helm-next-source)
+     (define-key helm-map (kbd "M-v") 'helm-previous-source)
+     (defun helm-mac-spotlight ()
+       "Preconfigured `helm' for `mdfind'."
+       (interactive)
+       (let ((helm-ff-transformer-show-only-basename nil))
+	 (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))))
 
 (require 'helm-howm)
-(setq hh:menu-list nil)
-(setq hh:recent-menu-number-limit 100)
-(setq hh:howm-data-directory howm-directory)
+(defvar hh:howm-data-directory howm-directory)
+(custom-set-variables
+ '(hh:menu-list nil)
+ '(hh:recent-menu-number-limit 100))
 
 (defun helm-howm-do-grep ()
   (interactive)
@@ -1086,7 +1039,6 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (helm-migemize-command helm-source-kill-ring)
 (helm-migemize-command helm-for-files)
 (helm-migemize-command hh:menu-command)
-(setq enable-recursive-minibuffers t)
 
 (set-face-background 'helm-source-header "azure2")
 (set-face-attribute 'helm-source-header nil :height 1.1 :weight 'normal)
@@ -1099,8 +1051,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 (el-get 'sync 'popwin)
 (require 'popwin)
-(setq display-buffer-function 'popwin:display-buffer)
-(setq anything-samewindow nil)
+(popwin-mode 1)
 (setq popwin:special-display-config
       (append
        '(("*Async Shell Command*"		:noselect t)
@@ -1120,8 +1071,8 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 
 (el-get 'sync 'deferred)
-(el-get 'sync 'inertial-scroll)
 (require 'deferred)
+(el-get 'sync 'inertial-scroll)
 (require 'inertial-scroll)
 (setq inertias-initial-velocity 50)
 (setq inertias-friction 120)
@@ -1141,10 +1092,11 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 
 (el-get 'sync 'edbi)
-(autoload 'e2wm:dp-edbi "edbi" nil t)
-(setq edbi:query-result-fix-header nil)
-(setq edbi:ds-history-list-num 50)
-(setq edbi:query-result-column-max-width nil)
+(eval-after-load "edbi"
+  '(progn
+     (custom-set-variables '(edbi:query-result-fix-header nil)
+			   '(edbi:ds-history-list-num 50)
+			   '(edbi:query-result-column-max-width nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1163,9 +1115,9 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (el-get 'sync 'id-manager)
 (autoload 'id-manager "id-manager" nil t)
 (setenv "GPG_AGENT_INFO" nil)
-(setq idm-database-file (concat external-directory ".idm-db.gpg"))
-(setq idm-copy-action 'kill-new)
-(setq idm-gen-password-cmd mkpasswd-command)
+(defvar idm-database-file (concat external-directory ".idm-db.gpg"))
+(defvar idm-copy-action 'kill-new)
+(defvar idm-gen-password-cmd mkpasswd-command)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1187,7 +1139,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (defvar locate-update-command-program-args
   (list "nice" "-n" "19" locate-update-command))
 
-(setq helm-c-locate-command
+(defvar helm-c-locate-command
   (concat "locate -i %s -d " locate-home-database " %s"))
 
 (defun locate-update-home ()
@@ -1255,7 +1207,7 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 
 (defun convert-win-to-mac-path()
   (interactive)
-  (let ((buf (get-buffer-create "*convert*")) str)
+  (let ((buf (get-buffer-create "*convert*")) str ret)
     (setq str (buffer-substring (region-beginning) (region-end)))
     (with-current-buffer
 	buf (setq ret (buffer-string))
@@ -1271,7 +1223,7 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 
 (defun convert-smb-to-win-path()
   (interactive)
-  (let ((buf (get-buffer-create "*convert*")) str)
+  (let ((buf (get-buffer-create "*convert*")) str ret)
     (setq str (buffer-substring (region-beginning) (region-end)))
     (with-current-buffer
 	buf (setq ret (buffer-string))
