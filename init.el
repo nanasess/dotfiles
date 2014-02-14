@@ -687,9 +687,8 @@
 (defun quickrun/phpunit-outputter ()
   (save-excursion
     (goto-char (point-min))
-    ;; (while (replace-regexp "" "")
-    ;;   nil)
-    )
+    (while (re-search-forward "" nil t)
+      (replace-match "" nil nil)))
   (highlight-phrase "^OK.*$" 'phpunit-pass)
   (highlight-phrase "^FAILURES.*$" 'phpunit-fail))
 
