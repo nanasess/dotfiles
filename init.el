@@ -320,6 +320,9 @@
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-hook 'js2-mode-hook 'basic-indent)
 (add-hook 'js-mode-hook 'js2-minor-mode)
+(eval-after-load "js2-mode"
+  '(progn
+     (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
