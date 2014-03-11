@@ -1160,7 +1160,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;;
 ;;;
 
-(defvar apachectl-program-command "/opt/local/apache2/bin/apachectl")
+(defvar apachectl-program-command "/usr/local/sbin/apachectl")
 (defvar apachectl-buffer-name "*apachectl*")
 (defun executable-apachectl (args)
 "Executable apachectl command.
