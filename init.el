@@ -605,11 +605,6 @@
 
 (el-get 'sync 'magit)
 (require 'magit-svn)
-(setq magit-git-log-options
-  (list
-   "--pretty=format:* %h %s"
-   (format "--abbrev=%s" magit-sha1-abbrev-length)
-   "--ext-diff"))
 
 (set-face-attribute 'magit-item-highlight nil
 		    :inherit nil)
