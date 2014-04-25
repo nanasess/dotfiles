@@ -8,7 +8,6 @@
 (setq gc-cons-threshold 10000)
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
-(add-to-list 'load-path user-emacs-directory)
 
 (defvar user-initial-directory (locate-user-emacs-file "init.d/"))
 (defvar user-site-lisp-directory (locate-user-emacs-file "site-lisp/"))
@@ -64,7 +63,6 @@
 	       (expand-file-name
 		(concat user-initial-directory "arch/" sys-type)))
   (load "init" t))
-(add-to-list 'load-path (expand-file-name user-emacs-directory))
 (add-to-list 'load-path (expand-file-name user-initial-directory))
 (add-to-list 'load-path (expand-file-name user-site-lisp-directory))
 
@@ -488,14 +486,14 @@
 ;;;
 ;;; org-mode settings
 ;;;
-(require 'ob-sh)
-(require 'ob-css)
-(require 'ob-sql)
-(custom-set-variables
- '(org-startup-truncated nil)
- '(org-startup-folded nil)
- '(org-return-follows-link t)
- '(org-directory (concat external-directory "howm/")))
+;; (require 'ob-sh)
+;; (require 'ob-css)
+;; (require 'ob-sql)
+;; (custom-set-variables
+;;  '(org-startup-truncated nil)
+;;  '(org-startup-folded nil)
+;;  '(org-return-follows-link t)
+;;  '(org-directory (concat external-directory "howm/")))
 ;; (org-defkey org-mode-map (kbd "C-j") 'skk-mode)
 (defvar org-export-latex-classes
   '(("jarticle"
@@ -511,19 +509,19 @@
 ;; (set-face-attribute 'org-document-title nil :height 1.0)
 
 ;;; org-export-generic
-(load "org-export-generic" t t)
+;; (load "org-export-generic" t t)
 ;;; orgmode-markdown
-(el-get 'sync 'markdown-mode)
-(load "markdown" t t)
+;; (el-get 'sync 'markdown-mode)
+;; (load "markdown" t t)
 
 ;;; org-html5presentation
-(el-get 'sync 'org-html5presentation)
-(autoload 'org-export-as-html5presentation-and-open "org-html5presentation" nil t)
-(autoload 'org-export-as-html5presentation "org-html5presentation" nil t)
+;; (el-get 'sync 'org-html5presentation)
+;; (autoload 'org-export-as-html5presentation-and-open "org-html5presentation" nil t)
+;; (autoload 'org-export-as-html5presentation "org-html5presentation" nil t)
 
 ;;; org-tree-slide
 ;; http://pastelwill.jp/wiki/doku.php?id=emacs:org-tree-slide
-(el-get 'sync 'org-tree-slide)
+;; (el-get 'sync 'org-tree-slide)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -619,7 +617,8 @@
 
 (el-get 'sync 'howm)
 (defvar howm-menu-lang 'ja)
-(defvar howm-directory org-directory)
+;; (defvar howm-directory org-directory)
+(defvar howm-directory (concat external-directory "howm/"))
 (defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.howm")
 (defvar howm-history-file (concat howm-directory ".howm-history"))
 (defvar howm-keyword-file (concat howm-directory ".howm-keys"))
