@@ -2,7 +2,7 @@
 ;; dot.skk
 ;;
 
-(require 'skk-study)
+;; (require 'skk-study)
 ;; (setq skk-server-inhibit-startup-server nil)
 ;; (setq skk-server-prog "dbskkd-cdb-tcp.sh")
 (setq skk-server-host "localhost")
@@ -41,6 +41,6 @@
   (message (format "skk-kutoten-type on set to the %s." skk-kutouten-type)))
 (defun skk-auto-save ()
   "auto save of the skk-jisyo and skk-study."
-  (skk-save-jisyo)
-  (skk-study-save))
+  (skk-save-jisyo))
+  ;; (skk-study-save))
 (run-with-idle-timer skk-auto-save-interval t 'skk-auto-save)
