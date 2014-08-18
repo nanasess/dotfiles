@@ -515,7 +515,7 @@
 ;; (load "markdown" t t)
 
 ;;; org-html5presentation
-;; (el-get 'sync 'org-html5presentation)
+(el-get 'sync 'org-html5presentation)
 ;; (autoload 'org-export-as-html5presentation-and-open "org-html5presentation" nil t)
 ;; (autoload 'org-export-as-html5presentation "org-html5presentation" nil t)
 
