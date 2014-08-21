@@ -1077,8 +1077,8 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (setq inertias-rest-coef 0.1)
 (global-set-key (kbd "C-v") 'inertias-up)
 (global-set-key (kbd "M-v") 'inertias-down)
-(global-set-key [wheel-up] 'inertias-down-wheel)
-(global-set-key [wheel-down] 'inertias-up-wheel)
+;; (global-set-key [wheel-up] 'inertias-down-wheel)
+;; (global-set-key [wheel-down] 'inertias-up-wheel)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
