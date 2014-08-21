@@ -486,38 +486,14 @@
 ;;;
 ;;; org-mode settings
 ;;;
-;; (require 'ob-sh)
-;; (require 'ob-css)
-;; (require 'ob-sql)
-;; (custom-set-variables
-;;  '(org-startup-truncated nil)
-;;  '(org-startup-folded nil)
-;;  '(org-return-follows-link t)
-;;  '(org-directory (concat external-directory "howm/")))
-;; (org-defkey org-mode-map (kbd "C-j") 'skk-mode)
-(defvar org-export-latex-classes
-  '(("jarticle"
-     "\\documentclass[11t,a4j,oneside]{jarticle}"
-     ("\\section{%s}" . "\\section*{%s}")
-     ("\\subsection{%s}" . "\\subsection*{%s}")
-     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-     ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-(defvar org-latex-to-pdf-process
-  '("org-latex-to-pdf.sh %f" "org-latex-to-pdf.sh %f"))
-;; (set-face-bold-p 'org-document-title nil)
-;; (set-face-attribute 'org-document-title nil :height 1.0)
-
-;;; org-export-generic
-;; (load "org-export-generic" t t)
-;;; orgmode-markdown
-;; (el-get 'sync 'markdown-mode)
-;; (load "markdown" t t)
+(custom-set-variables
+ '(org-startup-truncated nil)
+ '(org-startup-folded nil)
+ '(org-return-follows-link t)
+ '(org-directory (concat external-directory "howm/")))
 
 ;;; org-html5presentation
 (el-get 'sync 'org-html5presentation)
-;; (autoload 'org-export-as-html5presentation-and-open "org-html5presentation" nil t)
-;; (autoload 'org-export-as-html5presentation "org-html5presentation" nil t)
 
 ;;; org-tree-slide
 ;; http://pastelwill.jp/wiki/doku.php?id=emacs:org-tree-slide
