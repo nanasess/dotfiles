@@ -1035,6 +1035,7 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 (helm-migemize-command helm-source-kill-ring)
 (helm-migemize-command helm-for-files)
 (helm-migemize-command hh:menu-command)
+(helm-migemize-command helm-resume)
 
 (set-face-background 'helm-source-header "azure2")
 (set-face-attribute 'helm-source-header nil :height 1.1 :weight 'normal)
