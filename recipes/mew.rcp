@@ -18,4 +18,6 @@
          (setq mew-prog-smew        (concat default-directory
 					    "bin/hs/dist/build/smew/smew"))
          (setq mew-mbox-command     (concat default-directory "bin/incm")))
-       :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make") (,(concat "cd " default-directory "bin/hs && /usr/bin/cabal install"))))
+       :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make") ))
+       ;; :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make") (,(concat "cd " default-directory "bin/hs && /usr/bin/cabal install"))))
+       
