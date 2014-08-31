@@ -863,6 +863,7 @@
 (el-get 'sync 'helm-ack)
 (el-get 'sync 'helm-gtags)
 (el-get 'sync 'helm-ls-git)
+(el-get 'sync 'helm-descbinds)
 
 (custom-set-variables
  '(helm-mode t)
@@ -906,6 +907,8 @@
 (global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-z l") 'helm-ls-git-ls)
+(global-set-key (kbd "C-h b") 'helm-descbinds)
+
 (eval-after-load "helm"
   '(progn
      (define-key helm-map (kbd "C-v") 'helm-next-source)
