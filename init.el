@@ -453,6 +453,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; visual-regexp settings
+;;;
+
+(el-get 'sync 'visual-regexp)
+(define-key global-map (kbd "M-%") 'vr/query-replace)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mmm-mode settings
 ;;;
 
