@@ -20,8 +20,6 @@
 (defun smartrep-define-key (keymap prefix alist))
 (defun global-undo-tree-mode () ())
 (defun quickrun-add-command (key alist))
-(defun yas-global-mode (arg))
-(defun yas/expand () ())
 (defun c-toggle-hungry-state (arg))
 (defun php-completion-mode (arg))
 (defun helm-do-grep-1 (targets recurse zgrep exts))
@@ -446,10 +444,10 @@
 ;;; (auto-install-from-emacswiki "point-undo.el")
 ;;;
 
-(el-get 'sync 'point-undo)
-(require 'point-undo)
-(define-key global-map (kbd "C-M-,") 'point-undo)
-(define-key global-map (kbd "C-M-.") 'point-redo)
+;; (el-get 'sync 'point-undo)
+;; (require 'point-undo)
+;; (define-key global-map (kbd "C-M-,") 'point-undo)
+;; (define-key global-map (kbd "C-M-.") 'point-redo)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -686,9 +684,7 @@
 ;;;
 
 (el-get 'sync 'yasnippet)
-(el-get 'sync 'dropdown-list)
 (yas-global-mode 1)
-(require 'dropdown-list)
 (custom-set-variables '(yas-prompt-functions '(yas-dropdown-prompt
 					       yas-ido-prompt
 					       yas-completing-prompt)))
@@ -850,15 +846,6 @@
 (require 'auto-async-byte-compile)
 (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
 (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; emacs-init-check settings
-;;;
-
-(el-get 'sync 'emacs-init-check)
-(require 'emacs-init-check)
-(add-to-list 'auto-emacs-init-check-program-args "nice")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
