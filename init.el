@@ -857,7 +857,7 @@
 (el-get 'sync 'helm-ag)
 (el-get 'sync 'helm-ack)
 (el-get 'sync 'helm-gtags)
-(el-get 'sync 'helm-ls-git)
+(el-get 'sync 'helm-git-files)
 (el-get 'sync 'helm-descbinds)
 
 (custom-set-variables
@@ -901,7 +901,7 @@
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-z l") 'helm-ls-git-ls)
+(global-set-key (kbd "C-z l") 'helm-git-files)
 (global-set-key (kbd "C-h b") 'helm-descbinds)
 
 (eval-after-load "helm"
@@ -933,6 +933,7 @@
 (helm-migemize-command helm-for-files)
 (helm-migemize-command hh:menu-command)
 (helm-migemize-command helm-resume)
+(helm-migemize-command helm-git-files)
 
 (set-face-background 'helm-source-header "azure2")
 (set-face-attribute 'helm-source-header nil :height 1.1 :weight 'normal)
