@@ -523,10 +523,10 @@
 ;;; session settings
 ;;;
 
-;; (el-get 'sync 'session)
+(el-get 'sync 'session)
 (require 'session)
 (add-hook 'after-init-hook 'session-initialize)
-(setq session-globals-max-size 500)
+(setq session-save-print-spec '(t nil 40000))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
