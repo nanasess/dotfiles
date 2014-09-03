@@ -950,10 +950,8 @@
 (setq popwin:special-display-config
       (append
        '(("*Async Shell Command*"		:noselect t)
-	 ("^\*dvc-commit.*\*"			:regexp t :noselect t)
 	 ("^\*bzr-status.*\*"			:regexp t :noselect t)
 	 ("^\*xgit-status.*\*"			:regexp t :noselect t)
-	 ("^\*dvc-error.*\*"			:regexp t :noselect t)
 	 ("*quickrun*"				:noselect t))
        popwin:special-display-config))
 
