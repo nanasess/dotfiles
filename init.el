@@ -1007,6 +1007,7 @@
 
 (el-get 'sync 'id-manager)
 (autoload 'id-manager "id-manager" nil t)
+(setq epa-file-cache-passphrase-for-symmetric-encryption t)
 (setenv "GPG_AGENT_INFO" nil)
 (defvar idm-database-file (concat external-directory ".idm-db.gpg"))
 (defvar idm-copy-action 'kill-new)

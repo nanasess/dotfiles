@@ -1,5 +1,4 @@
 (:name id-manager
        :description "ID/Password management tool for emacs users."
        :type github
-       :branch "helm"
-       :pkgname "nanasess/emacs-id-manager")
+       :pkgname "kiwanami/emacs-id-manager")
