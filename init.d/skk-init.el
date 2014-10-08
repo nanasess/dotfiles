@@ -24,7 +24,7 @@
 (setq skk-show-annotation t)
 (setq skk-auto-start-henkan t)
 (setq skk-show-icon t)
-(setq skk-dcomp-activate t)
+(setq skk-dcomp-activate nil)
 (setq skk-egg-like-newline nil)
 (setq skk-auto-insert-paren t)
 (setq skk-rom-kana-rule-list
