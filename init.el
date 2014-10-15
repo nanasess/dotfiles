@@ -5,11 +5,49 @@
 
 ;;; Code:
 
-(defvar user-initial-directory (concat user-emacs-directory "init.d/"))
-(defvar user-site-lisp-directory (concat user-emacs-directory "site-lisp/"))
-(defvar user-misc-directory (concat user-emacs-directory "etc/"))
-(defvar user-bin-directory (concat user-emacs-directory "bin/"))
-(defvar dropbox-directory (expand-file-name "~/SparkleShare/share/"))
+(setq gc-cons-threshold 10000)
+(when load-file-name
+  (setq user-emacs-directory (file-name-directory load-file-name)))
+
+(defvar user-initial-directory (locate-user-emacs-file "init.d/"))
+(defvar user-site-lisp-directory (locate-user-emacs-file "site-lisp/"))
+(defvar user-misc-directory (locate-user-emacs-file "etc/"))
+(defvar user-bin-directory (locate-user-emacs-file "bin/"))
+(defvar external-directory (expand-file-name "~/GoogleDrive/share/"))
+
+;; Silence the warning.
+(defun el-get (&optional sync &rest packages))
+(defun smartrep-define-key (keymap prefix alist))
+(defun global-undo-tree-mode () ())
+(defun quickrun-add-command (key alist))
+(defun c-toggle-hungry-state (arg))
+(defun php-completion-mode (arg))
+(defun helm-do-grep-1 (targets recurse zgrep exts))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; el-get settings
+;;;
+(eval-after-load "el-get"
+  '(progn
+     (add-to-list 'el-get-recipe-path (locate-user-emacs-file "recipes"))))
+(add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
+(add-to-list 'load-path (concat user-emacs-directory "el-get/ddskk"))
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+    (let (el-get-master-branch)
+      (goto-char (point-max))
+      (eval-print-last-sexp))))
+
+(el-get 'sync)
+
+;; (el-get 'sync 'esup)
+;; (require 'esup)
+(el-get 'sync 'cp5022x)
+(define-coding-system-alias 'iso-2022-jp 'cp50220)
+(define-coding-system-alias 'euc-jp 'cp51932)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -23,7 +61,6 @@
 	       (expand-file-name
 		(concat user-initial-directory "arch/" sys-type)))
   (load "init" t))
-(add-to-list 'load-path (expand-file-name user-emacs-directory))
 (add-to-list 'load-path (expand-file-name user-initial-directory))
 (add-to-list 'load-path (expand-file-name user-site-lisp-directory))
 
@@ -49,34 +86,18 @@
 
 (require 'japanese-init)
 
-;;  (auto-install-from-url "http://nijino.homelinux.net/emacs/cp5022x.el")
-(require 'cp5022x)
-(define-coding-system-alias 'iso-2022-jp 'cp50220)
-(define-coding-system-alias 'euc-jp 'cp51932)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; SKK settings
 ;;;
 
-(setq skk-cdb-large-jisyo (concat dropbox-directory "SKK-JISYO.ALL.cdb"))
-(setq skk-user-directory (concat dropbox-directory "ddskk"))
-(setq skk-init-file (concat user-initial-directory "skk-init.el"))
-(setq skk-preload t)
-(setq skk-auto-save-interval 30)
-(setq skk-isearch-start-mode 'latin)
-(defun toggle-skk-kutouten ()
-  "toggle skk-kutoten-type."
-  (interactive)
-  (cond ((eq skk-kutouten-type 'en)
-	 (setq skk-kutouten-type 'jp))
-	((setq skk-kutouten-type 'en)))
-  (message (format "skk-kutoten-type on set to the %s." skk-kutouten-type)))
-(defun skk-auto-save ()
-  "auto save of the skk-jisyo and skk-study."
-  (skk-save-jisyo)
-  (skk-study-save))
-(run-with-idle-timer skk-auto-save-interval t 'skk-auto-save)
+(el-get 'sync 'ddskk)
+(custom-set-variables
+ '(skk-cdb-large-jisyo (concat external-directory "SKK-JISYO.ALL.cdb"))
+ '(skk-user-directory (concat external-directory "ddskk"))
+ '(skk-init-file (concat user-initial-directory "skk-init.el"))
+ '(skk-preload t)
+ '(skk-isearch-start-mode 'latin))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -94,33 +115,41 @@
 
 (global-unset-key (kbd "C-M-t"))
 (global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-\\"))
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-j") 'skk-mode)
+(global-set-key (kbd "C-x C-j") 'skk-mode)
 (global-set-key (kbd "C-t") 'other-window)
 (global-set-key (kbd "C-z C-u") 'other-frame)
 (global-set-key (kbd "C-z C-j") 'toggle-skk-kutouten)
+
+(global-set-key (kbd "C-M-g") 'end-of-buffer)
+(global-set-key (kbd "C-M-j") 'next-line)
+(global-set-key (kbd "C-M-k") 'previous-line)
+(global-set-key (kbd "C-M-h") 'backward-char)
+(global-set-key (kbd "C-M-l") 'forward-char)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; backup files settings
 ;;;
 
-(setq make-backup-files t)
-(setq backup-directory-alist
-      (cons (cons "\\.*$" (expand-file-name "~/.bak/"))
-	    backup-directory-alist))
-(setq version-control t)
-(setq delete-old-versions t)
+(custom-set-variables
+ '(make-backup-files t)
+ '(backup-directory-alist
+   (cons (cons "\\.*$" (expand-file-name "~/.bak/"))
+	 backup-directory-alist))
+ '(version-control t)
+ '(delete-old-versions t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; recentf settings
 ;;;
-;;; (auto-install-from-emacswiki "recentf-ext.el")
-;;;
 
-(require 'recentf-ext)
-(setq recentf-max-saved-items 50000)
+(el-get 'sync 'recentf-ext)
+(custom-set-variables
+ '(recentf-max-saved-items 50000))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -141,7 +170,7 @@
 ;;; show EOF settings
 ;;;
 
-(setq indicate-empty-lines t)
+(custom-set-variables '(indicate-empty-lines t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -153,15 +182,20 @@
 
 (defface hlline-face
   '((((class color) (background light))
-     (:background "honeydew"))) nil)
-(setq hl-line-face 'hlline-face)
+     (:background "Beige"))) nil :group 'font-lock-highlighting-faces)
+(custom-set-variables
+ '(hl-line-face 'hlline-face))
 (global-hl-line-mode)
 
-(setq whitespace-style '(spaces tabs newline space-mark tab-mark newline-mark))
+(custom-set-variables
+ '(whitespace-style '(spaces tabs newline space-mark tab-mark newline-mark)))
 
-(defface my-mark-whitespace '((t (:background "gray"))) nil)
-(defface my-mark-tabs '((t (:background "white smoke"))) nil)
-(defface my-mark-lineendsspaces '((t (:foreground "SteelBlue" :underline t))) nil)
+(defface my-mark-whitespace '((t (:background "gray"))) nil
+  :group 'font-lock-highlighting-faces)
+(defface my-mark-tabs '((t (:background "white smoke"))) nil
+  :group 'font-lock-highlighting-faces)
+(defface my-mark-lineendsspaces '((t (:foreground "SteelBlue" :underline t))) nil
+  :group 'font-lock-highlighting-faces)
 (defvar my-mark-whitespace 'my-mark-whitespace)
 (defvar my-mark-tabs 'my-mark-tabs)
 (defvar my-mark-lineendsspaces 'my-mark-lineendsspaces)
@@ -171,27 +205,28 @@
    major-mode
    '(("\t" 0 my-mark-tabs append)
      ("　" 0 my-mark-whitespace append)
-     ("[ \t]+$" 0 my-mark-lineendsspaces append)
-     )))
+     ("[ \t]+$" 0 my-mark-lineendsspaces append))))
 (ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
 (ad-activate 'font-lock-mode)
 
 (add-hook 'diff-mode-hook
-	  (lambda ()
-	    (set-face-foreground 'diff-context-face "grey50")
-	    (set-face-foreground 'diff-hunk-header-face "medium blue")
-	    (set-face-background 'diff-removed-face "#ffdddd")
-	    (set-face-background 'diff-added-face "#ddffdd")
-	    (set-face-background 'diff-refine-change "Thistle1")
-	    (set-face-bold-p 'diff-refine-change t)))
+	  #'(lambda ()
+	      (set-face-foreground 'diff-context-face "grey50")
+	      (set-face-foreground 'diff-hunk-header-face "medium blue")
+	      (set-face-background 'diff-removed-face "#ffdddd")
+	      (set-face-background 'diff-added-face "#ddffdd")
+	      (set-face-background 'diff-refine-change "Thistle1")
+	      (set-face-bold-p 'diff-refine-change t)))
+
+;; use solarized.
+;; (el-get 'sync 'solarized-theme)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; window-system settings
 ;;;
 
-(cond (window-system
-       (tool-bar-mode 0)))
+(cond (window-system (tool-bar-mode 0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -199,30 +234,23 @@
 ;;;
 
 (require 'uniquify)
-(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
-(setq uniquify-ignore-buffers-re "*[^*]+*")
+(custom-set-variables
+ '(uniquify-buffer-name-style 'post-forward-angle-brackets)
+ '(uniquify-ignore-buffers-re "*[^*]+*"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; dired-x settings
 ;;;
 
-(setq dired-bind-jump nil)
+(custom-set-variables '(dired-bind-jump nil))
 (add-hook 'dired-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "C-t") 'other-window)
-	    (local-set-key (kbd "r") 'wdired-change-to-wdired-mode)))
+	  #'(lambda ()
+	      (local-set-key (kbd "C-t") 'other-window)
+	      (local-set-key (kbd "r") 'wdired-change-to-wdired-mode)))
 (add-hook 'dired-load-hook
-	  (lambda ()
-	    (load "dired-x")))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; cc-mode settings
-;;;
-
-;; (define-key c-mode-base-map "*" nil) ; for Emacs 23
-(when (<= emacs-major-version 23)
-  (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "cc"))))
+	  #'(lambda ()
+	      (load "dired-x")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -239,9 +267,9 @@
 ;;;
 
 (add-hook 'emacs-lisp-mode-hook
-	  (lambda ()
-	    (setq tab-width 8)
-	    (setq indent-tabs-mode t)))
+	  #'(lambda ()
+	      (setq tab-width 8)
+	      (setq indent-tabs-mode t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -256,6 +284,22 @@
 ;;;
 
 (add-hook 'java-mode-hook 'basic-indent)
+(eval-after-load "cc-mode"
+  '(progn
+     (define-key java-mode-map [return] 'newline-and-indent)))
+(add-to-list 'auto-mode-alist
+	     '("\\.\\(cls\\|trigger\\)\\'" . java-mode))
+;; (require 'cedet)
+;; (el-get 'sync 'malabar-mode)
+;; (add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
+;; (setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
+;;                                   global-semanticdb-minor-mode
+;;                                   global-semantic-idle-summary-mode
+;;                                   global-semantic-mru-bookmark-mode))
+;; (semantic-mode 1)
+;; (add-hook 'malabar-mode-hook
+;; 	  #'(lambda ()
+;; 	      (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -266,25 +310,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; js3-mode settings
-;;;
-;;; (auto-install-from-url "https://raw.github.com/thomblake/js3-mode/master/js3.el")
+;;; js2-mode settings
 ;;;
 
-(setq js3-mirror-mode t)
-(autoload 'js3-mode "js3" nil t)
-(add-to-list 'auto-mode-alist '("\\.js$" . js3-mode))
-(add-hook 'js3-mode-hook
-	  (lambda ()
-	    (setq js3-indent-level 4)
-	    (setq js3-mode-dev-mode-p t)
-	    (setq js3-auto-indent-p t)
-	    (setq js3-enter-indents-newline t)
-	    (setq js3-indent-on-enter-key t)
-	    (when (require 'auto-complete nil t)
-	      (make-variable-buffer-local 'ac-sources)
-	      (add-to-list 'ac-sources 'ac-source-yasnippet)
-	      (auto-complete-mode t))))
+(el-get 'sync 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(add-hook 'js2-mode-hook 'basic-indent)
+(add-hook 'js-mode-hook 'js2-minor-mode)
+(eval-after-load "js2-mode"
+  '(progn
+     (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -294,21 +329,42 @@
 (add-to-list 'auto-mode-alist
 	     '("\\.\\(xml\\|xsl\\|rng\\|html\\|tpl\\)\\'" . nxml-mode))
 (add-hook 'nxml-mode-hook
-	  (lambda ()
-	    (setq auto-fill-mode -1)
-	    (setq nxml-slash-auto-complete-flag t)
-	    (setq nxml-child-indent 2)
-	    (rng-validate-mode 0)
-	    (setq indent-tabs-mode nil)
-	    (setq tab-width 2)))
+	  #'(lambda ()
+	      (rng-validate-mode 0)
+	      (custom-set-variables
+	       '(auto-fill-mode -1)
+	       '(nxml-slash-auto-complete-flag t)
+	       '(nxml-child-indent 2)
+	       '(indent-tabs-mode nil)
+	       '(tab-width 2))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; SQL settings
 ;;;
 
-(setq sql-product 'postgres)
+(custom-set-variables '(sql-product 'postgres))
 (add-hook 'sql-mode-hook 'basic-indent)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; view-mode settings
+;;;
+
+(add-hook 'view-mode-hook
+	  #'(lambda ()
+	      (setq view-read-only t)
+	      (auto-revert-mode 1)
+	      (setq line-move-visual nil)))
+(eval-after-load "view"
+  '(progn
+     (define-key view-mode-map (kbd "h") 'backward-word)
+     (define-key view-mode-map (kbd "l") 'forward-word)
+     (define-key view-mode-map (kbd "j") 'next-line)
+     (define-key view-mode-map (kbd "k") 'previous-line)
+     (define-key view-mode-map " " 'scroll-up)
+     (define-key view-mode-map (kbd "b") 'scroll-down)))
+(add-to-list 'auto-mode-alist '("\\.log$" . view-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -317,6 +373,7 @@
 
 (defvar normal-frame-width 82)
 (defvar wide-frame-width 175)
+(defvar toggle-frame-flag t)
 
 (defun frame-size-greater-p ()
   (< (+ (/ (- wide-frame-width normal-frame-width) 2) normal-frame-width)
@@ -354,28 +411,21 @@
 ;;; migemo settings
 ;;;
 
-;; (setq migemo-command "~/Documents/gnupack_basic-7.02/app/cmigemo/cmigemo.exe")
-;; (setq migemo-options '("-q" "--emacs" "-i" "\a"))
-;; (setq migemo-dictionary (expand-file-name (concat "~/Documents/gnupack_basic-7.02/app/cmigemo/dict/cp932/migemo-dict")))
-;; (setq migemo-user-dictionary nil)
-;; (setq migemo-regex-dictionary nil)
-;; (setq migemo-use-pattern-alist t)
-;; (setq migemo-use-frequent-pattern-alist t)
-;; (setq migemo-pattern-alist-length 1024)
-;; (setq migemo-coding-system 'sjis-unix)
-;; (load-library "migemo")
-;; (migemo-init)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; gtags settings
-;;;
-
-(require 'gtags)
-(setq gtags-path-style 'relative)
-(add-hook 'gtags-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "M-.") 'gtags-find-tag)))
+;; (el-get 'sync 'migemo)
+;; (defvar migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
+;; (custom-set-variables
+;;  '(isearch-lax-whitespace nil))
+;; (when (file-exists-p migemo-dictionary)
+;;   (custom-set-variables
+;;    '(migemo-command "cmigemo")
+;;    '(migemo-options '("-q" "--emacs" "-i" "\a"))
+;;    '(migemo-user-dictionary nil)
+;;    '(migemo-regex-dictionary nil)
+;;    '(migemo-use-pattern-alist t)
+;;    '(migemo-use-frequent-pattern-alist t)
+;;    '(migemo-pattern-alist-length 1000)
+;;    '(migemo-coding-system 'utf-8-unix))
+;;   (require 'migemo))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -384,31 +434,40 @@
 ;;; (auto-install-from-emacswiki "goto-chg.el")
 ;;;
 
-(require 'goto-chg)
+(el-get 'sync 'goto-chg)
 (global-set-key (kbd "C-.") 'goto-last-change)
 (global-set-key (kbd "C-,") 'goto-last-change-reverse)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; goto-chg settings
+;;; point-undo settings
 ;;;
 ;;; (auto-install-from-emacswiki "point-undo.el")
 ;;;
 
-(require 'point-undo)
-(define-key global-map (kbd "C-M-,") 'point-undo)
-(define-key global-map (kbd "C-M-.") 'point-redo)
+;; (el-get 'sync 'point-undo)
+;; (require 'point-undo)
+;; (define-key global-map (kbd "C-M-,") 'point-undo)
+;; (define-key global-map (kbd "C-M-.") 'point-redo)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; visual-regexp settings
+;;;
+
+(el-get 'sync 'visual-regexp)
+(define-key global-map (kbd "M-%") 'vr/query-replace)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; mmm-mode settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "mmm")))
+(el-get 'sync 'mmm-mode)
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
 (set-face-background 'mmm-default-submode-face "ivory2")
-(setq mmm-font-lock-available-p t)
+(custom-set-variables '(mmm-font-lock-available-p t))
 (require 'mmm-sample)
 (setq mmm-here-doc-mode-alist
       (append (list '("__EOF__" . sql-mode)
@@ -426,54 +485,33 @@
     :insert ((?d here-doc "Here-document Name: " @ "<<" str _ "\n"
 		 @ "\n" @ str "\n" @)))))
 
-(mmm-add-mode-ext-class nil "\\.tpl?\\'" 'embedded-css)
-(mmm-add-mode-ext-class nil "\\.tpl?\\'" 'html-js)
+(mmm-add-mode-ext-class nil "\\.\\(html\\|tpl\\)\\'" 'embedded-css)
+(mmm-add-mode-ext-class nil "\\.\\(html\\|tpl\\)\\'" 'html-js)
 (mmm-add-mode-ext-class nil "\\.php\\'" 'php-heredoc)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; org-mode settings
 ;;;
-(when (<= emacs-major-version 23)
-  (add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "org")))
-  (require 'org-install))
-(require 'ob-sh)
-(require 'ob-css)
-(require 'ob-sql)
-(setq org-startup-truncated nil)
-(setq org-startup-folded nil)
-(setq org-return-follows-link t)
-(setq org-directory (concat dropbox-directory "howm/"))
-;; (org-defkey org-mode-map (kbd "C-j") 'skk-mode)
-(setq org-export-latex-classes
-      '(("jarticle"
-	 "\\documentclass[11t,a4j,oneside]{jarticle}"
-	 ("\\section{%s}" . "\\section*{%s}")
-	 ("\\subsection{%s}" . "\\subsection*{%s}")
-	 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-	 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-	 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-(setq org-latex-to-pdf-process
-      '("org-latex-to-pdf.sh %f" "org-latex-to-pdf.sh %f"))
-;; (set-face-bold-p 'org-document-title nil)
-;; (set-face-attribute 'org-document-title nil :height 1.0)
+(custom-set-variables
+ '(org-startup-truncated nil)
+ '(org-startup-folded nil)
+ '(org-return-follows-link t)
+ '(org-directory (concat external-directory "howm/")))
 
-;;; org-export-generic
-;; (auto-install-from-url "http://orgmode.org/w/?p=org-mode.git;a=blob_plain;f=contrib/lisp/org-export-generic.el;hb=HEAD")
-(load "org-export-generic" t t)
-;;; orgmode-markdown
-;; (auto-install-from-url "https://raw.github.com/alexhenning/ORGMODE-Markdown/master/markdown.el")
-(load "markdown" t t)
+;;; org-html5presentation
+(el-get 'sync 'org-html5presentation)
 
-;; org-html5presentation
-(autoload 'org-export-as-html5presentation-and-open "org-html5presentation" nil t)
-(autoload 'org-export-as-html5presentation "org-html5presentation" nil t)
+;;; org-tree-slide
+;; http://pastelwill.jp/wiki/doku.php?id=emacs:org-tree-slide
+;; (el-get 'sync 'org-tree-slide)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; htmlize settings
 ;;;
 
+(el-get 'sync 'htmlize)
 (autoload 'htmlize-buffer "htmlize"
   "Convert BUFFER to HTML, preserving colors and decorations.")
 (autoload 'htmlize-region "htmlize"
@@ -486,65 +524,44 @@
 ;;; session settings
 ;;;
 
+(el-get 'sync 'session)
 (require 'session)
 (add-hook 'after-init-hook 'session-initialize)
-(setq session-globals-max-size 500)
+(setq session-save-print-spec '(t nil 40000))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; moccur settings
+;;; cua-mode settings
 ;;;
 
-(require 'color-moccur)
-(setq moccur-use-migemo t)
-(setq moccur-split-word t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; sense-region settings
-;;;
-
-(require 'sense-region)
-(sense-region-on)
+(cua-mode t)
+(custom-set-variables '(cua-enable-cua-keys nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; expand-region settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "expand-region")))
-(require 'expand-region)
+(el-get 'sync 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
+
+(el-get 'sync 'multiple-cursors)
+(el-get 'sync 'smartrep)
+
+(global-set-key (kbd "<C-M-return>") 'mc/edit-lines)
+(smartrep-define-key
+    global-map "C-z" '(("C-n" . 'mc/mark-next-like-this)
+		       ("C-p" . 'mc/mark-previous-like-this)
+		       ("*"   . 'mc/mark-all-like-this)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; undo-tree settings
 ;;;
-;;; http://www.dr-qubit.org/undo-tree/undo-tree.el
-;;;
 
-(require 'undo-tree)
+(el-get 'sync 'undo-tree)
 (global-undo-tree-mode)
-(setq undo-tree-mode-lighter " uT")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; all-ext settings
-;;;
-;;; requireds to all.el
-;;; (auto-install-from-emacswiki "all-ext.el")
-;;;
-
-(require 'all-ext)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; dvc settings
-;;;
-
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "dvc")))
-(require 'dvc-autoloads)
-(setq dvc-tips-enabled nil)
+(custom-set-variables '(undo-tree-mode-lighter " uT"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -557,9 +574,8 @@
 ;;;
 ;;; psvn settings
 ;;;
-;;; (auto-install-from-url "http://svn.apache.org/repos/asf/subversion/trunk/contrib/client-side/emacs/dsvn.el")
-;;;
 
+(el-get 'sync 'dsvn)
 (autoload 'svn-status "dsvn" "Run `svn status'." t)
 (autoload 'svn-update "dsvn" "Run `svn update'." t)
 
@@ -567,33 +583,39 @@
 ;;;
 ;;; magit settings
 ;;;
-;;; http://github.com/magit/magit
-;;;
 
-(require 'magit)
+(el-get 'sync 'magit)
+(require 'magit-svn)
+
+(set-face-attribute 'magit-item-highlight nil
+		    :inherit nil)
+(global-set-key (kbd "C-z m") 'magit-status)
+(define-key magit-log-mode-map (kbd "j") 'magit-goto-next-section)
+(define-key magit-log-mode-map (kbd "k") 'magit-goto-previous-section)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; howm settings
 ;;;
 
-(setq howm-menu-lang 'ja)
-(setq howm-directory org-directory)
-(setq howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.howm")
-(setq howm-history-file (concat howm-directory ".howm-history"))
-(setq howm-keyword-file (concat howm-directory ".howm-keys"))
-(setq howm-menu-schedule-days-before 30)
-(setq howm-menu-schedule-days 30)
-(setq howm-menu-expiry-hours 2)
-(setq howm-menu-refresh-after-save nil)
-(setq howm-refresh-after-save nil)
-(setq howm-list-all-title t)
-(setq howm-schedule-menu-types "[!@\+]")
+(el-get 'sync 'howm)
+(defvar howm-menu-lang 'ja)
+;; (defvar howm-directory org-directory)
+(defvar howm-directory (concat external-directory "howm/"))
+(defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.howm")
+(defvar howm-history-file (concat howm-directory ".howm-history"))
+(defvar howm-keyword-file (concat howm-directory ".howm-keys"))
+(defvar howm-menu-schedule-days-before 30)
+(defvar howm-menu-schedule-days 30)
+(defvar howm-menu-expiry-hours 2)
+(defvar howm-menu-refresh-after-save nil)
+(defvar howm-refresh-after-save nil)
+(defvar howm-list-all-title t)
+(defvar howm-schedule-menu-types "[!@\+]")
 (add-hook 'org-mode-hook 'howm-mode)
-(setq howm-view-title-header "#+TITLE:")
-(setq howm-view-use-grep nil)
+(defvar howm-view-title-header "#+TITLE:")
+(defvar howm-view-use-grep nil)
 (add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "howm")))
 (require 'howm)
 (setq howm-template
       (concat howm-view-title-header
@@ -621,222 +643,69 @@
           (message "(Deleted %s)" (file-name-nondirectory file-name))))
       (kill-buffer nil))))
 (add-hook 'howm-mode-hook
-	  (lambda ()
-	    (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
+	  #'(lambda ()
+	      (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
+
+(global-set-key (kbd "C-z c") 'howm-create)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; quickrun.el settings
 ;;;
-;;; (auto-install-from-url "https://raw.github.com/syohex/emacs-quickrun/master/quickrun.el")
-;;;
 
-(require 'quickrun)
+(el-get 'sync 'quickrun)
 (defface phpunit-pass
-  '((t (:foreground "white" :background "green" :weight bold))) nil)
+  '((t (:foreground "white" :background "green" :weight bold))) nil
+  :group 'font-lock-highlighting-faces)
 (defface phpunit-fail
-  '((t (:foreground "white" :background "red" :weight bold))) nil)
+  '((t (:foreground "white" :background "red" :weight bold))) nil
+  :group 'font-lock-highlighting-faces)
 
 (defun quickrun/phpunit-outputter ()
   (save-excursion
     (goto-char (point-min))
-    (while (replace-regexp "" "")
-      nil))
+    (while (re-search-forward "" nil t)
+      (replace-match "" nil nil)))
   (highlight-phrase "^OK.*$" 'phpunit-pass)
   (highlight-phrase "^FAILURES.*$" 'phpunit-fail))
 
 (quickrun-add-command "phpunit" '((:command . "phpunit")
                                   (:exec . "%c %s")
                                   (:outputter . quickrun/phpunit-outputter)))
-(add-to-list 'quickrun-file-alist
-	     '("\\(Test\\.php\\|TestSuite\\.php\\|AllTests\\.php\\)\\'" . "phpunit"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; PHP settings
-;;;
-;;; (auto-install-from-url "https://raw.github.com/ejmr/php-mode/master/php-mode.el")
-;;;
-
-(require 'php-mode)
-(setq php-executable "c:/Program Files (x86)/IIS Express/PHP/v5.3/php.exe")
-
-(defconst php-style
-  `((c-recognize-knr-p . nil)
-    (c-enable-xemacs-performance-kludge-p . t) ; speed up indentation in XEmacs
-    (c-basic-offset . 4)
-    (indent-tabs-mode . nil)
-    (c-comment-only-line-offset . 0)
-    (c-hanging-braces-alist . ((defun-open after)
-                               (defun-close before after)
-                               (class-open after)
-                               (class-close before after)
-                               (namespace-open after)
-                               (inline-open after)
-                               (inline-close before after)
-                               (block-open after)
-                               (block-close . c-snug-do-while)
-                               (extern-lang-open after)
-                               (extern-lang-close after)
-                               (statement-case-open after)
-                               (substatement-open after)))
-    (c-hanging-colons-alist . ((case-label)
-                               (label after)
-                               (access-label after)
-                               (member-init-intro before)
-                               (inher-intro)))
-    (c-hanging-semi&comma-criteria
-     . (c-semi&comma-no-newlines-for-oneline-inliners
-        c-semi&comma-inside-parenlist
-        c-semi&comma-no-newlines-before-nonblanks))
-    (c-indent-comments-syntactically-p . nil)
-    (comment-column . 40)
-    (c-cleanup-list . (brace-else-brace
-                       brace-elseif-brace
-                       brace-catch-brace
-                       empty-defun-braces
-                       defun-close-semi
-                       list-close-comma
-                       scope-operator))
-    (c-offsets-alist . ((func-decl-cont . ++)
-                        (member-init-intro . ++)
-                        (inher-intro . ++)
-                        (comment-intro . 0)
-                        (arglist-close . c-lineup-arglist)
-                        (topmost-intro . 0)
-                        (block-open . 0)
-                        (inline-open . 0)
-                        (substatement-open . 0)
-                        (statement-cont
-                         .
-                         (,(when (fboundp 'c-no-indent-after-java-annotations)
-                             'c-no-indent-after-java-annotations)
-                          ,(when (fboundp 'c-lineup-assignments)
-                             'c-lineup-assignments)
-                          ++))
-                        (label . /)
-                        (case-label . +)
-                        (statement-case-open . +)
-                        (statement-case-intro . +) ; case w/o {
-                        (access-label . /)
-                        (innamespace . 0))))
-  "
-My PHP Programming Style
-see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
-
-;; (auto-install-from-url "http://stcamp.net/share/php-electric.el")
-(require 'php-electric)
-(defun php-c-style ()
-  (interactive)
-  (make-local-variable 'c-tab-always-indent)
-  (setq c-tab-always-indent t)
-  (gtags-mode 1)
-  (php-electric-mode 1)
-  (c-toggle-hungry-state 1)
-  ;; (c-toggle-auto-hungry-state 1)
-  (flymake-mode 1)
-  (require 'php-completion)
-  (php-completion-mode t)
-  (define-key php-mode-map (kbd "C-o") 'phpcmp-complete)
-  (define-key php-mode-map [return] 'newline-and-indent)
-  (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
-  (define-key php-mode-map (kbd "M-p") 'flymake-goto-prev-error)
-  (define-key php-mode-map (kbd "M-n") 'flymake-goto-next-error)
-  (make-local-variable 'comment-start)
-  (setq comment-start "// ")
-  (make-local-variable 'comment-start-skip)
-  (setq comment-start-skip "// *")
-  (make-local-variable 'comment-end)
-  (setq comment-end "")
-  (when (require 'auto-complete nil t)
-    (make-variable-buffer-local 'ac-sources)
-    (add-to-list 'ac-sources
-		 'ac-source-php-completion
-		 'ac-source-yasnippet)
-    (auto-complete-mode t))
-  (c-add-style "php-style" php-style t))
-
-(add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)" . php-mode))
-(setq php-mode-force-pear t)
-(setq php-manual-url "http://jp2.php.net/manual/ja/")
-(setq php-search-url "http://jp2.php.net/")
-
-(add-hook 'php-mode-hook 'php-c-style)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; geben settings
-;;;
-
-(autoload 'geben "geben" "DBGp protocol front-end" t)
+(eval-after-load "quickrun"
+  '(progn
+     (add-to-list
+      'quickrun-file-alist
+      '("\\(Test\\.php\\|TestSuite\\.php\\|AllTests\\.php\\)\\'" . "phpunit"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; yasnippet settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name
-			 (concat user-site-lisp-directory "yasnippet")))
-(require 'yasnippet)
-(setq yas-snippet-dirs '("~/.emacs.d/etc/snippets"
-			 "~/.emacs.d/site-lisp/yasnippet/snippets"))
+(el-get 'sync 'yasnippet)
 (yas-global-mode 1)
-(require 'dropdown-list)
-(setq yas-prompt-functions '(yas-dropdown-prompt
-			     yas-ido-prompt
-			     yas-completing-prompt))
+(custom-set-variables '(yas-prompt-functions '(yas-dropdown-prompt
+					       yas-ido-prompt
+					       yas-completing-prompt)))
 (defun yas/org-very-safe-expand ()
   (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
 (add-hook 'org-mode-hook
-          (lambda ()
-            ;; yasnippet (using the new org-cycle hooks)
-            (setq ac-use-overriding-local-map t)
-            (make-variable-frame-local 'yas/trigger-key)
-            (setq  yas/trigger-key [tab])
-            (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-            (define-key yas/keymap [tab] 'yas/next-field)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; zencoding settings
-;;;
-
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "zencoding")))
-(require 'zencoding-mode)
-(add-hook 'nxml-mode-hook 'zencoding-mode)
-(define-key zencoding-mode-keymap (kbd "<C-return>") 'zencoding-expand-yas)
-(define-key zencoding-mode-keymap (kbd "<M-return>") 'zencoding-expand-line)
-(define-key zencoding-mode-keymap (kbd "C-j") 'skk-kakutei)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; markdown-mode settings
-;;;
-;;; (auto-install-from-url "http://jblevins.org/git/markdown-mode.git/plain/markdown-mode.el")
-;;;
-
-(autoload 'markdown-mode "markdown-mode" nil t)
-(autoload 'gfm-mode "markdown-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; csv-mode settings
-;;;
-
-(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
-(autoload 'csv-mode "csv-mode"
-  "Major mode for editing comma-separated value files." t)
+          #'(lambda ()
+	      ;; yasnippet (using the new org-cycle hooks)
+	      (custom-set-variables '(ac-use-overriding-local-map t))
+	      (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)))
+(eval-after-load "yasnippet"
+  '(progn
+     (define-key yas/keymap [tab] 'yas/next-field)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; auto-complete.el settings
 ;;;
-;;; (auto-install-from-url "https://raw.github.com/auto-complete/popup-el/master/popup.el")
-;;; (auto-install-from-url "https://raw.github.com/auto-complete/fuzzy-el/master/fuzzy.el")
-;;;
 
-(add-to-list 'load-path (expand-file-name (concat user-site-lisp-directory "auto-complete")))
+(el-get 'sync 'auto-complete)
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories
 	     (expand-file-name
@@ -849,9 +718,61 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; PHP settings
+;;;
+
+(el-get 'sync 'php-mode)
+(el-get 'sync 'php-electric)
+(el-get 'sync 'php-completion)
+
+(defun php-c-style ()
+  (interactive)
+  (c-toggle-hungry-state 1)
+  ;; (c-toggle-auto-hungry-state 1)
+  (set (make-local-variable 'comment-start) "// ")
+  (set (make-local-variable 'comment-start-skip) "// *")
+  (set (make-local-variable 'comment-end) ""))
+
+(add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)" . php-mode))
+(custom-set-variables '(php-mode-coding-style 'psr2)
+		      '(php-manual-url "http://jp2.php.net/manual/ja/")
+		      '(php-search-url "http://jp2.php.net/"))
+
+(add-hook 'php-mode-hook 'php-c-style)
+(add-hook 'php-mode-hook 'helm-gtags-mode)
+
+(eval-after-load "php-mode"
+  '(progn
+     (setq yas-trigger-key (kbd "<tab>"))
+     (define-key php-mode-map [return] 'newline-and-indent)
+     (define-key php-mode-map (kbd "C-z C-t") 'quickrun)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; markdown-mode settings
+;;;
+
+(el-get 'sync 'markdown-mode)
+(autoload 'markdown-mode "markdown-mode" nil t)
+(autoload 'gfm-mode "markdown-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; csv-mode settings
+;;;
+
+(el-get 'sync 'csv-mode)
+(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
+(autoload 'csv-mode "csv-mode"
+  "Major mode for editing comma-separated value files." t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew settings
 ;;;
 
+(el-get 'sync 'mew)
 (autoload 'mew "mew" nil t)
 (autoload 'mew-send "mew" nil t)
 ;; mm-version
@@ -862,216 +783,176 @@ see http://google-styleguide.googlecode.com/svn/trunk/google-c-style.el")
 ;;; w3m seettings
 ;;;
 
+(el-get 'sync 'emacs-w3m)
 (autoload 'w3m "w3m" "Visit the www page using w3m" t)
-(setq w3m-init-file (concat user-initial-directory "emacs-w3m-init.el"))
+(custom-set-variables
+ '(w3m-init-file (concat user-initial-directory "emacs-w3m-init.el")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; simple-hatena-mode settings
-;;;
-
-(require 'html-helper-mode)
-(autoload 'simple-hatena "simple-hatena-mode" nil t)
-(add-hook 'simple-hatena-mode-hook
-	  (lambda ()
-	    (require 'hatena)
-	    (setq simple-hatena-default-id "nanasess")
-	    (setq simple-hatena-bin (expand-file-name (concat user-bin-directory "hw.pl")))
-	    (setq simple-hatena-root howm-directory)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; twitting-mode settings
 ;;;
-;;; (auto-install-from-url "https://raw.github.com/hayamiz/twittering-mode/master/twittering-mode.el")
-;;;
 
+(el-get 'sync 'twittering-mode)
 (autoload 'twit "twittering-mode" nil t)
 (unless (load "twittering-tinyurl-api-key" t t)
-  (setq twittering-bitly-api-key nil))
-(setq twittering-auth-method 'xauth)
-(setq twittering-username "nanasess")
-(setq twittering-bitly-login twittering-username)
-(setq twittering-tinyurl-service 'j.mp)
-(setq twittering-status-format (concat "%i %S(%s),  %@:\n%"
-				       "FILL[  ]{%T // from %f%L%r%R}\n "))
-(setq twittering-retweet-format "RT @%s: %t")
-(setq twittering-display-remaining t)
-(setq twittering-allow-insecure-server-cert t)
-(add-hook 'twittering-mode-hook
-	  (lambda ()
-	    (let ((km twittering-mode-map))
-	      (define-key km (kbd "s") 'twittering-current-timeline)
-	      (define-key km (kbd "w") 'twittering-update-status-interactive))
-	    (let ((km twittering-edit-mode-map))
-	      (define-key km (kbd "C-c C-q") 'twittering-edit-cancel-status)
-	      (define-key km (kbd "C-u C-u") 'twittering-edit-replace-at-point))))
+  (defvar twittering-bitly-api-key nil))
+(custom-set-variables
+ '(twittering-auth-method 'xauth)
+ '(twittering-username "nanasess")
+ '(twittering-bitly-login twittering-username)
+ '(twittering-tinyurl-service 'j.mp)
+ '(twittering-status-format (concat "%i %S(%s),  %@:\n%"
+	     "FILL[  ]{%T // from %f%L%r%R}\n "))
+ '(twittering-retweet-format "RT @%s: %t")
+ '(twittering-display-remaining t)
+ '(twittering-allow-insecure-server-cert t))
+(eval-after-load "twittering-mode"
+  '(progn
+     (define-key twittering-mode-map
+       (kbd "s") 'twittering-current-timeline)
+     (define-key twittering-mode-map
+       (kbd "w") 'twittering-update-status-interactive)
+     (define-key twittering-edit-mode-map
+       (kbd "C-c C-q") 'twittering-edit-cancel-status)
+     (define-key twittering-edit-mode-map
+       (kbd "C-u C-u") 'twittering-edit-replace-at-point)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; navi2ch settings
 ;;;
 
+(el-get 'sync 'navi2ch)
 (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Japanese-holiays settings
-;;;
-
-(setq mark-holidays-in-calendar t)
-(add-hook 'today-visible-calendar-hook 'calendar-mark-today)
-(setq calendar-weekend-marker 'diary)
-(add-hook 'calendar-load-hook
-	  (lambda ()
-	    (require 'japanese-holidays)
-	    (setq calendar-holidays
-		  (append japanese-holidays holiday-local-holidays
-			  holiday-other-holidays))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; pdf-preview settings
 ;;;
-;;; (auto-install-from-url "http://homepage.mac.com/matsuan_tamachan/emacs/pdf-preview.el")
-;;;
 
 (autoload 'pdf-preview-buffer "pdf-preview" nil t)
 (autoload 'pdf-preview-buffer-with-faces "pdf-preview" nil t)
-(setq ps-print-header nil)
-(setq pdf-preview-preview-command "open")
-(setq mew-print-function 'pdf-preview-buffer-with-faces)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; auto-install settings
-;;;
-
-(require 'auto-install)
-(setq auto-install-directory user-site-lisp-directory)
+(defvar ps-print-header nil)
+(defvar pdf-preview-preview-command "open")
+(defvar mew-print-function 'pdf-preview-buffer-with-faces)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; auto-async-byte-compile settings
 ;;;
 
+(el-get 'sync 'auto-async-byte-compile)
 (require 'auto-async-byte-compile)
 (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
 (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; emacs-init-check settings
-;;;
-;;; (auto-install-from-emacswiki "emacs-init-check.el")
+;;; helm settings
 ;;;
 
-(require 'emacs-init-check)
-(add-to-list 'auto-emacs-init-check-program-args "nice")
+(el-get 'sync 'helm)
+(el-get 'sync 'helm-migemo)
+(el-get 'sync 'helm-ag)
+(el-get 'sync 'helm-ack)
+(el-get 'sync 'helm-gtags)
+(el-get 'sync 'helm-git-files)
+(el-get 'sync 'helm-descbinds)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; anything.el settings
-;;;
-;;; (auto-install-batch "anything")
-;;; (auto-install-from-url "https://raw.github.com/wakaran/anything-howm/master/anything-howm.el")
-;;;
+(custom-set-variables
+ '(helm-mode t)
+ '(helm-buffer-max-length 40)
+ '(helm-ff-auto-update-initial-value nil)
+ '(helm-truncate-lines t)
+ '(helm-grep-default-command "lgrep +i -n%c -Au8 -Ia - %p %f /dev/null")
+ '(helm-grep-default-recurse-command
+      (concat "find %f -type d \\( -name '.svn' -o -name '.git' \\) -prune "
+	      "-o -type f -name `echo -n '%e' | sed 's/--include=//' "
+	      "| sed 's/--exclude.*//' | sed 's/\\\\\\\\//g'` -print0 "
+	      "| xargs -0 lgrep +i -n%c -Au8 -Ia - %p /dev/null"))
+ '(helm-for-files-preferred-list
+   '(helm-source-buffers-list
+	helm-source-recentf
+	helm-source-bookmarks
+	helm-source-file-cache
+	helm-source-files-in-current-dir
+	helm-source-mac-spotlight
+	helm-source-buffer-not-found))
+ '(helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+ '(helm-ag-command-option "--all-text")
+ '(helm-ag-thing-at-point 'symbol)
+ '(helm-c-ack-thing-at-point 'symbol)
+ '(helm-gtags-path-style 'relative)
+ '(helm-gtags-ignore-case t)
+ '(enable-recursive-minibuffers t))
 
-(setq anything-howm-use-migemo t)
-(setq w3m-command "/opt/local/bin/w3m")
-(require 'anything-startup)
-(require 'anything-howm)
-(require 'anything-gtags)
-(setq anything-candidate-number-limit 500)
+(el-get 'sync 'wgrep)
+(custom-set-variables
+ '(wgrep-enable-key "r"))
 
-(defun my-anything ()
-  "Anything command for you.
-It is automatically generated by `anything-migrate-sources'."
+(add-hook 'helm-gtags-mode-hook
+	  #'(lambda ()
+	      (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
+
+(global-set-key (kbd "C-;") 'helm-for-files)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-z C-r") 'helm-resume)
+(global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-z l") 'helm-git-files)
+(global-set-key (kbd "C-h b") 'helm-descbinds)
+
+(eval-after-load "helm"
+  '(progn
+     (define-key helm-map (kbd "C-v") 'helm-next-source)
+     (define-key helm-map (kbd "M-v") 'helm-previous-source)
+     (defun helm-mac-spotlight ()
+       "Preconfigured `helm' for `mdfind'."
+       (interactive)
+       (let ((helm-ff-transformer-show-only-basename nil))
+	 (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))))
+
+(require 'helm-howm)
+(defvar hh:howm-data-directory howm-directory)
+(custom-set-variables
+ '(hh:menu-list nil)
+ '(hh:recent-menu-number-limit 100))
+
+(defun helm-howm-do-grep ()
   (interactive)
-  (anything-other-buffer
-   '(anything-c-source-ffap-line
-     anything-c-source-ffap-guesser
-     anything-c-source-buffers+-howm-title
-     anything-c-source-recentf
-     anything-c-source-files-in-current-dir+
-     anything-c-source-file-cache
-     anything-c-source-filelist
-     anything-c-source-locate
-     anything-c-source-gtags-select
-     anything-c-source-bookmarks
-     anything-c-source-kill-ring)
-   "*my-anything*"))
-(global-set-key (kbd "C-;") 'my-anything)
-(global-set-key (kbd "C-x C-;") 'anything-call-source)
-(global-set-key (kbd "C-z C-r") 'anything-resume)
-(setq grep-host-defaults-alist nil)
-(setq grep-command "ack -af | xargs grep -Hin ")
+  (helm-do-grep-1
+   (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.howm")))
 
-(define-key anything-map (kbd "C-v") 'anything-next-source)
-(define-key anything-map (kbd "M-v") 'anything-previous-source)
+(global-set-key (kbd "C-z ,") 'hh:menu-command)
+(global-set-key (kbd "C-z .") 'hh:resume)
+(global-set-key (kbd "C-z s") 'helm-howm-do-grep)
 
-(setq anything-howm-menu-list
-      '(("m [メニュー]" . "(howm-menu)")
-	("c [メモを作成]" . "(anything-howm-create-new-memo nil)")
-        ("cr[リージョンからメモを作成]" . "(anything-howm-create-new-memo (anything-howm-set-selected-text))")
-        ("s [検索]" . "(howm-list-grep-fixed)")
-        ("l [一覧]" . "(howm-list-recent)")))
+(helm-migemize-command helm-source-kill-ring)
+(helm-migemize-command helm-for-files)
+(helm-migemize-command hh:menu-command)
+(helm-migemize-command helm-resume)
+(helm-migemize-command helm-git-files)
 
-(setq anything-howm-recent-menu-number-limit 100)
-(setq anything-howm-data-directory howm-directory)
-(defun anything-howm-display-buffer (buf)
-  (pop-to-buffer buf))
-(global-set-key (kbd "C-z ,") 'anything-howm-menu-command)
-(global-set-key (kbd "C-z .") 'anything-howm-resume)
-
-(require 'anything-gist)
-
-(setq shell-history-file "~/.zsh/.zsh-history")
-(require 'shell-history)
-(require 'anything-c-shell-history)
-(setq anything-c-shell-history-file shell-history-file)
-
-;; anything in dired
-;; see. http://d.hatena.ne.jp/syohex/20120105/1325770778
-(defun my/anything-dired ()
-  ""
-  (interactive)
-  (let ((curbuf (current-buffer)))
-    (if (anything-other-buffer
-         '(anything-c-source-files-in-current-dir+)
-         " *anything-dired*")
-        (kill-buffer curbuf))))
-
-(define-key dired-mode-map (kbd "p") 'my/anything-dired)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; one-key settings
-;;;
-
-;; (require 'one-key)
-;; (require 'one-key-config)
-;; (require 'my-one-key-config)
-;; (require 'one-key-default)
-;; (one-key-default-setup-keys)
+(set-face-background 'helm-source-header "azure2")
+(set-face-attribute 'helm-source-header nil :height 1.1 :weight 'normal)
+(set-face-background 'helm-selection "Beige")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; popwin settings
 ;;;
-;;; (auto-install-from-url "https://raw.github.com/m2ym/popwin-el/master/popwin.el")
-;;;
 
+(el-get 'sync 'popwin)
 (require 'popwin)
-(setq display-buffer-function 'popwin:display-buffer)
-(setq anything-samewindow nil)
+(popwin-mode 1)
 (setq popwin:special-display-config
       (append
        '(("*Async Shell Command*"		:noselect t)
-	 ("^\*dvc-commit.*\*"			:regexp t :noselect t)
 	 ("^\*bzr-status.*\*"			:regexp t :noselect t)
 	 ("^\*xgit-status.*\*"			:regexp t :noselect t)
-	 ("^\*dvc-error.*\*"			:regexp t :noselect t)
 	 ("*quickrun*"				:noselect t))
        popwin:special-display-config))
 
@@ -1082,11 +963,10 @@ It is automatically generated by `anything-migrate-sources'."
 ;;;
 ;;; UI async settings
 ;;;
-;;; (auto-install-from-url "http://github.com/kiwanami/emacs-deferred/raw/master/deferred.el")
-;;; (auto-install-from-url "http://github.com/kiwanami/emacs-inertial-scroll/raw/master/inertial-scroll.el")
-;;;
 
+(el-get 'sync 'deferred)
 (require 'deferred)
+(el-get 'sync 'inertial-scroll)
 (require 'inertial-scroll)
 (setq inertias-initial-velocity 50)
 (setq inertias-friction 120)
@@ -1094,63 +974,23 @@ It is automatically generated by `anything-migrate-sources'."
 (setq inertias-rest-coef 0.1)
 (global-set-key (kbd "C-v") 'inertias-up)
 (global-set-key (kbd "M-v") 'inertias-down)
-(global-set-key [wheel-up] 'inertias-down-wheel)
-(global-set-key [wheel-down] 'inertias-up-wheel)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; e2wm settings
-;;;
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-window-layout/master/window-layout.el")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-window-manager/master/e2wm.el")
-;;; (auto-install-from-url "https://raw.github.com/gist/1842966/98b5f0596096b138009bffcd5d2e3609719fb5d5/e2wm-edbi-pre.el")
-;;;
-
-(autoload 'e2wm:start-management "e2wm" nil t)
-(setq e2wm:def-plugin-clock-text t)
-(global-set-key (kbd "M-+") 'e2wm:start-management)
-
-(add-hook 'e2wm:pre-start-hook
-	  (lambda ()
-	    (load "e2wm-edbi")
-	    (global-set-key (kbd "C-z C-c") 'e2wm:dp-code)
-	    (global-set-key (kbd "C-z C-d") 'e2wm:dp-edbi)
-	    (global-set-key (kbd "C-z 2") 'e2wm:dp-two)
-	    (global-set-key (kbd "C-z 1")
-			    'e2wm:dp-code-main-maximize-toggle-command)
-	    (global-set-key (kbd "C-z Q") 'e2wm:stop-management)))
-
-(defun e2wm:current-buffer ()
-  (cond
-   ((e2wm:managed-p)
-    (e2wm:history-get-main-buffer))
-   ((featurep 'elscreen)
-    (let* ((frame-confs (elscreen-get-frame-confs (selected-frame)))
-           (num (nth 1 (assoc 'screen-history frame-confs)))
-           (cur-window-conf (cadr (assoc num (assoc 'screen-property frame-confs))))
-           (marker (nth 2 cur-window-conf)))
-      (marker-buffer marker)))
-   (t
-    (nth 1
-         (assoc 'buffer-list
-                (nth 1 (nth 1 (current-frame-configuration))))))))
+;; (global-set-key [wheel-up] 'inertias-down-wheel)
+;; (global-set-key [wheel-down] 'inertias-up-wheel)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Emacs DBI settings
 ;;;
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-deferred/master/concurrent.el")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-ctable/master/ctable.el")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-epc/master/epc.el")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-edbi/master/edbi.el")
-;;; (auto-install-from-url "https://raw.github.com/kiwanami/emacs-edbi/master/edbi-bridge.pl")
 ;;; cpan RPC::EPC::Service DBI DBD::SQLite DBD::Pg DBD::mysql
-;;; dbi:Pg:dbname=dbname;host=hostname;password=password
+;;; e.g.) dbi:Pg:dbname=dbname;host=hostname;password=password
 ;;;
 
-(autoload 'e2wm:dp-edbi "edbi" nil t)
-(setq edbi:query-result-fix-header nil)
-(setq edbi:ds-history-list-num 50)
+(el-get 'sync 'edbi)
+(eval-after-load "edbi"
+  '(progn
+     (custom-set-variables '(edbi:query-result-fix-header nil)
+			   '(edbi:ds-history-list-num 50)
+			   '(edbi:query-result-column-max-width nil))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1165,41 +1005,23 @@ It is automatically generated by `anything-migrate-sources'."
 ;;;
 ;;; id-manager settings
 ;;;
-;;; (auto-install-from-url "https://github.com/kiwanami/emacs-id-manager/raw/master/id-manager.el")
-;;;
 
+(el-get 'sync 'id-manager)
 (autoload 'id-manager "id-manager" nil t)
+(setq epa-file-cache-passphrase-for-symmetric-encryption t)
 (setenv "GPG_AGENT_INFO" nil)
-(setq idm-database-file (concat dropbox-directory ".idm-db.gpg"))
-(setq idm-copy-action 'kill-new)
-(setq idm-gen-password-cmd mkpasswd-command)
+(defvar idm-database-file (concat external-directory ".idm-db.gpg"))
+(defvar idm-copy-action 'kill-new)
+(defvar idm-gen-password-cmd mkpasswd-command)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; term+.el
-;;;
-;;; https://github.com/tarao/term-plus-el
-;;; https://raw.github.com/tarao/dotfiles/master/.zsh/eterm.zsh
+;;; google-translate settings
 ;;;
 
-(add-to-list 'load-path (expand-file-name
-			 (concat user-site-lisp-directory "term-plus")))
-(add-to-list 'load-path (expand-file-name
-			 (concat user-site-lisp-directory "evil")))
-(add-to-list 'load-path (expand-file-name
-			 (concat user-site-lisp-directory "multi-mode-util")))
-
-(require 'term+mux)
-(require 'xterm-256color)
-(require 'key-intercept)
-(require 'multi-mode-util)
-(require 'term+evil)
-(require 'term+anything-shell-history)
-
-(add-hook 'term+char-mode-hook
-	  (lambda ()
-	    (define-key term+char-map (kbd "M-w") #'term+mark-or-copy)
-	    (define-key term+char-map (kbd "C-t C-t") #'other-window)))
+(el-get 'sync 'google-translate)
+(global-set-key "\C-ct" 'google-translate-at-point)
+(global-set-key "\C-cT" 'google-translate-query-translate)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1212,8 +1034,8 @@ It is automatically generated by `anything-migrate-sources'."
 (defvar locate-update-command-program-args
   (list "nice" "-n" "19" locate-update-command))
 
-(setq anything-c-locate-command
-  (concat "locate -i -d " locate-home-database " %s"))
+(defvar helm-c-locate-command
+  (concat "locate -i %s -d " locate-home-database " %s"))
 
 (defun locate-update-home ()
   "offer to update the locate database in home."
@@ -1221,9 +1043,9 @@ It is automatically generated by `anything-migrate-sources'."
   (set-process-sentinel
    (apply 'start-process "locate-update-home" "*Messages*"
 	  locate-update-command-program-args)
-   (lambda (proc stat)
-     (if (zerop (process-exit-status proc))
-	 (message "locate.updatedb...done")))))
+   #'(lambda (proc stat)
+       (if (zerop (process-exit-status proc))
+	   (message "locate.updatedb...done")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1231,7 +1053,7 @@ It is automatically generated by `anything-migrate-sources'."
 ;;;
 ;;;
 
-(defvar apachectl-program-command "/opt/local/apache2/bin/apachectl")
+(defvar apachectl-program-command "/usr/local/sbin/apachectl")
 (defvar apachectl-buffer-name "*apachectl*")
 (defun executable-apachectl (args)
 "Executable apachectl command.
@@ -1252,11 +1074,11 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
       (set-process-sentinel
        (apply 'start-process (format "apachectl %s" args) (current-buffer)
 	      apachectl-command)
-       (lambda (proc stat)
-	 (cond ((zerop (process-exit-status proc))
-		(message "%s... successful!" proc))
-	       ((popwin:popup-buffer-tail apachectl-buffer-name)
-		(error "%s... failur!" proc))))))))
+       #'(lambda (proc stat)
+	   (cond ((zerop (process-exit-status proc))
+		  (message "%s... successful!" proc))
+		 ((popwin:popup-buffer-tail apachectl-buffer-name)
+		  (error "%s... failur!" proc))))))))
 (defun apachectl/start ()
   (interactive)
   (executable-apachectl "start"))
@@ -1280,7 +1102,7 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 
 (defun convert-win-to-mac-path()
   (interactive)
-  (let ((buf (get-buffer-create "*convert*")) str)
+  (let ((buf (get-buffer-create "*convert*")) str ret)
     (setq str (buffer-substring (region-beginning) (region-end)))
     (with-current-buffer
 	buf (setq ret (buffer-string))
@@ -1296,7 +1118,7 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 
 (defun convert-smb-to-win-path()
   (interactive)
-  (let ((buf (get-buffer-create "*convert*")) str)
+  (let ((buf (get-buffer-create "*convert*")) str ret)
     (setq str (buffer-substring (region-beginning) (region-end)))
     (with-current-buffer
 	buf (setq ret (buffer-string))
@@ -1312,9 +1134,15 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; redmine.el settings
-;;;
-;;; (auto-install-from-url "https://raw.github.com/nanasess/redmine-el/master/redmine.el")
+;;; po-mode.el settings
 ;;;
 
-(load "redmine-config" t t)
+(el-get 'sync 'po-mode)
+(autoload 'po-mode "po-mode"
+  "Major mode for translators to edit PO files" t)
+(setq auto-mode-alist (cons '("\\.po\\'\\|\\.po\\." . po-mode)
+			    auto-mode-alist))
+
+(autoload 'po-find-file-coding-system "po-compat")
+(modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
+			    'po-find-file-coding-system)

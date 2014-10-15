@@ -1,0 +1,8 @@
+(:name csv-mode
+       :website "https://github.com/nanasess/csv-mode"
+       :description "Major mode for editing comma/char separated values 
+http://centaur.maths.qmul.ac.uk/Emacs"
+       :type github
+       :pkgname "nanasess/csv-mode"
+       :branch "mb-char-support"
+       :features "csv-mode"))

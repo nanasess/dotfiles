@@ -1,0 +1,16 @@
+(:name ddskk
+       :website "http://openlab.ring.gr.jp/skk/ddskk.html"
+       :description "A Japanese input method on Emacs."
+       :type cvs
+       :options login
+       :url ":pserver:guest:guest@openlab.jp:/circus/cvsroot"
+       :module "skk/main"
+       :autoloads nil
+       :features ("skk-setup")
+       :info "doc/skk.info"
+;; The "correct" way would be actually installing ddskk into some subdirectory.
+;; But it needs significant work due to the limitation of the Makefile
+;; thus here we are trying to emulate the Makefile behaviour.
+       :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
+                (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
+                ("cp" "skk-setup.el.in" "skk-setup.el")))

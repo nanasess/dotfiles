@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# ~/.gitconfig
+#
+# [diff]
+#  external = gitdiff_wrapper
+#
+
+echo diff --git a/$1 b/$5
+echo index $3 $4
+diff -u -L a/$1 -L b/$5 $2 $5 | lv | cat

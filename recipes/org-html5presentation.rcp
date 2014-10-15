@@ -1,0 +1,6 @@
+(:name org-html5presentation
+       :website "http://kinjo.github.io/org-html5presentation.el/"
+       :description "HTML5 Presentation Back-End for Org Export Engine."
+       :type github
+       :pkgname "kinjo/org-html5presentation.el"
+       :features "ox-html5presentation")

@@ -1,6 +1,0 @@
-[submodule "site-lisp/auto-complete"]
-	path = site-lisp/auto-complete
-	url = git://github.com/auto-complete/auto-complete.git
-[submodule "site-lisp/yasnippet"]
-	path = site-lisp/yasnippet
-	url = git://github.com/capitaomorte/yasnippet.git

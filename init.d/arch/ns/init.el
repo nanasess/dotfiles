@@ -3,17 +3,12 @@
   (setq locale-coding-system 'utf-8-hfs)
   (prefer-coding-system 'utf-8-hfs))
 
-;; grep-find で .svn を除外
-(setq grep-find-command 
-      (cons (concat "find . -type f -path '*.svn*' -prune -o -exec "
-		    "grep -nH -e  {} /dev/null \\;") 59))
-
 ;; font settings
-(create-fontset-from-ascii-font "Menlo-12:weight=normal:slant=normal" nil
-				"menlokakugo")
-(set-fontset-font "fontset-menlokakugo"
-		  'unicode (font-spec :family "Hiragino Kaku Gothic ProN" ) nil
-		  'append)
+(create-fontset-from-ascii-font "Menlo-12:weight=normal:slant=normal" nil "ns")
+(set-fontset-font "fontset-ns" 'unicode
+		  (font-spec :family "Hiragino Kaku Gothic ProN" ) nil 'append)
+(set-fontset-font "fontset-ns" '(#x0080 .  #x024F)
+		  (font-spec :family "Menlo") nil 'prepend)
 (setq face-font-rescale-alist '((".*Hiragino.*" . 1.2) (".*Menlo.*" . 1.0)))
 
 (setq mac-allow-anti-aliasing t)
@@ -34,10 +29,11 @@
 	  (append (list
 		   '(width . 82)
 		   '(height . 50)
-		   '(font . "fontset-menlokakugo")
-		   )
+		   '(font . "fontset-ns"))
 		  initial-frame-alist)))
 (setq default-frame-alist initial-frame-alist)
-(server-start)
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
 (provide 'ns-init)

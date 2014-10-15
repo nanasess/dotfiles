@@ -8,3 +8,14 @@ bookmarks
 url
 tramp
 .edbi-ds-history
+el-get/*
+.session
+elpa
+tutorial
+.DS_Store
+srecode-map.el
+semanticdb/*
+.mc-lists.el
+eshell
+games
+pandoc-mode
