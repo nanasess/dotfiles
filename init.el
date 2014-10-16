@@ -28,6 +28,13 @@
 ;;;
 ;;; el-get settings
 ;;;
+
+;; (setq tls-program '("gnutls-cli --insecure -p %p %h"
+;; ;;		    "gnutls-cli --insecure -p %p %h --protocols ssl3"
+;; 		    "openssl s_client  -connect %h:%p -no_ssl2 -no_ssl3 -ign_eof"))
+(defun gnutls-available-p ()
+  "Function redefined in order not to use built-in GnuTLS support"
+  nil)
 (eval-after-load "el-get"
   '(progn
      (add-to-list 'el-get-recipe-path (locate-user-emacs-file "recipes"))))
@@ -36,10 +43,9 @@
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
       (url-retrieve-synchronously
-       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
-    (let (el-get-master-branch)
-      (goto-char (point-max))
-      (eval-print-last-sexp))))
+       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
 
 (el-get 'sync)
 
@@ -493,14 +499,14 @@
 ;;;
 ;;; org-mode settings
 ;;;
-(custom-set-variables
- '(org-startup-truncated nil)
- '(org-startup-folded nil)
- '(org-return-follows-link t)
- '(org-directory (concat external-directory "howm/")))
+;; (custom-set-variables
+;;  '(org-startup-truncated nil)
+;;  '(org-startup-folded nil)
+;;  '(org-return-follows-link t)
+;;  '(org-directory (concat external-directory "howm/")))
 
 ;;; org-html5presentation
-(el-get 'sync 'org-html5presentation)
+;; (el-get 'sync 'org-html5presentation)
 
 ;;; org-tree-slide
 ;; http://pastelwill.jp/wiki/doku.php?id=emacs:org-tree-slide
