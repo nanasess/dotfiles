@@ -591,6 +591,8 @@
 ;;;
 
 (el-get 'sync 'magit)
+(add-to-list 'load-path (concat user-emacs-directory "el-get/magit"))
+(require 'magit)
 (require 'magit-svn)
 
 (set-face-attribute 'magit-item-highlight nil
@@ -604,7 +606,8 @@
 ;;; howm settings
 ;;;
 
-(el-get 'sync 'howm)
+;; (el-get 'sync 'howm)
+(add-to-list 'load-path (concat user-site-lisp-directory "howm-1.4.2"))
 (defvar howm-menu-lang 'ja)
 ;; (defvar howm-directory org-directory)
 (defvar howm-directory (concat external-directory "howm/"))
@@ -778,9 +781,9 @@
 ;;; mew settings
 ;;;
 
-(el-get 'sync 'mew)
-(autoload 'mew "mew" nil t)
-(autoload 'mew-send "mew" nil t)
+;; (el-get 'sync 'mew)
+;; (autoload 'mew "mew" nil t)
+;; (autoload 'mew-send "mew" nil t)
 ;; mm-version
 (require 'mm-version)
 
@@ -789,10 +792,10 @@
 ;;; w3m seettings
 ;;;
 
-(el-get 'sync 'emacs-w3m)
-(autoload 'w3m "w3m" "Visit the www page using w3m" t)
-(custom-set-variables
- '(w3m-init-file (concat user-initial-directory "emacs-w3m-init.el")))
+;; (el-get 'sync 'emacs-w3m)
+;; (autoload 'w3m "w3m" "Visit the www page using w3m" t)
+;; (custom-set-variables
+;;  '(w3m-init-file (concat user-initial-directory "emacs-w3m-init.el")))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -800,59 +803,59 @@
 ;;; twitting-mode settings
 ;;;
 
-(el-get 'sync 'twittering-mode)
-(autoload 'twit "twittering-mode" nil t)
-(unless (load "twittering-tinyurl-api-key" t t)
-  (defvar twittering-bitly-api-key nil))
-(custom-set-variables
- '(twittering-auth-method 'xauth)
- '(twittering-username "nanasess")
- '(twittering-bitly-login twittering-username)
- '(twittering-tinyurl-service 'j.mp)
- '(twittering-status-format (concat "%i %S(%s),  %@:\n%"
-	     "FILL[  ]{%T // from %f%L%r%R}\n "))
- '(twittering-retweet-format "RT @%s: %t")
- '(twittering-display-remaining t)
- '(twittering-allow-insecure-server-cert t))
-(eval-after-load "twittering-mode"
-  '(progn
-     (define-key twittering-mode-map
-       (kbd "s") 'twittering-current-timeline)
-     (define-key twittering-mode-map
-       (kbd "w") 'twittering-update-status-interactive)
-     (define-key twittering-edit-mode-map
-       (kbd "C-c C-q") 'twittering-edit-cancel-status)
-     (define-key twittering-edit-mode-map
-       (kbd "C-u C-u") 'twittering-edit-replace-at-point)))
+;; (el-get 'sync 'twittering-mode)
+;; (autoload 'twit "twittering-mode" nil t)
+;; (unless (load "twittering-tinyurl-api-key" t t)
+;;   (defvar twittering-bitly-api-key nil))
+;; (custom-set-variables
+;;  '(twittering-auth-method 'xauth)
+;;  '(twittering-username "nanasess")
+;;  '(twittering-bitly-login twittering-username)
+;;  '(twittering-tinyurl-service 'j.mp)
+;;  '(twittering-status-format (concat "%i %S(%s),  %@:\n%"
+;; 	     "FILL[  ]{%T // from %f%L%r%R}\n "))
+;;  '(twittering-retweet-format "RT @%s: %t")
+;;  '(twittering-display-remaining t)
+;;  '(twittering-allow-insecure-server-cert t))
+;; (eval-after-load "twittering-mode"
+;;   '(progn
+;;      (define-key twittering-mode-map
+;;        (kbd "s") 'twittering-current-timeline)
+;;      (define-key twittering-mode-map
+;;        (kbd "w") 'twittering-update-status-interactive)
+;;      (define-key twittering-edit-mode-map
+;;        (kbd "C-c C-q") 'twittering-edit-cancel-status)
+;;      (define-key twittering-edit-mode-map
+;;        (kbd "C-u C-u") 'twittering-edit-replace-at-point)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; navi2ch settings
 ;;;
 
-(el-get 'sync 'navi2ch)
-(autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
+;; (el-get 'sync 'navi2ch)
+;; (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; pdf-preview settings
 ;;;
 
-(autoload 'pdf-preview-buffer "pdf-preview" nil t)
-(autoload 'pdf-preview-buffer-with-faces "pdf-preview" nil t)
-(defvar ps-print-header nil)
-(defvar pdf-preview-preview-command "open")
-(defvar mew-print-function 'pdf-preview-buffer-with-faces)
+;; (autoload 'pdf-preview-buffer "pdf-preview" nil t)
+;; (autoload 'pdf-preview-buffer-with-faces "pdf-preview" nil t)
+;; (defvar ps-print-header nil)
+;; (defvar pdf-preview-preview-command "open")
+;; (defvar mew-print-function 'pdf-preview-buffer-with-faces)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; auto-async-byte-compile settings
 ;;;
 
-(el-get 'sync 'auto-async-byte-compile)
-(require 'auto-async-byte-compile)
-(setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
-(add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
+;; (el-get 'sync 'auto-async-byte-compile)
+;; (require 'auto-async-byte-compile)
+;; (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
+;; (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -864,7 +867,7 @@
 (el-get 'sync 'helm-ag)
 (el-get 'sync 'helm-ack)
 (el-get 'sync 'helm-gtags)
-(el-get 'sync 'helm-git-files)
+;; (el-get 'sync 'helm-git-files)
 (el-get 'sync 'helm-descbinds)
 
 (custom-set-variables
