@@ -885,17 +885,8 @@
  '(helm-buffer-max-length 40)
  '(helm-ff-auto-update-initial-value nil)
  '(helm-truncate-lines t)
- '(helm-grep-default-command
-   (concat "andg $(if [ -n '%c' ]; then echo -n '-i'; fi) -e %p %f |"
-	   "head -n " (number-to-string helm-candidate-number-limit) " 2> /dev/null"))
- '(helm-grep-default-recurse-command
-   ;; `ln -s find.exe xfind.exe`
-   (concat "xfind %f -type d \\( -name '.svn' -o -name '.git' \\) -prune -o -type f "
-	   "-name \"$(echo -n '%e' |"
-	   "sed -r 's/--include=([^ ]*) --exclude.*/\\1/' |"
-	   "sed 's/\\\\//g')\" -print0 |"
-	   "xargs -0 andg $(if [ -n '%c' ]; then echo -n '-i'; fi) -e %p |"
-	   "head -n " (number-to-string helm-candidate-number-limit) " 2> /dev/null"))
+ '(helm-grep-default-command "grep -a -d skip %e -n%cH -e %p %f | lv -Os -Ia ")
+ '(helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e %p %f | lv -Os -Ia ")
  '(helm-for-files-preferred-list
    '(helm-source-buffers-list
 	helm-source-recentf
