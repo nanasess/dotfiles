@@ -214,7 +214,7 @@
 		  initial-frame-alist)))
 (setq default-frame-alist initial-frame-alist)
 
-(setq exec-path (cons "C:/cygwin64/bin" exec-path))
+;; (setq exec-path (cons "C:/cygwin64/bin" exec-path))
 (setq shell-file-name "bash.exe")
 
 ;; プロセスが出力する文字コードを判定して、process-coding-system の DECODING の設定値を決定する

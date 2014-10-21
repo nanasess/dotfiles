@@ -418,20 +418,21 @@
 ;;;
 
 ;; (el-get 'sync 'migemo)
-;; (defvar migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
-;; (custom-set-variables
-;;  '(isearch-lax-whitespace nil))
-;; (when (file-exists-p migemo-dictionary)
-;;   (custom-set-variables
-;;    '(migemo-command "cmigemo")
-;;    '(migemo-options '("-q" "--emacs" "-i" "\a"))
-;;    '(migemo-user-dictionary nil)
-;;    '(migemo-regex-dictionary nil)
-;;    '(migemo-use-pattern-alist t)
-;;    '(migemo-use-frequent-pattern-alist t)
-;;    '(migemo-pattern-alist-length 1000)
-;;    '(migemo-coding-system 'utf-8-unix))
-;;   (require 'migemo))
+(defvar migemo-dictionary
+  (concat external-directory "migemo/dict/utf-8/migemo-dict"))
+(custom-set-variables
+ '(isearch-lax-whitespace nil))
+(when (file-exists-p migemo-dictionary)
+  (custom-set-variables
+   '(migemo-command "cmigemo")
+   '(migemo-options '("-q" "--emacs" "-i" "\a"))
+   '(migemo-user-dictionary nil)
+   '(migemo-regex-dictionary nil)
+   '(migemo-use-pattern-alist t)
+   '(migemo-use-frequent-pattern-alist t)
+   '(migemo-pattern-alist-length 1000)
+   '(migemo-coding-system 'utf-8-unix))
+  (require 'migemo))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
