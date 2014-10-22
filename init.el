@@ -903,6 +903,10 @@
  '(helm-gtags-ignore-case t)
  '(enable-recursive-minibuffers t))
 
+;; grep for euc-jp.
+;; (setq helm-grep-default-command "grep -a -d skip %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
+;; (setq helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
+
 (el-get 'sync 'wgrep)
 (custom-set-variables
  '(wgrep-enable-key "r"))
