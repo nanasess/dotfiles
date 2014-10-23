@@ -239,10 +239,11 @@
 ;;; uniquify settings
 ;;;
 
-(require 'uniquify)
-(custom-set-variables
- '(uniquify-buffer-name-style 'post-forward-angle-brackets)
- '(uniquify-ignore-buffers-re "*[^*]+*"))
+(if (not (version< "24.3.99" emacs-version))
+    (require 'uniquify)
+  (custom-set-variables
+   '(uniquify-buffer-name-style 'post-forward-angle-brackets)
+   '(uniquify-ignore-buffers-re "*[^*]+*")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -541,8 +542,9 @@
 ;;; cua-mode settings
 ;;;
 
-(cua-mode t)
-(custom-set-variables '(cua-enable-cua-keys nil))
+(if (not (version< "24.3.99" emacs-version))
+    (cua-mode t)
+  (custom-set-variables '(cua-enable-cua-keys nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
