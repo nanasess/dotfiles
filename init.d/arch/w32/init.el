@@ -3,7 +3,8 @@
 
 (setenv "LANG" "ja_JP.UTF-8")
 
-(add-to-list 'load-path (expand-file-name user-emacs-directory))
+(if (not (version< "24.3.90" emacs-version))
+    (add-to-list 'load-path (expand-file-name user-emacs-directory)))
 (add-to-list 'load-path (expand-file-name (concat user-emacs-directory "site-lisp")))
 
 (prefer-coding-system 'utf-8-unix)
