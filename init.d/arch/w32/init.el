@@ -127,13 +127,10 @@
    (coding-system-put 'cp932-mac :mnemonic ?P)
 
  ;;; 標準フォント
-(set-default-font "Consolas 11")
-(set-fontset-font (frame-parameter nil 'font)
-                   'japanese-jisx0208
-                   '("ＭＳ ゴシック" . "unicode-bmp"))
-(set-fontset-font (frame-parameter nil 'font)
-                   'katakana-jisx0201
-                   '("ＭＳ ゴシック" . "unicode-bmp"))
+(create-fontset-from-ascii-font "Consolas-10.4:weight=normal:slant=normal" nil "consolas")
+(set-fontset-font "fontset-consolas" 'unicode (font-spec :family "MeiryoKe_Console") nil 'append)
+(set-fontset-font "fontset-consolas" '(#x0080 . #x024F) (font-spec :family "Consolas") nil 'prepend)
+(setq face-font-rescale-alist '(("MeiryoKe_Console" . 1.08)))
 
 ;; ------------------------------------------------------------------------
 ;; @ image-library
@@ -211,7 +208,8 @@
     (setq initial-frame-alist
 	  (append (list
 		   '(height . 38)
-		   '(width  . 82))
+		   '(width  . 82)
+		   '(font   . "fontset-consolas"))
 		  initial-frame-alist)))
 (setq default-frame-alist initial-frame-alist)
 
