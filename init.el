@@ -785,11 +785,11 @@
 ;;;
 
 ;; (el-get 'sync 'mew)
-;; (autoload 'mew "mew" nil t)
-;; (autoload 'mew-send "mew" nil t)
-;; (setq mw32-process-wrapper-alist
-;;      '(("/\\(ssh\\|bash\\|tcsh\\|gpg[esvk]?\\)\\.exe" .
-;; 	 (nil . "fakecygpty.exe"))))
+(autoload 'mew "mew" nil t)
+(autoload 'mew-send "mew" nil t)
+(setq mw32-process-wrapper-alist
+     '(("/\\(ssh\\|bash\\|tcsh\\|gpg[esvk]?\\)\\.exe" .
+	 (nil . "fakecygpty.exe"))))
 
 ;; mm-version
 (require 'mm-version)
@@ -874,7 +874,7 @@
 (el-get 'sync 'helm-ag)
 (el-get 'sync 'helm-ack)
 (el-get 'sync 'helm-gtags)
-;; (el-get 'sync 'helm-git-files)
+(el-get 'sync 'helm-ls-git)
 (el-get 'sync 'helm-descbinds)
 
 ;; helm-grep-highlight-match を multi-match モードで強制的に起動する
@@ -923,7 +923,7 @@
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-z l") 'helm-git-files)
+(global-set-key (kbd "C-z l") 'helm-ls-git-ls)
 (global-set-key (kbd "C-h b") 'helm-descbinds)
 
 (eval-after-load "helm"
