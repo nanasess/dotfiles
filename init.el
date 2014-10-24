@@ -501,11 +501,11 @@
 ;;;
 ;;; org-mode settings
 ;;;
-;; (custom-set-variables
-;;  '(org-startup-truncated nil)
-;;  '(org-startup-folded nil)
-;;  '(org-return-follows-link t)
-;;  '(org-directory (concat external-directory "howm/")))
+(custom-set-variables
+ '(org-startup-truncated nil)
+ '(org-startup-folded nil)
+ '(org-return-follows-link t)
+ '(org-directory (concat external-directory "howm/")))
 
 ;;; org-html5presentation
 ;; (el-get 'sync 'org-html5presentation)
