@@ -306,7 +306,7 @@
 ;;; JavaScript-mode settings
 ;;;
 
-(add-hook 'javascript-mode-hook 'basic-indent)
+;; (add-hook 'javascript-mode-hook 'basic-indent)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -315,7 +315,9 @@
 
 (el-get 'sync 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-;; (add-hook 'js2-mode-hook 'basic-indent)
+(custom-set-variables
+ '(js2-basic-offset 2)
+ '(js2-bounce-indent-p t))
 (add-hook 'js-mode-hook 'js2-minor-mode)
 (eval-after-load "js2-mode"
   '(progn
