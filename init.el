@@ -176,7 +176,8 @@
 ;;; show EOF settings
 ;;;
 
-(custom-set-variables '(indicate-empty-lines t))
+(custom-set-variables '(indicate-empty-lines t)
+		      '(eol-mnemonic-dos "(DOS)"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
