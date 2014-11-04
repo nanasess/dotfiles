@@ -251,4 +251,8 @@
 ;(require 'mw32script)
 ;(mw32script-init)
 
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+
 (provide 'win32-init)
