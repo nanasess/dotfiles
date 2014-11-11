@@ -888,8 +888,8 @@
  '(helm-buffer-max-length 40)
  '(helm-ff-auto-update-initial-value nil)
  '(helm-truncate-lines t)
- '(helm-grep-default-command "grep -a -d skip %e -n%cH -e %p %f | lv -Os -Ia ")
- '(helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e %p %f | lv -Os -Ia ")
+ '(helm-grep-default-command "grep -a -d skip %e -n%cH -e %p %f ")
+ '(helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e %p %f")
  '(helm-for-files-preferred-list
    '(helm-source-buffers-list
 	helm-source-recentf

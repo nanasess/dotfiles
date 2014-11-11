@@ -133,19 +133,6 @@
 (setq face-font-rescale-alist '(("MeiryoKe_Console" . 1.08)))
 
 ;; ------------------------------------------------------------------------
-;; @ image-library
-   (setq image-library-alist
-         '((xpm "libxpm.dll")
-           (png "libpng14.dll")
-           (jpeg "libjpeg.dll")
-           (tiff "libtiff3.dll")
-           (gif "libungif4.dll")
-           (svg "librsvg-2-2.dll")
-           (gdk-pixbuf "libgdk_pixbuf-2.0-0.dll")
-           (glib "libglib-2.0-0.dll")
-           (gobject "libgobject-2.0-0.dll"))
-         )
-;; ------------------------------------------------------------------------
 ;; @ print
 
    ;; (require 'cl)
@@ -177,7 +164,7 @@
 
    ;; (M-! and M-| and compile.el)
    (setq shell-file-name "bash.exe")
-   (modify-coding-system-alist 'process ".*sh\\.exe" 'cp932)
+   (modify-coding-system-alist 'process ".*sh\\.exe" 'utf-8-for-putty)
 
    ;; shellモードの時の^M抑制
    (add-hook 'comint-output-filter-functions 'shell-strip-ctrl-m nil t)
