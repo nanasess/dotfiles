@@ -751,6 +751,8 @@
 		      '(php-manual-url "http://jp2.php.net/manual/ja/")
 		      '(php-search-url "http://jp2.php.net/"))
 
+(setq browse-url-browser-function 'eww-browse-url)
+
 (add-hook 'php-mode-hook 'php-c-style)
 (add-hook 'php-mode-hook 'helm-gtags-mode)
 
@@ -811,30 +813,30 @@
 ;;; twitting-mode settings
 ;;;
 
-;; (el-get 'sync 'twittering-mode)
-;; (autoload 'twit "twittering-mode" nil t)
-;; (unless (load "twittering-tinyurl-api-key" t t)
-;;   (defvar twittering-bitly-api-key nil))
-;; (custom-set-variables
-;;  '(twittering-auth-method 'xauth)
-;;  '(twittering-username "nanasess")
-;;  '(twittering-bitly-login twittering-username)
-;;  '(twittering-tinyurl-service 'j.mp)
-;;  '(twittering-status-format (concat "%i %S(%s),  %@:\n%"
-;; 	     "FILL[  ]{%T // from %f%L%r%R}\n "))
-;;  '(twittering-retweet-format "RT @%s: %t")
-;;  '(twittering-display-remaining t)
-;;  '(twittering-allow-insecure-server-cert t))
-;; (eval-after-load "twittering-mode"
-;;   '(progn
-;;      (define-key twittering-mode-map
-;;        (kbd "s") 'twittering-current-timeline)
-;;      (define-key twittering-mode-map
-;;        (kbd "w") 'twittering-update-status-interactive)
-;;      (define-key twittering-edit-mode-map
-;;        (kbd "C-c C-q") 'twittering-edit-cancel-status)
-;;      (define-key twittering-edit-mode-map
-;;        (kbd "C-u C-u") 'twittering-edit-replace-at-point)))
+(el-get 'sync 'twittering-mode)
+(autoload 'twit "twittering-mode" nil t)
+(unless (load "twittering-tinyurl-api-key" t t)
+  (defvar twittering-bitly-api-key nil))
+(custom-set-variables
+ '(twittering-auth-method 'xauth)
+ '(twittering-username "nanasess")
+ '(twittering-bitly-login twittering-username)
+ '(twittering-tinyurl-service 'j.mp)
+ '(twittering-status-format (concat "%i %S(%s),  %@:\n%"
+	     "FILL[  ]{%T // from %f%L%r%R}\n "))
+ '(twittering-retweet-format "RT @%s: %t")
+ '(twittering-display-remaining t)
+ '(twittering-allow-insecure-server-cert t))
+(eval-after-load "twittering-mode"
+  '(progn
+     (define-key twittering-mode-map
+       (kbd "s") 'twittering-current-timeline)
+     (define-key twittering-mode-map
+       (kbd "w") 'twittering-update-status-interactive)
+     (define-key twittering-edit-mode-map
+       (kbd "C-c C-q") 'twittering-edit-cancel-status)
+     (define-key twittering-edit-mode-map
+       (kbd "C-u C-u") 'twittering-edit-replace-at-point)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
