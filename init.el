@@ -746,7 +746,7 @@
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
 
-(add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
 (custom-set-variables '(php-mode-coding-style 'psr2)
 		      '(php-manual-url "http://jp2.php.net/manual/ja/")
 		      '(php-search-url "http://jp2.php.net/"))
