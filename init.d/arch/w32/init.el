@@ -128,10 +128,12 @@
 
  ;;; 標準フォント
 (create-fontset-from-ascii-font "Consolas-10:weight=normal:slant=normal" nil "consolas")
-;; (set-fontset-font "fontset-consolas" 'unicode (font-spec :family "ＭＳ ゴシック") nil 'append)
-(set-fontset-font "fontset-consolas" 'unicode (font-spec :family "メイリオ") nil 'append)
+(set-fontset-font "fontset-consolas" 'unicode (font-spec :family "ＭＳ ゴシック") nil 'append)
+;; (set-fontset-font "fontset-consolas" 'unicode (font-spec :family "メイリオ") nil 'append)
 (set-fontset-font "fontset-consolas" '(#x0080 . #x024F) (font-spec :family "Consolas") nil 'prepend)
-(setq face-font-rescale-alist '((".*メイリオ.*" . 1.1)(".*Consolas.*" . 1.0)))
+;; (setq face-font-rescale-alist '((".*メイリオ.*" . 1.1)(".*Consolas.*" . 1.0)))
+(setq face-font-rescale-alist '((".*ＭＳ ゴシック.*" . 1.1)(".*Consolas.*" . 1.0)))
+
 
 ;; イタリックやボールドフォントを標準フォントから作成する
 (setq w32-enable-synthesized-fonts t)
