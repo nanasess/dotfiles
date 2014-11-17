@@ -790,9 +790,6 @@
 ;; (el-get 'sync 'mew)
 (autoload 'mew "mew" nil t)
 (autoload 'mew-send "mew" nil t)
-(setq mw32-process-wrapper-alist
-     '(("/\\(ssh\\|bash\\|tcsh\\|gpg[esvk]?\\)\\.exe" .
-	 (nil . "fakecygpty.exe"))))
 
 ;; mm-version
 (require 'mm-version)
