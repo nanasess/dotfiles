@@ -126,14 +126,15 @@
    (coding-system-put 'cp932-unix :mnemonic ?P)
    (coding-system-put 'cp932-mac :mnemonic ?P)
 
- ;;; 標準フォント
+;;; 標準フォント
+;; MeiryoKe_Console
+;; http://web1.nazca.co.jp/hp/nzkchicagob/m6x9801/mrktb2br5.html
 (create-fontset-from-ascii-font "Consolas-10:weight=normal:slant=normal" nil "consolas")
-(set-fontset-font "fontset-consolas" 'unicode (font-spec :family "ＭＳ ゴシック") nil 'append)
+(set-fontset-font "fontset-consolas" 'unicode (font-spec :family "MeiryoKe_Console") nil 'append)
 ;; (set-fontset-font "fontset-consolas" 'unicode (font-spec :family "メイリオ") nil 'append)
 (set-fontset-font "fontset-consolas" '(#x0080 . #x024F) (font-spec :family "Consolas") nil 'prepend)
 ;; (setq face-font-rescale-alist '((".*メイリオ.*" . 1.1)(".*Consolas.*" . 1.0)))
-(setq face-font-rescale-alist '((".*ＭＳ ゴシック.*" . 1.1)(".*Consolas.*" . 1.0)))
-
+(setq face-font-rescale-alist '((".*MeiryoKe_Console.*" . 1.1)(".*Consolas.*" . 1.0)))
 
 ;; イタリックやボールドフォントを標準フォントから作成する
 (setq w32-enable-synthesized-fonts t)
