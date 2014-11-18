@@ -22,7 +22,7 @@
 (defun quickrun-add-command (key alist))
 (defun c-toggle-hungry-state (arg))
 (defun php-completion-mode (arg))
-(defun helm-do-grep-1 (targets recurse zgrep exts))
+;; (defun helm-do-grep-1 (targets recurse zgrep exts))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -874,7 +874,7 @@
 (el-get 'sync 'helm-ag)
 (el-get 'sync 'helm-ack)
 (el-get 'sync 'helm-gtags)
-(el-get 'sync 'helm-ls-git)
+(el-get 'sync 'helm-cmd-t)
 (el-get 'sync 'helm-descbinds)
 
 ;; helm-grep-highlight-match を multi-match モードで強制的に起動する
@@ -917,14 +917,16 @@
 	  #'(lambda ()
 	      (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
 
+(require 'helm-C-x-b)
+
 (global-set-key (kbd "C-;") 'helm-for-files)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-z l") 'helm-ls-git-ls)
 (global-set-key (kbd "C-h b") 'helm-descbinds)
+(global-set-key (kbd "C-z l") 'helm-C-x-b)
 
 (eval-after-load "helm"
   '(progn
