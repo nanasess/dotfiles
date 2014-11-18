@@ -203,7 +203,7 @@
 (if (boundp 'window-system)
     (setq initial-frame-alist
 	  (append (list
-		   '(height . 38)
+		   '(height . 45)
 		   '(width  . 82)
 		   '(font   . "fontset-consolas"))
 		  initial-frame-alist)))
