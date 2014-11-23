@@ -36,10 +36,9 @@
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
       (url-retrieve-synchronously
-       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
-    (let (el-get-master-branch)
-      (goto-char (point-max))
-      (eval-print-last-sexp))))
+       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
 
 (el-get 'sync)
 
@@ -424,7 +423,8 @@
 ;;;
 
 (el-get 'sync 'migemo)
-(defvar migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
+(defvar migemo-dictionary
+  (concat external-directory "migemo/dict/utf-8/migemo-dict"))
 (custom-set-variables
  '(isearch-lax-whitespace nil))
 (when (file-exists-p migemo-dictionary)
@@ -746,10 +746,12 @@
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
 
-(add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
 (custom-set-variables '(php-mode-coding-style 'psr2)
 		      '(php-manual-url "http://jp2.php.net/manual/ja/")
 		      '(php-search-url "http://jp2.php.net/"))
+
+(setq browse-url-browser-function 'eww-browse-url)
 
 (add-hook 'php-mode-hook 'php-c-style)
 (add-hook 'php-mode-hook 'helm-gtags-mode)
@@ -790,17 +792,6 @@
 (autoload 'mew-send "mew" nil t)
 ;; mm-version
 (require 'mm-version)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; w3m seettings
-;;;
-
-(el-get 'sync 'emacs-w3m)
-(autoload 'w3m "w3m" "Visit the www page using w3m" t)
-(custom-set-variables
- '(w3m-init-file (concat user-initial-directory "emacs-w3m-init.el")))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -871,7 +862,7 @@
 (el-get 'sync 'helm-ag)
 (el-get 'sync 'helm-ack)
 (el-get 'sync 'helm-gtags)
-(el-get 'sync 'helm-git-files)
+(el-get 'sync 'helm-cmd-t)
 (el-get 'sync 'helm-descbinds)
 
 (custom-set-variables
@@ -909,14 +900,16 @@
 	  #'(lambda ()
 	      (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
 
+(require 'helm-C-x-b)
+
 (global-set-key (kbd "C-;") 'helm-for-files)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-z C-r") 'helm-resume)
 (global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-z l") 'helm-git-files)
 (global-set-key (kbd "C-h b") 'helm-descbinds)
+(global-set-key (kbd "C-z l") 'helm-C-x-b)
 
 (eval-after-load "helm"
   '(progn
