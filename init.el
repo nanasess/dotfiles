@@ -321,7 +321,11 @@
 (add-hook 'js-mode-hook 'js2-minor-mode)
 (eval-after-load "js2-mode"
   '(progn
+     (electric-indent-mode 0)
      (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
+(defun disabled-indent-tabs-mode ()
+  (set-variable 'indent-tabs-mode nil))
+(add-hook 'js2-mode-hook 'disabled-indent-tabs-mode)
 
 (el-get 'sync 'jade-mode)
 (require 'sws-mode)
