@@ -1,0 +1,5 @@
+(:name scratch-pop
+       :description "[emacs] popup scratch buffer "
+       :type github
+       :pkgname "zk-phi/scratch-pop"
+       :features scratch-pop)
