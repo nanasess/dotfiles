@@ -867,15 +867,10 @@
 
 (custom-set-variables
  '(helm-mode t)
+ '(helm-input-idle-delay 0.2)
  '(helm-buffer-max-length 40)
  '(helm-ff-auto-update-initial-value nil)
  '(helm-truncate-lines t)
- '(helm-grep-default-command "lgrep +i -n%c -Au8 -Ia - %p %f /dev/null")
- '(helm-grep-default-recurse-command
-      (concat "find %f -type d \\( -name '.svn' -o -name '.git' \\) -prune "
-	      "-o -type f -name `echo -n '%e' | sed 's/--include=//' "
-	      "| sed 's/--exclude.*//' | sed 's/\\\\\\\\//g'` -print0 "
-	      "| xargs -0 lgrep +i -n%c -Au8 -Ia - %p /dev/null"))
  '(helm-for-files-preferred-list
    '(helm-source-buffers-list
 	helm-source-recentf
