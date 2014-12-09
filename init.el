@@ -262,6 +262,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; Misc settings
+;;;
+
+(custom-set-variables '(x-select-enable-clipboard t)
+		      '(x-select-enable-primary t)
+		      '(save-interprogram-paste-before-kill t)
+		      '(mouse-yank-at-point t)
+		      '(visible-bell t)
+		      '(ediff-window-setup-function 'ediff-setup-windows-plain))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; Emacs lisp settings
 ;;;
 
@@ -932,7 +944,7 @@
 (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
 
 (helm-migemize-command helm-source-kill-ring)
-(helm-migemize-command helm-for-files)
+;; (helm-migemize-command helm-for-files)
 (helm-migemize-command hh:menu-command)
 (helm-migemize-command helm-resume)
 (helm-migemize-command helm-git-files)
@@ -959,6 +971,43 @@
 
 (global-set-key (kbd "C-x C-p") popwin:keymap)
 (setq auto-async-byte-compile-display-function 'popwin:popup-buffer-tail)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; auto-save settings
+;;;
+
+(el-get 'sync 'auto-save-buffers-enhanced)
+(setq auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
+(setq auto-save-buffers-enhanced-file-related-with-scratch-buffer
+      (concat howm-directory "scratch.howm"))
+(auto-save-buffers-enhanced t)
+(global-set-key "\C-xas" 'auto-save-buffers-enhanced-toggle-activity)
+
+(el-get 'sync 'scratch-pop)
+(global-set-key (kbd "C-c c") 'scratch-pop)
+(makunbound 'scratch-ext-minor-mode-map)
+(define-minor-mode scratch-ext-minor-mode
+  "Minor mode for *scratch* buffer."
+  nil ""
+  '(("\C-c\C-c" . scratch-pop-kill-ring-save-exit)
+    ("\C-c\C-e" . erase-buffer)))
+
+(with-current-buffer (get-buffer-create "*scratch*")
+  (erase-buffer)
+  (ignore-errors
+    (insert-file-contents auto-save-buffers-enhanced-file-related-with-scratch-buffer))
+  (org-mode)
+  (setq header-line-format "scratch!!")
+  (scratch-ext-minor-mode 1))
+(defun scratch-pop-kill-ring-save-exit ()
+  "Save after close the contents of buffer to killring."
+  (interactive)
+  (kill-new (buffer-string))
+  (erase-buffer)
+  (funcall (if (fboundp 'popwin:close-popup-window)
+               'popwin:close-popup-window
+             'quit-window)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
