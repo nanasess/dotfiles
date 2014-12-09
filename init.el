@@ -262,6 +262,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; Misc settings
+;;;
+
+(custom-set-variables '(x-select-enable-clipboard t)
+		      '(x-select-enable-primary t)
+		      '(save-interprogram-paste-before-kill t)
+		      '(mouse-yank-at-point t)
+		      '(visible-bell t)
+		      '(ediff-window-setup-function 'ediff-setup-windows-plain))
+
 ;;; Emacs lisp settings
 ;;;
 
