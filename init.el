@@ -1052,7 +1052,7 @@
 (global-set-key (kbd "C-c c") 'scratch-pop)
 (makunbound 'scratch-ext-minor-mode-map)
 (define-minor-mode scratch-ext-minor-mode
-  "*scratch*バッファ専用のマイナーモード"
+  "Minor mode for *scratch* buffer."
   nil ""
   '(("\C-c\C-c" . scratch-pop-kill-ring-save-exit)
     ("\C-c\C-e" . erase-buffer)))
@@ -1065,7 +1065,7 @@
   (setq header-line-format "scratch!!")
   (scratch-ext-minor-mode 1))
 (defun scratch-pop-kill-ring-save-exit ()
-  "*scratch*バッファの内容をkill-ringに入れてから閉じる"
+  "Save after close the contents of buffer to killring."
   (interactive)
   (kill-new (buffer-string))
   (erase-buffer)
