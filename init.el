@@ -899,13 +899,6 @@
  '(helm-buffer-max-length 40)
  '(helm-ff-auto-update-initial-value nil)
  '(helm-truncate-lines t)
- ;; '(helm-ack-grep-executable "pt")
- '(helm-grep-default-command "LANG=C grep -a -d skip %e -n%cH -e %p %f ")
- '(helm-grep-default-recurse-command "LANG=C grep -a -d recurse %e -n%cH -e %p %f")
- ;; for pt
- ;; https://github.com/monochromegane/the_platinum_searcher
- ;; '(helm-grep-default-command "pt -S%c --nogroup -G%e -e %p %f ")
- ;; '(helm-grep-default-recurse-command "pt -S%c --nogroup -G%e -e %p  %f ")
  '(helm-for-files-preferred-list
    '(helm-source-buffers-list
 	helm-source-recentf
