@@ -22,7 +22,6 @@
 (defun quickrun-add-command (key alist))
 (defun c-toggle-hungry-state (arg))
 (defun php-completion-mode (arg))
-(defun helm-do-grep-1 (targets recurse zgrep exts))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -168,7 +167,8 @@
 ;;; show EOF settings
 ;;;
 
-(custom-set-variables '(indicate-empty-lines t))
+(custom-set-variables '(indicate-empty-lines t)
+		      '(eol-mnemonic-dos "(DOS)"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -190,7 +190,7 @@
 
 (defface my-mark-whitespace '((t (:background "gray"))) nil
   :group 'font-lock-highlighting-faces)
-(defface my-mark-tabs '((t (:background "white smoke"))) nil
+(defface my-mark-tabs '((t (:background "Gainsboro"))) nil
   :group 'font-lock-highlighting-faces)
 (defface my-mark-lineendsspaces '((t (:foreground "SteelBlue" :underline t))) nil
   :group 'font-lock-highlighting-faces)
@@ -338,11 +338,11 @@
   (set-variable 'indent-tabs-mode nil))
 (add-hook 'js2-mode-hook 'disabled-indent-tabs-mode)
 
-(el-get 'sync 'jade-mode)
-(require 'sws-mode)
-(require 'jade-mode)
-(add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
-(add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
+;; (el-get 'sync 'jade-mode)
+;; (require 'sws-mode)
+;; (require 'jade-mode)
+;; (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
+;; (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -434,7 +434,7 @@
 ;;; migemo settings
 ;;;
 
-(el-get 'sync 'migemo)
+;; (el-get 'sync 'migemo)
 (defvar migemo-dictionary
   (concat external-directory "migemo/dict/utf-8/migemo-dict"))
 (custom-set-variables
@@ -524,7 +524,7 @@
  '(org-directory (concat external-directory "howm/")))
 
 ;;; org-html5presentation
-(el-get 'sync 'org-html5presentation)
+;; (el-get 'sync 'org-html5presentation)
 
 ;;; org-tree-slide
 ;; http://pastelwill.jp/wiki/doku.php?id=emacs:org-tree-slide
@@ -610,6 +610,8 @@
 ;;;
 
 (el-get 'sync 'magit)
+(add-to-list 'load-path (concat user-emacs-directory "el-get/magit"))
+(require 'magit)
 (require 'magit-svn)
 
 (set-face-attribute 'magit-item-highlight nil
@@ -799,7 +801,7 @@
 ;;; mew settings
 ;;;
 
-(el-get 'sync 'mew)
+;; (el-get 'sync 'mew)
 (autoload 'mew "mew" nil t)
 (autoload 'mew-send "mew" nil t)
 ;; mm-version
@@ -837,32 +839,24 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; navi2ch settings
-;;;
-
-(el-get 'sync 'navi2ch)
-(autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; pdf-preview settings
 ;;;
 
-(autoload 'pdf-preview-buffer "pdf-preview" nil t)
-(autoload 'pdf-preview-buffer-with-faces "pdf-preview" nil t)
-(defvar ps-print-header nil)
-(defvar pdf-preview-preview-command "open")
-(defvar mew-print-function 'pdf-preview-buffer-with-faces)
+;; (autoload 'pdf-preview-buffer "pdf-preview" nil t)
+;; (autoload 'pdf-preview-buffer-with-faces "pdf-preview" nil t)
+;; (defvar ps-print-header nil)
+;; (defvar pdf-preview-preview-command "open")
+;; (defvar mew-print-function 'pdf-preview-buffer-with-faces)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; auto-async-byte-compile settings
 ;;;
 
-(el-get 'sync 'auto-async-byte-compile)
-(require 'auto-async-byte-compile)
-(setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
-(add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
+;; (el-get 'sync 'auto-async-byte-compile)
+;; (require 'auto-async-byte-compile)
+;; (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
+;; (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -876,6 +870,10 @@
 (el-get 'sync 'helm-gtags)
 (el-get 'sync 'helm-cmd-t)
 (el-get 'sync 'helm-descbinds)
+
+(defadvice helm-grep-highlight-match (around ad-helm-grep-highlight-match activate)
+  (ad-set-arg 1 t)
+  ad-do-it)
 
 (custom-set-variables
  '(helm-mode t)
@@ -898,6 +896,10 @@
  '(helm-gtags-path-style 'relative)
  '(helm-gtags-ignore-case t)
  '(enable-recursive-minibuffers t))
+
+;; grep for euc-jp.
+;; (setq helm-grep-default-command "grep -a -d skip %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
+;; (setq helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
 
 (el-get 'sync 'wgrep)
 (custom-set-variables
@@ -928,6 +930,29 @@
        (let ((helm-ff-transformer-show-only-basename nil))
 	 (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))))
 
+;;;
+;;; see http://www49.atwiki.jp/ntemacs/pages/32.html
+;;;
+
+(defadvice helm-reduce-file-name (around ad-helm-reduce-file-name activate)
+  (let ((fname (ad-get-arg 0))
+        (level (ad-get-arg 1)))
+    (while (> level 0)
+      (setq fname (expand-file-name (concat fname "/../")))
+      (setq level (1- level)))
+    (setq ad-return-value fname)))
+
+(defadvice helm-completing-read-default-1 (around ad-helm-completing-read-default-1 activate)
+  (if (listp (ad-get-arg 4))
+      (ad-set-arg 4 (car (ad-get-arg 4))))
+  (cl-letf (((symbol-function 'regexp-quote)
+          (symbol-function 'identity)))
+    ad-do-it))
+
+(defadvice find-file (around ad-find-file activate)
+  (let ((current-prefix-arg nil))
+    ad-do-it))
+
 (require 'helm-howm)
 (defvar hh:howm-data-directory howm-directory)
 (custom-set-variables
@@ -943,6 +968,18 @@
 (global-set-key (kbd "C-z .") 'hh:resume)
 (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
 
+(eval-after-load "helm-migemo"
+  '(defun helm-compile-source--candidates-in-buffer (source)
+     (helm-aif (assoc 'candidates-in-buffer source)
+         (append source
+                 `((candidates
+                    . ,(or (cdr it)
+                           (lambda ()
+                             ;; Do not use `source' because other plugins
+                             ;; (such as helm-migemo) may change it
+                             (helm-candidates-in-buffer (helm-get-current-source)))))
+                   (volatile) (match identity)))
+       source)))
 (helm-migemize-command helm-source-kill-ring)
 ;; (helm-migemize-command helm-for-files)
 (helm-migemize-command hh:menu-command)

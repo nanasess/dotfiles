@@ -5,10 +5,12 @@
        :pkgname "nanasess/magit"
        :branch "ext-diff"
        :depends (cl-lib git-modes)
-       :info "."
+       ;; :info "."
        ;; let el-get care about autoloads so that it works with all OSes
-       :build (if (version<= "24.3" emacs-version)
-                  `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
-                `(("make" ,(format "EMACS=%s" el-get-emacs) "docs")))
+       ;; :build (if (version<= "24.3" emacs-version)
+       ;;            `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
+       ;;          `(("make" ,(format "EMACS=%s" el-get-emacs) "docs")))
+       :build/windows-nt ()
        :build/berkeley-unix (("touch" "`find . -name Makefile`") ("gmake"))
-       :prepare (require 'magit-autoloads))
+       ;; :prepare (require 'magit-autoloads)
+       )

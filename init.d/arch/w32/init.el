@@ -207,4 +207,10 @@
 (unless (server-running-p)
   (server-start))
 
+(custom-set-variables
+ '(skk-cdb-large-jisyo (concat external-directory "SKK-JISYO.ALL.cdb")))
+
+(defvar mkpasswd-command
+  "head -c 10 < /dev/random | uuencode -m - | tail -n 3 |head -n 1 | head -c10")
+
 (provide 'win32-init)

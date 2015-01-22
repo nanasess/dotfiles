@@ -114,8 +114,7 @@ With prefix arg HERE, insert it at point."
 (defvar helm-c-source-howm-recent
   '((name    . "最近のメモ")
     (init    . helm-c-howm-recent-init)
-    (candidates . (lambda()
-		    (helm-candidates-in-buffer (helm-get-current-source))))
+    (candidates . helm-candidates-in-buffer)
     (volatile)
     (match identity)
     (candidate-number-limit . 9999)
