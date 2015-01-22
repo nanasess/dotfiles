@@ -825,7 +825,7 @@
 	     "FILL[  ]{%T // from %f%L%r%R}\n "))
  '(twittering-retweet-format "RT @%s: %t")
  '(twittering-display-remaining t)
- '(twittering-allow-insecure-server-cert t))
+ '(twittering-allow-insecure-server-cert nil))
 (eval-after-load "twittering-mode"
   '(progn
      (define-key twittering-mode-map
@@ -1015,6 +1015,7 @@
 ;;;
 
 (el-get 'sync 'auto-save-buffers-enhanced)
+(setq auto-save-buffers-enhanced-interval 1.5)
 (setq auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
 (setq auto-save-buffers-enhanced-file-related-with-scratch-buffer
       (concat howm-directory "scratch.howm"))
