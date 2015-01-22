@@ -199,7 +199,7 @@
 
 (defface my-mark-whitespace '((t (:background "gray"))) nil
   :group 'font-lock-highlighting-faces)
-(defface my-mark-tabs '((t (:background "white smoke"))) nil
+(defface my-mark-tabs '((t (:background "Gainsboro"))) nil
   :group 'font-lock-highlighting-faces)
 (defface my-mark-lineendsspaces '((t (:foreground "SteelBlue" :underline t))) nil
   :group 'font-lock-highlighting-faces)
@@ -622,8 +622,7 @@
 ;;; howm settings
 ;;;
 
-;; (el-get 'sync 'howm)
-(add-to-list 'load-path (concat user-site-lisp-directory "howm-1.4.2"))
+(el-get 'sync 'howm)
 (defvar howm-menu-lang 'ja)
 ;; (defvar howm-directory org-directory)
 (defvar howm-directory (concat external-directory "howm/"))
