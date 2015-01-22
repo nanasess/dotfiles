@@ -22,19 +22,11 @@
 (defun quickrun-add-command (key alist))
 (defun c-toggle-hungry-state (arg))
 (defun php-completion-mode (arg))
-;; (defun helm-do-grep-1 (targets recurse zgrep exts))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; el-get settings
 ;;;
-
-;; (setq tls-program '("gnutls-cli --insecure -p %p %h"
-;; ;;		    "gnutls-cli --insecure -p %p %h --protocols ssl3"
-;; 		    "openssl s_client  -connect %h:%p -no_ssl2 -no_ssl3 -ign_eof"))
-(defun gnutls-available-p ()
-  "Function redefined in order not to use built-in GnuTLS support"
-  nil)
 (eval-after-load "el-get"
   '(progn
      (add-to-list 'el-get-recipe-path (locate-user-emacs-file "recipes"))))
@@ -99,7 +91,6 @@
 
 (el-get 'sync 'ddskk)
 (custom-set-variables
- '(skk-cdb-large-jisyo (concat external-directory "SKK-JISYO.ALL.cdb"))
  '(skk-user-directory (concat external-directory "ddskk"))
  '(skk-init-file (concat user-initial-directory "skk-init.el"))
  '(skk-preload t)
@@ -326,7 +317,7 @@
 ;;; JavaScript-mode settings
 ;;;
 
-(add-hook 'javascript-mode-hook 'basic-indent)
+;; (add-hook 'javascript-mode-hook 'basic-indent)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -335,11 +326,23 @@
 
 (el-get 'sync 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(add-hook 'js2-mode-hook 'basic-indent)
+(custom-set-variables
+ '(js2-basic-offset 2)
+ '(js2-bounce-indent-p t))
 (add-hook 'js-mode-hook 'js2-minor-mode)
 (eval-after-load "js2-mode"
   '(progn
+     (electric-indent-mode 0)
      (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
+(defun disabled-indent-tabs-mode ()
+  (set-variable 'indent-tabs-mode nil))
+(add-hook 'js2-mode-hook 'disabled-indent-tabs-mode)
+
+;; (el-get 'sync 'jade-mode)
+;; (require 'sws-mode)
+;; (require 'jade-mode)
+;; (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
+;; (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -801,20 +804,8 @@
 ;; (el-get 'sync 'mew)
 (autoload 'mew "mew" nil t)
 (autoload 'mew-send "mew" nil t)
-
 ;; mm-version
 (require 'mm-version)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; w3m seettings
-;;;
-
-;; (el-get 'sync 'emacs-w3m)
-;; (autoload 'w3m "w3m" "Visit the www page using w3m" t)
-;; (custom-set-variables
-;;  '(w3m-init-file (concat user-initial-directory "emacs-w3m-init.el")))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -845,14 +836,6 @@
        (kbd "C-c C-q") 'twittering-edit-cancel-status)
      (define-key twittering-edit-mode-map
        (kbd "C-u C-u") 'twittering-edit-replace-at-point)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; navi2ch settings
-;;;
-
-;; (el-get 'sync 'navi2ch)
-;; (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -888,13 +871,13 @@
 (el-get 'sync 'helm-cmd-t)
 (el-get 'sync 'helm-descbinds)
 
-;; helm-grep-highlight-match を multi-match モードで強制的に起動する
 (defadvice helm-grep-highlight-match (around ad-helm-grep-highlight-match activate)
   (ad-set-arg 1 t)
   ad-do-it)
 
 (custom-set-variables
  '(helm-mode t)
+ '(helm-input-idle-delay 0.2)
  '(helm-buffer-max-length 40)
  '(helm-ff-auto-update-initial-value nil)
  '(helm-truncate-lines t)
@@ -950,17 +933,7 @@
 ;;;
 ;;; see http://www49.atwiki.jp/ntemacs/pages/32.html
 ;;;
-(setq helm-input-idle-delay 0.2)
-;; w32-ime-buffer-switch-p が t の場合に、ミニバッファで漢字を使えるようにする対策
-(setq w32-ime-buffer-switch-p t) ; バッファ切り替え時にIME状態を引き継ぐ
-(defadvice helm (around ad-helm-for-w32-ime activate)
-  (let ((select-window-functions nil)
-        (w32-ime-composition-window (minibuffer-window)))
-    ad-do-it))
 
-;; UNC や Tramp のパスに対して、helm-reduce-file-name が正しく機能しないことの対策
-;; （ (helm-mode 1) として dired を動かした際に C-l（helm-find-files-up-one-level）
-;;  が正しく機能するようにする対策）
 (defadvice helm-reduce-file-name (around ad-helm-reduce-file-name activate)
   (let ((fname (ad-get-arg 0))
         (level (ad-get-arg 1)))
@@ -969,8 +942,6 @@
       (setq level (1- level)))
     (setq ad-return-value fname)))
 
-;; ffap を使っていて find-file-at-point を起動した場合に、カーソル位置の UNC が正しく
-;; 取り込まれないことの対策
 (defadvice helm-completing-read-default-1 (around ad-helm-completing-read-default-1 activate)
   (if (listp (ad-get-arg 4))
       (ad-set-arg 4 (car (ad-get-arg 4))))
@@ -978,8 +949,6 @@
           (symbol-function 'identity)))
     ad-do-it))
 
-;; w32-symlinks を使っている場合に C-u 付きで helm-do-grep を起動すると、選択したファイルを
-;; no conversion で開いてしまうことの対策
 (defadvice find-file (around ad-find-file activate)
   (let ((current-prefix-arg nil))
     ad-do-it))
@@ -1116,7 +1085,7 @@
 ;;;
 
 (defvar mkpasswd-command
-  "head -c 10 < /dev/random | uuencode -m - | tail -n 3 |head -n 1 | head -c10")
+  "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
 (autoload 'mkpasswd "mkpasswd" nil t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

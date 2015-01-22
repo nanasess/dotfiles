@@ -1,5 +1,5 @@
-SITE_DIR=C:/Users/nanasess/.emacs.d
-EMACS=C:/emacs-24.2/bin/emacs.exe
+SITE_DIR=~/.emacs.d
+EMACS=~/Applications/Emacs.app/Contents/MacOS/Emacs
 
 all: compile
 compile:
