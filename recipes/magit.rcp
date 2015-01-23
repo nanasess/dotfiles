@@ -2,8 +2,8 @@
        :website "https://github.com/magit/magit#readme"
        :description "It's Magit! An Emacs mode for Git."
        :type github
-       :pkgname "nanasess/magit"
-       :branch "ext-diff"
+       :pkgname "magit/magit"
+       ;; :branch "ext-diff"
        :depends (cl-lib git-modes)
        ;; :info "."
        ;; let el-get care about autoloads so that it works with all OSes
