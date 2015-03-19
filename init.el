@@ -629,7 +629,7 @@
 (defvar howm-menu-lang 'ja)
 ;; (defvar howm-directory org-directory)
 (defvar howm-directory (concat external-directory "howm/"))
-(defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.howm")
+(defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt")
 (defvar howm-history-file (concat howm-directory ".howm-history"))
 (defvar howm-keyword-file (concat howm-directory ".howm-keys"))
 (defvar howm-menu-schedule-days-before 30)
@@ -642,7 +642,7 @@
 (add-hook 'org-mode-hook 'howm-mode)
 (defvar howm-view-title-header "#+TITLE:")
 (defvar howm-view-use-grep nil)
-(add-to-list 'auto-mode-alist '("\\.howm$" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
 (require 'howm)
 (setq howm-template
       (concat howm-view-title-header
@@ -659,7 +659,7 @@
   "kill screen when exiting from howm-mode"
   (interactive)
   (let* ((file-name (buffer-file-name)))
-    (when (and file-name (string-match "\\.howm" file-name))
+    (when (and file-name (string-match "\\.txt" file-name))
       (if (save-excursion
             (goto-char (point-min))
             (re-search-forward "[^ \t\r\n]" nil t))
@@ -962,7 +962,7 @@
 (defun helm-howm-do-grep ()
   (interactive)
   (helm-do-grep-1
-   (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.howm")))
+   (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt")))
 
 (global-set-key (kbd "C-z ,") 'hh:menu-command)
 (global-set-key (kbd "C-z .") 'hh:resume)
@@ -1018,7 +1018,7 @@
 (setq auto-save-buffers-enhanced-interval 1.5)
 (setq auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
 (setq auto-save-buffers-enhanced-file-related-with-scratch-buffer
-      (concat howm-directory "scratch.howm"))
+      (concat howm-directory "scratch.txt"))
 (auto-save-buffers-enhanced t)
 (global-set-key "\C-xas" 'auto-save-buffers-enhanced-toggle-activity)
 
