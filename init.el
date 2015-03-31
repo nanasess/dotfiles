@@ -5,7 +5,7 @@
 
 ;;; Code:
 
-(setq gc-cons-threshold 10000)
+(setq gc-cons-threshold (* 128 1024 1024))
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
 
@@ -1234,3 +1234,4 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
 			    'po-find-file-coding-system)
+(setq gc-cons-threshold 800000)
