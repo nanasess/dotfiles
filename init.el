@@ -350,7 +350,10 @@
 ;;;
 
 (add-to-list 'auto-mode-alist
-	     '("\\.\\(xml\\|xsl\\|rng\\|html\\|tpl\\)\\'" . nxml-mode))
+	     '("\\.\\(xml\\|xsl\\|rng\\)\\'" . nxml-mode))
+(add-to-list 'auto-mode-alist
+	     '("\\.\\(html\\|tpl\\)\\'" . nxml-web-mode))
+
 (add-hook 'nxml-mode-hook
 	  #'(lambda ()
 	      (rng-validate-mode 0)
