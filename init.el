@@ -183,7 +183,6 @@
      (:background "Beige"))) nil :group 'font-lock-highlighting-faces)
 (custom-set-variables
  '(hl-line-face 'hlline-face))
-(global-hl-line-mode)
 
 (custom-set-variables
  '(whitespace-style '(spaces tabs newline space-mark tab-mark newline-mark)))
@@ -215,6 +214,16 @@
 	      (set-face-background 'diff-added-face "#ddffdd")
 	      (set-face-background 'diff-refine-change "Thistle1")
 	      (set-face-bold-p 'diff-refine-change t)))
+
+;; see also http://rubikitch.com/2015/05/14/global-hl-line-mode-timer/
+(global-hl-line-mode 0)
+(defun global-hl-line-timer-function ()
+  (global-hl-line-unhighlight-all)
+  (let ((global-hl-line-mode t))
+    (global-hl-line-highlight)))
+(setq global-hl-line-timer
+      (run-with-idle-timer 0.1 t 'global-hl-line-timer-function))
+;; (cancel-timer global-hl-line-timer)
 
 ;; use solarized.
 ;; (el-get 'sync 'solarized-theme)
