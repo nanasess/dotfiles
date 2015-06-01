@@ -663,10 +663,11 @@
 (defvar howm-refresh-after-save nil)
 (defvar howm-list-all-title t)
 (defvar howm-schedule-menu-types "[!@\+]")
+(add-hook 'markdown-mode-hook 'howm-mode)
 (add-hook 'org-mode-hook 'howm-mode)
 (defvar howm-view-title-header "#+TITLE:")
 (defvar howm-view-use-grep nil)
-(add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.txt$" . gfm-mode))
 (require 'howm)
 (setq howm-template
       (concat howm-view-title-header
@@ -675,10 +676,12 @@
 	       "#+DATE: %date\n\n"
 	       "%file\n\n")
 	      (concat
-	       "#+LATEX_CLASS: jarticle\n"
-	       "# Local Variables:\n"
-	       "# coding: utf-8-unix\n"
-	       "# End:\n")))
+	       "<!--\n"
+	       "  Local Variables:\n"
+	       "  mode: gfm \n"
+	       "  coding: utf-8-unix\n"
+	       "  End:\n"
+	       "-->\n")))
 (defun howm-save-and-kill-buffer ()
   "kill screen when exiting from howm-mode"
   (interactive)
@@ -809,6 +812,16 @@
 (autoload 'markdown-mode "markdown-mode" nil t)
 (autoload 'gfm-mode "markdown-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode))
+
+;; see also http://stackoverflow.com/questions/14275122/editing-markdown-pipe-tables-in-emacs
+(defun cleanup-org-tables ()
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "-+-" nil t) (replace-match "-|-"))))
+(add-hook 'markdown-mode-hook 'orgtbl-mode)
+(add-hook 'markdown-mode-hook
+          #'(lambda()
+	      (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
