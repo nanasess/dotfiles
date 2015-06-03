@@ -665,7 +665,7 @@
 (defvar howm-schedule-menu-types "[!@\+]")
 (add-hook 'markdown-mode-hook 'howm-mode)
 (add-hook 'org-mode-hook 'howm-mode)
-(defvar howm-view-title-header "#+TITLE:")
+(defvar howm-view-title-header "Title:")
 (defvar howm-view-use-grep nil)
 (add-to-list 'auto-mode-alist '("\\.txt$" . gfm-mode))
 (require 'howm)
@@ -673,7 +673,7 @@
       (concat howm-view-title-header
 	      (concat
 	       " %title%cursor\n"
-	       "#+DATE: %date\n\n"
+	       "Date: %date\n\n"
 	       "%file\n\n")
 	      (concat
 	       "<!--\n"
