@@ -691,7 +691,7 @@
 	      (concat
 	       "<!--\n"
 	       "  Local Variables:\n"
-	       "  mode: gfm \n"
+	       "  mode: gfm\n"
 	       "  coding: utf-8-unix\n"
 	       "  End:\n"
 	       "-->\n")))
@@ -1085,7 +1085,6 @@
   (erase-buffer)
   (ignore-errors
     (insert-file-contents auto-save-buffers-enhanced-file-related-with-scratch-buffer))
-  (org-mode)
   (setq header-line-format "scratch!!")
   (scratch-ext-minor-mode 1))
 (defun scratch-pop-kill-ring-save-exit ()
