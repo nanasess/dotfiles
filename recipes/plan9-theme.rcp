@@ -1,0 +1,4 @@
+(:name plan9-theme
+       :description ""
+       :type github
+       :pkgname "john2x/plan9-theme.el")
