@@ -175,8 +175,8 @@
 ;;; face settings
 ;;;
 
-(set-background-color "ivory")
-(set-face-foreground 'font-lock-keyword-face "#7f007f")
+;; (set-background-color "ivory")
+;; (set-face-foreground 'font-lock-keyword-face "#7f007f")
 
 (defface hlline-face
   '((((class color) (background light))
@@ -208,11 +208,11 @@
 
 (add-hook 'diff-mode-hook
 	  #'(lambda ()
-	      (set-face-foreground 'diff-context-face "grey50")
-	      (set-face-foreground 'diff-hunk-header-face "medium blue")
-	      (set-face-background 'diff-removed-face "#ffdddd")
-	      (set-face-background 'diff-added-face "#ddffdd")
-	      (set-face-background 'diff-refine-change "Thistle1")
+	      ;; (set-face-foreground 'diff-context-face "grey50")
+	      ;; (set-face-foreground 'diff-hunk-header-face "medium blue")
+	      ;; (set-face-background 'diff-removed-face "#ffdddd")
+	      ;; (set-face-background 'diff-added-face "#ddffdd")
+	      ;; (set-face-background 'diff-refine-change "Thistle1")
 	      (set-face-bold-p 'diff-refine-change t)))
 
 ;; see also http://rubikitch.com/2015/05/14/global-hl-line-mode-timer/
@@ -227,6 +227,8 @@
 
 ;; use solarized.
 ;; (el-get 'sync 'solarized-theme)
+(el-get 'sync 'plan9-theme)
+(require 'plan9-theme)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1036,9 +1038,9 @@
 (helm-migemize-command helm-resume)
 (helm-migemize-command helm-git-files)
 
-(set-face-background 'helm-source-header "azure2")
-(set-face-attribute 'helm-source-header nil :height 1.1 :weight 'normal)
-(set-face-background 'helm-selection "Beige")
+;; (set-face-background 'helm-source-header "azure2")
+;; (set-face-attribute 'helm-source-header nil :height 1.1 :weight 'normal)
+;; (set-face-background 'helm-selection "Beige")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1284,3 +1286,4 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
 			    'po-find-file-coding-system)
 (setq gc-cons-threshold 800000)
+(put 'downcase-region 'disabled nil)
