@@ -267,6 +267,7 @@
 ;;; Indent settings
 ;;;
 
+(setq-default indent-tabs-mode nil)
 (defun basic-indent ()
   (setq tab-width 4)
   (setq indent-tabs-mode nil))
@@ -374,6 +375,22 @@
 	       '(nxml-child-indent 2)
 	       '(indent-tabs-mode nil)
 	       '(tab-width 2))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; web-mode settings
+;;;
+
+(el-get 'sync 'web-mode)
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
+(custom-set-variables
+ '(web-mode-script-padding 4)
+ '(web-mode-block-padding 4)
+ '(web-mode-style-padding 4)
+ '(web-mode-enable-block-face t))
+(add-hook 'web-mode-hook 'basic-indent)
+(add-hook 'web-mode-hook 'my-web-mode-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
