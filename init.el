@@ -528,6 +528,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; easy-kill settings
+;;;
+
+(el-get 'sync 'easy-kill)
+(global-set-key [remap kill-ring-save] 'easy-kill)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mmm-mode settings
 ;;;
 
