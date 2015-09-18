@@ -875,6 +875,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; yafolding settings
+;;;
+
+(el-get 'sync 'yafolding-mode)
+(add-hook 'prog-mode-hook 'yafolding-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew settings
 ;;;
 
