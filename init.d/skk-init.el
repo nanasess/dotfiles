@@ -7,6 +7,7 @@
 ;; (setq skk-server-prog "dbskkd-cdb-tcp.sh")
 (setq skk-server-host "localhost")
 (setq skk-server-portnum 1178)
+(setq skk-cdb-large-jisyo (concat external-directory "ddskk/SKK-JISYO.ALL.cdb"))
 (setq-default skk-kutouten-type 'en)
 (setq-default skk-kuten-touten-alist
 	      '((jp "。" . "、")
