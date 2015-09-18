@@ -205,8 +205,16 @@
 (unless (server-running-p)
   (server-start))
 
-(custom-set-variables
- '(skk-cdb-large-jisyo (concat external-directory "SKK-JISYO.ALL.cdb")))
+(defun scroll-down-with-lines ()
+  "" (interactive) (scroll-down 0.5))
+(defun scroll-up-with-lines ()
+  "" (interactive) (scroll-up 0.5))
+(global-set-key [wheel-up] 'scroll-down-with-lines)
+(global-set-key [wheel-down] 'scroll-up-with-lines)
+(global-set-key [double-wheel-up] 'scroll-down-with-lines)
+(global-set-key [double-wheel-down] 'scroll-up-with-lines)
+(global-set-key [triple-wheel-up] 'scroll-down-with-lines)
+(global-set-key [triple-wheel-down] 'scroll-up-with-lines)
 
 (defvar mkpasswd-command
   "head -c 10 < /dev/random | uuencode -m - | tail -n 3 |head -n 1 | head -c10")
