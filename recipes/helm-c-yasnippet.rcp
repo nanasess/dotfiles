@@ -1,0 +1,4 @@
+(:name helm-c-yasnippet
+       :description "Helm source for yasnippet"
+       :type github
+       :pkgname "emacs-jp/helm-c-yasnippet")

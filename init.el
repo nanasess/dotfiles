@@ -775,27 +775,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; yasnippet settings
-;;;
-
-(el-get 'sync 'yasnippet)
-(yas-global-mode 1)
-(custom-set-variables '(yas-prompt-functions '(yas-dropdown-prompt
-					       yas-ido-prompt
-					       yas-completing-prompt)))
-(defun yas/org-very-safe-expand ()
-  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
-(add-hook 'org-mode-hook
-          #'(lambda ()
-	      ;; yasnippet (using the new org-cycle hooks)
-	      (custom-set-variables '(ac-use-overriding-local-map t))
-	      (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)))
-(eval-after-load "yasnippet"
-  '(progn
-     (define-key yas/keymap [tab] 'yas/next-field)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; auto-complete.el settings
 ;;;
 
@@ -878,7 +857,7 @@
 ;;; yafolding settings
 ;;;
 
-(el-get 'sync 'yafolding-mode)
+(el-get 'sync 'yafolding)
 (add-hook 'prog-mode-hook 'yafolding-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1074,6 +1053,31 @@
 ;; (set-face-background 'helm-source-header "azure2")
 ;; (set-face-attribute 'helm-source-header nil :height 1.1 :weight 'normal)
 ;; (set-face-background 'helm-selection "Beige")
+
+(el-get 'sync 'helm-c-yasnippet)
+(setq helm-yas-space-match-any-greedy t)
+(global-set-key (kbd "C-c y") 'helm-yas-complete)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; yasnippet settings
+;;;
+
+(el-get 'sync 'yasnippet)
+(yas-global-mode 1)
+(custom-set-variables '(yas-prompt-functions '(yas-dropdown-prompt
+					       yas-ido-prompt
+					       yas-completing-prompt)))
+(defun yas/org-very-safe-expand ()
+  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
+(add-hook 'org-mode-hook
+          #'(lambda ()
+	      ;; yasnippet (using the new org-cycle hooks)
+	      (custom-set-variables '(ac-use-overriding-local-map t))
+	      (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)))
+(eval-after-load "yasnippet"
+  '(progn
+     (define-key yas/keymap [tab] 'yas/next-field)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
