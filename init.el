@@ -664,7 +664,7 @@
 (el-get 'sync 'magit)
 (add-to-list 'load-path (concat user-emacs-directory "el-get/magit"))
 (require 'magit)
-(require 'magit-svn)
+(require 'magit-blame)
 
 ;; see also https://github.com/magit/magit/issues/1318#issuecomment-71192459
 (defun magit-expand-git-file-name--msys (args)
