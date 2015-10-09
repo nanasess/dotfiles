@@ -397,7 +397,7 @@
 ;;; yaml-mode settings
 ;;;
 
-(el-get 'yaml-mode)
+(el-get 'sync 'yaml-mode)
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 (add-hook 'yaml-mode-hook
@@ -676,8 +676,8 @@
         (list filename)))
 (advice-add 'magit-expand-git-file-name :filter-args #'magit-expand-git-file-name--msys)
 
-(set-face-attribute 'magit-item-highlight nil
-		    :inherit nil)
+;; (set-face-attribute 'magit-item-highlight nil
+;; 		    :inherit nil)
 (global-set-key (kbd "C-z m") 'magit-status)
 (define-key magit-log-mode-map (kbd "j") 'magit-goto-next-section)
 (define-key magit-log-mode-map (kbd "k") 'magit-goto-previous-section)
@@ -1032,18 +1032,21 @@
 (global-set-key (kbd "C-z .") 'hh:resume)
 (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
 
-(eval-after-load "helm-migemo"
-  '(defun helm-compile-source--candidates-in-buffer (source)
-     (helm-aif (assoc 'candidates-in-buffer source)
-         (append source
-                 `((candidates
-                    . ,(or (cdr it)
-                           (lambda ()
-                             ;; Do not use `source' because other plugins
-                             ;; (such as helm-migemo) may change it
-                             (helm-candidates-in-buffer (helm-get-current-source)))))
-                   (volatile) (match identity)))
-       source)))
+(with-eval-after-load "helm-migemo"
+  (defun helm-compile-source--candidates-in-buffer (source)
+    (helm-aif (assoc 'candidates-in-buffer source)
+	(append source
+		`((candidates
+		   . ,(or (cdr it)
+                          (lambda ()
+                            ;; Do not use `source' because other plugins
+                            ;; (such as helm-migemo) may change it
+                            (helm-candidates-in-buffer (helm-get-current-source)))))
+                  (volatile) (match identity)))
+      source))
+  (defalias 'helm-mp-3-get-patterns 'helm-mm-3-get-patterns)
+  (defalias 'helm-mp-3-search-base 'helm-mm-3-search-base))
+
 (helm-migemize-command helm-source-kill-ring)
 ;; (helm-migemize-command helm-for-files)
 (helm-migemize-command hh:menu-command)
