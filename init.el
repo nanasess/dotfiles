@@ -41,6 +41,15 @@
 
 (el-get 'sync)
 
+(require 'package)
+(add-to-list 'package-archives
+	     ;; The 't' means to append, so that MELPA comes after the more
+	     ;; stable ELPA archive.
+	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
+;; M-x el-get-elpa-build-local-recipes
+(require 'el-get-elpa)
+
 ;; (el-get 'sync 'esup)
 ;; (require 'esup)
 (el-get 'sync 'cp5022x)
@@ -676,8 +685,8 @@
         (list filename)))
 (advice-add 'magit-expand-git-file-name :filter-args #'magit-expand-git-file-name--msys)
 
-(set-face-attribute 'magit-item-highlight nil
-		    :inherit nil)
+;; (set-face-attribute 'magit-item-highlight nil
+;; 		    :inherit nil)
 (global-set-key (kbd "C-z m") 'magit-status)
 (define-key magit-log-mode-map (kbd "j") 'magit-goto-next-section)
 (define-key magit-log-mode-map (kbd "k") 'magit-goto-previous-section)
