@@ -83,7 +83,7 @@
 
 (require 'cl-lib)
 (require 'helm)
-(require 'helm-match-plugin)
+(require 'helm-multi-match)
 (require 'helm-migemo nil t)
 (require 'howm)
 (require 'howm-menu)
