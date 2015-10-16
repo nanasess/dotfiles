@@ -675,23 +675,9 @@
 (require 'magit)
 (require 'magit-blame)
 
-;; see also https://github.com/magit/magit/issues/1318#issuecomment-71192459
-(defun magit-expand-git-file-name--msys (args)
-  "Handle Msys directory names such as /c/* by changing them to C:/*"
-  (let ((filename (car args)))
-        (when (string-match "^/\\([a-z]\\)/\\(.*\\)" filename)
-          (setq filename (concat (match-string 1 filename) ":/"
-                                 (match-string 2 filename))))
-        (list filename)))
-(advice-add 'magit-expand-git-file-name :filter-args #'magit-expand-git-file-name--msys)
-
-;; (set-face-attribute 'magit-item-highlight nil
-;; 		    :inherit nil)
 (global-set-key (kbd "C-z m") 'magit-status)
-(define-key magit-log-mode-map (kbd "j") 'magit-goto-next-section)
-(define-key magit-log-mode-map (kbd "k") 'magit-goto-previous-section)
-
-(setq magit-last-seen-setup-instructions "1.4.0")
+(define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
+(define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
