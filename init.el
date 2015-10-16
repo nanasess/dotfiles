@@ -235,9 +235,9 @@
 ;; (cancel-timer global-hl-line-timer)
 
 ;; use solarized.
-;; (el-get 'sync 'solarized-theme)
-(el-get 'sync 'plan9-theme)
-(require 'plan9-theme)
+(add-to-list 'custom-theme-load-path
+	     (concat user-emacs-directory "el-get/emacs-color-theme-solarized"))
+(load-theme 'solarized t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -671,7 +671,7 @@
 ;;;
 
 (el-get 'sync 'magit)
-(add-to-list 'load-path (concat user-emacs-directory "el-get/magit"))
+(add-to-list 'load-path (concat user-emacs-directory "el-get/magit/lisp"))
 (require 'magit)
 (require 'magit-blame)
 
