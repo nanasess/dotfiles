@@ -50,6 +50,9 @@
 ;; M-x el-get-elpa-build-local-recipes
 (require 'el-get-elpa)
 
+(el-get 'sync 'el-get-lock)
+(el-get-lock)
+
 ;; (el-get 'sync 'esup)
 ;; (require 'esup)
 (el-get 'sync 'cp5022x)
