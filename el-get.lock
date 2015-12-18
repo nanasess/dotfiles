@@ -1,5 +1,7 @@
 (setq el-get-lock-package-versions
-      '((po-mode :checksum "3c97f0d391751956fdcf9f4c858d45c60405dd35")
+      '((ddskk :checksum "83f1acd557d1b5561f6bc5a3abae7ab9ab4ea440")
+        (popup :checksum "5374e55822c53dbca818968dd492b5672c6da683")
+        (po-mode :checksum "3c97f0d391751956fdcf9f4c858d45c60405dd35")
         (google-translate :checksum "0e57fc9d040638398a31a5c67ebf88e051c73cf2")
         (id-manager :checksum "22b265b7cb824d7aa30678b871cfd363e6dac01e")
         (edbi :checksum "28ffa730414e00ef8c1032dfbdf692eb70a34277")
