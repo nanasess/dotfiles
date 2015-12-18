@@ -1,9 +1,8 @@
 (:name ddskk
        :website "http://openlab.ring.gr.jp/skk/ddskk.html"
        :description "A Japanese input method on Emacs."
-       :type cvs
-       :options login
-       :url ":pserver:guest:guest@openlab.jp:/circus/cvsroot"
+       :type github
+       :pkgname "skk-dev/ddskk"
        :module "skk/main"
        :autoloads nil
        :features ("skk-setup")
