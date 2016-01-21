@@ -50,7 +50,6 @@
 (setq skk-rom-kana-rule-list
            (append skk-rom-kana-rule-list
                    '(("@" nil "@"))))
-(setq skk-jisyo-code "euc-jisx0213-unix")
 (defvar skk-auto-save-interval 30)
 (defun toggle-skk-kutouten ()
   "toggle skk-kutoten-type."
