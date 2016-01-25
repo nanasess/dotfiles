@@ -38,7 +38,7 @@
         (web-mode :checksum "8cad2b7ef530df7337b4ed09ab1fc88619626970")
         (js2-mode :checksum "40c2ab5774d53433cc20c75f9c534b35d7de4edc")
         (recentf-ext :checksum "495bfe07e8a759f1e6dfbd45e62ae2f72404ff79")
-        (magit :checksum "acce5dad66a21f4fe7e8e7295cb2ea9a6f2873ac")
+        (magit :checksum "f77325ea13e68afce79801243fa3f8a4a463bc7f")
         (el-get :checksum "7e3118ae2753451a1636e61a8ec866ef843e82c3")
         (dash :checksum "2b69c146e419bebd495cd1ed9b1392f753ffb924")
         (ctable :checksum "270a5da27ba55e47e5bb9243746cca5fdc6a4f5e")
