@@ -5,27 +5,12 @@
 (setq skk-cdb-large-jisyo nil)
 (setq skk-large-jisyo (concat external-directory "ddskk/SKK-JISYO.L"))
 
-(setq skk-extra-jisyo-file-list
-      (list
-       ;; XXX external-directory をうまく展開できない
-       '("~/GoogleDrive/share/ddskk/SKK-JISYO.JIS3_4" . euc-jisx0213)
-       '("~/GoogleDrive/share/ddskk/SKK-JISYO.JIS2004" . euc-jisx0213)
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.JIS2"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.assoc"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.edict"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.fullname"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.geo"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.itaiji"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.jinmei"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.law"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.lisp"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.mazegaki"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.okinawa"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.propernoun"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.pubdic+"))
-       (format "%s" (concat external-directory "ddskk/SKK-JISYO.station"))
-       (format "%s" (concat external-directory "ddskk/zipcode/SKK-JISYO.zipcode"))
-       (format "%s" (concat external-directory "ddskk/zipcode/SKK-JISYO.office.zipcode"))))
+(dolist (JISYO
+	 (list "assoc" "edict" "fullname" "geo" "itaiji" "jinmei"
+	       "law" "lisp" "mazegaki" "okinawa" "propernoun" "pubdic+" "station"
+	       "zipcode" "office.zipcode" "JIS3_4" "JIS2004"))
+  (add-to-list 'skk-extra-jisyo-file-list
+	       (concat external-directory "ddskk/SKK-JISYO." JISYO)))
 
 (setq-default skk-kutouten-type 'en)
 (setq-default skk-kuten-touten-alist
