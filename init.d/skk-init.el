@@ -4,6 +4,7 @@
 
 (setq skk-cdb-large-jisyo nil)
 (setq skk-large-jisyo (concat external-directory "ddskk/SKK-JISYO.L"))
+(setq skk-jisyo-code 'euc-jis-2004-unix)
 
 (dolist (JISYO
 	 (list "assoc" "edict" "fullname" "geo" "itaiji" "jinmei"
