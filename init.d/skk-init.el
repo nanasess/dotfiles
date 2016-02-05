@@ -23,6 +23,7 @@
 (setq skk-show-inline 'vertical)
 (setq skk-use-jisx0201-input-method t)
 (setq skk-share-private-jisyo t)
+(setq skk-save-jisyo-instantly t)
 (setq skk-use-face t)
 (setq skk-use-color-cursor t)
 (setq skk-japanese-message-and-error nil)
@@ -35,7 +36,6 @@
 (setq skk-rom-kana-rule-list
            (append skk-rom-kana-rule-list
                    '(("@" nil "@"))))
-(defvar skk-auto-save-interval 30)
 (defun toggle-skk-kutouten ()
   "toggle skk-kutoten-type."
   (interactive)
@@ -43,8 +43,4 @@
 	 (setq skk-kutouten-type 'jp))
 	((setq skk-kutouten-type 'en)))
   (message (format "skk-kutoten-type on set to the %s." skk-kutouten-type)))
-(defun skk-auto-save ()
-  "auto save of the skk-jisyo and skk-study."
-  (skk-save-jisyo))
-  ;; (skk-study-save))
-(run-with-idle-timer skk-auto-save-interval t 'skk-auto-save)
+
