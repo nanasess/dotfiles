@@ -1169,6 +1169,12 @@
 			   '(edbi:ds-history-list-num 50)
 			   '(edbi:query-result-column-max-width nil))))
 
+;;; sqlite-dump
+(el-get 'sync 'sqlite-dump)
+(autoload 'sqlite-dump "sqlite-dump" nil t)
+(modify-coding-system-alist 'file "\\.\\(db\\|sqlite\\)\\'" 'raw-text-unix)
+(add-to-list 'auto-mode-alist '("\\.\\(db\\|sqlite\\)\\'" . sqlite-dump))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; mkpasswd settings
