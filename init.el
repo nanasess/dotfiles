@@ -782,7 +782,8 @@
 	     (expand-file-name
 	      (concat user-site-lisp-directory "auto-complete/dict")))
 (ac-config-default)
-(setq ac-auto-show-menu 0.3)
+(setq ac-delay 0.3)
+(setq ac-auto-show-menu 0.8)
 (setq ac-use-menu-map t)
 (define-key ac-completing-map [tab] 'ac-complete)
 (define-key ac-completing-map [return] 'ac-complete)
