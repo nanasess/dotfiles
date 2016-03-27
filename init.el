@@ -707,6 +707,7 @@
 (setq howm-view-use-grep t)
 ;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
 (setq howm-process-coding-system 'utf-8-unix)
+(setq howm-todo-menu-types "[-+~!]")
 
 (add-to-list 'auto-mode-alist '("\\.txt$" . gfm-mode))
 (require 'howm)
