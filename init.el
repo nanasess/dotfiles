@@ -704,7 +704,10 @@
 (add-hook 'markdown-mode-hook 'howm-mode)
 (add-hook 'org-mode-hook 'howm-mode)
 (defvar howm-view-title-header "Title:")
-(defvar howm-view-use-grep nil)
+(setq howm-view-use-grep t)
+;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
+(setq howm-process-coding-system 'utf-8-unix)
+
 (add-to-list 'auto-mode-alist '("\\.txt$" . gfm-mode))
 (require 'howm)
 (setq howm-template
