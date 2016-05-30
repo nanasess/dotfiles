@@ -1,6 +1,6 @@
 (setq el-get-lock-package-versions
       '((sqlite-dump :checksum "fbed2930b4b0362ba9a209e3ca256fff6cebadcd")
-        (ddskk :checksum "5385c2280d5e0cd321744d070a402908ee50dec7")
+        (ddskk :checksum "b5f96c76567e5049103d1fe963b96498c6443439")
         (popup :checksum "5374e55822c53dbca818968dd492b5672c6da683")
         (po-mode :checksum "3c97f0d391751956fdcf9f4c858d45c60405dd35")
         (google-translate :checksum "0e57fc9d040638398a31a5c67ebf88e051c73cf2")
