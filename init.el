@@ -798,15 +798,17 @@
 ;;;
 
 (el-get 'sync 'php-mode)
+(el-get 'sync 'autopair)
 
 (defun php-c-style ()
   (interactive)
   (c-toggle-hungry-state 1)
   (c-toggle-syntactic-indentation 1)
   ;; (c-toggle-auto-hungry-state 1)
-  (electric-pair-mode t)
+  ;; (electric-pair-mode t)
   (electric-indent-mode t)
   (electric-layout-mode t)
+  (autopair-mode)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
