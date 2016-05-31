@@ -798,13 +798,15 @@
 ;;;
 
 (el-get 'sync 'php-mode)
-(el-get 'sync 'php-electric)
-(el-get 'sync 'php-completion)
 
 (defun php-c-style ()
   (interactive)
   (c-toggle-hungry-state 1)
+  (c-toggle-syntactic-indentation 1)
   ;; (c-toggle-auto-hungry-state 1)
+  (electric-pair-mode t)
+  (electric-indent-mode t)
+  (electric-layout-mode t)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
@@ -813,8 +815,6 @@
 (custom-set-variables '(php-mode-coding-style 'psr2)
 		      '(php-manual-url "http://jp2.php.net/manual/ja/")
 		      '(php-search-url "http://jp2.php.net/"))
-
-(setq browse-url-browser-function 'eww-browse-url)
 
 (add-hook 'php-mode-hook 'php-c-style)
 (add-hook 'php-mode-hook 'helm-gtags-mode)
