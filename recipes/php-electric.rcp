@@ -1,3 +1,4 @@
 (:name php-electric
        :description "electric submode for the php-mode"
-       :type http :url "http://stcamp.net/share/php-electric.el")
+       :type github
+       :pkgname "nanasess/php-electric.el")
