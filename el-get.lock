@@ -1,5 +1,11 @@
 (setq el-get-lock-package-versions
-      '((autopair :checksum "2b6d72bccb0ebba6e7e711528872b898b0c65b0a")
+      '((xcscope :checksum "9dee0f3b20115dfaf9f8486937b4db013ec1903f")
+        (s :checksum "2184337a132944f669144d0078d1fa1220012840")
+        (f :checksum "de85171132fc0d3bdb8ca9264845b478e28c7b81")
+        (ac-php :checksum "23b998dafd43ff1dadc85cd0fa71f6aca34411e6")
+        (smartparens :checksum "1321757dfe774782d13b0c050c292b2477877d0b")
+        (flex-autopair :checksum "4bb757f2556a4a51828e2fed8fb81e31e83052cb")
+        (autopair :checksum "2b6d72bccb0ebba6e7e711528872b898b0c65b0a")
         (sqlite-dump :checksum "fbed2930b4b0362ba9a209e3ca256fff6cebadcd")
         (ddskk :checksum "b5f96c76567e5049103d1fe963b96498c6443439")
         (popup :checksum "5374e55822c53dbca818968dd492b5672c6da683")

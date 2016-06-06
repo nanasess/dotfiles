@@ -798,17 +798,22 @@
 ;;;
 
 (el-get 'sync 'php-mode)
-(el-get 'sync 'autopair)
+(el-get 'sync 'smartparens)
+
+;; require github.com/vim-php/phpctags
+;; require php >=5.5
+;; require cscope >= 15.8a
+;; M-x ac-php-remake-tags-all
+(el-get 'sync 'ac-php)
 
 (defun php-c-style ()
   (interactive)
-  (c-toggle-hungry-state 1)
-  (c-toggle-syntactic-indentation 1)
-  ;; (c-toggle-auto-hungry-state 1)
-  ;; (electric-pair-mode t)
+  (auto-complete-mode t)
+  (require 'ac-php)
+  (setq ac-sources '(ac-source-php))
+  (yas-global-mode 1)
   (electric-indent-mode t)
   (electric-layout-mode t)
-  (autopair-mode)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
@@ -819,11 +824,14 @@
 		      '(php-search-url "http://jp2.php.net/"))
 
 (add-hook 'php-mode-hook 'php-c-style)
-(add-hook 'php-mode-hook 'helm-gtags-mode)
+;; (add-hook 'php-mode-hook 'helm-gtags-mode)
+(add-hook 'php-mode-hook #'smartparens-mode)
 
 (eval-after-load "php-mode"
   '(progn
      (setq yas-trigger-key (kbd "<tab>"))
+     (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
+     (define-key php-mode-map (kbd "C-t") 'ac-php-location-stack-back)
      (define-key php-mode-map [return] 'newline-and-indent)
      (define-key php-mode-map (kbd "C-z C-t") 'quickrun)))
 
@@ -862,8 +870,8 @@
 ;;; yafolding settings
 ;;;
 
-(el-get 'sync 'yafolding)
-(add-hook 'prog-mode-hook 'yafolding-mode)
+;; (el-get 'sync 'yafolding)
+;; (add-hook 'prog-mode-hook 'yafolding-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1073,9 +1081,9 @@
 
 (el-get 'sync 'yasnippet)
 (yas-global-mode 1)
-(custom-set-variables '(yas-prompt-functions '(yas-dropdown-prompt
-					       yas-ido-prompt
-					       yas-completing-prompt)))
+;; (custom-set-variables '(yas-prompt-functions '(yas-dropdown-prompt
+;; 					       yas-ido-prompt
+;; 					       yas-completing-prompt)))
 (defun yas/org-very-safe-expand ()
   (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
 (add-hook 'org-mode-hook
