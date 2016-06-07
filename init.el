@@ -804,14 +804,14 @@
 ;; require php >=5.5
 ;; require cscope >= 15.8a
 ;; M-x ac-php-remake-tags-all
+(require 'cl)
 (el-get 'sync 'ac-php)
 
 (defun php-c-style ()
   (interactive)
   (auto-complete-mode t)
   (require 'ac-php)
-  (setq ac-sources '(ac-source-php))
-  (yas-global-mode 1)
+  (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
   (electric-indent-mode t)
   (electric-layout-mode t)
   (set (make-local-variable 'comment-start) "// ")
@@ -831,7 +831,7 @@
   '(progn
      (setq yas-trigger-key (kbd "<tab>"))
      (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
-     (define-key php-mode-map (kbd "C-t") 'ac-php-location-stack-back)
+     (define-key php-mode-map (kbd "C-u M-.") 'ac-php-location-stack-back)
      (define-key php-mode-map [return] 'newline-and-indent)
      (define-key php-mode-map (kbd "C-z C-t") 'quickrun)))
 
