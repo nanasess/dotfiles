@@ -798,13 +798,22 @@
 ;;;
 
 (el-get 'sync 'php-mode)
-(el-get 'sync 'php-electric)
-(el-get 'sync 'php-completion)
+(el-get 'sync 'smartparens)
+
+;; require github.com/vim-php/phpctags
+;; require php >=5.5
+;; require cscope >= 15.8a
+;; M-x ac-php-remake-tags-all
+(require 'cl)
+(el-get 'sync 'ac-php)
 
 (defun php-c-style ()
   (interactive)
-  (c-toggle-hungry-state 1)
-  ;; (c-toggle-auto-hungry-state 1)
+  (auto-complete-mode t)
+  (require 'ac-php)
+  (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+  (electric-indent-mode t)
+  (electric-layout-mode t)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
@@ -814,14 +823,15 @@
 		      '(php-manual-url "http://jp2.php.net/manual/ja/")
 		      '(php-search-url "http://jp2.php.net/"))
 
-(setq browse-url-browser-function 'eww-browse-url)
-
 (add-hook 'php-mode-hook 'php-c-style)
-(add-hook 'php-mode-hook 'helm-gtags-mode)
+;; (add-hook 'php-mode-hook 'helm-gtags-mode)
+(add-hook 'php-mode-hook #'smartparens-mode)
 
 (eval-after-load "php-mode"
   '(progn
      (setq yas-trigger-key (kbd "<tab>"))
+     (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
+     (define-key php-mode-map (kbd "C-u M-.") 'ac-php-location-stack-back)
      (define-key php-mode-map [return] 'newline-and-indent)
      (define-key php-mode-map (kbd "C-z C-t") 'quickrun)))
 
@@ -860,8 +870,8 @@
 ;;; yafolding settings
 ;;;
 
-(el-get 'sync 'yafolding)
-(add-hook 'prog-mode-hook 'yafolding-mode)
+;; (el-get 'sync 'yafolding)
+;; (add-hook 'prog-mode-hook 'yafolding-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -920,10 +930,11 @@
 ;;; auto-async-byte-compile settings
 ;;;
 
-;; (el-get 'sync 'auto-async-byte-compile)
-;; (require 'auto-async-byte-compile)
-;; (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
-;; (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
+(el-get 'sync 'auto-async-byte-compile)
+(require 'auto-async-byte-compile)
+(setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
+(setq auto-async-byte-compile-suppress-warnings t)
+(add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1071,9 +1082,9 @@
 
 (el-get 'sync 'yasnippet)
 (yas-global-mode 1)
-(custom-set-variables '(yas-prompt-functions '(yas-dropdown-prompt
-					       yas-ido-prompt
-					       yas-completing-prompt)))
+;; (custom-set-variables '(yas-prompt-functions '(yas-dropdown-prompt
+;; 					       yas-ido-prompt
+;; 					       yas-completing-prompt)))
 (defun yas/org-very-safe-expand ()
   (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
 (add-hook 'org-mode-hook
