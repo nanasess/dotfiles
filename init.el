@@ -799,7 +799,6 @@
   '(progn
      (setq yas-trigger-key (kbd "<tab>"))
      (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
-     (define-key php-mode-map (kbd "C-u M-.") 'ac-php-location-stack-back)
      (define-key php-mode-map [return] 'newline-and-indent)
      (define-key php-mode-map (kbd "C-z C-t") 'quickrun)))
 
@@ -923,6 +922,7 @@
 
 (custom-set-variables
  '(helm-mode t)
+ '(helm-migemo-mode 1)
  '(helm-input-idle-delay 0.2)
  '(helm-buffer-max-length 40)
  '(helm-ff-auto-update-initial-value nil)
@@ -1028,16 +1028,6 @@
       source))
   (defalias 'helm-mp-3-get-patterns 'helm-mm-3-get-patterns)
   (defalias 'helm-mp-3-search-base 'helm-mm-3-search-base))
-
-(helm-migemize-command helm-source-kill-ring)
-;; (helm-migemize-command helm-for-files)
-(helm-migemize-command hh:menu-command)
-(helm-migemize-command helm-resume)
-(helm-migemize-command helm-git-files)
-
-;; (set-face-background 'helm-source-header "azure2")
-;; (set-face-attribute 'helm-source-header nil :height 1.1 :weight 'normal)
-;; (set-face-background 'helm-selection "Beige")
 
 (el-get 'sync 'helm-c-yasnippet)
 (setq helm-yas-space-match-any-greedy t)
