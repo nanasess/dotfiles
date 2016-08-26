@@ -80,7 +80,7 @@
 ;;;
 
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
-		   "/opt/local/sbin" "/opt/local/bin"
+		   "/opt/local/sbin" "/opt/local/bin" "/usr/gnu/bin"
 		   (expand-file-name "~/bin")
 		   (expand-file-name "~/.emacs.d/bin")
 		   (expand-file-name "~/Applications/UpTeX.app/teTeX/bin")))
