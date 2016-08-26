@@ -220,11 +220,6 @@
 
 (add-hook 'diff-mode-hook
 	  #'(lambda ()
-	      ;; (set-face-foreground 'diff-context-face "grey50")
-	      ;; (set-face-foreground 'diff-hunk-header-face "medium blue")
-	      ;; (set-face-background 'diff-removed-face "#ffdddd")
-	      ;; (set-face-background 'diff-added-face "#ddffdd")
-	      ;; (set-face-background 'diff-refine-change "Thistle1")
 	      (set-face-bold-p 'diff-refine-change t)))
 
 ;; see also http://rubikitch.com/2015/05/14/global-hl-line-mode-timer/
@@ -238,6 +233,7 @@
 ;; (cancel-timer global-hl-line-timer)
 
 ;; use solarized.
+(el-get 'sync 'emacs-color-theme-solarized)
 (add-to-list 'custom-theme-load-path
 	     (concat user-emacs-directory "el-get/emacs-color-theme-solarized"))
 (load-theme 'solarized t)
