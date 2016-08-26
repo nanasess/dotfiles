@@ -548,37 +548,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; mmm-mode settings
-;;;
-
-(el-get 'sync 'mmm-mode)
-(require 'mmm-mode)
-(setq mmm-global-mode 'maybe)
-(set-face-background 'mmm-default-submode-face "ivory2")
-(custom-set-variables '(mmm-font-lock-available-p t))
-(require 'mmm-sample)
-(setq mmm-here-doc-mode-alist
-      (append (list '("__EOF__" . sql-mode)
-		    '("__EOS__" . sql-mode))
-	      mmm-here-doc-mode-alist))
-(mmm-add-classes
- '((php-heredoc
-    :front "<<<\\s-*[\"\']?\\([a-zA-Z_][a-zA-Z0-9_]+\\)"
-    :front-offset (end-of-line 1)
-    :back "^\\s-*~1;$"
-    :save-matches 1
-    :face mmm-code-submode-face
-    :delimiter-mode nil
-    :match-submode mmm-here-doc-get-mode
-    :insert ((?d here-doc "Here-document Name: " @ "<<" str _ "\n"
-		 @ "\n" @ str "\n" @)))))
-
-(mmm-add-mode-ext-class nil "\\.\\(html\\|tpl\\)\\'" 'embedded-css)
-(mmm-add-mode-ext-class nil "\\.\\(html\\|tpl\\)\\'" 'html-js)
-(mmm-add-mode-ext-class nil "\\.php\\'" 'php-heredoc)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; org-mode settings
 ;;;
 (custom-set-variables

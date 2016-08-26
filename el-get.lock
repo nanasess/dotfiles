@@ -36,7 +36,6 @@
         (multiple-cursors :checksum "f3daf86bd6c4b373075ab6afc3492675ccc1c558")
         (session :checksum "1f3d526692eaf252ec57cf55dff38282b62e4852")
         (htmlize :checksum "aa6e2f6dba6fdfa200c7c55efe29ff63380eac8f")
-        (mmm-mode :checksum "c28501c0fea2b1902a844b00aa11787618aa2d88")
         (visual-regexp :checksum "104d17fc8fd1d3bb8f7823a8bf076dcf6839ba64")
         (goto-chg :checksum "50e58f9e6bb0b8b8e3a24ed817ff78512a770448")
         (migemo :checksum "c2240afa9afc0f003bb1d846710505e8e8e38169")
