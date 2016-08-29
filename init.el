@@ -80,7 +80,7 @@
 ;;;
 
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
-		   "/opt/local/sbin" "/opt/local/bin"
+		   "/opt/local/sbin" "/opt/local/bin" "/usr/gnu/bin"
 		   (expand-file-name "~/bin")
 		   (expand-file-name "~/.emacs.d/bin")
 		   (expand-file-name "~/Applications/UpTeX.app/teTeX/bin")))
@@ -107,6 +107,7 @@
  '(skk-init-file (concat user-initial-directory "skk-init.el"))
  '(skk-preload t)
  '(skk-isearch-start-mode 'latin))
+(define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -220,11 +221,6 @@
 
 (add-hook 'diff-mode-hook
 	  #'(lambda ()
-	      ;; (set-face-foreground 'diff-context-face "grey50")
-	      ;; (set-face-foreground 'diff-hunk-header-face "medium blue")
-	      ;; (set-face-background 'diff-removed-face "#ffdddd")
-	      ;; (set-face-background 'diff-added-face "#ddffdd")
-	      ;; (set-face-background 'diff-refine-change "Thistle1")
 	      (set-face-bold-p 'diff-refine-change t)))
 
 ;; see also http://rubikitch.com/2015/05/14/global-hl-line-mode-timer/
@@ -238,6 +234,7 @@
 ;; (cancel-timer global-hl-line-timer)
 
 ;; use solarized.
+(el-get 'sync 'emacs-color-theme-solarized)
 (add-to-list 'custom-theme-load-path
 	     (concat user-emacs-directory "el-get/emacs-color-theme-solarized"))
 (load-theme 'solarized t)
@@ -490,7 +487,7 @@
 ;;; migemo settings
 ;;;
 
-;; (el-get 'sync 'migemo)
+(el-get 'sync 'migemo)
 (defvar migemo-dictionary
   (concat external-directory "migemo/dict/utf-8/migemo-dict"))
 (custom-set-variables
@@ -545,37 +542,6 @@
 
 (el-get 'sync 'easy-kill)
 (global-set-key [remap kill-ring-save] 'easy-kill)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; mmm-mode settings
-;;;
-
-(el-get 'sync 'mmm-mode)
-(require 'mmm-mode)
-(setq mmm-global-mode 'maybe)
-(set-face-background 'mmm-default-submode-face "ivory2")
-(custom-set-variables '(mmm-font-lock-available-p t))
-(require 'mmm-sample)
-(setq mmm-here-doc-mode-alist
-      (append (list '("__EOF__" . sql-mode)
-		    '("__EOS__" . sql-mode))
-	      mmm-here-doc-mode-alist))
-(mmm-add-classes
- '((php-heredoc
-    :front "<<<\\s-*[\"\']?\\([a-zA-Z_][a-zA-Z0-9_]+\\)"
-    :front-offset (end-of-line 1)
-    :back "^\\s-*~1;$"
-    :save-matches 1
-    :face mmm-code-submode-face
-    :delimiter-mode nil
-    :match-submode mmm-here-doc-get-mode
-    :insert ((?d here-doc "Here-document Name: " @ "<<" str _ "\n"
-		 @ "\n" @ str "\n" @)))))
-
-(mmm-add-mode-ext-class nil "\\.\\(html\\|tpl\\)\\'" 'embedded-css)
-(mmm-add-mode-ext-class nil "\\.\\(html\\|tpl\\)\\'" 'html-js)
-(mmm-add-mode-ext-class nil "\\.php\\'" 'php-heredoc)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -677,6 +643,8 @@
 (add-to-list 'load-path (concat user-emacs-directory "el-get/magit/lisp"))
 (require 'magit)
 (require 'magit-blame)
+
+(setq magit-diff-refine-hunk t)
 
 (global-set-key (kbd "C-z m") 'magit-status)
 (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
@@ -831,7 +799,6 @@
   '(progn
      (setq yas-trigger-key (kbd "<tab>"))
      (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
-     (define-key php-mode-map (kbd "C-u M-.") 'ac-php-location-stack-back)
      (define-key php-mode-map [return] 'newline-and-indent)
      (define-key php-mode-map (kbd "C-z C-t") 'quickrun)))
 
@@ -955,6 +922,7 @@
 
 (custom-set-variables
  '(helm-mode t)
+ '(helm-migemo-mode 1)
  '(helm-input-idle-delay 0.2)
  '(helm-buffer-max-length 40)
  '(helm-ff-auto-update-initial-value nil)
@@ -1061,19 +1029,26 @@
   (defalias 'helm-mp-3-get-patterns 'helm-mm-3-get-patterns)
   (defalias 'helm-mp-3-search-base 'helm-mm-3-search-base))
 
-(helm-migemize-command helm-source-kill-ring)
-;; (helm-migemize-command helm-for-files)
-(helm-migemize-command hh:menu-command)
-(helm-migemize-command helm-resume)
-(helm-migemize-command helm-git-files)
-
-;; (set-face-background 'helm-source-header "azure2")
-;; (set-face-attribute 'helm-source-header nil :height 1.1 :weight 'normal)
-;; (set-face-background 'helm-selection "Beige")
-
 (el-get 'sync 'helm-c-yasnippet)
 (setq helm-yas-space-match-any-greedy t)
 (global-set-key (kbd "C-c y") 'helm-yas-complete)
+
+(el-get 'sync 'helm-swoop)
+(cl-defun helm-swoop-nomigemo (&key $query ($multiline current-prefix-arg))
+  (interactive)
+  (let (helm-migemo-mode)
+    (helm-swoop :$query $query :$multiline $multiline)))
+
+(defun isearch-forward-or-helm-swoop-or-helm-occur (use-helm-swoop)
+  (interactive "p")
+  (let (current-prefix-arg
+        (helm-swoop-pre-input-function 'ignore))
+    (call-interactively
+     (case use-helm-swoop
+       (1 'isearch-forward)		; C-s
+       (4 (if (< 1000000 (buffer-size)) 'helm-occur 'helm-swoop)) ; C-u C-s
+       (16 'helm-swoop-nomigemo)))))				  ; C-u C-u C-s
+(global-set-key (kbd "C-s") 'isearch-forward-or-helm-swoop-or-helm-occur)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
