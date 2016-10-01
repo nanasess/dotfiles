@@ -479,6 +479,19 @@
       (set-frame-parameter nil 'fullscreen nil)
     (set-frame-parameter nil 'fullscreen 'fullscreen)))
 
+(defun change-frame-height-up ()
+  (interactive)
+  (set-frame-height (selected-frame) (+ (frame-height (selected-frame)) 1)))
+(defun change-frame-height-down ()
+  (interactive)
+  (set-frame-height (selected-frame) (- (frame-height (selected-frame)) 1)))
+(defun change-frame-width-up ()
+  (interactive)
+  (set-frame-width (selected-frame) (+ (frame-width (selected-frame)) 1)))
+(defun change-frame-width-down ()
+  (interactive)
+  (set-frame-width (selected-frame) (- (frame-width (selected-frame)) 1)))
+
 (global-set-key (kbd "C-z C-a") 'toggle-fullscreen)
 (global-set-key (kbd "C-z C-z") 'toggle-size-frame)
 

@@ -9,7 +9,7 @@
     (setq initial-frame-alist
 	  (append (list
 		   '(width . 82)
-		   '(height . 50)
+		   '(height . 45)
 		   '(font . "fontset-solaris"))
 		  initial-frame-alist)))
 (setq default-frame-alist initial-frame-alist)
