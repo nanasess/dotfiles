@@ -33,7 +33,7 @@
         (yafolding :checksum "0dc48073f429112b51a888e8e9285739435d3c7f")
         (markdown-mode :checksum "dea0ae2d52ccd3a92b9e932f258ed7eddfd9b58d")
         (php-completion :checksum "48f689f648ce463fbb92f763f3ab5899573db9fa")
-        (php-mode :checksum "fd2db3c259dce7ca3d0dad35ff2863e73b5e720b")
+        (php-mode :checksum "9b1e7736ce014f26f40635af3c781127a5e32dfa")
         (quickrun :checksum "87b34738ea152e6ff173a14f8b42303150c8c031")
         (howm :checksum "37733b47cc76e29e717cee2287d8022e80ca7798")
         (smartrep :checksum "50ac98e3a0c90616df6219d1e04c91e893fea579")
