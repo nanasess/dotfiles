@@ -107,7 +107,6 @@
  '(skk-init-file (concat user-initial-directory "skk-init.el"))
  '(skk-preload t)
  '(skk-isearch-start-mode 'latin))
-(define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1333,5 +1332,7 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
 			    'po-find-file-coding-system)
+
+(define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
 (put 'downcase-region 'disabled nil)
