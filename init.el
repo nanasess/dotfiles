@@ -846,6 +846,66 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; csharp
+;;;
+
+(el-get 'sync 'csharp)
+(el-get 'sync 'omnisharp-mode)
+;; (el-get 'sync 'company)
+;; (el-get 'sync 'ac-company)
+;;
+;; git clone git@github.com:OmniSharp/omnisharp-server.git
+;; cd omnisharp-server
+;; xbuild  /target:Build /property:Configuration=Release
+;; cp -r OmniSharp/bin/Release/* ~/.emacs.d/bin/
+;;
+;; XXX OmniSharp-Roslyn が自動起動してくれないので 以下のようにして手動で起動させる
+;; ~/git-repos/omnisharp-roslyn/artifacts/publish/OmniSharp/default/netcoreapp1.0/OmniSharp -s <project folder>
+;;
+;; さらに csharp-mode や omnisharp-mode がちゃんと起動しない場合は以下のように手動で起動させる
+;; M-x my-csharp-mode-hook
+;; M-x my-omnisharp-mode-hook
+(setq omnisharp-server-executable-path "omnisharp")
+;; (require 'ac-company)
+;; (ac-company-define-source ac-source-company-omnisharp company-omnisharp)
+
+(setq omnisharp-debug 1)
+(defun my-csharp-mode-hook ()
+  (interactive)
+  (flycheck-mode 1)
+  (auto-complete-mode 1)
+  (electric-pair-local-mode 1) ;; for Emacs25
+  (setq flycheck-idle-change-delay 2))
+(defun my-omnisharp-mode-hook ()
+  (interactive)
+  (message "omnisharp-mode enabled")
+  ;; (define-key omnisharp-mode-map "\C-c\C-s" 'omnisharp-start-omnisharp-server)
+  (define-key omnisharp-mode-map "\M-/" 'omnisharp-auto-complete)
+  (define-key omnisharp-mode-map "." 'omnisharp-add-dot-and-auto-complete)
+  (define-key omnisharp-mode-map "\C-c\C-c" 'omnisharp-build-in-emacs)
+  (define-key omnisharp-mode-map "\C-c\C-N" 'omnisharp-navigate-to-solution-member)
+  (define-key omnisharp-mode-map "\C-c\C-n" 'omnisharp-navigate-to-current-file-member)
+  (define-key omnisharp-mode-map "\C-c\C-f" 'omnisharp-navigate-to-solution-file)
+  (define-key omnisharp-mode-map "\C-c\C-g" 'omnisharp-go-to-definition)
+  (define-key omnisharp-mode-map "\C-c\C-r" 'omnisharp-rename)
+  (define-key omnisharp-mode-map "\C-c\C-v" 'omnisharp-run-code-action-refactoring)
+  (define-key omnisharp-mode-map "\C-c\C-o" 'omnisharp-auto-complete-overrides)
+  (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-helm-find-symbols)
+  ;; (define-key omnisharp-mode-map "\C-c\C-t\C-s" (lambda() (interactive) (omnisharp-unit-test "single")))
+  ;; (define-key omnisharp-mode-map "\C-c\C-t\C-r" (lambda() (interactive) (omnisharp-unit-test "fixture")))
+  ;; (define-key omnisharp-mode-map "\C-c\C-t\C-e" (lambda() (interactive) (omnisharp-unit-test "all")))
+  )
+(add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
+(add-hook 'csharp-mode-hook
+	  #'(lambda ()
+	      (add-to-list 'ac-sources 'ac-source-omnisharp)
+	      (add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck)))
+(add-hook 'csharp-mode-hook 'my-omnisharp-mode-hook)
+
+;; (eval-after-load 'company
+;;   '(add-to-list 'company-backends 'company-omnisharp))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; yafolding settings
 ;;;
 

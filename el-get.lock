@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((helm-swoop :checksum "6d3fdcfb6dea06242efc8ff4cafff9917e558bfc")
+      '((csharp :checksum "4516a18c0dd1797a2d1eb2ae3069c0e16efa14a7")
+        (helm-swoop :checksum "6d3fdcfb6dea06242efc8ff4cafff9917e558bfc")
         (emacs-async :checksum "8bc0678ebca97e7b1c6e78e75e03f8dfd502d63a")
         (pcre2el :checksum "166a10472002010692dbc35f323ffb8110a294c5")
         (ht :checksum "62d77713ecb99871f2b05c111474445c15781164")
