@@ -512,7 +512,7 @@
    '(migemo-regex-dictionary nil)
    '(migemo-use-pattern-alist t)
    '(migemo-use-frequent-pattern-alist t)
-   '(migemo-pattern-alist-length 1000)
+   '(migemo-pattern-alist-length 10000)
    '(migemo-coding-system 'utf-8-unix))
   (require 'migemo))
 
@@ -998,7 +998,7 @@
 
 (custom-set-variables
  '(helm-mode t)
- '(helm-migemo-mode 1)
+ ;; '(helm-migemo-mode 1)
  '(helm-input-idle-delay 0.2)
  '(helm-buffer-max-length 40)
  '(helm-ff-auto-update-initial-value nil)
