@@ -1401,3 +1401,57 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
 (put 'downcase-region 'disabled nil)
+
+;; haskell
+(el-get 'sync 'haskell-mode)
+(el-get 'sync 'ghc-mod)
+(el-get 'sync 'ac-ghc-mod)
+
+(autoload 'haskell-mode "haskell-mode")
+(autoload 'haskell-cabal "haskell-cabal")
+(add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
+(add-to-list 'interpreter-mode-alist '("runghc" . haskell-mode))
+(add-to-list 'interpreter-mode-alist '("runhaskell" . haskell-mode))
+(setq haskell-program-name "/usr/local/bin/ghci")
+
+(autoload 'ghc-init "ghc" nil t)
+(autoload 'ghc-debug "ghc" nil t)
+
+(let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
+  (setenv "PATH" (concat my-cabal-path path-separator (getenv "PATH")))
+  (add-to-list 'exec-path my-cabal-path))
+(custom-set-variables '(haskell-tags-on-save t))
+
+(custom-set-variables
+  '(haskell-process-suggest-remove-import-lines t)
+  '(haskell-process-auto-import-loaded-modules t)
+  '(haskell-process-log t))
+
+(eval-after-load 'haskell-mode
+  '(progn
+     (auto-complete-mode 1)
+     (add-to-list 'ac-sources 'ac-source-ghc-mod)
+     (add-hook 'haskell-mode-hook 'inf-haskell-mode) ;; enable
+     (defadvice inferior-haskell-load-file (after change-focus-after-load)
+       “Change focus to GHCi window after C-c C-l command”
+	 (other-window 1))
+     (ad-activate 'inferior-haskell-load-file)
+     (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+     (add-hook 'haskell-mode-hook (lambda () (flymake-mode)))
+     (define-key haskell-mode-map (kbd "C-c C-o") 'haskell-compile)
+     (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
+     (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
+     (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
+     (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
+     (define-key haskell-mode-map (kbd "C-c C-n C-c") 'haskell-process-cabal-build)
+     (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)))
+(eval-after-load 'haskell-cabal
+  '(progn
+     (define-key haskell-cabal-mode-map (kbd "C-c C-o") 'haskell-compile)
+     (define-key haskell-cabal-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
+     (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
+     (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+     (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
+
+(custom-set-variables '(haskell-process-type 'cabal-repl))
+(custom-set-variables '(haskell-process-type 'stack-ghci))
