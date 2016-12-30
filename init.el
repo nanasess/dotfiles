@@ -107,7 +107,6 @@
  '(skk-init-file (concat user-initial-directory "skk-init.el"))
  '(skk-preload t)
  '(skk-isearch-start-mode 'latin))
-(define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -513,7 +512,7 @@
    '(migemo-regex-dictionary nil)
    '(migemo-use-pattern-alist t)
    '(migemo-use-frequent-pattern-alist t)
-   '(migemo-pattern-alist-length 1000)
+   '(migemo-pattern-alist-length 10000)
    '(migemo-coding-system 'utf-8-unix))
   (require 'migemo))
 
@@ -795,9 +794,13 @@
   (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
   (electric-indent-mode t)
   (electric-layout-mode t)
+  (electric-pair-local-mode t)
+  (flycheck-mode t)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
-  (set (make-local-variable 'comment-end) ""))
+  (set (make-local-variable 'comment-end) "")
+  ;; (setq flycheck-phpcs-standard "PSR2")
+  )
 
 (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
 (custom-set-variables '(php-mode-coding-style 'psr2)
@@ -844,6 +847,67 @@
 (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 (autoload 'csv-mode "csv-mode"
   "Major mode for editing comma-separated value files." t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; csharp
+;;;
+
+(el-get 'sync 'csharp)
+(el-get 'sync 'omnisharp-mode)
+;; (el-get 'sync 'company)
+;; (el-get 'sync 'ac-company)
+;; (eval-after-load 'company
+;;   '(add-to-list 'company-backends 'company-omnisharp))
+;;
+;; git clone git@github.com:OmniSharp/omnisharp-roslyn.git
+;; cd omnisharp-roslyn
+;; ./build.sh
+;;
+;; XXX OmniSharp-Roslyn が自動起動してくれないので 以下のようにして手動で起動させる
+;; ~/git-repos/omnisharp-roslyn/artifacts/publish/OmniSharp/default/netcoreapp1.0/OmniSharp -s <project folder>
+;;
+;; さらに csharp-mode や omnisharp-mode がちゃんと起動しない場合は以下のように手動で起動させる
+;; M-x my-csharp-mode-hook
+;; M-x my-omnisharp-mode-hook
+(setq omnisharp-server-executable-path "omnisharp")
+;; (require 'ac-company)
+;; (ac-company-define-source ac-source-company-omnisharp company-omnisharp)
+
+;; (setq omnisharp-debug 1)
+(defun my-csharp-mode-hook ()
+  (interactive)
+  (flycheck-mode 1)
+  (auto-complete-mode 1)
+  (electric-pair-local-mode 1) ;; for Emacs25
+  (setq flycheck-idle-change-delay 2)
+  (omnisharp-mode 1))
+(defun my-omnisharp-mode-hook ()
+  (interactive)
+  (message "omnisharp-mode enabled")
+  ;; (define-key omnisharp-mode-map "\C-c\C-s" 'omnisharp-start-omnisharp-server)
+  (define-key omnisharp-mode-map "\M-/"     'omnisharp-auto-complete)
+  (define-key omnisharp-mode-map "."        'omnisharp-add-dot-and-auto-complete)
+  (define-key omnisharp-mode-map "\C-c\C-c" 'omnisharp-code-format)
+  (define-key omnisharp-mode-map "\C-c\C-N" 'omnisharp-navigate-to-solution-member)
+  (define-key omnisharp-mode-map "\C-c\C-n" 'omnisharp-navigate-to-current-file-member)
+  (define-key omnisharp-mode-map "\C-c\C-f" 'omnisharp-navigate-to-solution-file)
+  (define-key omnisharp-mode-map "\M-."     'omnisharp-go-to-definition)
+  (define-key omnisharp-mode-map "\C-c\C-r" 'omnisharp-rename)
+  (define-key omnisharp-mode-map "\C-c\C-v" 'omnisharp-run-code-action-refactoring)
+  (define-key omnisharp-mode-map "\C-c\C-o" 'omnisharp-auto-complete-overrides)
+  (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-fix-usings)
+
+  ;; (define-key omnisharp-mode-map "\C-c\C-t\C-s" (lambda() (interactive) (omnisharp-unit-test "single")))
+  ;; (define-key omnisharp-mode-map "\C-c\C-t\C-r" (lambda() (interactive) (omnisharp-unit-test "fixture")))
+  ;; (define-key omnisharp-mode-map "\C-c\C-t\C-e" (lambda() (interactive) (omnisharp-unit-test "all")))
+  )
+(add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
+(add-hook 'csharp-mode-hook
+	  #'(lambda ()
+	      (add-to-list 'ac-sources 'ac-source-omnisharp)
+	      (add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck)))
+(add-hook 'csharp-mode-hook 'my-omnisharp-mode-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -935,7 +999,7 @@
 
 (custom-set-variables
  '(helm-mode t)
- '(helm-migemo-mode 1)
+ ;; '(helm-migemo-mode 1)
  '(helm-input-idle-delay 0.2)
  '(helm-buffer-max-length 40)
  '(helm-ff-auto-update-initial-value nil)
@@ -1333,5 +1397,7 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
 			    'po-find-file-coding-system)
+
+(define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
 (put 'downcase-region 'disabled nil)
