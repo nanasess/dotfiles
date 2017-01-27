@@ -372,7 +372,7 @@
 (add-to-list 'auto-mode-alist
 	     '("\\.\\(xml\\|xsl\\|rng\\)\\'" . nxml-mode))
 (add-to-list 'auto-mode-alist
-	     '("\\.\\(html\\|tpl\\)\\'" . nxml-web-mode))
+	     '("\\.\\(tpl\\)\\'" . nxml-web-mode))
 
 (add-hook 'nxml-mode-hook
 	  #'(lambda ()
@@ -391,14 +391,14 @@
 
 (el-get 'sync 'web-mode)
 (require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
 (custom-set-variables
  '(web-mode-script-padding 4)
  '(web-mode-block-padding 4)
  '(web-mode-style-padding 4)
  '(web-mode-enable-block-face t))
+(add-to-list 'auto-mode-alist '("\\.\\(twig\\|html\\)\\'" . web-mode))
+
 (add-hook 'web-mode-hook 'basic-indent)
-(add-hook 'web-mode-hook 'my-web-mode-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -771,6 +771,26 @@
 (setq ac-use-menu-map t)
 (define-key ac-completing-map [tab] 'ac-complete)
 (define-key ac-completing-map [return] 'ac-complete)
+
+(el-get 'sync 'company)
+(global-set-key (kbd "C-M-i") 'company-complete)
+
+(eval-after-load "company"
+    '(progn
+       ;; C-n, C-pで補完候補を次/前の候補を選択
+       (define-key company-active-map (kbd "C-n") 'company-select-next)
+       (define-key company-active-map (kbd "C-p") 'company-select-previous)
+       (define-key company-search-map (kbd "C-n") 'company-select-next)
+       (define-key company-search-map (kbd "C-p") 'company-select-previous)
+
+       ;; C-sで絞り込む
+       (define-key company-active-map (kbd "C-s") 'company-filter-candidates)
+
+       ;; TABで候補を設定
+       (define-key company-active-map (kbd "C-i") 'company-complete-selection)
+
+       ;; 各種メジャーモードでも C-M-iで company-modeの補完を使う
+       (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1397,6 +1417,41 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
 			    'po-find-file-coding-system)
+
+(el-get 'sync 'tide)
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+
+;; formats the buffer before saving
+(add-hook 'before-save-hook 'tide-format-before-save)
+
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+
+;; format options
+(setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
+
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode))))
+
+(add-hook 'js2-mode-hook #'setup-tide-mode)
+
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "jsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode))))
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
