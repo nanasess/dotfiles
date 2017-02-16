@@ -233,10 +233,10 @@
 ;; (cancel-timer global-hl-line-timer)
 
 ;; use solarized.
-(el-get 'sync 'emacs-color-theme-solarized)
+(el-get 'sync 'solarized-theme)
 (add-to-list 'custom-theme-load-path
-	     (concat user-emacs-directory "el-get/emacs-color-theme-solarized"))
-(load-theme 'solarized t)
+	     (concat user-emacs-directory "el-get/solarized-theme"))
+(load-theme 'solarized-light t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -760,20 +760,26 @@
 ;;; auto-complete.el settings
 ;;;
 
-(el-get 'sync 'auto-complete)
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories
-	     (expand-file-name
-	      (concat user-site-lisp-directory "auto-complete/dict")))
-(ac-config-default)
-(setq ac-delay 0.3)
-(setq ac-auto-show-menu 0.8)
-(setq ac-use-menu-map t)
-(define-key ac-completing-map [tab] 'ac-complete)
-(define-key ac-completing-map [return] 'ac-complete)
+;; (el-get 'sync 'auto-complete)
+;; (auto-complete-mode 0)
+;; (global-auto-complete-mode 0)
+;; (require 'auto-complete-config)
+;; (add-to-list 'ac-dictionary-directories
+;; 	     (expand-file-name
+;; 	      (concat user-site-lisp-directory "auto-complete/dict")))
+;; ;; (ac-config-default)
+;; (setq ac-delay 0.3)
+;; (setq ac-auto-show-menu 0.8)
+;; (setq ac-use-menu-map t)
+;; (define-key ac-completing-map [tab] 'ac-complete)
+;; (define-key ac-completing-map [return] 'ac-complete)
 
 (el-get 'sync 'company)
+(global-company-mode 1)
 (global-set-key (kbd "C-M-i") 'company-complete)
+(setq company-idle-delay 0)
+(setq company-minimum-prefix-length 2)
+(setq company-selection-wrap-around t)
 
 (eval-after-load "company"
     '(progn
@@ -790,7 +796,22 @@
        (define-key company-active-map (kbd "C-i") 'company-complete-selection)
 
        ;; 各種メジャーモードでも C-M-iで company-modeの補完を使う
-       (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)))
+       (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
+
+       (set-face-attribute 'company-tooltip nil
+			   :foreground "black" :background "lightgrey")
+       (set-face-attribute 'company-tooltip-common nil
+			   :foreground "black" :background "lightgrey")
+       (set-face-attribute 'company-tooltip-common-selection nil
+			   :foreground "white" :background "steelblue")
+       (set-face-attribute 'company-tooltip-selection nil
+			   :foreground "black" :background "steelblue")
+       (set-face-attribute 'company-preview-common nil
+			   :background nil :foreground "lightgrey" :underline t)
+       (set-face-attribute 'company-scrollbar-fg nil
+			   :background "orange")
+       (set-face-attribute 'company-scrollbar-bg nil
+			   :background "gray40")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -798,7 +819,7 @@
 ;;;
 
 (el-get 'sync 'php-mode)
-(el-get 'sync 'smartparens)
+;; (el-get 'sync 'smartparens)
 
 ;; require github.com/vim-php/phpctags
 ;; require php >=5.5
@@ -809,9 +830,12 @@
 
 (defun php-c-style ()
   (interactive)
-  (auto-complete-mode t)
+  (auto-complete-mode 0)
   (require 'ac-php)
-  (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+  (require 'company-php)
+  ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+  (company-mode t)
+  (add-to-list 'company-backends 'company-ac-php-backend)
   (electric-indent-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
@@ -829,7 +853,7 @@
 
 (add-hook 'php-mode-hook 'php-c-style)
 ;; (add-hook 'php-mode-hook 'helm-gtags-mode)
-(add-hook 'php-mode-hook #'smartparens-mode)
+;; (add-hook 'php-mode-hook #'smartparens-mode)
 
 (eval-after-load "php-mode"
   '(progn
@@ -898,7 +922,7 @@
 (defun my-csharp-mode-hook ()
   (interactive)
   (flycheck-mode 1)
-  (auto-complete-mode 1)
+  ;; (auto-complete-mode 1)
   (electric-pair-local-mode 1) ;; for Emacs25
   (setq flycheck-idle-change-delay 2)
   (omnisharp-mode 1))
