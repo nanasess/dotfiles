@@ -760,9 +760,9 @@
 ;;; auto-complete.el settings
 ;;;
 
-;; (el-get 'sync 'auto-complete)
-;; (auto-complete-mode 0)
-;; (global-auto-complete-mode 0)
+(el-get 'sync 'auto-complete)
+(auto-complete-mode 0)
+(global-auto-complete-mode 0)
 ;; (require 'auto-complete-config)
 ;; (add-to-list 'ac-dictionary-directories
 ;; 	     (expand-file-name
