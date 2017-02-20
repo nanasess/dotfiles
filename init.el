@@ -836,7 +836,7 @@
   ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
   (company-mode t)
   (add-to-list 'company-backends 'company-ac-php-backend)
-  (electric-indent-mode t)
+  (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
   (flycheck-mode t)
@@ -847,7 +847,7 @@
   )
 
 (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-(custom-set-variables '(php-mode-coding-style 'psr2)
+(custom-set-variables '(php-mode-coding-style 'symfony2)
 		      '(php-manual-url "http://jp2.php.net/manual/ja/")
 		      '(php-search-url "http://jp2.php.net/"))
 
