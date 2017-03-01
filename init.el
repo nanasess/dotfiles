@@ -909,7 +909,7 @@
 ;; ./build.sh
 ;;
 ;; XXX OmniSharp-Roslyn が自動起動してくれないので 以下のようにして手動で起動させる
-;; ~/git-repos/omnisharp-roslyn/artifacts/publish/OmniSharp/default/netcoreapp1.0/OmniSharp -s <project folder>
+;; ~/git-repos/omnisharp-roslyn/artifacts/publish/OmniSharp/default/netcoreapp1.1/OmniSharp -s `pwd`
 ;;
 ;; さらに csharp-mode や omnisharp-mode がちゃんと起動しない場合は以下のように手動で起動させる
 ;; M-x my-csharp-mode-hook
@@ -919,6 +919,35 @@
 ;; (ac-company-define-source ac-source-company-omnisharp company-omnisharp)
 
 ;; (setq omnisharp-debug 1)
+
+
+;; see https://github.com/nosami/omnisharp-demo/blob/master/config/omnisharp.el
+(defun csharp-newline-and-indent ()
+  "Open a newline and indent.
+If point is between a pair of braces, opens newlines to put braces
+on their own line."
+  (interactive)
+  (save-excursion
+    (save-match-data
+      (when (and
+             (looking-at " *}")
+             (save-match-data
+               (when (looking-back "{ *")
+                 (goto-char (match-beginning 0))
+                 (unless (looking-back "^[[:space:]]*")
+                   (newline-and-indent))
+                 t)))
+        (unless (and (boundp electric-pair-open-newline-between-pairs)
+                     electric-pair-open-newline-between-pairs
+                     electric-pair-mode)
+          (goto-char (match-beginning 0))
+          (newline-and-indent)))))
+  (newline-and-indent))
+(defun omnisharp-format-before-save ()
+  "Before save hook to format the buffer before each save."
+  (interactive)
+  (when (bound-and-true-p omnisharp-mode)
+    (omnisharp-code-format)))
 (defun my-csharp-mode-hook ()
   (interactive)
   (flycheck-mode 1)
@@ -930,6 +959,14 @@
   (interactive)
   (message "omnisharp-mode enabled")
   ;; (define-key omnisharp-mode-map "\C-c\C-s" 'omnisharp-start-omnisharp-server)
+  ;; (define-key company-active-map (kbd ".") (lambda() (interactive) (company-complete-selection-insert-key-and-complete '".")))
+  (define-key company-active-map (kbd "]") (lambda() (interactive) (company-complete-selection-insert-key-and-complete '"]")))
+  (define-key company-active-map (kbd "[") (lambda() (interactive) (company-complete-selection-insert-key '"[")))
+  (define-key company-active-map (kbd ")") (lambda() (interactive) (company-complete-selection-insert-key '")")))
+  (define-key company-active-map (kbd "<SPC>") nil)
+  (define-key company-active-map (kbd ";") (lambda() (interactive) (company-complete-selection-insert-key '";")))
+  (define-key company-active-map (kbd ">") (lambda() (interactive) (company-complete-selection-insert-key '">")))
+  (define-key omnisharp-mode-map (kbd "}") 'csharp-indent-function-on-closing-brace) 
   (define-key omnisharp-mode-map "\M-/"     'omnisharp-auto-complete)
   (define-key omnisharp-mode-map "."        'omnisharp-add-dot-and-auto-complete)
   (define-key omnisharp-mode-map "\C-c\C-c" 'omnisharp-code-format)
@@ -941,17 +978,20 @@
   (define-key omnisharp-mode-map "\C-c\C-v" 'omnisharp-run-code-action-refactoring)
   (define-key omnisharp-mode-map "\C-c\C-o" 'omnisharp-auto-complete-overrides)
   (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-fix-usings)
+  (define-key omnisharp-mode-map (kbd "<RET>") 'csharp-newline-and-indent)
 
   ;; (define-key omnisharp-mode-map "\C-c\C-t\C-s" (lambda() (interactive) (omnisharp-unit-test "single")))
   ;; (define-key omnisharp-mode-map "\C-c\C-t\C-r" (lambda() (interactive) (omnisharp-unit-test "fixture")))
   ;; (define-key omnisharp-mode-map "\C-c\C-t\C-e" (lambda() (interactive) (omnisharp-unit-test "all")))
   )
+(setq omnisharp-company-strip-trailing-brackets nil)
 (add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
 (add-hook 'csharp-mode-hook
 	  #'(lambda ()
 	      (add-to-list 'ac-sources 'ac-source-omnisharp)
 	      (add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck)))
 (add-hook 'csharp-mode-hook 'my-omnisharp-mode-hook)
+;; (add-hook 'before-save-hook 'omnisharp-format-before-save)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

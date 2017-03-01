@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((ac-company :checksum "0db1c9bb6b9be54519d90910f11817178138ac9a")
+      '((omnisharp-mode :checksum "f956929891e77ba4ce2fb1361129d5d3ebc7bb55")
+        (ac-company :checksum "0db1c9bb6b9be54519d90910f11817178138ac9a")
         (company-mode :checksum "c494fc65d35f7f00c2da17206e6550385ae9b300")
         (highlight-symbol :checksum "7a789c779648c55b16e43278e51be5898c121b3a")
         (csharp :checksum "4516a18c0dd1797a2d1eb2ae3069c0e16efa14a7")
