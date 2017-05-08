@@ -774,7 +774,7 @@
 ;; (define-key ac-completing-map [tab] 'ac-complete)
 ;; (define-key ac-completing-map [return] 'ac-complete)
 
-(el-get 'sync 'company)
+(el-get 'sync 'company-mode)
 (global-company-mode 1)
 (global-set-key (kbd "C-M-i") 'company-complete)
 (setq company-idle-delay 0)
@@ -897,7 +897,8 @@
 ;;; csharp
 ;;;
 
-(el-get 'sync 'csharp)
+(el-get 'sync 'dash)
+(el-get 'sync 'csharp-mode)
 (el-get 'sync 'omnisharp-mode)
 ;; (el-get 'sync 'company)
 ;; (el-get 'sync 'ac-company)
@@ -914,7 +915,7 @@
 ;; さらに csharp-mode や omnisharp-mode がちゃんと起動しない場合は以下のように手動で起動させる
 ;; M-x my-csharp-mode-hook
 ;; M-x my-omnisharp-mode-hook
-(setq omnisharp-server-executable-path "omnisharp")
+(setq omnisharp-server-executable-path "~/bin/omnisharp-osx-x64-netcoreapp1.1/OmniSharp")
 ;; (require 'ac-company)
 ;; (ac-company-define-source ac-source-company-omnisharp company-omnisharp)
 
@@ -988,9 +989,11 @@ on their own line."
 (add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
 (add-hook 'csharp-mode-hook
 	  #'(lambda ()
-	      (add-to-list 'ac-sources 'ac-source-omnisharp)
+	      ;; (add-to-list 'ac-sources 'ac-source-omnisharp)
 	      (add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck)))
-(add-hook 'csharp-mode-hook 'my-omnisharp-mode-hook)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-omnisharp))
+
 ;; (add-hook 'before-save-hook 'omnisharp-format-before-save)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1068,7 +1071,8 @@ on their own line."
 ;;;
 ;;; helm settings
 ;;;
-
+(defvar helm-compile-source-functions nil 
+   "Functions to compile elements of `helm-sources' (plug-in).")
 (el-get 'sync 'helm)
 (el-get 'sync 'helm-migemo)
 (el-get 'sync 'helm-ag)
@@ -1245,7 +1249,8 @@ on their own line."
        '(("*Async Shell Command*"		:noselect t)
 	 ("^\*bzr-status.*\*"			:regexp t :noselect t)
 	 ("^\*xgit-status.*\*"			:regexp t :noselect t)
-	 ("*quickrun*"				:noselect t))
+	 ("*quickrun*"				:noselect t :tail t)
+	 ("^\*karma.*\*"			:regexp t :noselect t :tail t))
        popwin:special-display-config))
 
 (global-set-key (kbd "C-x C-p") popwin:keymap)
@@ -1483,6 +1488,8 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 			    'po-find-file-coding-system)
 
 (el-get 'sync 'tide)
+(el-get 'sync 'karma)
+
 (defun setup-tide-mode ()
   (interactive)
   (tide-setup)
@@ -1507,7 +1514,8 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (add-hook 'web-mode-hook
           (lambda ()
             (when (string-equal "tsx" (file-name-extension buffer-file-name))
-              (setup-tide-mode))))
+              (setup-tide-mode)
+	      (karma-mode 1))))
 
 (add-hook 'js2-mode-hook #'setup-tide-mode)
 
