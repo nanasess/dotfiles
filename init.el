@@ -1078,7 +1078,8 @@ on their own line."
 (el-get 'sync 'helm-ag)
 (el-get 'sync 'helm-ack)
 (el-get 'sync 'helm-gtags)
-(el-get 'sync 'helm-cmd-t)
+;; (el-get 'sync 'helm-cmd-t)
+(el-get 'sync 'helm-ls-git)
 (el-get 'sync 'helm-descbinds)
 
 (defadvice helm-grep-highlight-match (around ad-helm-grep-highlight-match activate)
@@ -1120,8 +1121,6 @@ on their own line."
 	  #'(lambda ()
 	      (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
 
-(require 'helm-C-x-b)
-
 (global-set-key (kbd "C-;") 'helm-for-files)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
@@ -1129,7 +1128,7 @@ on their own line."
 (global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-h b") 'helm-descbinds)
-(global-set-key (kbd "C-z l") 'helm-C-x-b)
+(global-set-key (kbd "C-z l") 'helm-ls-git-ls)
 
 (eval-after-load "helm"
   '(progn
