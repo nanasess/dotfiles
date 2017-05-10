@@ -855,8 +855,10 @@
 ;; (add-hook 'php-mode-hook 'helm-gtags-mode)
 ;; (add-hook 'php-mode-hook #'smartparens-mode)
 
+(add-to-list 'load-path (concat user-emacs-directory "el-get/php-mode/skeleton"))
 (eval-after-load "php-mode"
   '(progn
+     (require 'php-ext)
      (setq yas-trigger-key (kbd "<tab>"))
      (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
      (define-key php-mode-map [return] 'newline-and-indent)
