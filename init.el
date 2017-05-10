@@ -233,10 +233,10 @@
 ;; (cancel-timer global-hl-line-timer)
 
 ;; use solarized.
-(el-get 'sync 'emacs-color-theme-solarized)
+(el-get 'sync 'solarized-theme)
 (add-to-list 'custom-theme-load-path
-	     (concat user-emacs-directory "el-get/emacs-color-theme-solarized"))
-(load-theme 'solarized t)
+	     (concat user-emacs-directory "el-get/solarized-theme"))
+(load-theme 'solarized-light t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -358,6 +358,48 @@
   (set-variable 'indent-tabs-mode nil))
 (add-hook 'js2-mode-hook 'disabled-indent-tabs-mode)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; tide settings
+;;;
+
+(el-get 'sync 'tide)
+(el-get 'sync 'karma)
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+
+;; formats the buffer before saving
+(add-hook 'before-save-hook 'tide-format-before-save)
+
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+
+;; format options
+(setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
+
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode)
+	      (karma-mode 1))))
+
+(add-hook 'js2-mode-hook #'setup-tide-mode)
+
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "jsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode))))
+
 ;; (el-get 'sync 'jade-mode)
 ;; (require 'sws-mode)
 ;; (require 'jade-mode)
@@ -372,7 +414,7 @@
 (add-to-list 'auto-mode-alist
 	     '("\\.\\(xml\\|xsl\\|rng\\)\\'" . nxml-mode))
 (add-to-list 'auto-mode-alist
-	     '("\\.\\(html\\|tpl\\)\\'" . nxml-web-mode))
+	     '("\\.\\(tpl\\)\\'" . nxml-web-mode))
 
 (add-hook 'nxml-mode-hook
 	  #'(lambda ()
@@ -391,14 +433,14 @@
 
 (el-get 'sync 'web-mode)
 (require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
 (custom-set-variables
  '(web-mode-script-padding 4)
  '(web-mode-block-padding 4)
  '(web-mode-style-padding 4)
  '(web-mode-enable-block-face t))
+(add-to-list 'auto-mode-alist '("\\.\\(twig\\|html\\)\\'" . web-mode))
+
 (add-hook 'web-mode-hook 'basic-indent)
-(add-hook 'web-mode-hook 'my-web-mode-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -761,16 +803,57 @@
 ;;;
 
 (el-get 'sync 'auto-complete)
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories
-	     (expand-file-name
-	      (concat user-site-lisp-directory "auto-complete/dict")))
-(ac-config-default)
-(setq ac-delay 0.3)
-(setq ac-auto-show-menu 0.8)
-(setq ac-use-menu-map t)
-(define-key ac-completing-map [tab] 'ac-complete)
-(define-key ac-completing-map [return] 'ac-complete)
+(auto-complete-mode 0)
+(global-auto-complete-mode 0)
+;; (require 'auto-complete-config)
+;; (add-to-list 'ac-dictionary-directories
+;; 	     (expand-file-name
+;; 	      (concat user-site-lisp-directory "auto-complete/dict")))
+;; ;; (ac-config-default)
+;; (setq ac-delay 0.3)
+;; (setq ac-auto-show-menu 0.8)
+;; (setq ac-use-menu-map t)
+;; (define-key ac-completing-map [tab] 'ac-complete)
+;; (define-key ac-completing-map [return] 'ac-complete)
+
+(el-get 'sync 'company-mode)
+(global-company-mode 1)
+(global-set-key (kbd "C-M-i") 'company-complete)
+(setq company-idle-delay 0)
+(setq company-minimum-prefix-length 2)
+(setq company-selection-wrap-around t)
+
+(eval-after-load "company"
+    '(progn
+       ;; C-n, C-pで補完候補を次/前の候補を選択
+       (define-key company-active-map (kbd "C-n") 'company-select-next)
+       (define-key company-active-map (kbd "C-p") 'company-select-previous)
+       (define-key company-search-map (kbd "C-n") 'company-select-next)
+       (define-key company-search-map (kbd "C-p") 'company-select-previous)
+
+       ;; C-sで絞り込む
+       (define-key company-active-map (kbd "C-s") 'company-filter-candidates)
+
+       ;; TABで候補を設定
+       (define-key company-active-map (kbd "C-i") 'company-complete-selection)
+
+       ;; 各種メジャーモードでも C-M-iで company-modeの補完を使う
+       (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
+
+       (set-face-attribute 'company-tooltip nil
+			   :foreground "black" :background "lightgrey")
+       (set-face-attribute 'company-tooltip-common nil
+			   :foreground "black" :background "lightgrey")
+       (set-face-attribute 'company-tooltip-common-selection nil
+			   :foreground "white" :background "steelblue")
+       (set-face-attribute 'company-tooltip-selection nil
+			   :foreground "black" :background "steelblue")
+       (set-face-attribute 'company-preview-common nil
+			   :background nil :foreground "lightgrey" :underline t)
+       (set-face-attribute 'company-scrollbar-fg nil
+			   :background "orange")
+       (set-face-attribute 'company-scrollbar-bg nil
+			   :background "gray40")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -778,7 +861,7 @@
 ;;;
 
 (el-get 'sync 'php-mode)
-(el-get 'sync 'smartparens)
+;; (el-get 'sync 'smartparens)
 
 ;; require github.com/vim-php/phpctags
 ;; require php >=5.5
@@ -789,10 +872,13 @@
 
 (defun php-c-style ()
   (interactive)
-  (auto-complete-mode t)
+  (auto-complete-mode 0)
   (require 'ac-php)
-  (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
-  (electric-indent-mode t)
+  (require 'company-php)
+  ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+  (company-mode t)
+  (add-to-list 'company-backends 'company-ac-php-backend)
+  (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
   (flycheck-mode t)
@@ -803,16 +889,18 @@
   )
 
 (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-(custom-set-variables '(php-mode-coding-style 'psr2)
+(custom-set-variables '(php-mode-coding-style 'symfony2)
 		      '(php-manual-url "http://jp2.php.net/manual/ja/")
 		      '(php-search-url "http://jp2.php.net/"))
 
 (add-hook 'php-mode-hook 'php-c-style)
 ;; (add-hook 'php-mode-hook 'helm-gtags-mode)
-(add-hook 'php-mode-hook #'smartparens-mode)
+;; (add-hook 'php-mode-hook #'smartparens-mode)
 
+(add-to-list 'load-path (concat user-emacs-directory "el-get/php-mode/skeleton"))
 (eval-after-load "php-mode"
   '(progn
+     (require 'php-ext)
      (setq yas-trigger-key (kbd "<tab>"))
      (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
      (define-key php-mode-map [return] 'newline-and-indent)
@@ -853,7 +941,8 @@
 ;;; csharp
 ;;;
 
-(el-get 'sync 'csharp)
+(el-get 'sync 'dash)
+(el-get 'sync 'csharp-mode)
 (el-get 'sync 'omnisharp-mode)
 ;; (el-get 'sync 'company)
 ;; (el-get 'sync 'ac-company)
@@ -865,20 +954,49 @@
 ;; ./build.sh
 ;;
 ;; XXX OmniSharp-Roslyn が自動起動してくれないので 以下のようにして手動で起動させる
-;; ~/git-repos/omnisharp-roslyn/artifacts/publish/OmniSharp/default/netcoreapp1.0/OmniSharp -s <project folder>
+;; ~/git-repos/omnisharp-roslyn/artifacts/publish/OmniSharp/default/netcoreapp1.1/OmniSharp -s `pwd`
 ;;
 ;; さらに csharp-mode や omnisharp-mode がちゃんと起動しない場合は以下のように手動で起動させる
 ;; M-x my-csharp-mode-hook
 ;; M-x my-omnisharp-mode-hook
-(setq omnisharp-server-executable-path "omnisharp")
+(setq omnisharp-server-executable-path "~/bin/omnisharp-osx-x64-netcoreapp1.1/OmniSharp")
 ;; (require 'ac-company)
 ;; (ac-company-define-source ac-source-company-omnisharp company-omnisharp)
 
 ;; (setq omnisharp-debug 1)
+
+
+;; see https://github.com/nosami/omnisharp-demo/blob/master/config/omnisharp.el
+(defun csharp-newline-and-indent ()
+  "Open a newline and indent.
+If point is between a pair of braces, opens newlines to put braces
+on their own line."
+  (interactive)
+  (save-excursion
+    (save-match-data
+      (when (and
+             (looking-at " *}")
+             (save-match-data
+               (when (looking-back "{ *")
+                 (goto-char (match-beginning 0))
+                 (unless (looking-back "^[[:space:]]*")
+                   (newline-and-indent))
+                 t)))
+        (unless (and (boundp electric-pair-open-newline-between-pairs)
+                     electric-pair-open-newline-between-pairs
+                     electric-pair-mode)
+          (goto-char (match-beginning 0))
+          (newline-and-indent)))))
+  (newline-and-indent))
+(defun omnisharp-format-before-save ()
+  "Before save hook to format the buffer before each save."
+  (interactive)
+  (when (bound-and-true-p omnisharp-mode)
+    (omnisharp-code-format)))
 (defun my-csharp-mode-hook ()
   (interactive)
   (flycheck-mode 1)
-  (auto-complete-mode 1)
+  ;; (auto-complete-mode 1)
   (electric-pair-local-mode 1) ;; for Emacs25
   (setq flycheck-idle-change-delay 2)
   (omnisharp-mode 1))
@@ -886,6 +1004,14 @@
   (interactive)
   (message "omnisharp-mode enabled")
   ;; (define-key omnisharp-mode-map "\C-c\C-s" 'omnisharp-start-omnisharp-server)
+  ;; (define-key company-active-map (kbd ".") (lambda() (interactive) (company-complete-selection-insert-key-and-complete '".")))
+  (define-key company-active-map (kbd "]") (lambda() (interactive) (company-complete-selection-insert-key-and-complete '"]")))
+  (define-key company-active-map (kbd "[") (lambda() (interactive) (company-complete-selection-insert-key '"[")))
+  (define-key company-active-map (kbd ")") (lambda() (interactive) (company-complete-selection-insert-key '")")))
+  (define-key company-active-map (kbd "<SPC>") nil)
+  (define-key company-active-map (kbd ";") (lambda() (interactive) (company-complete-selection-insert-key '";")))
+  (define-key company-active-map (kbd ">") (lambda() (interactive) (company-complete-selection-insert-key '">")))
+  (define-key omnisharp-mode-map (kbd "}") 'csharp-indent-function-on-closing-brace) 
   (define-key omnisharp-mode-map "\M-/"     'omnisharp-auto-complete)
   (define-key omnisharp-mode-map "."        'omnisharp-add-dot-and-auto-complete)
   (define-key omnisharp-mode-map "\C-c\C-c" 'omnisharp-code-format)
@@ -897,17 +1023,22 @@
   (define-key omnisharp-mode-map "\C-c\C-v" 'omnisharp-run-code-action-refactoring)
   (define-key omnisharp-mode-map "\C-c\C-o" 'omnisharp-auto-complete-overrides)
   (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-fix-usings)
+  (define-key omnisharp-mode-map (kbd "<RET>") 'csharp-newline-and-indent)
 
   ;; (define-key omnisharp-mode-map "\C-c\C-t\C-s" (lambda() (interactive) (omnisharp-unit-test "single")))
   ;; (define-key omnisharp-mode-map "\C-c\C-t\C-r" (lambda() (interactive) (omnisharp-unit-test "fixture")))
   ;; (define-key omnisharp-mode-map "\C-c\C-t\C-e" (lambda() (interactive) (omnisharp-unit-test "all")))
   )
+(setq omnisharp-company-strip-trailing-brackets nil)
 (add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
 (add-hook 'csharp-mode-hook
 	  #'(lambda ()
-	      (add-to-list 'ac-sources 'ac-source-omnisharp)
+	      ;; (add-to-list 'ac-sources 'ac-source-omnisharp)
 	      (add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck)))
-(add-hook 'csharp-mode-hook 'my-omnisharp-mode-hook)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-omnisharp))
+
+;; (add-hook 'before-save-hook 'omnisharp-format-before-save)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -984,13 +1115,15 @@
 ;;;
 ;;; helm settings
 ;;;
-
+(defvar helm-compile-source-functions nil 
+   "Functions to compile elements of `helm-sources' (plug-in).")
 (el-get 'sync 'helm)
 (el-get 'sync 'helm-migemo)
 (el-get 'sync 'helm-ag)
 (el-get 'sync 'helm-ack)
 (el-get 'sync 'helm-gtags)
-(el-get 'sync 'helm-cmd-t)
+;; (el-get 'sync 'helm-cmd-t)
+(el-get 'sync 'helm-ls-git)
 (el-get 'sync 'helm-descbinds)
 
 (defadvice helm-grep-highlight-match (around ad-helm-grep-highlight-match activate)
@@ -1032,8 +1165,6 @@
 	  #'(lambda ()
 	      (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
 
-(require 'helm-C-x-b)
-
 (global-set-key (kbd "C-;") 'helm-for-files)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
@@ -1041,7 +1172,7 @@
 (global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-h b") 'helm-descbinds)
-(global-set-key (kbd "C-z l") 'helm-C-x-b)
+(global-set-key (kbd "C-z l") 'helm-ls-git-ls)
 
 (eval-after-load "helm"
   '(progn
@@ -1161,7 +1292,8 @@
        '(("*Async Shell Command*"		:noselect t)
 	 ("^\*bzr-status.*\*"			:regexp t :noselect t)
 	 ("^\*xgit-status.*\*"			:regexp t :noselect t)
-	 ("*quickrun*"				:noselect t))
+	 ("*quickrun*"				:noselect t :tail t)
+	 ("^\*karma.*\*"			:regexp t :noselect t :tail t))
        popwin:special-display-config))
 
 (global-set-key (kbd "C-x C-p") popwin:keymap)
