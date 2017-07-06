@@ -877,6 +877,7 @@
   (require 'company-php)
   ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
   (company-mode t)
+  (ac-php-core-eldoc-setup)
   (set (make-local-variable 'company-backends)
        '((company-ac-php-backend company-dabbrev-code company-gtags company-etags company-keywords company-dabbrev company-css company-capf company-files company-oddmuse company-abbrev company-yasnippet company-nxml)))
   (electric-indent-local-mode t)
