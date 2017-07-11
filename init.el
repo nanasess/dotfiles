@@ -887,7 +887,8 @@
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) "")
-  ;; (setq flycheck-phpcs-standard "PSR2")
+  (setq flycheck-phpcs-standard "PSR2")
+  (setq flycheck-phpmd-rulesets (concat user-emacs-directory "phpmd_ruleset.xml"))
   )
 
 (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
