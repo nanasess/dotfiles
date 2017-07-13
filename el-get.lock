@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((omnisharp-mode :checksum "d16b03158778fad4e3329e4f260f1604ddfa3c35")
+      '((tide :checksum "6ea01b753dc968d0850bd3d21865cc43f016f6f8")
+        (omnisharp-mode :checksum "d16b03158778fad4e3329e4f260f1604ddfa3c35")
         (helm-ls-git :checksum "7b7b6dc2554603ad98412927f84a803625069ab3")
         (magit :checksum "b8d558678821e35450c19e415656e366ebe44c38")
         (karma :checksum "31d3e7708246183d7ed0686be92bf23140af348c")
@@ -19,7 +20,7 @@
         (ac-php :checksum "e0aaae30e4e5f18390e5d00953db02c1f03c44f6")
         (smartparens :checksum "1321757dfe774782d13b0c050c292b2477877d0b")
         (sqlite-dump :checksum "fbed2930b4b0362ba9a209e3ca256fff6cebadcd")
-        (ddskk :checksum "aa9dba05f7a971c530ef9da3d5dffc764df3bcfd")
+        (ddskk :checksum "78798134af82a300e54a5d22d2f10c2885cd11ae")
         (popup :checksum "5374e55822c53dbca818968dd492b5672c6da683")
         (po-mode :checksum "3c97f0d391751956fdcf9f4c858d45c60405dd35")
         (google-translate :checksum "0e57fc9d040638398a31a5c67ebf88e051c73cf2")
