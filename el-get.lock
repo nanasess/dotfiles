@@ -44,7 +44,7 @@
         (yafolding :checksum "0dc48073f429112b51a888e8e9285739435d3c7f")
         (markdown-mode :checksum "ea5549233b3ce1536dae3a4793df79971a3781da")
         (php-completion :checksum "48f689f648ce463fbb92f763f3ab5899573db9fa")
-        (php-mode :checksum "6e57817aa3a3cabe41e069ff8af1521db118ff13")
+        (php-mode :checksum "3a9076b6f6146326c1314c580acddce9cbb5a290")
         (quickrun :checksum "87b34738ea152e6ff173a14f8b42303150c8c031")
         (howm :checksum "37733b47cc76e29e717cee2287d8022e80ca7798")
         (smartrep :checksum "50ac98e3a0c90616df6219d1e04c91e893fea579")
