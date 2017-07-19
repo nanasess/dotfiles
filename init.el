@@ -1325,12 +1325,12 @@ on their own line."
 ;;; id-manager settings
 ;;;
 
+(setq idm-database-file (concat external-directory ".idm-db.gpg"))
+(setq idm-copy-action 'kill-new)
+(setq idm-gen-password-cmd mkpasswd-command)
 (el-get-bundle id-manager in kiwanami/emacs-id-manager)
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 (setenv "GPG_AGENT_INFO" nil)
-(defvar idm-database-file (concat external-directory ".idm-db.gpg"))
-(defvar idm-copy-action 'kill-new)
-(defvar idm-gen-password-cmd mkpasswd-command)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
