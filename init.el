@@ -1246,7 +1246,7 @@ on their own line."
 ;;; auto-save settings
 ;;;
 
-(el-get-bundle auto-save-buffers-enhanced)
+(el-get-bundle! auto-save-buffers-enhanced in kentaro/auto-save-buffers-enhanced)
 (setq auto-save-buffers-enhanced-interval 1.5)
 (setq auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
 (setq auto-save-buffers-enhanced-file-related-with-scratch-buffer
