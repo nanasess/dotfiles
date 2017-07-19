@@ -1060,10 +1060,10 @@ on their own line."
 ;;; auto-async-byte-compile settings
 ;;;
 
-(el-get-bundle! auto-async-byte-compile)
-(setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
-(setq auto-async-byte-compile-suppress-warnings t)
-(add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
+;; (el-get-bundle! auto-async-byte-compile)
+;; (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
+;; (setq auto-async-byte-compile-suppress-warnings t)
+;; (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
