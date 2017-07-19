@@ -100,11 +100,11 @@
 ;;; SKK settings
 ;;;
 
-(el-get-bundle ddskk
-  (setq skk-user-directory (concat external-directory "ddskk")
-	skk-init-file (concat user-initial-directory "skk-init.el")
-	skk-preload t
-	skk-isearch-start-mode 'latin))
+(setq skk-user-directory (concat external-directory "ddskk")
+      skk-init-file (concat user-initial-directory "skk-init.el")
+      skk-isearch-start-mode 'latin
+      skk-preload t)
+(el-get-bundle ddskk)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -575,7 +575,7 @@
 ;;; easy-kill settings
 ;;;
 
-(el-get-bundle easy-kill)
+(el-get-bundle! easy-kill in leoliu/easy-kill)
 (global-set-key [remap kill-ring-save] 'easy-kill)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
