@@ -1,4 +1,0 @@
-(:name php-electric
-       :description "electric submode for the php-mode"
-       :type github
-       :pkgname "nanasess/php-electric.el")
