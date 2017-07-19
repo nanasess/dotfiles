@@ -36,7 +36,7 @@
         (edbi :checksum "28ffa730414e00ef8c1032dfbdf692eb70a34277")
         (scratch-pop :checksum "d81b82c1813fa67de60bc01e694765cfa6e35700")
         (popwin :checksum "fe508ce1dc02bfd8b55ca300db3846083854ccef")
-        (yasnippet :checksum "710ea4d106683bc770597792cdeedfce80551614")
+        (yasnippet :checksum "75cbf7251b2c041b134f6b0d162dfe911e578b8f")
         (helm-c-yasnippet :checksum "1fa400233ba8e990066c47cca1e2af64bd192d4d")
         (wgrep :checksum "8e91b932d9c64c5525a1c0a8c770ec55e213e790")
         (helm-descbinds :checksum "5d8e84e6c047ce8a042fdcd827abb421f4848ac7")

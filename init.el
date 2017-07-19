@@ -338,11 +338,11 @@
 
 (el-get-bundle js2-mode
   (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-  (setq js2-basic-offset 2
-	js2-bounce-indent-p t)
   (add-hook 'js-mode-hook 'js2-minor-mode)
   (with-eval-after-load-feature 'js2-mode
-    (electric-indent-mode 0)
+    (setq js2-basic-offset 2
+	  js2-bounce-indent-p t)
+    (electric-indent-local-mode 0)
     (define-key js2-mode-map (kbd "RET") 'js2-line-break)
     (add-hook 'js2-mode-hook 'disabled-indent-tabs-mode)))
 
@@ -782,10 +782,10 @@
 (el-get-bundle company-mode
   (global-company-mode 1)
   (global-set-key (kbd "C-M-i") 'company-complete)
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 2)
-  (setq company-selection-wrap-around t)
-  (with-eval-after-load 'company
+  (with-eval-after-load-feature 'company
+    (setq company-idle-delay 0
+	  company-minimum-prefix-length 2
+	  company-selection-wrap-around t)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous)
     (define-key company-search-map (kbd "C-n") 'company-select-next)
@@ -828,7 +828,6 @@
    (add-to-list 'load-path
 		(concat user-emacs-directory "el-get/php-mode/skeleton"))
    (require 'php-ext)
-   (setq yas-trigger-key (kbd "<tab>"))
    (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
    (define-key php-mode-map [return] 'newline-and-indent)
    (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
@@ -841,8 +840,6 @@
 ;; require php >=5.5
 ;; require cscope >= 15.8a
 ;; M-x ac-php-remake-tags-all
-(require 'cl)
-
 (el-get-bundle ac-php)
 
 (defun php-c-style ()
@@ -864,7 +861,6 @@
   (set (make-local-variable 'comment-end) "")
   (setq flycheck-phpcs-standard "PSR2")
   (setq flycheck-phpmd-rulesets (concat user-emacs-directory "phpmd_ruleset.xml")))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1060,7 +1056,7 @@ on their own line."
 ;;; auto-async-byte-compile settings
 ;;;
 
-;; (el-get-bundle! auto-async-byte-compile)
+;; (el-get-bundle auto-async-byte-compile)
 ;; (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
 ;; (setq auto-async-byte-compile-suppress-warnings t)
 ;; (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
@@ -1213,9 +1209,7 @@ on their own line."
 ;;; yasnippet settings
 ;;;
 
-(el-get-bundle yasnippet
-  (with-eval-after-load-feature 'yasnippet
-    (define-key yas/keymap [tab] 'yas/next-field)))
+(el-get-bundle yasnippet)
 (yas-global-mode 1)
 ;; (custom-set-variables '(yas-prompt-functions '(yas-dropdown-prompt
 ;; 					       yas-ido-prompt
