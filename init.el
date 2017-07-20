@@ -987,6 +987,7 @@ on their own line."
 	  #'(lambda ()
 	      ;; (add-to-list 'ac-sources 'ac-source-omnisharp)
 	      (add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck)))
+(add-hook 'omnisharp-mode-hook 'my-omnisharp-mode-hook)
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-omnisharp))
 
@@ -1069,13 +1070,6 @@ on their own line."
    "Functions to compile elements of `helm-sources' (plug-in).")
 
 (el-get-bundle helm
-  (setq helm-buffer-max-length 40
-	helm-c-ack-thing-at-point 'symbol
-	helm-ff-auto-update-initial-value nil
-	helm-grep-default-recurse-command "ggrep -a -d recurse %e -n%cH -e %p %f"
-	helm-input-idle-delay 0.2
-	helm-mode t
-	helm-truncate-lines t)
   (with-eval-after-load-feature 'helm
     (define-key helm-map (kbd "C-v") 'helm-next-source)
     (define-key helm-map (kbd "M-v") 'helm-previous-source)
@@ -1091,6 +1085,13 @@ on their own line."
     helm-source-file-cache
     helm-source-files-in-current-dir
     helm-source-mac-spotlight))
+(setq helm-buffer-max-length 40
+      helm-c-ack-thing-at-point 'symbol
+      helm-ff-auto-update-initial-value nil
+      helm-grep-default-recurse-command "ggrep -a -d recurse %e -n%cH -e %p %f"
+      helm-input-idle-delay 0.2
+      helm-mode t
+      helm-truncate-lines t)
 
 (el-get-bundle helm-migemo)
 (el-get-bundle helm-ag
