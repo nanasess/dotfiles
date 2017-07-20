@@ -1018,7 +1018,7 @@ on their own line."
 (el-get-bundle twittering-mode
   (setq
    twittering-allow-insecure-server-cert nil
-   twittering-auth-method 'xauth
+   twittering-auth-method 'oauth
    twittering-bitly-login twittering-username
    twittering-display-remaining t
    twittering-retweet-format "RT @%s: %t"
