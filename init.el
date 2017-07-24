@@ -890,8 +890,7 @@
 ;;; csv-mode settings
 ;;;
 
-(el-get-bundle csv-mode in nanasess/csv-mode
-  :branch "mb-char-support")
+(el-get-bundle csv-mode in emacsmirror/csv-mode)
 (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
