@@ -395,12 +395,11 @@
 (add-hook 'nxml-mode-hook
 	  #'(lambda ()
 	      (rng-validate-mode 0)
-	      (custom-set-variables
-	       '(auto-fill-mode -1)
-	       '(nxml-slash-auto-complete-flag t)
-	       '(nxml-child-indent 2)
-	       '(indent-tabs-mode nil)
-	       '(tab-width 2))))
+	      (set (make-local-variable 'auto-fill-mode) -1)
+	      (set (make-local-variable 'nxml-slash-auto-complete-flag) t)
+	      (set (make-local-variable 'nxml-child-indent) 2)
+	      (set (make-local-variable 'indent-tabs-mode) nil)
+	      (set (make-local-variable 'tab-width) 2)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -618,7 +617,7 @@
 
 (if (not (version< "24.3.99" emacs-version))
     (cua-mode t)
-  (custom-set-variables '(cua-enable-cua-keys nil)))
+  (setq cua-enable-cua-keys nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1216,15 +1215,12 @@ on their own line."
 
 (el-get-bundle yasnippet)
 (yas-global-mode 1)
-;; (custom-set-variables '(yas-prompt-functions '(yas-dropdown-prompt
-;; 					       yas-ido-prompt
-;; 					       yas-completing-prompt)))
 (defun yas/org-very-safe-expand ()
   (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
 (add-hook 'org-mode-hook
           #'(lambda ()
 	      ;; yasnippet (using the new org-cycle hooks)
-	      (custom-set-variables '(ac-use-overriding-local-map t))
+	      (setq ac-use-overriding-local-map t)
 	      (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
