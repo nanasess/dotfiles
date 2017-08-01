@@ -1,6 +1,0 @@
-(:name wgrep
-       :website "https://github.com/mhayashi1120/Emacs-wgrep"
-       :description "Writable grep buffer and apply the changes to files"
-       :type github
-       :pkgname "mhayashi1120/Emacs-wgrep"
-       :features (wgrep wgrep-helm))

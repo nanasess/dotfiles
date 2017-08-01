@@ -1,6 +1,0 @@
-(:name csharp
-       :website "https://github.com/josteink/csharp-mode"
-       :description "A major-mode for editing C# in emacs"
-       :type github
-       :pkgname "josteink/csharp-mode"
-       :features "csharp-mode")

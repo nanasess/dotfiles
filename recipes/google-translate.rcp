@@ -1,5 +1,0 @@
-(:name google-translate
-       :description "Emacs interface to Google Translate"
-       :type github
-       :pkgname "manzyuk/google-translate"
-       :features google-translate)

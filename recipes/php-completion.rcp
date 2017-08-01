@@ -1,6 +1,0 @@
-(:name php-completion
-       :website "https://github.com/suzuki/php-completion"
-       :description "complete everything PHP with Anything.el"
-       :type github
-       :branch "feature/helm-version"
-       :pkgname "suzuki/php-completion")

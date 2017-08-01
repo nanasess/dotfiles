@@ -1,4 +1,0 @@
-(:name inertial-scroll
-       :description "Inertial scrolling for emacs"
-       :type github
-       :pkgname "kiwanami/emacs-inertial-scroll")
