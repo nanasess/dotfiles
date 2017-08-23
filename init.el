@@ -283,6 +283,7 @@
 (setq x-select-enable-clipboard t)
 (setq x-select-enable-primary t)
 (setq save-interprogram-paste-before-kill t)
+(delete-selection-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -307,9 +308,8 @@
 ;;;
 
 (add-hook 'java-mode-hook 'basic-indent)
-(eval-after-load "cc-mode"
-  '(progn
-     (define-key java-mode-map [return] 'newline-and-indent)))
+(with-eval-after-load 'cc-mode
+     (define-key java-mode-map [return] 'newline-and-indent))
 (add-to-list 'auto-mode-alist
 	     '("\\.\\(cls\\|trigger\\)\\'" . java-mode))
 ;; (require 'cedet)
@@ -457,14 +457,13 @@
 	      (setq view-read-only t)
 	      (auto-revert-mode 1)
 	      (setq line-move-visual nil)))
-(eval-after-load "view"
-  '(progn
+(with-eval-after-load 'view
      (define-key view-mode-map (kbd "h") 'backward-word)
      (define-key view-mode-map (kbd "l") 'forward-word)
      (define-key view-mode-map (kbd "j") 'next-line)
      (define-key view-mode-map (kbd "k") 'previous-line)
      (define-key view-mode-map " " 'scroll-up)
-     (define-key view-mode-map (kbd "b") 'scroll-down)))
+     (define-key view-mode-map (kbd "b") 'scroll-down))
 (add-to-list 'auto-mode-alist '("\\.log$" . view-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -635,6 +634,9 @@
     global-map "C-z" '(("C-n" . 'mc/mark-next-like-this)
 		       ("C-p" . 'mc/mark-previous-like-this)
 		       ("*"   . 'mc/mark-all-like-this)))
+
+;; see https://github.com/magnars/expand-region.el/issues/220
+(setq shift-select-mode nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -915,7 +917,7 @@
 ;; さらに csharp-mode や omnisharp-mode がちゃんと起動しない場合は以下のように手動で起動させる
 ;; M-x my-csharp-mode-hook
 ;; M-x my-omnisharp-mode-hook
-(setq omnisharp-server-executable-path "~/bin/omnisharp-osx-x64-netcoreapp1.1/OmniSharp")
+(setq omnisharp-server-executable-path "~/bin/omnisharp-osx/run")
 ;; (require 'ac-company)
 ;; (ac-company-define-source ac-source-company-omnisharp company-omnisharp)
 
@@ -980,6 +982,7 @@ on their own line."
   (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-fix-usings)
   (define-key omnisharp-mode-map (kbd "<RET>") 'csharp-newline-and-indent)
 
+  (add-to-list 'company-backends 'company-omnisharp)
   ;; (define-key omnisharp-mode-map "\C-c\C-t\C-s" (lambda() (interactive) (omnisharp-unit-test "single")))
   ;; (define-key omnisharp-mode-map "\C-c\C-t\C-r" (lambda() (interactive) (omnisharp-unit-test "fixture")))
   ;; (define-key omnisharp-mode-map "\C-c\C-t\C-e" (lambda() (interactive) (omnisharp-unit-test "all")))
@@ -991,8 +994,6 @@ on their own line."
 	      ;; (add-to-list 'ac-sources 'ac-source-omnisharp)
 	      (add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck)))
 (add-hook 'omnisharp-mode-hook 'my-omnisharp-mode-hook)
-(eval-after-load 'company
-  '(add-to-list 'company-backends 'company-omnisharp))
 
 ;; (add-hook 'before-save-hook 'omnisharp-format-before-save)
 
@@ -1326,6 +1327,7 @@ on their own line."
 ;;; id-manager settings
 ;;;
 
+;; use gpg2 http://blog.n-z.jp/blog/2016-08-20-mac-easypg-gpg2.html
 (setq idm-database-file (concat external-directory ".idm-db.gpg"))
 (setq idm-copy-action 'kill-new)
 (setq idm-gen-password-cmd mkpasswd-command)
