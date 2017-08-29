@@ -23,7 +23,8 @@ install:
 script:
   - git config --global user.name "Kentaro Ohkouchi"
   - git config --global user.email nanasess@example.com
-  - git tag 0
+  - $EMACS -q -l init.el --batch
+  - $EMACS -q -l init.el --batch -f batch-byte-compile init.el
   # - make lisp EMACSBIN=$EMACS DASH_DIR=$PWD
   # - make test EMACSBIN=$EMACS DASH_DIR=$PWD
 notifications:
