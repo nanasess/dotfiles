@@ -1,5 +1,5 @@
 ;;----------------------- window settings ---------------------------
-(if (boundp 'window-system)
+(if (display-graphic-p)
     (create-fontset-from-ascii-font "Circle M+ 1m-12:weight=normal:slant=normal" nil "linux")
   (set-fontset-font "fontset-linux" 'unicode
 		    (font-spec :family "Circle M+ 1m" ) nil 'append)
