@@ -1167,7 +1167,7 @@ on their own line."
 (defun helm-howm-do-grep ()
   (interactive)
   (helm-do-grep-1
-   (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt")))
+   (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt" "*.md")))
 
 (global-set-key (kbd "C-z ,") 'hh:menu-command)
 (global-set-key (kbd "C-z .") 'hh:resume)
@@ -1367,6 +1367,12 @@ on their own line."
    #'(lambda (proc stat)
        (if (zerop (process-exit-status proc))
 	   (message "locate.updatedb...done")))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; nginx-mode settings
+;;;
+(el-get-bundle nginx-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
