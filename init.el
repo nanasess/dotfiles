@@ -1167,7 +1167,7 @@ on their own line."
 (defun helm-howm-do-grep ()
   (interactive)
   (helm-do-grep-1
-   (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt")))
+   (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt" "*.md")))
 
 (global-set-key (kbd "C-z ,") 'hh:menu-command)
 (global-set-key (kbd "C-z .") 'hh:resume)
