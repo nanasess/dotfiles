@@ -12,6 +12,12 @@ env:
   # - EMACS_VERSION=master # master branch, built daily
   allow_failures:
     # - env: EMACS_VERSION=master
+addons:
+  apt:
+    packages:
+      # Install makeinfo [sic] - needed for magit
+      - texinfo
+
 install:
   - $CURL -O https://github.com/npostavs/emacs-travis/releases/download/bins/emacs-bin-${EMACS_VERSION}.tar.gz
   - tar -xaf emacs-bin-${EMACS_VERSION}.tar.gz -C /
