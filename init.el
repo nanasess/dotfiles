@@ -1159,21 +1159,22 @@ on their own line."
   (let ((current-prefix-arg nil))
     ad-do-it))
 
-(require 'helm-howm)
-(defvar hh:howm-data-directory howm-directory)
-(setq hh:menu-list nil)
-(setq hh:recent-menu-number-limit 100)
+(with-eval-after-load-feature 'howm
+  (require 'helm-howm)
+  (defvar hh:howm-data-directory howm-directory)
+  (setq hh:menu-list nil)
+  (setq hh:recent-menu-number-limit 100)
 
-(defun helm-howm-do-grep ()
-  (interactive)
-  (helm-do-grep-1
-   (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt" "*.md")))
+  (defun helm-howm-do-grep ()
+    (interactive)
+    (helm-do-grep-1
+     (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt" "*.md")))
 
-(global-set-key (kbd "C-z ,") 'hh:menu-command)
-(global-set-key (kbd "C-z .") 'hh:resume)
-(global-set-key (kbd "C-z s") 'helm-howm-do-grep)
+  (global-set-key (kbd "C-z ,") 'hh:menu-command)
+  (global-set-key (kbd "C-z .") 'hh:resume)
+  (global-set-key (kbd "C-z s") 'helm-howm-do-grep))
 
-(with-eval-after-load "helm-migemo"
+(with-eval-after-load 'helm-migemo
   (defun helm-compile-source--candidates-in-buffer (source)
     (helm-aif (assoc 'candidates-in-buffer source)
 	(append source
