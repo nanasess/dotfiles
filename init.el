@@ -1098,13 +1098,6 @@ on their own line."
       helm-truncate-lines t)
 
 (el-get-bundle helm-migemo)
-(el-get-bundle helm-ag
-  (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case"
-	helm-ag-command-option "--all-text"
-	helm-ag-thing-at-point 'symbol))
-(el-get-bundle helm-ack)
-(el-get-bundle helm-gtags)
-;; (el-get-bundle helm-cmd-t)
 (el-get-bundle helm-ls-git)
 (el-get-bundle helm-descbinds)
 
@@ -1310,7 +1303,9 @@ on their own line."
 	  edbi:query-result-column-max-width nil)))
 
 ;;; sqlite-dump
-(el-get-bundle sqlite-dump)
+(el-get-bundle sqlite-dump
+  :type http
+  :url "http://download.tuxfamily.org/user42/sqlite-dump.el")
 (modify-coding-system-alist 'file "\\.\\(db\\|sqlite\\)\\'" 'raw-text-unix)
 (add-to-list 'auto-mode-alist '("\\.\\(db\\|sqlite\\)\\'" . sqlite-dump))
 
