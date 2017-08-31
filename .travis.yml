@@ -7,9 +7,12 @@ env:
   - EMACS_VERSION=25.2
   - EMACS_VERSION=25 # emacs-25 branch, built daily
   - EMACS_VERSION=master # master branch, built daily
+
+matrix:
+  fast_finish: true
   allow_failures:
-    - env: EMACS_VERSION=25
     - env: EMACS_VERSION=master
+
 addons:
   apt:
     packages:
