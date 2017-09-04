@@ -618,13 +618,8 @@
 (el-get-bundle expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
-(el-get-bundle multiple-cursors
-  (global-set-key (kbd "<C-M-return>") 'mc/edit-lines))
-(el-get-bundle smartrep
-  (smartrep-define-key
-    global-map "C-z" '(("C-n" . 'mc/mark-next-like-this)
-		       ("C-p" . 'mc/mark-previous-like-this)
-		       ("*"   . 'mc/mark-all-like-this))))
+(el-get-bundle multiple-cursors)
+(global-set-key (kbd "<C-M-return>") 'mc/edit-lines)
 
 ;; see https://github.com/magnars/expand-region.el/issues/220
 (setq shift-select-mode nil)
