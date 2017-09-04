@@ -22,14 +22,6 @@
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
 (defvar external-directory (expand-file-name "~/OneDrive - nanasess.net/emacs/"))
 
-;; Silence the warning.
-(defun el-get (&optional sync &rest packages))
-(defun smartrep-define-key (keymap prefix alist))
-(defun global-undo-tree-mode () ())
-(defun quickrun-add-command (key alist))
-(defun c-toggle-hungry-state (arg))
-(defun php-completion-mode (arg))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; el-get settings
@@ -217,7 +209,7 @@
 
 (add-hook 'diff-mode-hook
 	  #'(lambda ()
-	      (set-face-bold-p 'diff-refine-change t)))
+	      (set-face-bold 'diff-refine-change t)))
 
 ;; see also http://rubikitch.com/2015/05/14/global-hl-line-mode-timer/
 (global-hl-line-mode 0)
@@ -280,8 +272,8 @@
 (setq indicate-empty-lines t)
 (setq isearch-lax-whitespace nil)
 (setq mouse-yank-at-point t)
-(setq x-select-enable-clipboard t)
-(setq x-select-enable-primary t)
+(setq select-enable-clipboard t)
+(setq select-enable-primary t)
 (setq save-interprogram-paste-before-kill t)
 (delete-selection-mode 1)
 
@@ -392,14 +384,14 @@
 (add-to-list 'auto-mode-alist
 	     '("\\.\\(xml\\|xsl\\|rng\\)\\'" . nxml-mode))
 
-(add-hook 'nxml-mode-hook
-	  #'(lambda ()
-	      (rng-validate-mode 0)
-	      (set (make-local-variable 'auto-fill-mode) -1)
-	      (set (make-local-variable 'nxml-slash-auto-complete-flag) t)
-	      (set (make-local-variable 'nxml-child-indent) 2)
-	      (set (make-local-variable 'indent-tabs-mode) nil)
-	      (set (make-local-variable 'tab-width) 2)))
+(with-eval-after-load-feature 'nxml-mode
+  (add-hook 'nxml-mode-hook
+	    #'(lambda ()
+		(rng-validate-mode 0)
+		(set (make-local-variable 'nxml-slash-auto-complete-flag) t)
+		(set (make-local-variable 'nxml-child-indent) 2)
+		(set (make-local-variable 'indent-tabs-mode) nil)
+		(set (make-local-variable 'tab-width) 2))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -457,7 +449,7 @@
 	      (setq view-read-only t)
 	      (auto-revert-mode 1)
 	      (setq line-move-visual nil)))
-(with-eval-after-load 'view
+(with-eval-after-load-feature 'view
      (define-key view-mode-map (kbd "h") 'backward-word)
      (define-key view-mode-map (kbd "l") 'forward-word)
      (define-key view-mode-map (kbd "j") 'next-line)
@@ -626,14 +618,13 @@
 (el-get-bundle expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
-(el-get-bundle multiple-cursors)
-(el-get-bundle smartrep)
-
-(global-set-key (kbd "<C-M-return>") 'mc/edit-lines)
-(smartrep-define-key
+(el-get-bundle multiple-cursors
+  (global-set-key (kbd "<C-M-return>") 'mc/edit-lines))
+(el-get-bundle smartrep
+  (smartrep-define-key
     global-map "C-z" '(("C-n" . 'mc/mark-next-like-this)
 		       ("C-p" . 'mc/mark-previous-like-this)
-		       ("*"   . 'mc/mark-all-like-this)))
+		       ("*"   . 'mc/mark-all-like-this))))
 
 ;; see https://github.com/magnars/expand-region.el/issues/220
 (setq shift-select-mode nil)
@@ -934,9 +925,9 @@ on their own line."
       (when (and
              (looking-at " *}")
              (save-match-data
-               (when (looking-back "{ *")
+               (when (looking-back "{ *" nil)
                  (goto-char (match-beginning 0))
-                 (unless (looking-back "^[[:space:]]*")
+                 (unless (looking-back "^[[:space:]]*" nil)
                    (newline-and-indent))
                  t)))
         (unless (and (boundp electric-pair-open-newline-between-pairs)
@@ -945,57 +936,53 @@ on their own line."
           (goto-char (match-beginning 0))
           (newline-and-indent)))))
   (newline-and-indent))
-(defun omnisharp-format-before-save ()
-  "Before save hook to format the buffer before each save."
-  (interactive)
-  (when (bound-and-true-p omnisharp-mode)
-    (omnisharp-code-format)))
-(defun my-csharp-mode-hook ()
-  (interactive)
-  (flycheck-mode 1)
-  ;; (auto-complete-mode 1)
-  (electric-pair-local-mode 1) ;; for Emacs25
-  (setq flycheck-idle-change-delay 2)
-  (omnisharp-mode 1))
-(defun my-omnisharp-mode-hook ()
-  (interactive)
-  (message "omnisharp-mode enabled")
-  ;; (define-key omnisharp-mode-map "\C-c\C-s" 'omnisharp-start-omnisharp-server)
-  ;; (define-key company-active-map (kbd ".") (lambda() (interactive) (company-complete-selection-insert-key-and-complete '".")))
-  (define-key company-active-map (kbd "]") (lambda() (interactive) (company-complete-selection-insert-key-and-complete '"]")))
-  (define-key company-active-map (kbd "[") (lambda() (interactive) (company-complete-selection-insert-key '"[")))
-  (define-key company-active-map (kbd ")") (lambda() (interactive) (company-complete-selection-insert-key '")")))
-  (define-key company-active-map (kbd "<SPC>") nil)
-  (define-key company-active-map (kbd ";") (lambda() (interactive) (company-complete-selection-insert-key '";")))
-  (define-key company-active-map (kbd ">") (lambda() (interactive) (company-complete-selection-insert-key '">")))
-  (define-key omnisharp-mode-map (kbd "}") 'csharp-indent-function-on-closing-brace) 
-  (define-key omnisharp-mode-map "\M-/"     'omnisharp-auto-complete)
-  (define-key omnisharp-mode-map "."        'omnisharp-add-dot-and-auto-complete)
-  (define-key omnisharp-mode-map "\C-c\C-c" 'omnisharp-code-format)
-  (define-key omnisharp-mode-map "\C-c\C-N" 'omnisharp-navigate-to-solution-member)
-  (define-key omnisharp-mode-map "\C-c\C-n" 'omnisharp-navigate-to-current-file-member)
-  (define-key omnisharp-mode-map "\C-c\C-f" 'omnisharp-navigate-to-solution-file)
-  (define-key omnisharp-mode-map "\M-."     'omnisharp-go-to-definition)
-  (define-key omnisharp-mode-map "\C-c\C-r" 'omnisharp-rename)
-  (define-key omnisharp-mode-map "\C-c\C-v" 'omnisharp-run-code-action-refactoring)
-  (define-key omnisharp-mode-map "\C-c\C-o" 'omnisharp-auto-complete-overrides)
-  (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-fix-usings)
-  (define-key omnisharp-mode-map (kbd "<RET>") 'csharp-newline-and-indent)
 
-  (add-to-list 'company-backends 'company-omnisharp)
-  ;; (define-key omnisharp-mode-map "\C-c\C-t\C-s" (lambda() (interactive) (omnisharp-unit-test "single")))
-  ;; (define-key omnisharp-mode-map "\C-c\C-t\C-r" (lambda() (interactive) (omnisharp-unit-test "fixture")))
-  ;; (define-key omnisharp-mode-map "\C-c\C-t\C-e" (lambda() (interactive) (omnisharp-unit-test "all")))
-  )
-(setq omnisharp-company-strip-trailing-brackets nil)
-(add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
-(add-hook 'csharp-mode-hook
-	  #'(lambda ()
-	      ;; (add-to-list 'ac-sources 'ac-source-omnisharp)
-	      (add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck)))
-(add-hook 'omnisharp-mode-hook 'my-omnisharp-mode-hook)
+(with-eval-after-load-feature 'csharp
+  (defun my-csharp-mode-hook ()
+    (interactive)
+    (flycheck-mode 1)
+    ;; (auto-complete-mode 1)
+    (electric-pair-local-mode 1) ;; for Emacs25
+    (setq flycheck-idle-change-delay 2)
+    (omnisharp-mode 1))
+  (add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
+  (add-hook 'csharp-mode-hook
+	    #'(lambda ()
+		;; (add-to-list 'ac-sources 'ac-source-omnisharp)
+		(add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck))))
+(with-eval-after-load-feature 'omnisharp
+  (defun my-omnisharp-mode-hook ()
+    (interactive)
+    (message "omnisharp-mode enabled")
+    ;; (define-key omnisharp-mode-map "\C-c\C-s" 'omnisharp-start-omnisharp-server)
+    ;; (define-key company-active-map (kbd ".") (lambda() (interactive) (company-complete-selection-insert-key-and-complete '".")))
+    ;; (define-key company-active-map (kbd "]") (lambda() (interactive) (company-complete-selection-insert-key-and-complete '"]")))
+    ;; (define-key company-active-map (kbd "[") (lambda() (interactive) (company-complete-selection-insert-key '"[")))
+    ;; (define-key company-active-map (kbd ")") (lambda() (interactive) (company-complete-selection-insert-key '")")))
+    ;; (define-key company-active-map (kbd "<SPC>") nil)
+    ;; (define-key company-active-map (kbd ";") (lambda() (interactive) (company-complete-selection-insert-key '";")))
+    ;; (define-key company-active-map (kbd ">") (lambda() (interactive) (company-complete-selection-insert-key '">")))
+    (define-key omnisharp-mode-map (kbd "}") 'csharp-indent-function-on-closing-brace) 
+    (define-key omnisharp-mode-map "\M-/"     'omnisharp-auto-complete)
+    (define-key omnisharp-mode-map "."        'omnisharp-add-dot-and-auto-complete)
+    (define-key omnisharp-mode-map "\C-c\C-c" 'omnisharp-code-format)
+    (define-key omnisharp-mode-map "\C-c\C-N" 'omnisharp-navigate-to-solution-member)
+    (define-key omnisharp-mode-map "\C-c\C-n" 'omnisharp-navigate-to-current-file-member)
+    (define-key omnisharp-mode-map "\C-c\C-f" 'omnisharp-navigate-to-solution-file)
+    (define-key omnisharp-mode-map "\M-."     'omnisharp-go-to-definition)
+    (define-key omnisharp-mode-map "\C-c\C-r" 'omnisharp-rename)
+    (define-key omnisharp-mode-map "\C-c\C-v" 'omnisharp-run-code-action-refactoring)
+    (define-key omnisharp-mode-map "\C-c\C-o" 'omnisharp-auto-complete-overrides)
+    (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-fix-usings)
+    (define-key omnisharp-mode-map (kbd "<RET>") 'csharp-newline-and-indent)
 
-;; (add-hook 'before-save-hook 'omnisharp-format-before-save)
+    (add-to-list 'company-backends 'company-omnisharp)
+    ;; (define-key omnisharp-mode-map "\C-c\C-t\C-s" (lambda() (interactive) (omnisharp-unit-test "single")))
+    ;; (define-key omnisharp-mode-map "\C-c\C-t\C-r" (lambda() (interactive) (omnisharp-unit-test "fixture")))
+    ;; (define-key omnisharp-mode-map "\C-c\C-t\C-e" (lambda() (interactive) (omnisharp-unit-test "all")))
+    )
+  (setq omnisharp-company-strip-trailing-brackets nil)
+  (add-hook 'omnisharp-mode-hook 'my-omnisharp-mode-hook))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1210,13 +1197,11 @@ on their own line."
 
 (el-get-bundle yasnippet)
 (yas-global-mode 1)
-(defun yas/org-very-safe-expand ()
-  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
+
 (add-hook 'org-mode-hook
           #'(lambda ()
 	      ;; yasnippet (using the new org-cycle hooks)
-	      (setq ac-use-overriding-local-map t)
-	      (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)))
+	      (setq ac-use-overriding-local-map t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1461,7 +1446,6 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
-(put 'downcase-region 'disabled nil)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
