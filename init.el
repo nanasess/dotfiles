@@ -300,7 +300,7 @@
 ;;;
 
 (add-hook 'java-mode-hook 'basic-indent)
-(with-eval-after-load 'cc-mode
+(with-eval-after-load-feature 'cc-mode
      (define-key java-mode-map [return] 'newline-and-indent))
 (add-to-list 'auto-mode-alist
 	     '("\\.\\(cls\\|trigger\\)\\'" . java-mode))
@@ -937,7 +937,7 @@ on their own line."
           (newline-and-indent)))))
   (newline-and-indent))
 
-(with-eval-after-load-feature 'csharp
+(with-eval-after-load-feature 'csharp-mode
   (defun my-csharp-mode-hook ()
     (interactive)
     (flycheck-mode 1)
