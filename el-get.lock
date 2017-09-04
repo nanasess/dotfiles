@@ -64,7 +64,7 @@
         (web-mode :checksum "e4304bcfa0c5121522ba2a5db75af8a2e4e81246")
         (js2-mode :checksum "558f53f6b6749b09b03b858b0b1dfaeffbba4042")
         (recentf-ext :checksum "95f81dfac24d3f67002024f0a24e6b997bf6d647")
-        (el-get :checksum "4a1dde57e8a4d4c22ed279bac8253f5f16da9197")
+        (el-get :checksum "c98016bf352bb17ca4aafcc68e12583001fbea71")
         (ctable :checksum "cd673a09a80ce4e9e102ffe2e3d7e6bfb9d652b0")
         (expand-region :checksum "2357f1d5efd9d5b9e37f3513342237fec2629291")
         (esup :checksum "872861ba1fccec90c32dc18af787b506fb08d7d3")
