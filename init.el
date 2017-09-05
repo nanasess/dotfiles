@@ -643,16 +643,14 @@
 ;;; magit settings
 ;;;
 
-(el-get-bundle magit)
-(add-to-list 'load-path (concat user-emacs-directory "el-get/magit/lisp"))
-(require 'magit)
-(require 'magit-blame)
+(el-get-bundle magit
+  (setq magit-diff-refine-hunk t))
 
-(setq magit-diff-refine-hunk t)
+(with-eval-after-load-feature 'magit
+  (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
+  (define-key magit-log-mode-map (kbd "k") 'magit-section-backward))
 
 (global-set-key (kbd "C-z m") 'magit-status)
-(define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
-(define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
