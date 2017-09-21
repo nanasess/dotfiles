@@ -1097,6 +1097,19 @@ on their own line."
       (let ((helm-ff-transformer-show-only-basename nil))
 	(helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))))
 
+;; see also https://github.com/syl20bnr/spacemacs/blob/159a9376fa567a38db5644123dfb9cd617c824f6/layers/%2Bspacemacs/spacemacs-completion/packages.el#L111
+(with-eval-after-load 'helm-files
+    (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+    (define-key helm-find-files-map
+      (kbd "S-<tab>") 'helm-find-files-up-one-level)
+    (define-key helm-find-files-map
+      (kbd "<backtab>") 'helm-find-files-up-one-level)
+    ;; For terminal.
+    (define-key helm-map (kbd "TAB") 'helm-execute-persistent-action)
+    (define-key helm-find-files-map
+      (kbd "S-TAB") 'helm-find-files-up-one-level)
+    (define-key helm-map (kbd "C-z") 'helm-select-action))
+
 (defconst helm-for-files-preferred-list
   '(helm-source-buffers-list
     helm-source-recentf
