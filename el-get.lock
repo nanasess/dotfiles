@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((nginx-mode :checksum "a2bab83c2eb233d57d76b236e7c141c2ccc97005")
+      '((haskell-mode :checksum "9ced44c934e9d02dc41ab2f47686cc041f7ae5f5")
+        (nginx-mode :checksum "a2bab83c2eb233d57d76b236e7c141c2ccc97005")
         (tide :checksum "10f456fe1e402260bf8cfd3bf4c7bd7637a3cc42")
         (csv-mode :checksum "5fb7759827029caed29523a1b0c3f9e28313762e")
         (deferred :checksum "d012a1ab50edcc2c44e3e49006f054dbff47cb6c")

@@ -371,7 +371,6 @@
 (setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
 (add-hook 'js2-mode-hook #'setup-tide-mode)
 
-
 ;; (el-get 'sync 'jade-mode)
 ;; (require 'sws-mode)
 ;; (require 'jade-mode)
@@ -1473,6 +1472,16 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 			    'po-find-file-coding-system)
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
+
+(el-get-bundle haskell-mode
+  :type github
+  :pkgname "haskell/haskell-mode"
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs) "check-emacs-version" "compile" "haskell-mode-autoloads.el"))
+  :post-init (progn
+	       (require 'haskell-mode-autoloads)
+	       (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+	       (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)))
+
 (setq gc-cons-threshold 800000)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
