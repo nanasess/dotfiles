@@ -1,6 +1,6 @@
 (setq el-get-lock-package-versions
       '((nginx-mode :checksum "a2bab83c2eb233d57d76b236e7c141c2ccc97005")
-        (tide :checksum "af6adf6170e23a44ba773e07899ec602ae659663")
+        (tide :checksum "10f456fe1e402260bf8cfd3bf4c7bd7637a3cc42")
         (csv-mode :checksum "5fb7759827029caed29523a1b0c3f9e28313762e")
         (deferred :checksum "d012a1ab50edcc2c44e3e49006f054dbff47cb6c")
         (dockerfile-mode :checksum "3c6bc90360a2df53caad1721ee4c8285e2e22369")
@@ -18,7 +18,7 @@
         (magit :checksum "b8d558678821e35450c19e415656e366ebe44c38")
         (karma :checksum "31d3e7708246183d7ed0686be92bf23140af348c")
         (mocha :checksum "55f1e6afd100891ffd7008f5c5efbc5a9ab1c22d")
-        (typescript-mode :checksum "e0b4a6cb31750314e827bbc57de9a35558b34fd9")
+        (typescript-mode :checksum "0f41709e1525403767bd4889cb913900c68448dd")
         (ac-company :checksum "0db1c9bb6b9be54519d90910f11817178138ac9a")
         (company-mode :checksum "a197b072dc93dbad238f1dc70da01e3775ebfb56")
         (highlight-symbol :checksum "7a789c779648c55b16e43278e51be5898c121b3a")

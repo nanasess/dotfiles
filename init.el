@@ -347,7 +347,6 @@
 ;;;
 
 (el-get-bundle tide)
-(el-get-bundle karma)
 (defun setup-tide-mode ()
   (interactive)
   (tide-setup)
@@ -355,7 +354,10 @@
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
-  (company-mode +1))
+  (company-mode +1)
+  (auto-complete-mode 0)
+  (flycheck-add-mode 'typescript-tslint 'web-mode)
+  (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append))
 
 ;; aligns annotation to the right hand side
 (setq company-tooltip-align-annotations t)
@@ -410,8 +412,7 @@
     (add-hook 'web-mode-hook
 	      #'(lambda ()
 		  (when (string-equal "tsx" (file-name-extension buffer-file-name))
-		    (setup-tide-mode)
-		    (karma-mode 1))))
+		    (setup-tide-mode))))
     (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
     (add-hook 'web-mode-hook
 	      #'(lambda ()
