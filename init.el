@@ -347,7 +347,6 @@
 ;;;
 
 (el-get-bundle tide)
-(el-get-bundle karma)
 (defun setup-tide-mode ()
   (interactive)
   (tide-setup)
@@ -355,7 +354,10 @@
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
-  (company-mode +1))
+  (company-mode +1)
+  (auto-complete-mode 0)
+  (flycheck-add-mode 'typescript-tslint 'web-mode)
+  (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append))
 
 ;; aligns annotation to the right hand side
 (setq company-tooltip-align-annotations t)
@@ -368,7 +370,6 @@
 ;; format options
 (setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
 (add-hook 'js2-mode-hook #'setup-tide-mode)
-
 
 ;; (el-get 'sync 'jade-mode)
 ;; (require 'sws-mode)
@@ -410,8 +411,7 @@
     (add-hook 'web-mode-hook
 	      #'(lambda ()
 		  (when (string-equal "tsx" (file-name-extension buffer-file-name))
-		    (setup-tide-mode)
-		    (karma-mode 1))))
+		    (setup-tide-mode))))
     (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
     (add-hook 'web-mode-hook
 	      #'(lambda ()
@@ -903,6 +903,15 @@
 (add-hook 'gfm-mode-hook
           #'(lambda()
 	      (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+(with-eval-after-load-feature 'org-table
+  (add-hook 'markdown-mode-hook
+            #'(lambda()
+		(define-key orgtbl-mode-map
+		  (kbd "<backspace>") 'delete-backward-char)))
+  (add-hook 'gfm-mode-hook
+            #'(lambda()
+		(define-key orgtbl-mode-map
+		  (kbd "<backspace>") 'delete-backward-char))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1472,6 +1481,16 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 			    'po-find-file-coding-system)
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
+
+(el-get-bundle haskell-mode
+  :type github
+  :pkgname "haskell/haskell-mode"
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs) "check-emacs-version" "compile" "haskell-mode-autoloads.el"))
+  :post-init (progn
+	       (require 'haskell-mode-autoloads)
+	       (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+	       (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)))
+
 (setq gc-cons-threshold 800000)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
