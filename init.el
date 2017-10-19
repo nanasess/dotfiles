@@ -903,6 +903,15 @@
 (add-hook 'gfm-mode-hook
           #'(lambda()
 	      (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+(with-eval-after-load-feature 'org-table
+  (add-hook 'markdown-mode-hook
+            #'(lambda()
+		(define-key orgtbl-mode-map
+		  (kbd "<backspace>") 'delete-backward-char)))
+  (add-hook 'gfm-mode-hook
+            #'(lambda()
+		(define-key orgtbl-mode-map
+		  (kbd "<backspace>") 'delete-backward-char))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
