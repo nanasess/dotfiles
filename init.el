@@ -1102,6 +1102,9 @@ on their own line."
   (with-eval-after-load-feature 'helm
     (define-key helm-map (kbd "C-v") 'helm-next-source)
     (define-key helm-map (kbd "M-v") 'helm-previous-source)
+    ;; use ripgrep https://github.com/BurntSushi/ripgrep
+    (when (executable-find "rg")
+      (setq helm-grep-ag-command "rg --color=always -S --no-heading --line-number %s %s %s"))
     (defun helm-mac-spotlight ()
       "Preconfigured `helm' for `mdfind'."
       (interactive)
@@ -1117,7 +1120,7 @@ on their own line."
 (setq helm-buffer-max-length 40
       helm-c-ack-thing-at-point 'symbol
       helm-ff-auto-update-initial-value nil
-      helm-grep-default-recurse-command "ggrep -a -d recurse %e -n%cH -e %p %f"
+      ;; helm-grep-default-recurse-command "rg --no-heading -S %p --files '%f'"
       helm-input-idle-delay 0.2
       helm-mode t
       helm-truncate-lines t)
@@ -1183,14 +1186,19 @@ on their own line."
   (setq hh:menu-list nil)
   (setq hh:recent-menu-number-limit 100)
 
+  (defun helm-howm-do-ag ()
+    (interactive)
+    (helm-grep-ag-1
+     hh:howm-data-directory))
+  ;; use for grep
   (defun helm-howm-do-grep ()
     (interactive)
     (helm-do-grep-1
      (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt" "*.md")))
-
   (global-set-key (kbd "C-z ,") 'hh:menu-command)
   (global-set-key (kbd "C-z .") 'hh:resume)
-  (global-set-key (kbd "C-z s") 'helm-howm-do-grep))
+  (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
+  (global-set-key (kbd "C-z x") 'helm-howm-do-ag))
 
 (with-eval-after-load 'helm-migemo
   (defun helm-compile-source--candidates-in-buffer (source)
