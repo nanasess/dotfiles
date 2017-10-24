@@ -1120,7 +1120,7 @@ on their own line."
 (setq helm-buffer-max-length 40
       helm-c-ack-thing-at-point 'symbol
       helm-ff-auto-update-initial-value nil
-      ;; helm-grep-default-recurse-command "rg --no-heading -S %p --files '%f'"
+      ;; helm-grep-default-recurse-command "ggrep -a -d recurse %e -n%cH -e %p %f"
       helm-input-idle-delay 0.2
       helm-mode t
       helm-truncate-lines t)
