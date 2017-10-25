@@ -1195,6 +1195,16 @@ on their own line."
     (interactive)
     (helm-do-grep-1
      (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt" "*.md")))
+
+  (when (executable-find "rg")
+    (setq howm-view-use-grep t)
+    (setq howm-view-grep-command "rg")
+    (setq howm-view-grep-option "-nH --no-heading --color never")
+    (setq howm-view-grep-extended-option nil)
+    (setq howm-view-grep-fixed-option "-F")
+    (setq howm-view-grep-expr-option nil)
+    (setq howm-view-grep-file-stdin-option nil))
+
   (global-set-key (kbd "C-z ,") 'hh:menu-command)
   (global-set-key (kbd "C-z .") 'hh:resume)
   (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
