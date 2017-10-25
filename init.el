@@ -1102,9 +1102,7 @@ on their own line."
   (with-eval-after-load-feature 'helm
     (define-key helm-map (kbd "C-v") 'helm-next-source)
     (define-key helm-map (kbd "M-v") 'helm-previous-source)
-    ;; use ripgrep https://github.com/BurntSushi/ripgrep
-    (when (executable-find "rg")
-      (setq helm-grep-ag-command "rg --color=always -S --no-heading --line-number %s %s %s"))
+
     (defun helm-mac-spotlight ()
       "Preconfigured `helm' for `mdfind'."
       (interactive)
@@ -1124,6 +1122,11 @@ on their own line."
       helm-input-idle-delay 0.2
       helm-mode t
       helm-truncate-lines t)
+
+(with-eval-after-load-feature 'helm-grep
+  ;; use ripgrep https://github.com/BurntSushi/ripgrep
+  (when (executable-find "rg")
+    (setq helm-grep-ag-command "rg --color=always -S --no-heading --line-number %s %s %s")))
 
 (el-get-bundle helm-migemo)
 (el-get-bundle helm-ls-git)
