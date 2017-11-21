@@ -17,7 +17,7 @@
         (solarized-emacs :checksum "8aa2ce76327dc7081b1c9a310e858fe2b854d899")
         (dash :checksum "a57c2c335d0527909f472ca51a2201ad44d38aab")
         (with-eval-after-load-feature-el :checksum "0b38651a5f0dafdfe04bd0032eb5ff803e99460b")
-        (omnisharp-mode :checksum "ad147956b936fd528d26ca88158a8af96ff5827a")
+        (omnisharp-mode :checksum "ad4a19c60f7dc3d52a5b11febdcc9b78930a1e7d")
         (helm-ls-git :checksum "7b7b6dc2554603ad98412927f84a803625069ab3")
         (magit :checksum "b8d558678821e35450c19e415656e366ebe44c38")
         (karma :checksum "31d3e7708246183d7ed0686be92bf23140af348c")

@@ -365,7 +365,7 @@
 (setq company-tooltip-align-annotations t)
 
 ;; formats the buffer before saving
-(add-hook 'before-save-hook 'tide-format-before-save)
+;; (add-hook 'before-save-hook 'tide-format-before-save)
 
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 
@@ -928,6 +928,7 @@
 ;;; csharp
 ;;;
 
+;; XXX omnisharp-utils.el で (require 'shut-up) しないと動かないかも
 (el-get-bundle shut-up in cask/shut-up)
 (el-get-bundle omnisharp-mode
   :depends (csharp-mode shut-up dash s f))
@@ -1504,15 +1505,15 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 			    'po-find-file-coding-system)
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
-
-(el-get-bundle haskell-mode
-  :type github
-  :pkgname "haskell/haskell-mode"
-  :build `(("make" ,(format "EMACS=%s" el-get-emacs) "check-emacs-version" "compile" "haskell-mode-autoloads.el"))
-  :post-init (progn
-	       (require 'haskell-mode-autoloads)
-	       (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-	       (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)))
+;; TODO Build problem on Emacs26
+;; (el-get-bundle haskell-mode
+;;   :type github
+;;   :pkgname "haskell/haskell-mode"
+;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs) "check-emacs-version" "compile" "haskell-mode-autoloads.el"))
+;;   :post-init (progn
+;; 	       (require 'haskell-mode-autoloads)
+;; 	       (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+;; 	       (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)))
 
 (setq gc-cons-threshold 800000)
 (custom-set-faces
