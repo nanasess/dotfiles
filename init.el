@@ -22,6 +22,8 @@
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
 (defvar external-directory (expand-file-name "~/OneDrive - nanasess.net/emacs/"))
 
+(setq load-prefer-newer t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; el-get settings
@@ -363,7 +365,7 @@
 (setq company-tooltip-align-annotations t)
 
 ;; formats the buffer before saving
-(add-hook 'before-save-hook 'tide-format-before-save)
+;; (add-hook 'before-save-hook 'tide-format-before-save)
 
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 
@@ -926,6 +928,7 @@
 ;;; csharp
 ;;;
 
+;; XXX omnisharp-utils.el で (require 'shut-up) しないと動かないかも
 (el-get-bundle shut-up in cask/shut-up)
 (el-get-bundle omnisharp-mode
   :depends (csharp-mode shut-up dash s f))
@@ -1100,6 +1103,7 @@ on their own line."
   (with-eval-after-load-feature 'helm
     (define-key helm-map (kbd "C-v") 'helm-next-source)
     (define-key helm-map (kbd "M-v") 'helm-previous-source)
+
     (defun helm-mac-spotlight ()
       "Preconfigured `helm' for `mdfind'."
       (interactive)
@@ -1115,10 +1119,15 @@ on their own line."
 (setq helm-buffer-max-length 40
       helm-c-ack-thing-at-point 'symbol
       helm-ff-auto-update-initial-value nil
-      helm-grep-default-recurse-command "ggrep -a -d recurse %e -n%cH -e %p %f"
+      ;; helm-grep-default-recurse-command "ggrep -a -d recurse %e -n%cH -e %p %f"
       helm-input-idle-delay 0.2
       helm-mode t
       helm-truncate-lines t)
+
+(with-eval-after-load-feature 'helm-grep
+  ;; use ripgrep https://github.com/BurntSushi/ripgrep
+  (when (executable-find "rg")
+    (setq helm-grep-ag-command "rg --color=always -S --no-heading --line-number %s %s %s")))
 
 (el-get-bundle helm-migemo)
 (el-get-bundle helm-ls-git)
@@ -1181,14 +1190,29 @@ on their own line."
   (setq hh:menu-list nil)
   (setq hh:recent-menu-number-limit 100)
 
+  (defun helm-howm-do-ag ()
+    (interactive)
+    (helm-grep-ag-1
+     hh:howm-data-directory))
+  ;; use for grep
   (defun helm-howm-do-grep ()
     (interactive)
     (helm-do-grep-1
      (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt" "*.md")))
 
+  (when (executable-find "rg")
+    (setq howm-view-use-grep t)
+    (setq howm-view-grep-command "rg")
+    (setq howm-view-grep-option "-nH --no-heading --color never")
+    (setq howm-view-grep-extended-option nil)
+    (setq howm-view-grep-fixed-option "-F")
+    (setq howm-view-grep-expr-option nil)
+    (setq howm-view-grep-file-stdin-option nil))
+
   (global-set-key (kbd "C-z ,") 'hh:menu-command)
   (global-set-key (kbd "C-z .") 'hh:resume)
-  (global-set-key (kbd "C-z s") 'helm-howm-do-grep))
+  (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
+  (global-set-key (kbd "C-z x") 'helm-howm-do-ag))
 
 (with-eval-after-load 'helm-migemo
   (defun helm-compile-source--candidates-in-buffer (source)
@@ -1481,15 +1505,15 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 			    'po-find-file-coding-system)
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
-
-(el-get-bundle haskell-mode
-  :type github
-  :pkgname "haskell/haskell-mode"
-  :build `(("make" ,(format "EMACS=%s" el-get-emacs) "check-emacs-version" "compile" "haskell-mode-autoloads.el"))
-  :post-init (progn
-	       (require 'haskell-mode-autoloads)
-	       (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-	       (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)))
+;; TODO Build problem on Emacs26
+;; (el-get-bundle haskell-mode
+;;   :type github
+;;   :pkgname "haskell/haskell-mode"
+;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs) "check-emacs-version" "compile" "haskell-mode-autoloads.el"))
+;;   :post-init (progn
+;; 	       (require 'haskell-mode-autoloads)
+;; 	       (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+;; 	       (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)))
 
 (setq gc-cons-threshold 800000)
 (custom-set-faces
