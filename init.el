@@ -227,6 +227,26 @@
 (el-get-bundle solarized-emacs
   (load-theme 'solarized-light t))
 
+(el-get-bundle git-complete
+  :type github
+  :pkgname "zk-phi/git-complete"
+  :features git-complete
+  :depends popup
+  (with-eval-after-load-feature 'git-complete
+    (setq git-complete-enable-autopair t)
+    (global-set-key (kbd "C-z /") 'git-complete)))
+
+(el-get-bundle symbol-overlay
+  :type github
+  :pkgname "wolray/symbol-overlay"
+  :features symbol-overlay
+  (with-eval-after-load-feature 'symbol-overlay
+    (global-set-key (kbd "M-i") 'symbol-overlay-put)
+    (global-set-key (kbd "M-n") 'symbol-overlay-switch-forward)
+    (global-set-key (kbd "M-p") 'symbol-overlay-switch-backward)
+    (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
+    (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; window-system settings
@@ -835,6 +855,14 @@
 			:background "orange")
     (set-face-attribute 'company-scrollbar-bg nil
 			:background "gray40")))
+
+(el-get-bundle git-complete
+  :type github
+  :pkgname "zk-phi/git-complete"
+  :features git-complete
+  (with-eval-after-load-feature 'git-complete
+    (setq git-complete-enable-autopair t)
+    (global-set-key (kbd "C-z /") 'git-complete)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
