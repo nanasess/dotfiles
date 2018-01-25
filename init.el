@@ -780,18 +780,7 @@
 ;;; quickrun.el settings
 ;;;
 
-(el-get-bundle quickrun
-  (with-eval-after-load-feature 'quickrun
-    (add-to-list
-     'quickrun-file-alist
-     '("\\(Test\\.php\\|TestSuite\\.php\\|AllTests\\.php\\)\\'" . "phpunit"))))
-
-(defface phpunit-pass
-  '((t (:foreground "white" :background "green" :weight bold))) nil
-  :group 'font-lock-highlighting-faces)
-(defface phpunit-fail
-  '((t (:foreground "white" :background "red" :weight bold))) nil
-  :group 'font-lock-highlighting-faces)
+(el-get-bundle quickrun)
 
 (defun quickrun/phpunit-outputter ()
   (save-excursion
@@ -799,11 +788,18 @@
     (while (re-search-forward "" nil t)
       (replace-match "" nil nil)))
   (highlight-phrase "^OK.*$" 'phpunit-pass)
-  (highlight-phrase "^FAILURES.*$" 'phpunit-fail))
+  (highlight-phrase "^ERRORS.*$" 'phpunit-fail))
 
+(add-to-list 'quickrun-file-alist '("Test\\.php\\'" . "phpunit"))
 (quickrun-add-command "phpunit" '((:command . "phpunit")
-                                  (:exec . "%c %s")
-                                  (:outputter . quickrun/phpunit-outputter)))
+				  (:exec . ("%c -c ~/git-repos/ec-cube/phpunit.xml.dist %s"))
+				  (:outputter . quickrun/phpunit-outputter)))
+(defface phpunit-pass
+  '((t (:foreground "white" :background "green" :weight bold))) nil
+  :group 'font-lock-highlighting-faces)
+(defface phpunit-fail
+  '((t (:foreground "white" :background "red" :weight bold))) nil
+  :group 'font-lock-highlighting-faces)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
