@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((smart-mode-line :checksum "1facbe9816b602c640ddb23602e30588d6d904ca")
+      '((helm-company :checksum "c3c8604a49dda51628b63de0be10130a983d0bc9")
+        (smart-mode-line :checksum "1facbe9816b602c640ddb23602e30588d6d904ca")
         (rich-minority :checksum "3201f6e1769beb9f6cbbda392bef99fce337acf4")
         (sky-color-clock :checksum "63aaafb4925cfc86b030555013c4bcc4bf6360dd")
         (symbol-overlay :checksum "305ef1d283923d2b0f1cd751f57f71754ab714e6")

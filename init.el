@@ -854,7 +854,17 @@
     (set-face-attribute 'company-scrollbar-fg nil
 			:background "orange")
     (set-face-attribute 'company-scrollbar-bg nil
-			:background "gray40")))
+			:background "gray40"))
+  (with-eval-after-load-feature 'company-dabbrev
+    (setq company-dabbrev-downcase nil)))
+
+(el-get-bundle helm-company
+  :type github
+  :pkgname "manuel-uberti/helm-company"
+  :depends (company-mode helm))
+(with-eval-after-load-feature 'company
+  (define-key company-mode-map (kbd "C-z C-;") 'helm-company)
+  (define-key company-active-map (kbd "C-z C-;") 'helm-company))
 
 (el-get-bundle git-complete
   :type github
@@ -901,7 +911,7 @@
   (company-mode t)
   (ac-php-core-eldoc-setup)
   (make-local-variable 'company-backends)
-  (add-to-list 'company-backends 'company-ac-php-backend)
+  (add-to-list 'company-backends '(company-ac-php-backend :with company-dabbrev))
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
