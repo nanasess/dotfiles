@@ -21,6 +21,7 @@
 (defvar user-misc-directory (locate-user-emacs-file "etc/"))
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
 (defvar external-directory (expand-file-name "~/OneDrive - nanasess.net/emacs/"))
+(defvar openweathermap-api-key nil)
 
 (setq load-prefer-newer t)
 
@@ -66,6 +67,7 @@
   (load "init" t))
 (add-to-list 'load-path (expand-file-name user-initial-directory))
 (add-to-list 'load-path (expand-file-name user-site-lisp-directory))
+(add-to-list 'load-path (expand-file-name (locate-user-emacs-file "secret.d/")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -226,6 +228,28 @@
 ;; use solarized.
 (el-get-bundle solarized-emacs
   (load-theme 'solarized-light t))
+
+(el-get-bundle symbol-overlay
+  :type github
+  :pkgname "wolray/symbol-overlay"
+  :features symbol-overlay
+  (with-eval-after-load-feature 'symbol-overlay
+    (global-set-key (kbd "M-i") 'symbol-overlay-put)
+    (global-set-key (kbd "M-n") 'symbol-overlay-switch-forward)
+    (global-set-key (kbd "M-p") 'symbol-overlay-switch-backward)
+    (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
+    (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)))
+
+(el-get-bundle sky-color-clock
+  :type github
+  :pkgname "zk-phi/sky-color-clock"
+  :features sky-color-clock
+  (with-eval-after-load-feature 'sky-color-clock
+    (load "openweathermap-api-key" t)
+    (sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
+    (setq-default mode-line-format
+		  (append mode-line-format '((:eval (sky-color-clock)))))
+    (sky-color-clock-initialize-openweathermap-client openweathermap-api-key 1855207)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -756,18 +780,7 @@
 ;;; quickrun.el settings
 ;;;
 
-(el-get-bundle quickrun
-  (with-eval-after-load-feature 'quickrun
-    (add-to-list
-     'quickrun-file-alist
-     '("\\(Test\\.php\\|TestSuite\\.php\\|AllTests\\.php\\)\\'" . "phpunit"))))
-
-(defface phpunit-pass
-  '((t (:foreground "white" :background "green" :weight bold))) nil
-  :group 'font-lock-highlighting-faces)
-(defface phpunit-fail
-  '((t (:foreground "white" :background "red" :weight bold))) nil
-  :group 'font-lock-highlighting-faces)
+(el-get-bundle quickrun)
 
 (defun quickrun/phpunit-outputter ()
   (save-excursion
@@ -775,11 +788,18 @@
     (while (re-search-forward "" nil t)
       (replace-match "" nil nil)))
   (highlight-phrase "^OK.*$" 'phpunit-pass)
-  (highlight-phrase "^FAILURES.*$" 'phpunit-fail))
+  (highlight-phrase "^ERRORS.*$" 'phpunit-fail))
 
+(add-to-list 'quickrun-file-alist '("Test\\.php\\'" . "phpunit"))
 (quickrun-add-command "phpunit" '((:command . "phpunit")
-                                  (:exec . "%c %s")
-                                  (:outputter . quickrun/phpunit-outputter)))
+				  (:exec . ("%c -c ~/git-repos/ec-cube/phpunit.xml.dist %s"))
+				  (:outputter . quickrun/phpunit-outputter)))
+(defface phpunit-pass
+  '((t (:foreground "white" :background "green" :weight bold))) nil
+  :group 'font-lock-highlighting-faces)
+(defface phpunit-fail
+  '((t (:foreground "white" :background "red" :weight bold))) nil
+  :group 'font-lock-highlighting-faces)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -812,13 +832,13 @@
     (define-key company-search-map (kbd "C-n") 'company-select-next)
     (define-key company-search-map (kbd "C-p") 'company-select-previous)
 
-    ;; C-sで絞り込む
+    ;; C-sで絞り込む
     (define-key company-active-map (kbd "C-s") 'company-filter-candidates)
 
-    ;; TABで候補を設定
+    ;; TABで候補を設定
     (define-key company-active-map (kbd "C-i") 'company-complete-selection)
 
-    ;; 各種メジャーモードでも C-M-iで company-modeの補完を使う
+    ;; 各種メジャーモードでも C-M-iで company-modeの補完を使う
     (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
 
     (set-face-attribute 'company-tooltip nil
@@ -834,7 +854,26 @@
     (set-face-attribute 'company-scrollbar-fg nil
 			:background "orange")
     (set-face-attribute 'company-scrollbar-bg nil
-			:background "gray40")))
+			:background "gray40"))
+  (with-eval-after-load-feature 'company-dabbrev
+    (setq company-dabbrev-downcase nil)))
+
+(el-get-bundle helm-company
+  :type github
+  :pkgname "manuel-uberti/helm-company"
+  :depends (company-mode helm))
+(with-eval-after-load-feature 'company
+  (define-key company-mode-map (kbd "C-z C-;") 'helm-company)
+  (define-key company-active-map (kbd "C-z C-;") 'helm-company))
+
+(el-get-bundle git-complete
+  :type github
+  :pkgname "zk-phi/git-complete"
+  :features git-complete
+  :depends popup
+  (with-eval-after-load-feature 'git-complete
+    (setq git-complete-enable-autopair t)
+    (global-set-key (kbd "C-z /") 'git-complete)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -850,7 +889,7 @@
 		(concat user-emacs-directory "el-get/php-mode/skeleton"))
    (require 'php-ext)
    (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
-   (define-key php-mode-map [return] 'newline-and-indent)
+   ;; (define-key php-mode-map [return] 'newline-and-indent) XXX problem git-complete
    (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
    (add-hook 'php-mode-hook 'php-c-style)))
@@ -872,7 +911,7 @@
   (company-mode t)
   (ac-php-core-eldoc-setup)
   (make-local-variable 'company-backends)
-  (add-to-list 'company-backends 'company-ac-php-backend)
+  (add-to-list 'company-backends '(company-ac-php-backend :with company-dabbrev))
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
@@ -928,7 +967,7 @@
 ;;; csharp
 ;;;
 
-;; XXX omnisharp-utils.el で (require 'shut-up) しないと動かないかも
+;; XXX omnisharp-utils.el で (require 'shut-up) しないと動かないかも
 (el-get-bundle shut-up in cask/shut-up)
 (el-get-bundle omnisharp-mode
   :depends (csharp-mode shut-up dash s f))
@@ -941,10 +980,10 @@
 ;; cd omnisharp-roslyn
 ;; ./build.sh
 ;;
-;; XXX OmniSharp-Roslyn が自動起動してくれないので 以下のようにして手動で起動させる
+;; XXX OmniSharp-Roslyn が自動起動してくれないので 以下のようにして手動で起動させる
 ;; ~/git-repos/omnisharp-roslyn/artifacts/publish/OmniSharp/default/netcoreapp1.1/OmniSharp -s `pwd`
 ;;
-;; さらに csharp-mode や omnisharp-mode がちゃんと起動しない場合は以下のように手動で起動させる
+;; さらに csharp-mode や omnisharp-mode がちゃんと起動しない場合は以下のように手動で起動させる
 ;; M-x my-csharp-mode-hook
 ;; M-x my-omnisharp-mode-hook
 (setq omnisharp-server-executable-path "~/bin/omnisharp-osx/run")
