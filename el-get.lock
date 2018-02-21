@@ -42,7 +42,7 @@
         (xcscope :checksum "9dee0f3b20115dfaf9f8486937b4db013ec1903f")
         (s :checksum "2184337a132944f669144d0078d1fa1220012840")
         (f :checksum "fabdbd4a4a8caf8684f0fa656f457a03c5dfa4de")
-        (ac-php :checksum "317ad1d023db6b2fe67444a2c075e656c35f5094")
+        (ac-php :checksum "cf9db85af2db9150e9d9b4fecad874e16ce43f0d")
         (smartparens :checksum "1321757dfe774782d13b0c050c292b2477877d0b")
         (sqlite-dump :checksum "044f63a89874d6fcc80fc881ef98ec523120afb7")
         (ddskk :checksum "78798134af82a300e54a5d22d2f10c2885cd11ae")
