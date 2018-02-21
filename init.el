@@ -825,6 +825,7 @@
 ;; (define-key ac-completing-map [tab] 'ac-complete)
 ;; (define-key ac-completing-map [return] 'ac-complete)
 
+(el-get-bundle emacs-async)
 (el-get-bundle company-mode
   (global-company-mode 1)
   (global-set-key (kbd "C-M-i") 'company-complete)
