@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((helm-company :checksum "c3c8604a49dda51628b63de0be10130a983d0bc9")
+      '((session :checksum "c1d2dce4bb67f6a6f07a3b27b5225c7f8cc3c4c7")
+        (helm-company :checksum "c3c8604a49dda51628b63de0be10130a983d0bc9")
         (smart-mode-line :checksum "1facbe9816b602c640ddb23602e30588d6d904ca")
         (rich-minority :checksum "3201f6e1769beb9f6cbbda392bef99fce337acf4")
         (sky-color-clock :checksum "63aaafb4925cfc86b030555013c4bcc4bf6360dd")
@@ -68,7 +69,6 @@
         (quickrun :checksum "87b34738ea152e6ff173a14f8b42303150c8c031")
         (smartrep :checksum "50ac98e3a0c90616df6219d1e04c91e893fea579")
         (multiple-cursors :checksum "f3daf86bd6c4b373075ab6afc3492675ccc1c558")
-        (session :checksum "200bb6cb6bfd041ed7e7fa117d448c1b1c2f3cd8")
         (htmlize :checksum "aa6e2f6dba6fdfa200c7c55efe29ff63380eac8f")
         (visual-regexp :checksum "104d17fc8fd1d3bb8f7823a8bf076dcf6839ba64")
         (goto-chg :checksum "50e58f9e6bb0b8b8e3a24ed817ff78512a770448")
