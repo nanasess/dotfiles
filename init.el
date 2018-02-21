@@ -240,16 +240,17 @@
     (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
     (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)))
 
-(el-get-bundle sky-color-clock
-  :type github
-  :pkgname "zk-phi/sky-color-clock"
-  :features sky-color-clock
-  (with-eval-after-load-feature 'sky-color-clock
-    (load "openweathermap-api-key" t)
-    (sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
-    (setq-default mode-line-format
-		  (append mode-line-format '((:eval (sky-color-clock)))))
-    (sky-color-clock-initialize-openweathermap-client openweathermap-api-key 1855207)))
+(load "openweathermap-api-key" t)
+(when openweathermap-api-key
+    (el-get-bundle sky-color-clock
+      :type github
+      :pkgname "zk-phi/sky-color-clock"
+      :features sky-color-clock
+      (with-eval-after-load-feature 'sky-color-clock
+	(sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
+	(setq-default mode-line-format
+		      (append mode-line-format '((:eval (sky-color-clock)))))
+	(sky-color-clock-initialize-openweathermap-client openweathermap-api-key 1855207))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
