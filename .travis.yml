@@ -31,7 +31,7 @@ script:
   - $EMACS -q -l init.el --batch
   - $EMACS -q -l init.el --batch -f batch-byte-compile init.el
   - ls el-get/emacs-async
-  - cd el-get/helm && make
+  - cd el-get/helm && make ASYNC_ELPA_DIR=${TRAVIS_BUILD_DIR}/el-get/emacs-async/
 
 notifications:
   email:
