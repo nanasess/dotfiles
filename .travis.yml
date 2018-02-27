@@ -4,7 +4,7 @@ env:
   global:
     - CURL="curl -fsSkL --retry 9 --retry-delay 9"
   matrix:
-  - EMACS_VERSION=25.2
+  - EMACS_VERSION=26 # emacs-26 branch, built daily
   - EMACS_VERSION=25 # emacs-25 branch, built daily
   - EMACS_VERSION=master # master branch, built daily
 
