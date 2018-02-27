@@ -30,7 +30,8 @@ script:
   - git config --global user.email nanasess@example.com
   - $EMACS -q -l init.el --batch
   - $EMACS -q -l init.el --batch -f batch-byte-compile init.el
-  - cd el-get/helm && make
+  - cd el-get/helm && make && ls ../async
+
 notifications:
   email:
     # Default is change, but that includes a new branch's 1st success.
