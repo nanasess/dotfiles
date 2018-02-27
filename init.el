@@ -624,9 +624,12 @@
 ;;; session settings
 ;;;
 
-(el-get-bundle! session)
-(add-hook 'after-init-hook 'session-initialize)
-(setq session-save-print-spec '(t nil 40000))
+(el-get-bundle session
+  :type github
+  :pkgname "nanasess/emacs-session"
+  :features session
+  (add-hook 'after-init-hook 'session-initialize)
+  (setq session-save-print-spec '(t nil 40000)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -670,6 +673,7 @@
 ;;; magit settings
 ;;;
 
+(el-get-bundle emacs-async)
 (el-get-bundle magit
   (setq magit-diff-refine-hunk t))
 
