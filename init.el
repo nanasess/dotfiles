@@ -673,9 +673,7 @@
 ;;; magit settings
 ;;;
 
-(el-get-bundle jwiegley/emacs-async
-  :name async
-  :features async)
+(el-get-bundle emacs-async)
 (el-get-bundle magit
   (setq magit-diff-refine-hunk t))
 

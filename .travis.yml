@@ -30,7 +30,8 @@ script:
   - git config --global user.email nanasess@example.com
   - $EMACS -q -l init.el --batch
   - $EMACS -q -l init.el --batch -f batch-byte-compile init.el
-  - cd el-get/helm && make && ls ../async
+  - ls el-get/emacs-async
+  - cd el-get/helm && make
 
 notifications:
   email:
