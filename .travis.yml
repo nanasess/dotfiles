@@ -24,6 +24,7 @@ install:
   - tar -xaf emacs-bin-${EMACS_VERSION}.tar.gz -C /
   - export EMACS=/tmp/emacs/bin/emacs
   - export EMACS_COMMAND=$EMACS # use helm
+  - export PATH=/tmp/emacs/bin:${PATH}
   - $EMACS --version
 script:
   - git config --global user.name "Kentaro Ohkouchi"
@@ -31,7 +32,7 @@ script:
   - $EMACS -q -l init.el --batch
   - $EMACS -q -l init.el --batch -f batch-byte-compile init.el
   - ls el-get/emacs-async
-  - cd el-get/helm && make ASYNC_ELPA_DIR=${TRAVIS_BUILD_DIR}/el-get/emacs-async/ EMACS=/tmp/emacs/bin/emacs EMACS_COMMAND=$EMACS
+  - cd el-get/helm && make ASYNC_ELPA_DIR=${TRAVIS_BUILD_DIR}/el-get/emacs-async
 
 notifications:
   email:
