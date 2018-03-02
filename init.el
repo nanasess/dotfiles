@@ -674,8 +674,7 @@
 ;;;
 
 (el-get-bundle emacs-async)
-(el-get-bundle magit
-  (setq magit-diff-refine-hunk t))
+(el-get-bundle magit)
 
 ;; see https://stackoverflow.com/a/32914548/4956633
 (defun endless/visit-pull-request-url ()
@@ -711,6 +710,7 @@
 	    repo)
 	   (magit-get-current-branch))))
 (with-eval-after-load-feature 'magit
+  (setq magit-diff-refine-hunk t)
   ;; visit PR for github or bitbucket repositories with "v"
   (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
   (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)

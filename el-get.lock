@@ -38,7 +38,7 @@
         (with-eval-after-load-feature-el :checksum "0b38651a5f0dafdfe04bd0032eb5ff803e99460b")
         (omnisharp-mode :checksum "ad4a19c60f7dc3d52a5b11febdcc9b78930a1e7d")
         (helm-ls-git :checksum "d116bb96b6ea946f633ed7735fbf38a63e611a3a")
-        (magit :checksum "60a167ad12ce9e4dc9637254f39ae11ab2f22a81")
+        (magit :checksum "b28748256870d44878d6d7349505172b3d46f1b6")
         (karma :checksum "31d3e7708246183d7ed0686be92bf23140af348c")
         (mocha :checksum "55f1e6afd100891ffd7008f5c5efbc5a9ab1c22d")
         (typescript-mode :checksum "0f41709e1525403767bd4889cb913900c68448dd")
