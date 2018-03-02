@@ -714,7 +714,8 @@
   ;; visit PR for github or bitbucket repositories with "v"
   (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
   (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
-  (define-key magit-log-mode-map (kbd "k") 'magit-section-backward))
+  (define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
+  (remove-hook 'server-switch-hook 'magit-commit-diff))
 (global-set-key (kbd "C-z m") 'magit-status)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
