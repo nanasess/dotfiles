@@ -614,13 +614,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; htmlize settings
-;;;
-
-(el-get-bundle htmlize)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; session settings
 ;;;
 
@@ -674,8 +667,7 @@
 ;;;
 
 (el-get-bundle emacs-async)
-(el-get-bundle magit
-  (setq magit-diff-refine-hunk t))
+(el-get-bundle magit)
 
 ;; see https://stackoverflow.com/a/32914548/4956633
 (defun endless/visit-pull-request-url ()
@@ -711,10 +703,12 @@
 	    repo)
 	   (magit-get-current-branch))))
 (with-eval-after-load-feature 'magit
+  (setq magit-diff-refine-hunk t)
   ;; visit PR for github or bitbucket repositories with "v"
   (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
   (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
-  (define-key magit-log-mode-map (kbd "k") 'magit-section-backward))
+  (define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
+  (remove-hook 'server-switch-hook 'magit-commit-diff))
 (global-set-key (kbd "C-z m") 'magit-status)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -863,14 +857,6 @@
 			:background "gray40"))
   (with-eval-after-load-feature 'company-dabbrev
     (setq company-dabbrev-downcase nil)))
-
-(el-get-bundle helm-company
-  :type github
-  :pkgname "manuel-uberti/helm-company"
-  :depends (company-mode helm))
-(with-eval-after-load-feature 'company
-  (define-key company-mode-map (kbd "C-z C-;") 'helm-company)
-  (define-key company-active-map (kbd "C-z C-;") 'helm-company))
 
 (el-get-bundle git-complete
   :type github
