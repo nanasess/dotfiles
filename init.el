@@ -865,14 +865,6 @@
   (with-eval-after-load-feature 'company-dabbrev
     (setq company-dabbrev-downcase nil)))
 
-(el-get-bundle helm-company
-  :type github
-  :pkgname "manuel-uberti/helm-company"
-  :depends (company-mode helm))
-(with-eval-after-load-feature 'company
-  (define-key company-mode-map (kbd "C-z C-;") 'helm-company)
-  (define-key company-active-map (kbd "C-z C-;") 'helm-company))
-
 (el-get-bundle git-complete
   :type github
   :pkgname "zk-phi/git-complete"
