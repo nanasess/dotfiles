@@ -359,7 +359,7 @@
   (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
   (add-hook 'js-mode-hook 'js2-minor-mode)
   (with-eval-after-load-feature 'js2-mode
-    (setq js2-basic-offset 2
+    (setq js2-basic-offset 4
 	  js2-bounce-indent-p t)
     (electric-indent-local-mode 0)
     (define-key js2-mode-map (kbd "RET") 'js2-line-break)
