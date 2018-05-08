@@ -875,7 +875,7 @@
 (el-get-bundle php-mode
  (with-eval-after-load-feature 'php-mode
    (setq php-manual-url "http://jp2.php.net/manual/ja/"
-	 php-mode-coding-style 'symfony2
+	 php-mode-coding-style 'Symfony2
 	 php-search-url "http://jp2.php.net/")
    (add-to-list 'load-path
 		(concat user-emacs-directory "el-get/php-mode/skeleton"))
