@@ -858,6 +858,8 @@
   (with-eval-after-load-feature 'company-dabbrev
     (setq company-dabbrev-downcase nil)))
 
+(el-get-bundle company-quickhelp)
+
 (el-get-bundle git-complete
   :type github
   :pkgname "zk-phi/git-complete"
