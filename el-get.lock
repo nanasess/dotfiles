@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((phpunit\.el :checksum "a13706733f98be3639c47311fc820b3b50f4bc33")
+      '((company-quickhelp :checksum "1580b107ebecb98cf5c21a5b7185d4bfe761047d")
+        (phpunit\.el :checksum "a13706733f98be3639c47311fc820b3b50f4bc33")
         (with-editor :checksum "ad5bb005ed3afec2d8b9b2bc1df19fb9b5e2dd84")
         (pkg-info :checksum "76ba7415480687d05a4353b27fea2ae02b8d9d61")
         (org-html5presentation :checksum "09784f8acc50d943b35dc2ff5582d7c1e8718e67")

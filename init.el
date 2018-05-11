@@ -806,19 +806,19 @@
 ;;; auto-complete.el settings
 ;;;
 
-(el-get-bundle auto-complete)
+(el-get-bundle auto-complete
+  (with-eval-after-load-feature 'auto-complete
+      (add-to-list 'ac-dictionary-directories
+		   (expand-file-name
+		    (concat user-site-lisp-directory "auto-complete/dict")))
+    (setq ac-delay 0.1)
+    (setq ac-auto-show-menu 0.3)
+    (setq ac-use-menu-map t)
+    (define-key ac-completing-map [tab] 'ac-complete)
+    (define-key ac-completing-map [return] 'ac-complete)))
+
 (auto-complete-mode 0)
 (global-auto-complete-mode 0)
-;; (require 'auto-complete-config)
-;; (add-to-list 'ac-dictionary-directories
-;; 	     (expand-file-name
-;; 	      (concat user-site-lisp-directory "auto-complete/dict")))
-;; ;; (ac-config-default)
-;; (setq ac-delay 0.3)
-;; (setq ac-auto-show-menu 0.8)
-;; (setq ac-use-menu-map t)
-;; (define-key ac-completing-map [tab] 'ac-complete)
-;; (define-key ac-completing-map [return] 'ac-complete)
 
 (el-get-bundle company-mode
   (global-company-mode 1)
@@ -839,24 +839,11 @@
     (define-key company-active-map (kbd "C-i") 'company-complete-selection)
 
     ;; 各種メジャーモードでも C-M-iで company-modeの補完を使う
-    (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
-
-    (set-face-attribute 'company-tooltip nil
-			:foreground "black" :background "lightgrey")
-    (set-face-attribute 'company-tooltip-common nil
-			:foreground "black" :background "lightgrey")
-    (set-face-attribute 'company-tooltip-common-selection nil
-			:foreground "white" :background "steelblue")
-    (set-face-attribute 'company-tooltip-selection nil
-			:foreground "black" :background "steelblue")
-    (set-face-attribute 'company-preview-common nil
-			:background nil :foreground "lightgrey" :underline t)
-    (set-face-attribute 'company-scrollbar-fg nil
-			:background "orange")
-    (set-face-attribute 'company-scrollbar-bg nil
-			:background "gray40"))
+    (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete))
   (with-eval-after-load-feature 'company-dabbrev
     (setq company-dabbrev-downcase nil)))
+
+(el-get-bundle company-quickhelp)
 
 (el-get-bundle git-complete
   :type github
@@ -896,14 +883,15 @@
 
 (defun php-c-style ()
   (interactive)
-  (auto-complete-mode 0)
+  (company-mode -1)
+  (auto-complete-mode 1)
   (require 'ac-php)
-  (require 'company-php)
-  ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
-  (company-mode t)
+  ;; (require 'company-php)
+  (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+
   (ac-php-core-eldoc-setup)
-  (make-local-variable 'company-backends)
-  (add-to-list 'company-backends '(company-ac-php-backend :with company-dabbrev))
+  ;; (make-local-variable 'company-backends)
+  ;; (add-to-list 'company-backends '(company-ac-php-backend :with company-dabbrev))
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
