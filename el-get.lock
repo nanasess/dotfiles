@@ -58,7 +58,7 @@
         (f :checksum "de6d4d40ddc844eee643e92d47b9d6a63fbebb48")
         (ac-php :checksum "f925943244cf0dc91ada86d2b6238745af871a8f")
         (smartparens :checksum "1321757dfe774782d13b0c050c292b2477877d0b")
-        (sqlite-dump :checksum "044f63a89874d6fcc80fc881ef98ec523120afb7")
+        (sqlite-dump :checksum "ca0bc945cd2dc5db6a5e27ec01ae77e1c3a83fa5")
         (ddskk :checksum "16d156562aef72f02ced58087335ed72d520d878")
         (popup :checksum "80829dd46381754639fb764da11c67235fe63282")
         (po-mode :checksum "3c97f0d391751956fdcf9f4c858d45c60405dd35")

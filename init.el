@@ -1367,9 +1367,11 @@ on their own line."
 	  edbi:query-result-column-max-width nil)))
 
 ;;; sqlite-dump
+;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
 (el-get-bundle sqlite-dump
-  :type http
-  :url "http://download.tuxfamily.org/user42/sqlite-dump.el")
+  :type github
+  :pkgname "nanasess/sqlite-dump"
+  :features sqlite-dump)
 (modify-coding-system-alist 'file "\\.\\(db\\|sqlite\\)\\'" 'raw-text-unix)
 (add-to-list 'auto-mode-alist '("\\.\\(db\\|sqlite\\)\\'" . sqlite-dump))
 
