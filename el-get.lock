@@ -83,7 +83,7 @@
         (multiple-cursors :checksum "75dd6bf83af4eff83dc22e278c47264c1a41cd66")
         (visual-regexp :checksum "b3096c2d391ff4e28a2a4e8cd82efbf11071ea85")
         (yaml-mode :checksum "40067a10ac1360f0b9533f0bbbb2eea128e2574d")
-        (web-mode :checksum "49a2aae1d1e8e58f67d71a22dfaacf4b6406f5b4")
+        (web-mode :checksum "471e1235d976e209de5262e75ecf7cc3e1fec39f")
         (js2-mode :checksum "d76b4df4427e7bf4dfb2ba7b5dfff3c2aea52459")
         (recentf-ext :checksum "95f81dfac24d3f67002024f0a24e6b997bf6d647")
         (el-get :checksum "e065feaa545087dd49f690a838237fe6239b00f6")

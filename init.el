@@ -432,6 +432,9 @@
   (setq web-mode-script-padding 4)
   (setq web-mode-style-padding 4)
   (with-eval-after-load-feature 'web-mode
+    ;; (setq web-mode-enable-auto-indentation nil)
+    (setq web-mode-enable-current-element-highlight nil)
+    (setq web-mode-enable-current-column-highlight nil)
     (add-to-list 'auto-mode-alist '("\\.\\(twig\\|html\\)\\'" . web-mode))
     (add-hook 'web-mode-hook 'basic-indent)
     (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
