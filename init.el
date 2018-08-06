@@ -876,6 +876,14 @@
    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
    (add-hook 'php-mode-hook 'php-c-style)))
 
+(el-get-bundle php-actor
+  :type github
+  :pkgname "emacs-php/phpactor.el")
+
+(el-get-bundle flycheck-phpstan
+  :type github
+  :pkgname "emacs-php/phpstan.el")
+
 ;; (el-get 'sync 'smartparens)
 
 ;; require github.com/vim-php/phpctags
@@ -888,22 +896,27 @@
   (interactive)
   (company-mode -1)
   (auto-complete-mode 1)
+  ;; (require 'company-phpactor)
   (require 'ac-php)
   ;; (require 'company-php)
   (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 
   (ac-php-core-eldoc-setup)
   ;; (make-local-variable 'company-backends)
-  ;; (add-to-list 'company-backends '(company-ac-php-backend :with company-dabbrev))
+  ;; (add-to-list 'company-backends '(company-phpactor :with company-dabbrev))
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
-  (flycheck-mode t)
+  ;; (setq flycheck-phpstan-executable "/Users/nanasess/.emacs.d/bin/phpstan")
+  ;; (require 'flycheck-phpstan)
+  ;; (flycheck-mode t)
+  ;; (flycheck-select-checker 'phpstan)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) "")
   (setq flycheck-phpcs-standard "PSR2")
-  (setq flycheck-phpmd-rulesets (concat user-emacs-directory "phpmd_ruleset.xml")))
+  (setq flycheck-phpmd-rulesets (concat user-emacs-directory "phpmd_ruleset.xml"))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
