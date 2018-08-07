@@ -78,7 +78,8 @@
 		   "/opt/local/sbin" "/opt/local/bin" "/usr/gnu/bin"
 		   (expand-file-name "~/bin")
 		   (expand-file-name "~/.emacs.d/bin")
-		   (expand-file-name "~/Applications/UpTeX.app/teTeX/bin")))
+		   (expand-file-name "~/Applications/UpTeX.app/teTeX/bin")
+		   (expand-file-name "~/.composer/vendor/bin")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
@@ -870,15 +871,21 @@
    (add-to-list 'load-path
 		(concat user-emacs-directory "el-get/php-mode/skeleton"))
    (require 'php-ext)
-   (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
+   ;; (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
    ;; (define-key php-mode-map [return] 'newline-and-indent) XXX problem git-complete
    (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
    (add-hook 'php-mode-hook 'php-c-style)))
 
-(el-get-bundle php-actor
+(el-get-bundle! f)
+(require 'f)
+(el-get-bundle phpactor
   :type github
-  :pkgname "emacs-php/phpactor.el")
+  :pkgname "emacs-php/phpactor.el"
+  ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs)) ("composer install"))
+  :depends f
+  :post-init (progn
+  	       (load "phpactor-autoloads")))
 
 (el-get-bundle flycheck-phpstan
   :type github
@@ -890,27 +897,27 @@
 ;; require php >=5.5
 ;; require cscope >= 15.8a
 ;; M-x ac-php-remake-tags-all
-(el-get-bundle ac-php)
+;; (el-get-bundle ac-php)
 
 (defun php-c-style ()
   (interactive)
-  (company-mode -1)
-  (auto-complete-mode 1)
-  ;; (require 'company-phpactor)
-  (require 'ac-php)
+  (company-mode 1)
+  (auto-complete-mode -1)
+  (require 'company-phpactor)
+  ;; (require 'ac-php)
   ;; (require 'company-php)
-  (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+  ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 
-  (ac-php-core-eldoc-setup)
-  ;; (make-local-variable 'company-backends)
-  ;; (add-to-list 'company-backends '(company-phpactor :with company-dabbrev))
+  ;; (ac-php-core-eldoc-setup)
+  (make-local-variable 'company-backends)
+  (add-to-list 'company-backends '(company-phpactor))
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
-  ;; (setq flycheck-phpstan-executable "/Users/nanasess/.emacs.d/bin/phpstan")
-  ;; (require 'flycheck-phpstan)
-  ;; (flycheck-mode t)
-  ;; (flycheck-select-checker 'phpstan)
+  ;; (setq flycheck-phpstan-executable "phpstan")
+  (require 'flycheck-phpstan)
+  (flycheck-mode t)
+  (flycheck-select-checker 'phpstan)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) "")
