@@ -884,8 +884,9 @@
   :pkgname "emacs-php/phpactor.el"
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs)) ("composer install"))
   :depends f
-  :post-init (progn
-  	       (load "phpactor-autoloads")))
+  ;; :post-init (progn
+  ;; 	       (load "phpactor-autoloads"))
+  )
 
 (el-get-bundle flycheck-phpstan
   :type github
@@ -903,12 +904,14 @@
   (interactive)
   (company-mode 1)
   (auto-complete-mode -1)
-  (require 'company-phpactor)
+  (load "phpactor-autoloads")
   ;; (require 'ac-php)
   ;; (require 'company-php)
   ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 
   ;; (ac-php-core-eldoc-setup)
+  (setq phpactor--debug 1)
+  (setq phpactor-executable "/Users/nanasess/.emacs.d/el-get/phpactor/vendor/bin/phpactor")
   (make-local-variable 'company-backends)
   (add-to-list 'company-backends '(company-phpactor))
   (electric-indent-local-mode t)

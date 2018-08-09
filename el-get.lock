@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((flycheck-phpstan :checksum "beac0e0e7160454d4f42162b3502a36ccf488120")
+      '((phpactor :checksum "61e4eab638168b7034eef0f11e35a89223fa7687")
+        (flycheck-phpstan :checksum "beac0e0e7160454d4f42162b3502a36ccf488120")
         (php-actor :checksum "c5328bbff39fa7a976e5bcd5943c9950b3159d28")
         (company-quickhelp :checksum "479676cade80a9f03802ca3d956591820ed5c537")
         (phpunit\.el :checksum "a13706733f98be3639c47311fc820b3b50f4bc33")
