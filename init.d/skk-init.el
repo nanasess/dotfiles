@@ -45,3 +45,9 @@
 	((setq skk-kutouten-type 'en)))
   (message (format "skk-kutoten-type on set to the %s." skk-kutouten-type)))
 
+;;; skk-search-web
+(require 'skk-search-web)
+(add-to-list 'skk-search-prog-list
+	     '(skk-search-web 'skk-google-cgi-api-for-japanese-input)
+	     t)
+;;(add-to-list 'skk-completion-prog-list '(skk-comp-google) t)

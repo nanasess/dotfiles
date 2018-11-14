@@ -20,3 +20,5 @@ eshell
 games
 pandoc-mode
 server
+/secret.d/*
+!/secret.d/.gitkeep

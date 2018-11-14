@@ -1,6 +1,0 @@
-(:name easy-kill
-       :website "https://github.com/leoliu/easy-kill"
-       :description " Kill & Mark Things Easily in Emacs http://elpa.gnu.org"
-       :type github
-       :pkgname "leoliu/easy-kill"
-       :features "easy-kill")

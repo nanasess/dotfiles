@@ -20,9 +20,6 @@
 
 (setq ns-pop-up-frames nil)
 
-(custom-set-variables
- '(helm-grep-default-recurse-command "ggrep -a -d recurse %e -n%cH -e %p %f"))
- 
 ;; XXX Tiger ではバックスラッシュが円マークになってしまう...
 (keyboard-translate 165 92)
 

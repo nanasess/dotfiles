@@ -1,5 +1,0 @@
-(:name helm-git-files
-       :description "Yet another helm to list git files."
-       :type github
-       :pkgname "kenbeese/helm-git-files"
-       :features helm-git-files)
