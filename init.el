@@ -78,8 +78,9 @@
 		   "/opt/local/sbin" "/opt/local/bin" "/usr/gnu/bin"
 		   (expand-file-name "~/bin")
 		   (expand-file-name "~/.emacs.d/bin")
-		   (expand-file-name "~/Applications/UpTeX.app/teTeX/bin")
-		   (expand-file-name "~/.composer/vendor/bin")))
+		   (expand-file-name "~/.local/bin")
+		   (expand-file-name "~/.composer/vendor/bin")
+		   (expand-file-name "~/Applications/UpTeX.app/teTeX/bin")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
@@ -860,6 +861,55 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; markdown-mode settings
+;;;
+
+(el-get-bundle markdown-mode)
+(add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode))
+
+;; see also http://stackoverflow.com/questions/14275122/editing-markdown-pipe-tables-in-emacs
+(defun cleanup-org-tables ()
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "-+-" nil t) (replace-match "-|-"))))
+
+(add-hook 'markdown-mode-hook 'turn-on-orgtbl)
+(add-hook 'markdown-mode-hook
+          #'(lambda()
+	      (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+(add-hook 'gfm-mode-hook 'turn-on-orgtbl)
+(add-hook 'gfm-mode-hook
+          #'(lambda()
+	      (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+(with-eval-after-load-feature 'org-table
+  (add-hook 'markdown-mode-hook
+            #'(lambda()
+		(define-key orgtbl-mode-map
+		  (kbd "<backspace>") 'delete-backward-char)))
+  (add-hook 'gfm-mode-hook
+            #'(lambda()
+		(define-key orgtbl-mode-map
+		  (kbd "<backspace>") 'delete-backward-char))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Language-server settings
+;;;
+
+(el-get-bundle lsp-mode
+  :type github
+  :pkgname "emacs-lsp/lsp-mode"
+  :post-init (progn
+               (require 'lsp-mode)))
+(el-get-bundle lsp-ui
+  :type github
+  :pkgname "emacs-lsp/lsp-ui"
+  :post-init (progn
+               (require 'lsp-ui))
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; PHP settings
 ;;;
 
@@ -927,38 +977,6 @@
   (setq flycheck-phpcs-standard "PSR2")
   (setq flycheck-phpmd-rulesets (concat user-emacs-directory "phpmd_ruleset.xml"))
   )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; markdown-mode settings
-;;;
-
-(el-get-bundle markdown-mode)
-(add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode))
-
-;; see also http://stackoverflow.com/questions/14275122/editing-markdown-pipe-tables-in-emacs
-(defun cleanup-org-tables ()
-  (save-excursion
-    (goto-char (point-min))
-    (while (search-forward "-+-" nil t) (replace-match "-|-"))))
-
-(add-hook 'markdown-mode-hook 'turn-on-orgtbl)
-(add-hook 'markdown-mode-hook
-          #'(lambda()
-	      (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
-(add-hook 'gfm-mode-hook 'turn-on-orgtbl)
-(add-hook 'gfm-mode-hook
-          #'(lambda()
-	      (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
-(with-eval-after-load-feature 'org-table
-  (add-hook 'markdown-mode-hook
-            #'(lambda()
-		(define-key orgtbl-mode-map
-		  (kbd "<backspace>") 'delete-backward-char)))
-  (add-hook 'gfm-mode-hook
-            #'(lambda()
-		(define-key orgtbl-mode-map
-		  (kbd "<backspace>") 'delete-backward-char))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1067,6 +1085,32 @@ on their own line."
     )
   (setq omnisharp-company-strip-trailing-brackets nil)
   (add-hook 'omnisharp-mode-hook 'my-omnisharp-mode-hook))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; haskell-ide-engine settings
+;;;
+;;; git clone git@github.com:haskell/haskell-ide-engine.git ~/.emacs.d/haskell-ide-engine
+;;;
+
+(el-get-bundle haskell-mode
+  :type github
+  :pkgname "haskell/haskell-mode"
+  ;; :info "."
+  ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
+  :post-init (progn
+               (require 'haskell-mode-autoloads)
+               (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+               (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)))
+
+(el-get-bundle lsp-haskell
+  :type github
+  :pkgname "emacs-lsp/lsp-haskell"
+  :post-init (progn
+	       (require 'lsp-haskell))
+  (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
+  (add-hook 'haskell-mode-hook 'flycheck-mode))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1551,17 +1595,8 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
 			    'po-find-file-coding-system)
 
-(define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
-;; TODO Build problem on Emacs26
-;; (el-get-bundle haskell-mode
-;;   :type github
-;;   :pkgname "haskell/haskell-mode"
-;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs) "check-emacs-version" "compile" "haskell-mode-autoloads.el"))
-;;   :post-init (progn
-;; 	       (require 'haskell-mode-autoloads)
-;; 	       (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-;; 	       (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)))
 
+(define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

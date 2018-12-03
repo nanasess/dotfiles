@@ -22,3 +22,4 @@ pandoc-mode
 server
 /secret.d/*
 !/secret.d/.gitkeep
+/haskell-ide-engine
