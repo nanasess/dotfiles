@@ -913,7 +913,7 @@
 ;;; PHP settings
 ;;;
 
-(el-get-bundle php-mode
+(el-get-bundle! php-mode
  (with-eval-after-load-feature 'php-mode
    (setq php-manual-url "http://jp2.php.net/manual/ja/"
 	 php-mode-coding-style 'Symfony2
@@ -930,18 +930,19 @@
 (el-get-bundle! f)
 (require 'f)
 
+(require 'company)
 (el-get-bundle composer
   :type github
-  :pkgname "emacs-php/composer.el")
+  :pkgname "emacs-php/composer.el"
+  :depends request)
 (setq phpactor--debug 1)
 (setq phpactor-executable "/Users/nanasess/.emacs.d/el-get/phpactor/vendor/bin/phpactor")
 (el-get-bundle phpactor
   :type github
   :pkgname "emacs-php/phpactor.el"
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs)) ("composer install"))
-  :depends f composer
-  :post-init (progn
-  	       (load "phpactor-autoloads"))
+  :depends f composer company
+  :post-init (progn)
   )
 
 (el-get-bundle flycheck-phpstan
@@ -966,7 +967,6 @@
   ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 
   ;; (ac-php-core-eldoc-setup)
-  (make-local-variable 'company-backends)
   (add-to-list 'company-backends '(company-phpactor))
   (electric-indent-local-mode t)
   (electric-layout-mode t)

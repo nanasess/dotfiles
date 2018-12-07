@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((composer :checksum "6c1578b2352c81cc9a22616a70db2a14b7d2b67f")
+      '((request :checksum "48a35969f7c41810d550e6cdf784cb86c5a05a20")
+        (composer :checksum "6c1578b2352c81cc9a22616a70db2a14b7d2b67f")
         (treepy :checksum "b40e6b09eb9be45da67b8c9e4990a5a0d7a2a09d")
         (graphql :checksum "e2b309689f4faf9225f290080f836e988c5a576d")
         (lsp-haskell :checksum "1d18fb6b3c055d665dd0bc8694fd74782091d5cf")
