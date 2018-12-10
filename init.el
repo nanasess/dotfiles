@@ -913,18 +913,20 @@
 ;;;
 
 (el-get-bundle php-mode
- (with-eval-after-load-feature 'php-mode
-   (setq php-manual-url "http://jp2.php.net/manual/ja/"
-	 php-mode-coding-style 'Symfony2
-	 php-search-url "http://jp2.php.net/")
-   (add-to-list 'load-path
-		(concat user-emacs-directory "el-get/php-mode/skeleton"))
-   (require 'php-ext)
-   (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
-   ;; (define-key php-mode-map [return] 'newline-and-indent) XXX problem git-complete
-   (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
-   (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-   (add-hook 'php-mode-hook 'php-c-style)))
+  :type github
+  :pkgname "emacs-php/php-mode"
+  (with-eval-after-load-feature 'php-mode
+    (setq php-manual-url "http://jp2.php.net/manual/ja/"
+	  php-mode-coding-style 'Symfony2
+	  php-search-url "http://jp2.php.net/")
+    (add-to-list 'load-path
+		 (concat user-emacs-directory "el-get/php-mode/skeleton"))
+    (require 'php-ext)
+    (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
+    ;; (define-key php-mode-map [return] 'newline-and-indent) XXX problem git-complete
+    (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
+    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
+    (add-hook 'php-mode-hook 'php-c-style)))
 
 ;; (el-get 'sync 'smartparens)
 
