@@ -324,28 +324,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Java settings
-;;;
-
-(add-hook 'java-mode-hook 'basic-indent)
-(with-eval-after-load-feature 'cc-mode
-     (define-key java-mode-map [return] 'newline-and-indent))
-(add-to-list 'auto-mode-alist
-	     '("\\.\\(cls\\|trigger\\)\\'" . java-mode))
-;; (require 'cedet)
-;; (el-get 'sync 'malabar-mode)
-;; (add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
-;; (setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
-;;                                   global-semanticdb-minor-mode
-;;                                   global-semantic-idle-summary-mode
-;;                                   global-semantic-mru-bookmark-mode))
-;; (semantic-mode 1)
-;; (add-hook 'malabar-mode-hook
-;; 	  #'(lambda ()
-;; 	      (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; JavaScript-mode settings
 ;;;
 
@@ -894,12 +872,13 @@
 ;;;
 ;;; Language-server settings
 ;;;
-
-(el-get-bundle lsp-mode
+(el-get-bundle spinner)
+(el-get-bundle f)
+(el-get-bundle ht)
+(el-get-bundle lsp
   :type github
   :pkgname "emacs-lsp/lsp-mode"
-  :post-init (progn
-               (require 'lsp-mode)))
+  :depends (spinner f ht))
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
@@ -956,6 +935,47 @@
   (set (make-local-variable 'comment-end) "")
   (setq flycheck-phpcs-standard "PSR2")
   (setq flycheck-phpmd-rulesets (concat user-emacs-directory "phpmd_ruleset.xml")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Java settings
+;;;
+
+(el-get-bundle lsp-java
+  :type github
+  :pkgname "emacs-lsp/lsp-java"
+  :post-init (progn
+               (require 'lsp-java)
+	       (add-hook 'java-mode-hook #'lsp)))
+(el-get-bundle emacswiki:tree-mode)
+(el-get-bundle bui
+  :type github
+  :pkgname "alezost/bui.el")
+(el-get-bundle dap-mode
+  :type github
+  :pkgname "yyoncho/dap-mode"
+  :depends tree-mode bui
+  :post-init (progn
+               (require 'dap-java)
+	       (dap-mode 1)
+	       (dap-ui-mode 1)))
+
+(add-hook 'java-mode-hook 'basic-indent)
+(with-eval-after-load-feature 'cc-mode
+     (define-key java-mode-map [return] 'newline-and-indent))
+(add-to-list 'auto-mode-alist
+	     '("\\.\\(cls\\|trigger\\)\\'" . java-mode))
+;; (require 'cedet)
+;; (el-get 'sync 'malabar-mode)
+;; (add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
+;; (setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
+;;                                   global-semanticdb-minor-mode
+;;                                   global-semantic-idle-summary-mode
+;;                                   global-semantic-mru-bookmark-mode))
+;; (semantic-mode 1)
+;; (add-hook 'malabar-mode-hook
+;; 	  #'(lambda ()
+;; 	      (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
