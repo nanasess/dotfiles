@@ -325,28 +325,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Java settings
-;;;
-
-(add-hook 'java-mode-hook 'basic-indent)
-(with-eval-after-load-feature 'cc-mode
-     (define-key java-mode-map [return] 'newline-and-indent))
-(add-to-list 'auto-mode-alist
-	     '("\\.\\(cls\\|trigger\\)\\'" . java-mode))
-;; (require 'cedet)
-;; (el-get 'sync 'malabar-mode)
-;; (add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
-;; (setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
-;;                                   global-semanticdb-minor-mode
-;;                                   global-semantic-idle-summary-mode
-;;                                   global-semantic-mru-bookmark-mode))
-;; (semantic-mode 1)
-;; (add-hook 'malabar-mode-hook
-;; 	  #'(lambda ()
-;; 	      (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; JavaScript-mode settings
 ;;;
 
@@ -895,12 +873,13 @@
 ;;;
 ;;; Language-server settings
 ;;;
-
-(el-get-bundle lsp-mode
+(el-get-bundle spinner)
+(el-get-bundle f)
+(el-get-bundle ht)
+(el-get-bundle lsp
   :type github
   :pkgname "emacs-lsp/lsp-mode"
-  :post-init (progn
-               (require 'lsp-mode)))
+  :depends (spinner f ht))
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
@@ -913,39 +892,40 @@
 ;;; PHP settings
 ;;;
 
-(el-get-bundle! php-mode
- (with-eval-after-load-feature 'php-mode
-   (setq php-manual-url "http://jp2.php.net/manual/ja/"
-	 php-mode-coding-style 'Symfony2
-	 php-search-url "http://jp2.php.net/")
-   (add-to-list 'load-path
-		(concat user-emacs-directory "el-get/php-mode/skeleton"))
-   (require 'php-ext)
-   ;; (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
-   ;; (define-key php-mode-map [return] 'newline-and-indent) XXX problem git-complete
-   (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
-   (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-   (add-hook 'php-mode-hook 'php-c-style)))
+(el-get-bundle php-mode
+  :type github
+  :pkgname "emacs-php/php-mode"
+  (with-eval-after-load-feature 'php-mode
+    (setq php-manual-url "http://jp2.php.net/manual/ja/"
+	  php-mode-coding-style 'Symfony2
+	  php-search-url "http://jp2.php.net/")
+    (add-to-list 'load-path
+		 (concat user-emacs-directory "el-get/php-mode/skeleton"))
+    (require 'php-ext)
+    (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
+    ;; (define-key php-mode-map [return] 'newline-and-indent) XXX problem git-complete
+    (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
+    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
+    (add-hook 'php-mode-hook 'php-c-style)))
 
-(el-get-bundle! f)
-(require 'f)
-
-(require 'company)
+;; (require 'company)
 (el-get-bundle composer
   :type github
   :pkgname "emacs-php/composer.el"
-  :depends request)
+  :depends request
+)
+(require 'composer)
 (setq phpactor--debug 1)
-(setq phpactor-executable "/Users/nanasess/.emacs.d/el-get/phpactor/vendor/bin/phpactor")
+(require 'php-project)
 (el-get-bundle phpactor
   :type github
   :pkgname "emacs-php/phpactor.el"
-  ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs)) ("composer install"))
-  :depends f composer company
-  :post-init (progn)
+  ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
+  ;; :depends f composer company
+  ;; :post-init (progn)
   )
 
-(el-get-bundle flycheck-phpstan
+(el-get-bundle phpstan
   :type github
   :pkgname "emacs-php/phpstan.el")
 
@@ -961,7 +941,7 @@
   (interactive)
   (company-mode 1)
   (auto-complete-mode -1)
-  (load "phpactor-autoloads")
+  (require 'phpactor)
   ;; (require 'ac-php)
   ;; (require 'company-php)
   ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
@@ -971,16 +951,57 @@
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
-  ;; (setq flycheck-phpstan-executable "phpstan")
+  (require 'phpstan)
   (require 'flycheck-phpstan)
   (flycheck-mode t)
   (flycheck-select-checker 'phpstan)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) "")
-  (setq flycheck-phpcs-standard "PSR2")
-  (setq flycheck-phpmd-rulesets (concat user-emacs-directory "phpmd_ruleset.xml"))
+  ;; (setq flycheck-phpcs-standard "PSR2")
+  ;; (setq flycheck-phpmd-rulesets (concat user-emacs-directory "phpmd_ruleset.xml"))
   )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Java settings
+;;;
+
+(el-get-bundle lsp-java
+  :type github
+  :pkgname "emacs-lsp/lsp-java"
+  :post-init (progn
+               (require 'lsp-java)
+	       (add-hook 'java-mode-hook #'lsp)))
+(el-get-bundle emacswiki:tree-mode)
+(el-get-bundle bui
+  :type github
+  :pkgname "alezost/bui.el")
+(el-get-bundle dap-mode
+  :type github
+  :pkgname "yyoncho/dap-mode"
+  :depends tree-mode bui
+  :post-init (progn
+               (require 'dap-java)
+	       (dap-mode 1)
+	       (dap-ui-mode 1)))
+
+(add-hook 'java-mode-hook 'basic-indent)
+(with-eval-after-load-feature 'cc-mode
+     (define-key java-mode-map [return] 'newline-and-indent))
+(add-to-list 'auto-mode-alist
+	     '("\\.\\(cls\\|trigger\\)\\'" . java-mode))
+;; (require 'cedet)
+;; (el-get 'sync 'malabar-mode)
+;; (add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
+;; (setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
+;;                                   global-semanticdb-minor-mode
+;;                                   global-semantic-idle-summary-mode
+;;                                   global-semantic-mru-bookmark-mode))
+;; (semantic-mode 1)
+;; (add-hook 'malabar-mode-hook
+;; 	  #'(lambda ()
+;; 	      (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
