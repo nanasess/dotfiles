@@ -1110,6 +1110,19 @@ on their own line."
   (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
   (add-hook 'haskell-mode-hook 'flycheck-mode))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Dockerfile settings
+;;;
+;;; npm i -g dockerfile-language-server-nodejs
+;;;
+(el-get-bundle dockerfile-mode)
+(el-get-bundle lsp-dockerfile
+  :type github
+  :pkgname "emacs-lsp/lsp-dockerfile"
+  :post-init (progn
+	       (require 'lsp-dockerfile))
+  (add-hook 'dockerfile-mode-hook #'lsp))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
