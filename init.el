@@ -940,7 +940,7 @@
 ;;;
 ;;; Java settings
 ;;;
-
+(el-get-bundle request)
 (el-get-bundle lsp-java
   :type github
   :pkgname "emacs-lsp/lsp-java"
