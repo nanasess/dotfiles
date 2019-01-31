@@ -317,13 +317,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; CSS settings
-;;;
-
-(add-hook 'css-mode-hook 'basic-indent)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; JavaScript-mode settings
 ;;;
 
@@ -1123,6 +1116,21 @@ on their own line."
   :post-init (progn
 	       (require 'lsp-dockerfile))
   (add-hook 'dockerfile-mode-hook #'lsp))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; CSS settings
+;;;
+
+(add-hook 'css-mode-hook #'lsp)
+(add-hook 'css-mode-hook 'basic-indent)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; shel settings
+;;;
+
+(add-hook 'sh-mode-hook #'lsp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
