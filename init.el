@@ -871,13 +871,69 @@
 (el-get-bundle lsp
   :type github
   :pkgname "emacs-lsp/lsp-mode"
-  :depends (spinner f ht))
+  :depends (spinner f ht)
+  (with-eval-after-load-feature 'lsp
+    ;; https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp
+    (setq lsp-print-io nil)
+    (setq lsp-trace nil)
+    (setq lsp-print-performance nil)
+    ;; general
+    (setq lsp-auto-guess-root t)
+    (setq lsp-document-sync-method 'incremental) ;; always send incremental document
+    (setq lsp-response-timeout 5)
+    (setq lsp-prefer-flymake 'flymake)
+    (setq lsp-enable-completion-at-point nil)
+    (require 'lsp-clients)))
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
   :post-init (progn
                (require 'lsp-ui))
+  (with-eval-after-load-feature 'lsp-ui
+    ;; lsp-ui-doc
+    (setq lsp-ui-doc-enable t)
+    (setq lsp-ui-doc-header t)
+    (setq lsp-ui-doc-include-signature t)
+    (setq lsp-ui-doc-position 'top) ;; top, bottom, or at-point
+    (setq lsp-ui-doc-max-width 150)
+    (setq lsp-ui-doc-max-height 30)
+    (setq lsp-ui-doc-use-childframe t)
+    (setq lsp-ui-doc-use-webkit t)
+    ;; lsp-ui-flycheck
+    (setq lsp-ui-flycheck-enable nil)
+    ;; lsp-ui-sideline
+    (setq lsp-ui-sideline-enable nil)
+    (setq lsp-ui-sideline-ignore-duplicate t)
+    (setq lsp-ui-sideline-show-symbol t)
+    (setq lsp-ui-sideline-show-hover t)
+    (setq lsp-ui-sideline-show-diagnostics nil)
+    (setq lsp-ui-sideline-show-code-actions nil)
+    ;; lsp-ui-imenu
+    (setq lsp-ui-imenu-enable nil)
+    (setq lsp-ui-imenu-kind-position 'top)
+    ;; lsp-ui-peek
+    (setq lsp-ui-peek-enable t)
+    (setq lsp-ui-peek-peek-height 20)
+    (setq lsp-ui-peek-list-width 50)
+    (setq lsp-ui-peek-fontify 'on-demand) ;; never, on-demand, or always
+    (defun ladicle/toggle-lsp-ui-doc ()
+      (interactive)
+      (if lsp-ui-doc-mode
+        (progn
+          (setq lsp-ui-doc-mode -1)
+          (setq lsp-ui-doc--hide-frame))
+         (setq lsp-ui-doc-mode 1))))
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+(el-get-bundle company-lsp
+  :type github
+  :pkgname "tigersoldier/company-lsp"
+  :post-init (progn
+               (require 'company-lsp)
+	       (push 'company-lsp company-backends))
+  (with-eval-after-load-feature 'company-lsp
+    (setq company-lsp-cache-candidates t) ;; always using cache
+    (setq company-lsp-async t)
+    (setq company-lsp-enable-recompletion nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1008,35 +1064,19 @@
 
 ;; (setq omnisharp-debug 1)
 
-
-;; see https://github.com/nosami/omnisharp-demo/blob/master/config/omnisharp.el
-(defun csharp-newline-and-indent ()
-  "Open a newline and indent.If point is between a pair of braces, opens newlines to put braces
-on their own line."
-  (interactive)
-  (save-excursion
-    (save-match-data
-      (when (and
-             (looking-at " *}")
-             (save-match-data
-               (when (looking-back "{ *" nil)
-                 (goto-char (match-beginning 0))
-                 (unless (looking-back "^[[:space:]]*" nil)
-                   (newline-and-indent))
-                 t)))
-        (unless (and (boundp electric-pair-open-newline-between-pairs)
-                     electric-pair-open-newline-between-pairs
-                     electric-pair-mode)
-          (goto-char (match-beginning 0))
-          (newline-and-indent)))))
-  (newline-and-indent))
-
 (with-eval-after-load-feature 'csharp-mode
   (defun my-csharp-mode-hook ()
     (interactive)
     (flycheck-mode 1)
     ;; (auto-complete-mode 1)
     (electric-pair-local-mode 1) ;; for Emacs25
+    (setq indent-tabs-mode nil)
+    (setq c-syntactic-indentation t)
+    (c-set-style "ellemtel")
+    (setq c-basic-offset 4)
+    (setq truncate-lines t)
+    (setq tab-width 4)
+    (setq evil-shift-width 4)
     (setq flycheck-idle-change-delay 2)
     (omnisharp-mode 1))
   (add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
@@ -1068,7 +1108,7 @@ on their own line."
     (define-key omnisharp-mode-map "\C-c\C-v" 'omnisharp-run-code-action-refactoring)
     (define-key omnisharp-mode-map "\C-c\C-o" 'omnisharp-auto-complete-overrides)
     (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-fix-usings)
-    (define-key omnisharp-mode-map (kbd "<RET>") 'csharp-newline-and-indent)
+    ;; (define-key omnisharp-mode-map (kbd "<RET>") 'csharp-newline-and-indent)
 
     (add-to-list 'company-backends 'company-omnisharp)
     ;; (define-key omnisharp-mode-map "\C-c\C-t\C-s" (lambda() (interactive) (omnisharp-unit-test "single")))
