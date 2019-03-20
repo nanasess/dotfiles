@@ -354,7 +354,7 @@
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
   (company-mode +1)
-  (auto-complete-mode 0)
+  (auto-complete-mode -1)
   (flycheck-add-mode 'typescript-tslint 'web-mode)
   (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append))
 
@@ -782,6 +782,9 @@
 ;;;
 
 (el-get-bundle auto-complete
+  :type github
+  :pkgname "auto-complete/auto-complete"
+  :depends (popup fuzzy)
   (with-eval-after-load-feature 'auto-complete
       (add-to-list 'ac-dictionary-directories
 		   (expand-file-name
@@ -792,8 +795,8 @@
     (define-key ac-completing-map [tab] 'ac-complete)
     (define-key ac-completing-map [return] 'ac-complete)))
 
-(auto-complete-mode 0)
-(global-auto-complete-mode 0)
+(auto-complete-mode -1)
+(global-auto-complete-mode -1)
 
 (el-get-bundle company-mode
   (global-company-mode 1)
@@ -920,9 +923,9 @@
       (interactive)
       (if lsp-ui-doc-mode
         (progn
-          (setq lsp-ui-doc-mode -1)
-          (setq lsp-ui-doc--hide-frame))
-         (setq lsp-ui-doc-mode 1))))
+          (lsp-ui-doc-mode -1)
+          (lsp-ui-doc--hide-frame))
+         (lsp-ui-doc-mode 1))))
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 (el-get-bundle company-lsp
   :type github

@@ -60,7 +60,7 @@
         (mocha :checksum "55f1e6afd100891ffd7008f5c5efbc5a9ab1c22d")
         (typescript-mode :checksum "5350c45aec10bcdffe16ec9273d04298e576f1e1")
         (ac-company :checksum "0db1c9bb6b9be54519d90910f11817178138ac9a")
-        (company-mode :checksum "1c768504eb0ed7c416be4f7844311b6c68f789fb")
+        (company-mode :checksum "20fe01542bf7665ba90f9fe1a86cbe0eea4d9f8a")
         (highlight-symbol :checksum "7a789c779648c55b16e43278e51be5898c121b3a")
         (csharp :checksum "4516a18c0dd1797a2d1eb2ae3069c0e16efa14a7")
         (helm-swoop :checksum "c66336b8245ddc51c4206f19c119f1081920985c")
