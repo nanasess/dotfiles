@@ -641,7 +641,10 @@
 ;;; magit settings
 ;;;
 
+(setenv "EDITOR" "emacsclient")
 (el-get-bundle emacs-async)
+(el-get-bundle transient)
+(el-get-bundle with-editor)
 (el-get-bundle magit)
 
 ;; see https://stackoverflow.com/a/32914548/4956633
