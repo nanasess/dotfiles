@@ -1201,19 +1201,8 @@
 ;;;
 
 (el-get-bundle twittering-mode
-  (setq
-   twittering-allow-insecure-server-cert nil
-   twittering-auth-method 'oauth
-   twittering-bitly-login twittering-username
-   twittering-display-remaining t
-   twittering-retweet-format "RT @%s: %t"
-   twittering-status-format
-   (concat "%i %S(%s),  %@:
-%" "FILL[  ]{%T // from %f%L%r%R}
- ")
-   twittering-tinyurl-service 'j.mp
-   twittering-username "nanasess")
   (with-eval-after-load-feature 'twittering-mode
+    (setq twittering-status-format "%RT{%FACE[bold]{RT}}%i %s,  %@: %FACE[error]{%FIELD-IF-NONZERO[❤ %d]{favorite_count}}  %FACE[warning]{%FIELD-IF-NONZERO[↺ %d]{retweet_count}}\n%FOLD[  ]{%T // from %f%L%r%R%QT{\n+----\n%FOLD[|]{%i %s,  %@:\n%FOLD[  ]{%T // from %f%L%r%R}}\n+----}}\n ")
     (define-key twittering-mode-map
       (kbd "s") 'twittering-current-timeline)
     (define-key twittering-mode-map

@@ -89,7 +89,7 @@
         (helm-descbinds :checksum "033be73f21778633813264ce1634a6e1ad873d8e")
         (helm-migemo :checksum "66c6a19d07c6a385daefd2090d0709d26b608b4e")
         (helm :checksum "7970badff157b9e2e40b2c712fdc5deb721d4821")
-        (twittering-mode :checksum "6d10d1765a7b4de4c723395c8a2200a1649beeb0")
+        (twittering-mode :checksum "114891e8fdb4f06b1326a6cf795e49c205cf9e29")
         (mew :checksum "abe7f589adc5eef0d53e1eeaba9ab28d01c91231")
         (yafolding :checksum "57c015ddd7c3454571c80825bc5391d7a10fa1d7")
         (markdown-mode :checksum "668de4a965980d618637a3b5754e721b54c51e83")
