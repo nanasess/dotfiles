@@ -426,12 +426,13 @@
 ;;; yaml-mode settings
 ;;;
 
-(el-get-bundle! yaml-mode
+(el-get-bundle yaml-mode
   (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-  (add-hook 'yaml-mode-hook
-	    #'(lambda ()
-		(define-key yaml-mode-map "\C-m" 'newline-and-indent)
-		(setq yaml-indent-offset 2))))
+  (with-eval-after-load-feature 'yaml-mode
+    (add-hook 'yaml-mode-hook
+	      #'(lambda ()
+		  (define-key yaml-mode-map "\C-m" 'newline-and-indent)
+		  (setq yaml-indent-offset 2)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -756,9 +757,6 @@
 ;;;
 ;;; quickrun.el settings
 ;;;
-
-(el-get-bundle quickrun)
-
 (defun quickrun/phpunit-outputter ()
   (save-excursion
     (goto-char (point-min))
@@ -766,18 +764,18 @@
       (replace-match "" nil nil)))
   (highlight-phrase "^OK.*$" 'phpunit-pass)
   (highlight-phrase "^ERRORS.*$" 'phpunit-fail))
-
-(with-eval-after-load-feature 'quickrun
-  (add-to-list 'quickrun-file-alist '("Test\\.php\\'" . "phpunit"))
-  (quickrun-add-command "phpunit" '((:command . "phpunit")
-				    (:exec . ("%c -c ~/git-repos/ec-cube/phpunit.xml.dist %s"))
-				    (:outputter . quickrun/phpunit-outputter)))
-  (defface phpunit-pass
-    '((t (:foreground "white" :background "green" :weight bold))) nil
-    :group 'font-lock-highlighting-faces)
-  (defface phpunit-fail
-    '((t (:foreground "white" :background "red" :weight bold))) nil
-    :group 'font-lock-highlighting-faces))
+(el-get-bundle quickrun
+  (with-eval-after-load-feature 'quickrun
+    (add-to-list 'quickrun-file-alist '("Test\\.php\\'" . "phpunit"))
+    (quickrun-add-command "phpunit" '((:command . "phpunit")
+				      (:exec . ("%c -c ~/git-repos/ec-cube/phpunit.xml.dist %s"))
+				      (:outputter . quickrun/phpunit-outputter)))
+    (defface phpunit-pass
+      '((t (:foreground "white" :background "green" :weight bold))) nil
+      :group 'font-lock-highlighting-faces)
+    (defface phpunit-fail
+      '((t (:foreground "white" :background "red" :weight bold))) nil
+      :group 'font-lock-highlighting-faces)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -788,6 +786,8 @@
   :type github
   :pkgname "auto-complete/auto-complete"
   :depends (popup fuzzy)
+  (auto-complete-mode -1)
+  (global-auto-complete-mode -1)
   (with-eval-after-load-feature 'auto-complete
       (add-to-list 'ac-dictionary-directories
 		   (expand-file-name
@@ -797,9 +797,6 @@
     (setq ac-use-menu-map t)
     (define-key ac-completing-map [tab] 'ac-complete)
     (define-key ac-completing-map [return] 'ac-complete)))
-
-(auto-complete-mode -1)
-(global-auto-complete-mode -1)
 
 (el-get-bundle company-mode
   (global-company-mode 1)
@@ -840,8 +837,8 @@
 ;;; markdown-mode settings
 ;;;
 
-(el-get-bundle markdown-mode)
-(add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode))
+(el-get-bundle markdown-mode
+  (add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode)))
 
 ;; see also http://stackoverflow.com/questions/14275122/editing-markdown-pipe-tables-in-emacs
 (defun cleanup-org-tables ()
@@ -893,8 +890,7 @@
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
-  :post-init (progn
-               (require 'lsp-ui))
+  :features lsp-ui
   (with-eval-after-load-feature 'lsp-ui
     ;; lsp-ui-doc
     (setq lsp-ui-doc-enable t)
@@ -928,14 +924,13 @@
         (progn
           (lsp-ui-doc-mode -1)
           (lsp-ui-doc--hide-frame))
-         (lsp-ui-doc-mode 1))))
+	(lsp-ui-doc-mode 1))))
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 (el-get-bundle company-lsp
   :type github
   :pkgname "tigersoldier/company-lsp"
-  :post-init (progn
-               (require 'company-lsp)
-	       (push 'company-lsp company-backends))
+  :features company-lsp
+  (push 'company-lsp company-backends)
   (with-eval-after-load-feature 'company-lsp
     (setq company-lsp-cache-candidates t) ;; always using cache
     (setq company-lsp-async t)
@@ -960,6 +955,7 @@
     ;; (define-key php-mode-map [return] 'newline-and-indent) XXX problem git-complete
     (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
+    (add-hook 'php-mode-hook #'lsp)
     (add-hook 'php-mode-hook 'php-c-style)))
 
 ;; (el-get 'sync 'smartparens)
@@ -972,19 +968,19 @@
 
 (defun php-c-style ()
   (interactive)
-  (company-mode -1)
-  (auto-complete-mode 1)
+  ;; (company-mode -1)
+  ;; (auto-complete-mode 1)
   (require 'ac-php)
-  ;; (require 'company-php)
-  (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+  (require 'company-php)
+  ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 
-  (ac-php-core-eldoc-setup)
+  ;; (ac-php-core-eldoc-setup)
   ;; (make-local-variable 'company-backends)
-  ;; (add-to-list 'company-backends '(company-ac-php-backend :with company-dabbrev))
+  (push 'company-ac-php-backend company-backends)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
-  (flycheck-mode t)
+  (flycheck-mode -1)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) "")
@@ -999,9 +995,8 @@
 (el-get-bundle lsp-java
   :type github
   :pkgname "emacs-lsp/lsp-java"
-  :post-init (progn
-               (require 'lsp-java)
-	       (add-hook 'java-mode-hook #'lsp)))
+  :features lsp-java
+  (add-hook 'java-mode-hook #'lsp))
 (el-get-bundle emacswiki:tree-mode)
 (el-get-bundle bui
   :type github
@@ -1010,10 +1005,9 @@
   :type github
   :pkgname "yyoncho/dap-mode"
   :depends tree-mode bui
-  :post-init (progn
-               (require 'dap-java)
-	       (dap-mode 1)
-	       (dap-ui-mode 1)))
+  :features dap-java
+  (dap-mode 1)
+  (dap-ui-mode 1))
 
 (add-hook 'java-mode-hook 'basic-indent)
 (with-eval-after-load-feature 'cc-mode
@@ -1136,18 +1130,15 @@
   :pkgname "haskell/haskell-mode"
   ;; :info "."
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
-  :post-init (progn
-               (require 'haskell-mode-autoloads)
-               (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-               (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)))
+  :features haskell-mode-autoloads
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
 
 (el-get-bundle lsp-haskell
   :type github
   :pkgname "emacs-lsp/lsp-haskell"
-  :post-init (progn
-	       (require 'lsp-haskell))
-  (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
-  (add-hook 'haskell-mode-hook 'flycheck-mode))
+  :features lsp-haskell
+  (add-hook 'haskell-mode-hook #'lsp))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1159,8 +1150,7 @@
 (el-get-bundle lsp-dockerfile
   :type github
   :pkgname "emacs-lsp/lsp-dockerfile"
-  :post-init (progn
-	       (require 'lsp-dockerfile))
+  :features lsp-dockerfile
   (add-hook 'dockerfile-mode-hook #'lsp))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1240,7 +1230,7 @@
 ;;;
 ;;; helm settings
 ;;;
-(defvar helm-compile-source-functions nil 
+(defvar helm-compile-source-functions nil
    "Functions to compile elements of `helm-sources' (plug-in).")
 
 (el-get-bundle helm
@@ -1288,8 +1278,9 @@
 ;; (setq helm-grep-default-command "grep -a -d skip %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
 ;; (setq helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
 
-(el-get-bundle wgrep)
-(setq wgrep-enable-key "r")
+(el-get-bundle wgrep
+  (setq wgrep-enable-key "r"))
+
 
 (add-hook 'helm-gtags-mode-hook
 	  #'(lambda ()
@@ -1412,19 +1403,19 @@
 ;;; popwin settings
 ;;;
 
-(el-get-bundle! popwin
-  (popwin-mode 1)
-  (setq popwin:special-display-config
-	(append
-	 '(("*Async Shell Command*"		:noselect t)
-	   ("^\*bzr-status.*\*"			:regexp t :noselect t)
-	   ("^\*xgit-status.*\*"			:regexp t :noselect t)
-	   ("*quickrun*"				:noselect t :tail t)
-	   ("^\*karma.*\*"			:regexp t :noselect t :tail t))
-	 popwin:special-display-config))
+;; (el-get-bundle! popwin
+;;   (popwin-mode 1)
+;;   (setq popwin:special-display-config
+;; 	(append
+;; 	 '(("*Async Shell Command*"		:noselect t)
+;; 	   ("^\*bzr-status.*\*"			:regexp t :noselect t)
+;; 	   ("^\*xgit-status.*\*"			:regexp t :noselect t)
+;; 	   ("*quickrun*"				:noselect t :tail t)
+;; 	   ("^\*karma.*\*"			:regexp t :noselect t :tail t))
+;; 	 popwin:special-display-config))
 
-  (global-set-key (kbd "C-x C-p") popwin:keymap)
-  (setq auto-async-byte-compile-display-function 'popwin:popup-buffer-tail))
+;;   (global-set-key (kbd "C-x C-p") popwin:keymap)
+;;   (setq auto-async-byte-compile-display-function 'popwin:popup-buffer-tail))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1649,7 +1640,6 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
 			    'po-find-file-coding-system)
-
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
