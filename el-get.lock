@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((lsp-mode :checksum "2e0b52d94e48fdc119f58308b1422716e1651f5e")
+      '((pos-tip :checksum "051e08fec5cf30b7574bdf439f79fef7d42d689d")
+        (lsp-mode :checksum "2e0b52d94e48fdc119f58308b1422716e1651f5e")
         (transient :checksum "9e30038d2d69e4ad0f3333777137af52e4771442")
         (company-lsp :checksum "2b99795ce52d49a42b8a45821e39ba574f4fa5fc")
         (lsp-dockerfile :checksum "3047d887dc5a974e7a46d5f6920afc427577a925")

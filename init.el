@@ -821,7 +821,9 @@
   (with-eval-after-load-feature 'company-dabbrev
     (setq company-dabbrev-downcase nil)))
 
-(el-get-bundle company-quickhelp)
+(el-get-bundle pos-tip)
+(el-get-bundle company-quickhelp
+  (company-quickhelp-mode 1))
 
 (el-get-bundle git-complete
   :type github
@@ -950,12 +952,11 @@
 	  php-search-url "http://jp2.php.net/")
     (add-to-list 'load-path
 		 (concat user-emacs-directory "el-get/php-mode/skeleton"))
-    (require 'php-ext)
     (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
     ;; (define-key php-mode-map [return] 'newline-and-indent) XXX problem git-complete
     (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-    (add-hook 'php-mode-hook #'lsp)
+    ;; (add-hook 'php-mode-hook #'lsp)
     (add-hook 'php-mode-hook 'php-c-style)))
 
 ;; (el-get 'sync 'smartparens)
@@ -970,17 +971,18 @@
   (interactive)
   ;; (company-mode -1)
   ;; (auto-complete-mode 1)
+  (require 'php-ext)
   (require 'ac-php)
   (require 'company-php)
   ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 
-  ;; (ac-php-core-eldoc-setup)
+  (ac-php-core-eldoc-setup)
   ;; (make-local-variable 'company-backends)
   (push 'company-ac-php-backend company-backends)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
-  (flycheck-mode -1)
+  (flycheck-mode 1)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) "")
