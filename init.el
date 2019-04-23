@@ -318,13 +318,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; CSS settings
-;;;
-
-(add-hook 'css-mode-hook 'basic-indent)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; JavaScript-mode settings
 ;;;
 
@@ -362,7 +355,7 @@
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
   (company-mode +1)
-  (auto-complete-mode 0)
+  (auto-complete-mode -1)
   (flycheck-add-mode 'typescript-tslint 'web-mode)
   (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append))
 
@@ -434,12 +427,13 @@
 ;;; yaml-mode settings
 ;;;
 
-(el-get-bundle! yaml-mode
+(el-get-bundle yaml-mode
   (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-  (add-hook 'yaml-mode-hook
-	    #'(lambda ()
-		(define-key yaml-mode-map "\C-m" 'newline-and-indent)
-		(setq yaml-indent-offset 2))))
+  (with-eval-after-load-feature 'yaml-mode
+    (add-hook 'yaml-mode-hook
+	      #'(lambda ()
+		  (define-key yaml-mode-map "\C-m" 'newline-and-indent)
+		  (setq yaml-indent-offset 2)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -649,7 +643,10 @@
 ;;; magit settings
 ;;;
 
+(setenv "EDITOR" "emacsclient")
 (el-get-bundle emacs-async)
+(el-get-bundle transient)
+(el-get-bundle with-editor)
 (el-get-bundle magit)
 
 ;; see https://stackoverflow.com/a/32914548/4956633
@@ -761,9 +758,6 @@
 ;;;
 ;;; quickrun.el settings
 ;;;
-
-(el-get-bundle quickrun)
-
 (defun quickrun/phpunit-outputter ()
   (save-excursion
     (goto-char (point-min))
@@ -771,18 +765,18 @@
       (replace-match "" nil nil)))
   (highlight-phrase "^OK.*$" 'phpunit-pass)
   (highlight-phrase "^ERRORS.*$" 'phpunit-fail))
-
-(with-eval-after-load-feature 'quickrun
-  (add-to-list 'quickrun-file-alist '("Test\\.php\\'" . "phpunit"))
-  (quickrun-add-command "phpunit" '((:command . "phpunit")
-				    (:exec . ("%c -c ~/git-repos/ec-cube/phpunit.xml.dist %s"))
-				    (:outputter . quickrun/phpunit-outputter)))
-  (defface phpunit-pass
-    '((t (:foreground "white" :background "green" :weight bold))) nil
-    :group 'font-lock-highlighting-faces)
-  (defface phpunit-fail
-    '((t (:foreground "white" :background "red" :weight bold))) nil
-    :group 'font-lock-highlighting-faces))
+(el-get-bundle quickrun
+  (with-eval-after-load-feature 'quickrun
+    (add-to-list 'quickrun-file-alist '("Test\\.php\\'" . "phpunit"))
+    (quickrun-add-command "phpunit" '((:command . "phpunit")
+				      (:exec . ("%c -c ~/git-repos/ec-cube/phpunit.xml.dist %s"))
+				      (:outputter . quickrun/phpunit-outputter)))
+    (defface phpunit-pass
+      '((t (:foreground "white" :background "green" :weight bold))) nil
+      :group 'font-lock-highlighting-faces)
+    (defface phpunit-fail
+      '((t (:foreground "white" :background "red" :weight bold))) nil
+      :group 'font-lock-highlighting-faces)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -790,6 +784,11 @@
 ;;;
 
 (el-get-bundle auto-complete
+  :type github
+  :pkgname "auto-complete/auto-complete"
+  :depends (popup fuzzy)
+  (auto-complete-mode -1)
+  (global-auto-complete-mode -1)
   (with-eval-after-load-feature 'auto-complete
       (add-to-list 'ac-dictionary-directories
 		   (expand-file-name
@@ -799,9 +798,6 @@
     (setq ac-use-menu-map t)
     (define-key ac-completing-map [tab] 'ac-complete)
     (define-key ac-completing-map [return] 'ac-complete)))
-
-(auto-complete-mode 0)
-(global-auto-complete-mode 0)
 
 (el-get-bundle company-mode
   (global-company-mode 1)
@@ -826,7 +822,9 @@
   (with-eval-after-load-feature 'company-dabbrev
     (setq company-dabbrev-downcase nil)))
 
-(el-get-bundle company-quickhelp)
+(el-get-bundle pos-tip)
+(el-get-bundle company-quickhelp
+  (company-quickhelp-mode 1))
 
 (el-get-bundle git-complete
   :type github
@@ -842,8 +840,8 @@
 ;;; markdown-mode settings
 ;;;
 
-(el-get-bundle markdown-mode)
-(add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode))
+(el-get-bundle markdown-mode
+  (add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode)))
 
 ;; see also http://stackoverflow.com/questions/14275122/editing-markdown-pipe-tables-in-emacs
 (defun cleanup-org-tables ()
@@ -879,13 +877,67 @@
 (el-get-bundle lsp
   :type github
   :pkgname "emacs-lsp/lsp-mode"
-  :depends (spinner f ht))
+  :depends (spinner f ht)
+  (with-eval-after-load-feature 'lsp
+    ;; https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp
+    (setq lsp-print-io nil)
+    (setq lsp-trace nil)
+    (setq lsp-print-performance nil)
+    ;; general
+    (setq lsp-auto-guess-root t)
+    (setq lsp-document-sync-method 'incremental) ;; always send incremental document
+    (setq lsp-response-timeout 5)
+    (setq lsp-prefer-flymake 'flymake)
+    (setq lsp-enable-completion-at-point nil)
+    (require 'lsp-clients)))
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
-  :post-init (progn
-               (require 'lsp-ui))
+  :features lsp-ui
+  (with-eval-after-load-feature 'lsp-ui
+    ;; lsp-ui-doc
+    (setq lsp-ui-doc-enable t)
+    (setq lsp-ui-doc-header t)
+    (setq lsp-ui-doc-include-signature t)
+    (setq lsp-ui-doc-position 'top) ;; top, bottom, or at-point
+    (setq lsp-ui-doc-max-width 150)
+    (setq lsp-ui-doc-max-height 30)
+    (setq lsp-ui-doc-use-childframe t)
+    (setq lsp-ui-doc-use-webkit t)
+    ;; lsp-ui-flycheck
+    (setq lsp-ui-flycheck-enable nil)
+    ;; lsp-ui-sideline
+    (setq lsp-ui-sideline-enable nil)
+    (setq lsp-ui-sideline-ignore-duplicate t)
+    (setq lsp-ui-sideline-show-symbol t)
+    (setq lsp-ui-sideline-show-hover t)
+    (setq lsp-ui-sideline-show-diagnostics nil)
+    (setq lsp-ui-sideline-show-code-actions nil)
+    ;; lsp-ui-imenu
+    (setq lsp-ui-imenu-enable nil)
+    (setq lsp-ui-imenu-kind-position 'top)
+    ;; lsp-ui-peek
+    (setq lsp-ui-peek-enable t)
+    (setq lsp-ui-peek-peek-height 20)
+    (setq lsp-ui-peek-list-width 50)
+    (setq lsp-ui-peek-fontify 'on-demand) ;; never, on-demand, or always
+    (defun ladicle/toggle-lsp-ui-doc ()
+      (interactive)
+      (if lsp-ui-doc-mode
+        (progn
+          (lsp-ui-doc-mode -1)
+          (lsp-ui-doc--hide-frame))
+	(lsp-ui-doc-mode 1))))
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+(el-get-bundle company-lsp
+  :type github
+  :pkgname "tigersoldier/company-lsp"
+  :features company-lsp
+  (push 'company-lsp company-backends)
+  (with-eval-after-load-feature 'company-lsp
+    (setq company-lsp-cache-candidates t) ;; always using cache
+    (setq company-lsp-async t)
+    (setq company-lsp-enable-recompletion nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -901,19 +953,22 @@
 	  php-search-url "http://jp2.php.net/")
     (add-to-list 'load-path
 		 (concat user-emacs-directory "el-get/php-mode/skeleton"))
-    (require 'php-ext)
-    (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
+    ;; (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
+    (define-key php-mode-map (kbd "M-.") 'phpactor-goto-definition)
     ;; (define-key php-mode-map [return] 'newline-and-indent) XXX problem git-complete
     (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
+    ;; (add-hook 'php-mode-hook #'lsp)
     (add-hook 'php-mode-hook 'php-c-style)))
 
-;; (require 'company)
+(el-get-bundle! php-runtime
+  :type github
+  :pkgname "emacs-php/php-runtime.el")
+
 (el-get-bundle composer
   :type github
   :pkgname "emacs-php/composer.el"
-  :depends request
-)
+  :depends request)
 (require 'composer)
 (setq phpactor--debug 1)
 (require 'php-project)
@@ -923,7 +978,7 @@
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
   ;; :depends f composer company
   ;; :post-init (progn)
-  )
+  (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor")))
 
 (el-get-bundle phpstan
   :type github
@@ -941,17 +996,20 @@
   (interactive)
   (company-mode 1)
   (auto-complete-mode -1)
+  ;; (require 'php-ext)
   (require 'phpactor)
   ;; (require 'ac-php)
   ;; (require 'company-php)
   ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 
   ;; (ac-php-core-eldoc-setup)
-  (add-to-list 'company-backends '(company-phpactor))
+  (push 'company-phpactor company-backends)
+  (setq eldoc-documentation-function 'phpactor-hover)
+  (eldoc-mode t)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
-  (require 'phpstan)
+  ;; (require 'phpstan)
   (require 'flycheck-phpstan)
   (flycheck-mode t)
   (flycheck-select-checker 'phpstan)
@@ -966,13 +1024,12 @@
 ;;;
 ;;; Java settings
 ;;;
-
+(el-get-bundle request)
 (el-get-bundle lsp-java
   :type github
   :pkgname "emacs-lsp/lsp-java"
-  :post-init (progn
-               (require 'lsp-java)
-	       (add-hook 'java-mode-hook #'lsp)))
+  :features lsp-java
+  (add-hook 'java-mode-hook #'lsp))
 (el-get-bundle emacswiki:tree-mode)
 (el-get-bundle bui
   :type github
@@ -981,10 +1038,9 @@
   :type github
   :pkgname "yyoncho/dap-mode"
   :depends tree-mode bui
-  :post-init (progn
-               (require 'dap-java)
-	       (dap-mode 1)
-	       (dap-ui-mode 1)))
+  :features dap-java
+  (dap-mode 1)
+  (dap-ui-mode 1))
 
 (add-hook 'java-mode-hook 'basic-indent)
 (with-eval-after-load-feature 'cc-mode
@@ -1041,35 +1097,19 @@
 
 ;; (setq omnisharp-debug 1)
 
-
-;; see https://github.com/nosami/omnisharp-demo/blob/master/config/omnisharp.el
-(defun csharp-newline-and-indent ()
-  "Open a newline and indent.If point is between a pair of braces, opens newlines to put braces
-on their own line."
-  (interactive)
-  (save-excursion
-    (save-match-data
-      (when (and
-             (looking-at " *}")
-             (save-match-data
-               (when (looking-back "{ *" nil)
-                 (goto-char (match-beginning 0))
-                 (unless (looking-back "^[[:space:]]*" nil)
-                   (newline-and-indent))
-                 t)))
-        (unless (and (boundp electric-pair-open-newline-between-pairs)
-                     electric-pair-open-newline-between-pairs
-                     electric-pair-mode)
-          (goto-char (match-beginning 0))
-          (newline-and-indent)))))
-  (newline-and-indent))
-
 (with-eval-after-load-feature 'csharp-mode
   (defun my-csharp-mode-hook ()
     (interactive)
     (flycheck-mode 1)
     ;; (auto-complete-mode 1)
     (electric-pair-local-mode 1) ;; for Emacs25
+    (setq indent-tabs-mode nil)
+    (setq c-syntactic-indentation t)
+    (c-set-style "ellemtel")
+    (setq c-basic-offset 4)
+    (setq truncate-lines t)
+    (setq tab-width 4)
+    (setq evil-shift-width 4)
     (setq flycheck-idle-change-delay 2)
     (omnisharp-mode 1))
   (add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
@@ -1101,7 +1141,7 @@ on their own line."
     (define-key omnisharp-mode-map "\C-c\C-v" 'omnisharp-run-code-action-refactoring)
     (define-key omnisharp-mode-map "\C-c\C-o" 'omnisharp-auto-complete-overrides)
     (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-fix-usings)
-    (define-key omnisharp-mode-map (kbd "<RET>") 'csharp-newline-and-indent)
+    ;; (define-key omnisharp-mode-map (kbd "<RET>") 'csharp-newline-and-indent)
 
     (add-to-list 'company-backends 'company-omnisharp)
     ;; (define-key omnisharp-mode-map "\C-c\C-t\C-s" (lambda() (interactive) (omnisharp-unit-test "single")))
@@ -1123,19 +1163,43 @@ on their own line."
   :pkgname "haskell/haskell-mode"
   ;; :info "."
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
-  :post-init (progn
-               (require 'haskell-mode-autoloads)
-               (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-               (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)))
+  :features haskell-mode-autoloads
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
 
 (el-get-bundle lsp-haskell
   :type github
   :pkgname "emacs-lsp/lsp-haskell"
-  :post-init (progn
-	       (require 'lsp-haskell))
-  (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
-  (add-hook 'haskell-mode-hook 'flycheck-mode))
+  :features lsp-haskell
+  (add-hook 'haskell-mode-hook #'lsp))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Dockerfile settings
+;;;
+;;; npm i -g dockerfile-language-server-nodejs
+;;;
+(el-get-bundle dockerfile-mode)
+(el-get-bundle lsp-dockerfile
+  :type github
+  :pkgname "emacs-lsp/lsp-dockerfile"
+  :features lsp-dockerfile
+  (add-hook 'dockerfile-mode-hook #'lsp))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; CSS settings
+;;;
+
+(add-hook 'css-mode-hook #'lsp)
+(add-hook 'css-mode-hook 'basic-indent)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; shel settings
+;;;
+
+(add-hook 'sh-mode-hook #'lsp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1160,19 +1224,8 @@ on their own line."
 ;;;
 
 (el-get-bundle twittering-mode
-  (setq
-   twittering-allow-insecure-server-cert nil
-   twittering-auth-method 'oauth
-   twittering-bitly-login twittering-username
-   twittering-display-remaining t
-   twittering-retweet-format "RT @%s: %t"
-   twittering-status-format
-   (concat "%i %S(%s),  %@:
-%" "FILL[  ]{%T // from %f%L%r%R}
- ")
-   twittering-tinyurl-service 'j.mp
-   twittering-username "nanasess")
   (with-eval-after-load-feature 'twittering-mode
+    (setq twittering-status-format "%RT{%FACE[bold]{RT}}%i %s,  %@: %FACE[error]{%FIELD-IF-NONZERO[❤ %d]{favorite_count}}  %FACE[warning]{%FIELD-IF-NONZERO[↺ %d]{retweet_count}}\n%FOLD[  ]{%T // from %f%L%r%R%QT{\n+----\n%FOLD[|]{%i %s,  %@:\n%FOLD[  ]{%T // from %f%L%r%R}}\n+----}}\n ")
     (define-key twittering-mode-map
       (kbd "s") 'twittering-current-timeline)
     (define-key twittering-mode-map
@@ -1210,7 +1263,7 @@ on their own line."
 ;;;
 ;;; helm settings
 ;;;
-(defvar helm-compile-source-functions nil 
+(defvar helm-compile-source-functions nil
    "Functions to compile elements of `helm-sources' (plug-in).")
 
 (el-get-bundle helm
@@ -1258,8 +1311,9 @@ on their own line."
 ;; (setq helm-grep-default-command "grep -a -d skip %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
 ;; (setq helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
 
-(el-get-bundle wgrep)
-(setq wgrep-enable-key "r")
+(el-get-bundle wgrep
+  (setq wgrep-enable-key "r"))
+
 
 (add-hook 'helm-gtags-mode-hook
 	  #'(lambda ()
@@ -1382,19 +1436,19 @@ on their own line."
 ;;; popwin settings
 ;;;
 
-(el-get-bundle! popwin
-  (popwin-mode 1)
-  (setq popwin:special-display-config
-	(append
-	 '(("*Async Shell Command*"		:noselect t)
-	   ("^\*bzr-status.*\*"			:regexp t :noselect t)
-	   ("^\*xgit-status.*\*"			:regexp t :noselect t)
-	   ("*quickrun*"				:noselect t :tail t)
-	   ("^\*karma.*\*"			:regexp t :noselect t :tail t))
-	 popwin:special-display-config))
+;; (el-get-bundle! popwin
+;;   (popwin-mode 1)
+;;   (setq popwin:special-display-config
+;; 	(append
+;; 	 '(("*Async Shell Command*"		:noselect t)
+;; 	   ("^\*bzr-status.*\*"			:regexp t :noselect t)
+;; 	   ("^\*xgit-status.*\*"			:regexp t :noselect t)
+;; 	   ("*quickrun*"				:noselect t :tail t)
+;; 	   ("^\*karma.*\*"			:regexp t :noselect t :tail t))
+;; 	 popwin:special-display-config))
 
-  (global-set-key (kbd "C-x C-p") popwin:keymap)
-  (setq auto-async-byte-compile-display-function 'popwin:popup-buffer-tail))
+;;   (global-set-key (kbd "C-x C-p") popwin:keymap)
+;;   (setq auto-async-byte-compile-display-function 'popwin:popup-buffer-tail))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1619,7 +1673,6 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
 			    'po-find-file-coding-system)
-
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
