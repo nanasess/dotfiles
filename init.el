@@ -947,78 +947,60 @@
 (el-get-bundle php-mode
   :type github
   :pkgname "emacs-php/php-mode"
+  :features php-mode
   (with-eval-after-load-feature 'php-mode
+    (require 'php-project)
     (setq php-manual-url "http://jp2.php.net/manual/ja/"
 	  php-mode-coding-style 'Symfony2
 	  php-search-url "http://jp2.php.net/")
     (add-to-list 'load-path
 		 (concat user-emacs-directory "el-get/php-mode/skeleton"))
-    ;; (define-key php-mode-map (kbd "M-.") 'ac-php-find-symbol-at-point)
+    (require 'php-ext)
     (define-key php-mode-map (kbd "M-.") 'phpactor-goto-definition)
-    ;; (define-key php-mode-map [return] 'newline-and-indent) XXX problem git-complete
+
     (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
     ;; (add-hook 'php-mode-hook #'lsp)
     (add-hook 'php-mode-hook 'php-c-style)))
 
-(el-get-bundle! php-runtime
+(el-get-bundle php-runtime
   :type github
-  :pkgname "emacs-php/php-runtime.el")
+  :pkgname "emacs-php/php-runtime.el"
+  :features php-runtime)
 
 (el-get-bundle composer
   :type github
   :pkgname "emacs-php/composer.el"
+  :features composer
   :depends request)
-(require 'composer)
-(setq phpactor--debug 1)
-(require 'php-project)
+
 (el-get-bundle phpactor
   :type github
   :pkgname "emacs-php/phpactor.el"
-  ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-  ;; :depends f composer company
-  ;; :post-init (progn)
-  (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor")))
+  :depends f composer company)
 
 (el-get-bundle phpstan
   :type github
-  :pkgname "emacs-php/phpstan.el")
-
-;; (el-get 'sync 'smartparens)
-
-;; require github.com/vim-php/phpctags
-;; require php >=5.5
-;; require cscope >= 15.8a
-;; M-x ac-php-remake-tags-all
-;; (el-get-bundle ac-php)
+  :pkgname "emacs-php/phpstan.el"
+  :features flycheck-phpstan)
 
 (defun php-c-style ()
   (interactive)
-  (company-mode 1)
-  (auto-complete-mode -1)
-  ;; (require 'php-ext)
+  (setq phpactor--debug 1)
+  (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
   (require 'phpactor)
-  ;; (require 'ac-php)
-  ;; (require 'company-php)
-  ;; (setq ac-sources '(ac-source-php ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
-
-  ;; (ac-php-core-eldoc-setup)
+  (require 'company-phpactor)
   (push 'company-phpactor company-backends)
   (setq eldoc-documentation-function 'phpactor-hover)
   (eldoc-mode t)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   (electric-pair-local-mode t)
-  ;; (require 'phpstan)
-  (require 'flycheck-phpstan)
   (flycheck-mode t)
   (flycheck-select-checker 'phpstan)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
-  (set (make-local-variable 'comment-end) "")
-  ;; (setq flycheck-phpcs-standard "PSR2")
-  ;; (setq flycheck-phpmd-rulesets (concat user-emacs-directory "phpmd_ruleset.xml"))
-  )
+  (set (make-local-variable 'comment-end) ""))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
