@@ -763,8 +763,8 @@
     (goto-char (point-min))
     (while (re-search-forward "" nil t)
       (replace-match "" nil nil)))
-  (highlight-phrase "^OK.*$" 'phpunit-pass)
-  (highlight-phrase "^ERRORS.*$" 'phpunit-fail))
+  (highlight-phrase "OK.*$" 'phpunit-pass)
+  (highlight-phrase "ERRORS.*$" 'phpunit-fail))
 (el-get-bundle quickrun
   (with-eval-after-load-feature 'quickrun
     (add-to-list 'quickrun-file-alist '("Test\\.php\\'" . "phpunit"))
@@ -772,7 +772,7 @@
 				      (:exec . ("%c -c ~/git-repos/ec-cube/phpunit.xml.dist %s"))
 				      (:outputter . quickrun/phpunit-outputter)))
     (defface phpunit-pass
-      '((t (:foreground "white" :background "green" :weight bold))) nil
+      '((t (:foreground "white" :background "ForestGreen" :weight bold))) nil
       :group 'font-lock-highlighting-faces)
     (defface phpunit-fail
       '((t (:foreground "white" :background "red" :weight bold))) nil
@@ -990,7 +990,9 @@
   (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
   (require 'phpactor)
   (require 'company-phpactor)
+  (make-local-variable 'company-backends)
   (push 'company-phpactor company-backends)
+  (make-local-variable 'eldoc-documentation-function)
   (setq eldoc-documentation-function 'phpactor-hover)
   (eldoc-mode t)
   (electric-indent-local-mode t)
@@ -1001,6 +1003,13 @@
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
+
+(el-get-bundle phpunit
+  :type github
+  :pkgname "nlamirault/phpunit.el"
+  :features phpunit
+  (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class)
+  (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
