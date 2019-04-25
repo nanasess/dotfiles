@@ -306,6 +306,10 @@
 (setq save-interprogram-paste-before-kill t)
 (delete-selection-mode 1)
 
+;; XXX allow remembering risky variables
+;; see https://emacs.stackexchange.com/a/44604
+(defun risky-local-variable-p (sym &optional _ignored) nil)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Emacs lisp settings
@@ -1009,17 +1013,9 @@
   :pkgname "nlamirault/phpunit.el"
   :features phpunit
   (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class)
-  (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode)))
-;;; XXX exclude to -program$
-(defun risky-local-variable-p (sym &optional _ignored)
-  (condition-case nil
-      (setq sym (indirect-variable sym))
-    (error nil))
-  (or (get sym 'risky-local-variable)
-      (string-match "-hooks?$\\|-functions?$\\|-forms?$\\|\
--commands?$\\|-predicates?$\\|font-lock-keywords$\\|font-lock-keywords\
--[0-9]+$\\|font-lock-syntactic-keywords$\\|-frame-alist$\\|-mode-alist$\\|\
--map$\\|-map-alist$\\|-bindat-spec$" (symbol-name sym))))
+  (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode))
+  (setq phpunit-configuration-file  "phpunit.xml.dist")
+  (setq phpunit-default-program  "phpunit"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
