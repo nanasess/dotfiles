@@ -306,9 +306,10 @@
 (setq save-interprogram-paste-before-kill t)
 (delete-selection-mode 1)
 
-;; XXX allow remembering risky variables
+;; XXX allow remembering risky and safe variables
 ;; see https://emacs.stackexchange.com/a/44604
 (defun risky-local-variable-p (sym &optional _ignored) nil)
+(defun safe-local-variable-p (sym val) t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
