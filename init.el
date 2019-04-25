@@ -1010,6 +1010,16 @@
   :features phpunit
   (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class)
   (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode)))
+;;; XXX exclude to -program$
+(defun risky-local-variable-p (sym &optional _ignored)
+  (condition-case nil
+      (setq sym (indirect-variable sym))
+    (error nil))
+  (or (get sym 'risky-local-variable)
+      (string-match "-hooks?$\\|-functions?$\\|-forms?$\\|\
+-commands?$\\|-predicates?$\\|font-lock-keywords$\\|font-lock-keywords\
+-[0-9]+$\\|font-lock-syntactic-keywords$\\|-frame-alist$\\|-mode-alist$\\|\
+-map$\\|-map-alist$\\|-bindat-spec$" (symbol-name sym))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1303,7 +1313,8 @@
 ;; (setq helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
 
 (el-get-bundle wgrep
-  (setq wgrep-enable-key "r"))
+  (with-eval-after-load-feature 'wgrep
+  (setq wgrep-enable-key "r")))
 
 
 (add-hook 'helm-gtags-mode-hook
