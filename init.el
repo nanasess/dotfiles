@@ -1426,6 +1426,7 @@
 ;;;
 
 (el-get-bundle yasnippet)
+(el-get-bundle yasnippet-snippets)
 (yas-global-mode 1)
 
 (add-hook 'org-mode-hook
