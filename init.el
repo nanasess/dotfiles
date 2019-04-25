@@ -829,7 +829,10 @@
 
 (el-get-bundle pos-tip)
 (el-get-bundle company-quickhelp
-  (company-quickhelp-mode 1))
+  :depends pos-tip
+  (with-eval-after-load-feature 'company-quickhelp
+    (setq company-quickhelp-use-propertized-text t)))
+;; (company-quickhelp-mode)
 
 (el-get-bundle git-complete
   :type github
