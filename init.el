@@ -579,6 +579,15 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; yasnippet settings
+;;;
+
+(el-get-bundle yasnippet)
+(el-get-bundle yasnippet-snippets)
+(yas-global-mode 1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; org-mode settings
 ;;;
 
@@ -586,6 +595,11 @@
 (setq org-return-follows-link t)
 (setq org-startup-folded nil)
 (setq org-startup-truncated nil)
+
+(add-hook 'org-mode-hook
+          #'(lambda ()
+	      ;; yasnippet (using the new org-cycle hooks)
+	      (setq ac-use-overriding-local-map t)))
 
 ;;; org-html5presentation
 ;; (el-get 'sync 'org-html5presentation)
@@ -807,9 +821,18 @@
 (el-get-bundle company-mode
   (global-company-mode 1)
   (global-set-key (kbd "C-M-i") 'company-complete)
+  ;; Add yasnippet support for all company backends
+  ;; https://github.com/syl20bnr/spacemacs/pull/179
+  (defvar company-mode/enable-yas t
+    "Enable yasnippet for all backends.")
+  (defun company-mode/backend-with-yas (backend)
+    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+	backend
+      (append (if (consp backend) backend (list backend))
+	      '(:with company-yasnippet))))
+
   (with-eval-after-load-feature 'company
-    (setq company-idle-delay 0
-	  company-minimum-prefix-length 2
+    (setq company-minimum-prefix-length 2
 	  company-selection-wrap-around t)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous)
@@ -823,7 +846,13 @@
     (define-key company-active-map (kbd "C-i") 'company-complete-selection)
 
     ;; 各種メジャーモードでも C-M-iで company-modeの補完を使う
-    (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete))
+    (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
+
+    (defun company-backends-with-yas ()
+      (interactive)
+      (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
+    (company-backends-with-yas))
+
   (with-eval-after-load-feature 'company-dabbrev
     (setq company-dabbrev-downcase nil)))
 
@@ -898,6 +927,7 @@
     (setq lsp-prefer-flymake 'flymake)
     (setq lsp-enable-completion-at-point nil)
     (require 'lsp-clients)))
+
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
@@ -941,7 +971,6 @@
   :type github
   :pkgname "tigersoldier/company-lsp"
   :features company-lsp
-  (push 'company-lsp company-backends)
   (with-eval-after-load-feature 'company-lsp
     (setq company-lsp-cache-candidates t) ;; always using cache
     (setq company-lsp-async t)
@@ -994,12 +1023,12 @@
 
 (defun php-c-style ()
   (interactive)
-  (setq phpactor--debug 1)
+  ;; (setq phpactor--debug 1)
   (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
   (require 'phpactor)
   (require 'company-phpactor)
   (make-local-variable 'company-backends)
-  (push 'company-phpactor company-backends)
+  (push '(company-phpactor :with company-yasnippet) company-backends)
   (make-local-variable 'eldoc-documentation-function)
   (setq eldoc-documentation-function 'phpactor-hover)
   (eldoc-mode t)
@@ -1029,8 +1058,10 @@
 (el-get-bundle lsp-java
   :type github
   :pkgname "emacs-lsp/lsp-java"
-  :features lsp-java
-  (add-hook 'java-mode-hook #'lsp))
+  :features lsp-java)
+(with-eval-after-load-feature 'java-mode
+  (add-hook 'java-mode-hook #'lsp)
+  (add-hook 'java-mode-hook #'company-backends-with-yas))
 (el-get-bundle emacswiki:tree-mode)
 (el-get-bundle bui
   :type github
@@ -1165,14 +1196,16 @@
   ;; :info "."
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
   :features haskell-mode-autoloads
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
+  (with-eval-after-load-feature 'haskell-mode
+    (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+    (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+    (add-hook 'haskell-mode-hook #'lsp)
+    (add-hook 'haskell-mode-hook #'company-backends-with-yas)))
 
 (el-get-bundle lsp-haskell
   :type github
   :pkgname "emacs-lsp/lsp-haskell"
-  :features lsp-haskell
-  (add-hook 'haskell-mode-hook #'lsp))
+  :features lsp-haskell)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1185,22 +1218,28 @@
   :type github
   :pkgname "emacs-lsp/lsp-dockerfile"
   :features lsp-dockerfile
-  (add-hook 'dockerfile-mode-hook #'lsp))
+  (with-eval-after-load-feature 'dockerfile-mode
+    (add-hook 'dockerfile-mode-hook #'lsp)
+    (add-hook 'dockerfile-mode-hook #'company-backends-with-yas)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; CSS settings
 ;;;
 
-(add-hook 'css-mode-hook #'lsp)
-(add-hook 'css-mode-hook 'basic-indent)
+(with-eval-after-load-feature 'css-mode
+  (add-hook 'css-mode-hook #'lsp)
+  (add-hook 'css-mode-hook #'company-backends-with-yas)
+  (add-hook 'css-mode-hook 'basic-indent))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; shel settings
 ;;;
 
-(add-hook 'sh-mode-hook #'lsp)
+(with-eval-after-load-feature 'sh-mode
+  (add-hook 'sh-mode-hook #'lsp)
+  (add-hook 'sh-mode-hook #'company-backends-with-yas))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1419,20 +1458,6 @@
        (4 (if (< 1000000 (buffer-size)) 'helm-occur 'helm-swoop)) ; C-u C-s
        (16 'helm-swoop-nomigemo)))))				  ; C-u C-u C-s
 (global-set-key (kbd "C-s") 'isearch-forward-or-helm-swoop-or-helm-occur)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; yasnippet settings
-;;;
-
-(el-get-bundle yasnippet)
-(el-get-bundle yasnippet-snippets)
-(yas-global-mode 1)
-
-(add-hook 'org-mode-hook
-          #'(lambda ()
-	      ;; yasnippet (using the new org-cycle hooks)
-	      (setq ac-use-overriding-local-map t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
