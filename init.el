@@ -850,8 +850,7 @@
 
     (defun company-backends-with-yas ()
       (interactive)
-      (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
-    (company-backends-with-yas))
+      (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))))
 
   (with-eval-after-load-feature 'company-dabbrev
     (setq company-dabbrev-downcase nil)))
@@ -1058,10 +1057,10 @@
 (el-get-bundle lsp-java
   :type github
   :pkgname "emacs-lsp/lsp-java"
-  :features lsp-java)
-(with-eval-after-load-feature 'java-mode
-  (add-hook 'java-mode-hook #'lsp)
-  (add-hook 'java-mode-hook #'company-backends-with-yas))
+  :features lsp-java
+  (with-eval-after-load-feature 'lsp-java
+    (add-hook 'java-mode-hook #'company-backends-with-yas)
+    (add-hook 'java-mode-hook #'lsp)))
 (el-get-bundle emacswiki:tree-mode)
 (el-get-bundle bui
   :type github
@@ -1199,8 +1198,8 @@
   (with-eval-after-load-feature 'haskell-mode
     (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
     (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-    (add-hook 'haskell-mode-hook #'lsp)
-    (add-hook 'haskell-mode-hook #'company-backends-with-yas)))
+    (add-hook 'haskell-mode-hook #'company-backends-with-yas)
+    (add-hook 'haskell-mode-hook #'lsp)))
 
 (el-get-bundle lsp-haskell
   :type github
@@ -1219,8 +1218,8 @@
   :pkgname "emacs-lsp/lsp-dockerfile"
   :features lsp-dockerfile
   (with-eval-after-load-feature 'dockerfile-mode
-    (add-hook 'dockerfile-mode-hook #'lsp)
-    (add-hook 'dockerfile-mode-hook #'company-backends-with-yas)))
+    (add-hook 'dockerfile-mode-hook #'company-backends-with-yas)
+    (add-hook 'dockerfile-mode-hook #'lsp)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1228,8 +1227,8 @@
 ;;;
 
 (with-eval-after-load-feature 'css-mode
-  (add-hook 'css-mode-hook #'lsp)
   (add-hook 'css-mode-hook #'company-backends-with-yas)
+  (add-hook 'css-mode-hook #'lsp)
   (add-hook 'css-mode-hook 'basic-indent))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1237,9 +1236,9 @@
 ;;; shel settings
 ;;;
 
-(with-eval-after-load-feature 'sh-mode
-  (add-hook 'sh-mode-hook #'lsp)
-  (add-hook 'sh-mode-hook #'company-backends-with-yas))
+(with-eval-after-load-feature 'sh-script
+  (add-hook 'sh-mode-hook #'company-backends-with-yas)
+  (add-hook 'sh-mode-hook #'lsp))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
