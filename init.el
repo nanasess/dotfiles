@@ -238,7 +238,6 @@
 (el-get-bundle symbol-overlay
   :type github
   :pkgname "wolray/symbol-overlay"
-  :features symbol-overlay
   (with-eval-after-load-feature 'symbol-overlay
     (global-set-key (kbd "M-i") 'symbol-overlay-put)
     (global-set-key (kbd "M-n") 'symbol-overlay-switch-forward)
@@ -248,10 +247,9 @@
 
 (load "openweathermap-api-key" t)
 (when openweathermap-api-key
-    (el-get-bundle sky-color-clock
+    (el-get-bundle! sky-color-clock
       :type github
       :pkgname "zk-phi/sky-color-clock"
-      :features sky-color-clock
       (with-eval-after-load-feature 'sky-color-clock
 	(sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
 	(setq-default mode-line-format
@@ -408,7 +406,7 @@
 ;;; web-mode settings
 ;;;
 
-(el-get-bundle! web-mode
+(el-get-bundle web-mode
   (setq web-mode-block-padding 4)
   (setq web-mode-enable-block-face t)
   (setq web-mode-script-padding 4)
@@ -617,10 +615,9 @@
 ;;; session settings
 ;;;
 
-(el-get-bundle session
+(el-get-bundle! session
   :type github
   :pkgname "nanasess/emacs-session"
-  :features session
   (add-hook 'after-init-hook 'session-initialize)
   (setq session-save-print-spec '(t nil 40000)))
 
@@ -739,7 +736,7 @@
 ;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
 (setq howm-process-coding-system 'utf-8-unix)
 (setq howm-todo-menu-types "[-+~!]")
-(el-get-bundle! howm
+(el-get-bundle howm
   :type git
   :url "git://git.osdn.jp/gitroot/howm/howm.git"
   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make")))
@@ -869,7 +866,6 @@
 (el-get-bundle git-complete
   :type github
   :pkgname "zk-phi/git-complete"
-  :features git-complete
   :depends popup
   (with-eval-after-load-feature 'git-complete
     (setq git-complete-enable-autopair t)
@@ -933,7 +929,6 @@
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
-  :features lsp-ui
   (with-eval-after-load-feature 'lsp-ui
     ;; lsp-ui-doc
     (setq lsp-ui-doc-enable t)
@@ -972,7 +967,6 @@
 (el-get-bundle company-lsp
   :type github
   :pkgname "tigersoldier/company-lsp"
-  :features company-lsp
   (with-eval-after-load-feature 'company-lsp
     (setq company-lsp-cache-candidates t) ;; always using cache
     (setq company-lsp-async t)
@@ -986,15 +980,12 @@
 (el-get-bundle php-mode
   :type github
   :pkgname "emacs-php/php-mode"
-  :features php-mode
   (with-eval-after-load-feature 'php-mode
-    (require 'php-project)
     (setq php-manual-url "http://jp2.php.net/manual/ja/"
 	  php-mode-coding-style 'Symfony2
 	  php-search-url "http://jp2.php.net/")
     (add-to-list 'load-path
 		 (concat user-emacs-directory "el-get/php-mode/skeleton"))
-    (require 'php-ext)
     (define-key php-mode-map (kbd "M-.") 'phpactor-goto-definition)
 
     (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
@@ -1004,29 +995,29 @@
 
 (el-get-bundle php-runtime
   :type github
-  :pkgname "emacs-php/php-runtime.el"
-  :features php-runtime)
+  :pkgname "emacs-php/php-runtime.el")
 
 (el-get-bundle composer
   :type github
   :pkgname "emacs-php/composer.el"
-  :features composer
   :depends request)
 
 (el-get-bundle phpactor
   :type github
   :pkgname "emacs-php/phpactor.el"
-  :depends f composer company)
+  :depends (f composer company-mode))
 
 (el-get-bundle phpstan
   :type github
-  :pkgname "emacs-php/phpstan.el"
-  :features flycheck-phpstan)
+  :pkgname "emacs-php/phpstan.el")
 
 (defun php-c-style ()
   (interactive)
-  ;; (setq phpactor--debug 1)
+  (setq phpactor--debug nil)
   (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
+  (require 'php-project)
+  (require 'php-ext)
+  (require 'flycheck-phpstan)
   (require 'phpactor)
   (require 'company-phpactor)
   (make-local-variable 'company-backends)
@@ -1046,21 +1037,23 @@
 (el-get-bundle phpunit
   :type github
   :pkgname "nlamirault/phpunit.el"
-  :features phpunit
-  (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class)
-  (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode))
-  (setq phpunit-configuration-file  "phpunit.xml.dist")
-  (setq phpunit-default-program  "phpunit"))
+  (with-eval-after-load-feature 'phpunit
+    (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class)
+    (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode))
+    (setq phpunit-configuration-file  "phpunit.xml.dist")
+    (setq phpunit-default-program  "phpunit")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Java settings
 ;;;
+(defun java-c-style ()
+  (require 'lsp-java)
+  (define-key java-mode-map [return] 'newline-and-indent))
 (el-get-bundle request)
 (el-get-bundle lsp-java
   :type github
   :pkgname "emacs-lsp/lsp-java"
-  :features lsp-java
   (with-eval-after-load-feature 'lsp-java
     (add-hook 'java-mode-hook #'company-backends-with-yas)
     (add-hook 'java-mode-hook #'lsp)))
@@ -1072,13 +1065,11 @@
   :type github
   :pkgname "yyoncho/dap-mode"
   :depends tree-mode bui
-  :features dap-java
   (dap-mode 1)
   (dap-ui-mode 1))
 
 (add-hook 'java-mode-hook 'basic-indent)
-(with-eval-after-load-feature 'cc-mode
-     (define-key java-mode-map [return] 'newline-and-indent))
+(add-hook 'java-mode-hook 'java-c-style)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1192,8 +1183,7 @@
 
 (el-get-bundle lsp-haskell
   :type github
-  :pkgname "emacs-lsp/lsp-haskell"
-  :features lsp-haskell)
+  :pkgname "emacs-lsp/lsp-haskell")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1536,8 +1526,7 @@
 ;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
 (el-get-bundle sqlite-dump
   :type github
-  :pkgname "nanasess/sqlite-dump"
-  :features sqlite-dump)
+  :pkgname "nanasess/sqlite-dump")
 (modify-coding-system-alist 'file "\\.\\(db\\|sqlite\\)\\'" 'raw-text-unix)
 (add-to-list 'auto-mode-alist '("\\.\\(db\\|sqlite\\)\\'" . sqlite-dump))
 
@@ -1562,8 +1551,7 @@
 (el-get-bundle id-manager
   :type github
   :pkgname "kiwanami/emacs-id-manager"
-  :depends helm
-  :features id-manager)
+  :depends helm)
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 (setenv "GPG_AGENT_INFO" nil)
 
