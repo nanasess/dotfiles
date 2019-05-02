@@ -44,8 +44,12 @@
 
 (el-get-bundle tarao/with-eval-after-load-feature-el)
 
-;; (el-get 'sync 'esup)
-;; (require 'esup)
+;; (el-get-bundle esup)
+;; (el-get-bundle! initchart
+;;   :type github
+;;   :pkgname "yuttie/initchart")
+;; (initchart-record-execution-time-of load file)
+;; (initchart-record-execution-time-of require feature)
 (el-get-bundle awasira/cp5022x.el
   :name cp5022x
   :features cp5022x
@@ -917,7 +921,6 @@
   (with-eval-after-load-feature 'lsp
     ;; https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp
     (setq lsp-print-io nil)
-    (setq lsp-trace nil)
     (setq lsp-print-performance nil)
     ;; general
     (setq lsp-auto-guess-root t)
@@ -1076,19 +1079,6 @@
 (add-hook 'java-mode-hook 'basic-indent)
 (with-eval-after-load-feature 'cc-mode
      (define-key java-mode-map [return] 'newline-and-indent))
-(add-to-list 'auto-mode-alist
-	     '("\\.\\(cls\\|trigger\\)\\'" . java-mode))
-;; (require 'cedet)
-;; (el-get 'sync 'malabar-mode)
-;; (add-to-list 'auto-mode-alist '("\\.java\\'" . malabar-mode))
-;; (setq semantic-default-submodes '(global-semantic-idle-scheduler-mode
-;;                                   global-semanticdb-minor-mode
-;;                                   global-semantic-idle-summary-mode
-;;                                   global-semantic-mru-bookmark-mode))
-;; (semantic-mode 1)
-;; (add-hook 'malabar-mode-hook
-;; 	  #'(lambda ()
-;; 	      (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1194,7 +1184,6 @@
   :pkgname "haskell/haskell-mode"
   ;; :info "."
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
-  :features haskell-mode-autoloads
   (with-eval-after-load-feature 'haskell-mode
     (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
     (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
@@ -1213,13 +1202,13 @@
 ;;; npm i -g dockerfile-language-server-nodejs
 ;;;
 (el-get-bundle dockerfile-mode)
-(el-get-bundle lsp-dockerfile
-  :type github
-  :pkgname "emacs-lsp/lsp-dockerfile"
-  :features lsp-dockerfile
-  (with-eval-after-load-feature 'dockerfile-mode
-    (add-hook 'dockerfile-mode-hook #'company-backends-with-yas)
-    (add-hook 'dockerfile-mode-hook #'lsp)))
+;; (el-get-bundle lsp-dockerfile
+;;   :type github
+;;   :pkgname "emacs-lsp/lsp-dockerfile"
+;;   :features lsp-dockerfile
+;;   (with-eval-after-load-feature 'dockerfile-mode
+;;     (add-hook 'dockerfile-mode-hook #'company-backends-with-yas)
+;;     (add-hook 'dockerfile-mode-hook #'lsp)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1302,11 +1291,10 @@
 ;;;
 ;;; helm settings
 ;;;
-(defvar helm-compile-source-functions nil
-   "Functions to compile elements of `helm-sources' (plug-in).")
 
 (el-get-bundle helm
   (with-eval-after-load-feature 'helm
+    (helm-migemo-mode 1)
     (define-key helm-map (kbd "C-v") 'helm-next-source)
     (define-key helm-map (kbd "M-v") 'helm-previous-source)
 
@@ -1335,7 +1323,6 @@
   (when (executable-find "rg")
     (setq helm-grep-ag-command "rg --color=always -S --no-heading --line-number %s %s %s")))
 
-(el-get-bundle helm-migemo)
 (el-get-bundle helm-ls-git)
 (el-get-bundle helm-descbinds)
 
@@ -1353,7 +1340,6 @@
 (el-get-bundle wgrep
   (with-eval-after-load-feature 'wgrep
   (setq wgrep-enable-key "r")))
-
 
 (add-hook 'helm-gtags-mode-hook
 	  #'(lambda ()
@@ -1457,6 +1443,10 @@
        (4 (if (< 1000000 (buffer-size)) 'helm-occur 'helm-swoop)) ; C-u C-s
        (16 'helm-swoop-nomigemo)))))				  ; C-u C-u C-s
 (global-set-key (kbd "C-s") 'isearch-forward-or-helm-swoop-or-helm-occur)
+
+;; (el-get-bundle helm-lsp
+;;   :type github
+;;   :pkgname "emacs-lsp/helm-lsp")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1569,7 +1559,11 @@
 (setq idm-database-file (concat external-directory ".idm-db.gpg"))
 (setq idm-copy-action 'kill-new)
 (setq idm-gen-password-cmd mkpasswd-command)
-(el-get-bundle id-manager in kiwanami/emacs-id-manager)
+(el-get-bundle id-manager
+  :type github
+  :pkgname "kiwanami/emacs-id-manager"
+  :depends helm
+  :features id-manager)
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 (setenv "GPG_AGENT_INFO" nil)
 
