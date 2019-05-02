@@ -14,7 +14,7 @@
         (lsp-dockerfile :checksum "3047d887dc5a974e7a46d5f6920afc427577a925")
         (bui :checksum "508577a7225b3d07eaefa9444064410af2518675")
         (tree-mode :checksum "56a765fe2023909b37d430ab1fc70963fb41c845")
-        (dap-mode :checksum "7d034858848e83626ef47e557d80a2d4f8ed6313")
+        (dap-mode :checksum "638b5d61991de6d7c6f4f163058b0d5b99e72021")
         (lsp-java :checksum "11f2daaba60391ead419430e10f679e6bb49f549")
         (lsp-ui :checksum "9f468c52687e9db2da098d0840b959e1c41b5cdf")
         (spinner :checksum "4b335260edcdd8dcee0811d7048bb08274e941f1")

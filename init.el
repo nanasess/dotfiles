@@ -407,11 +407,11 @@
 ;;;
 
 (el-get-bundle web-mode
-  (setq web-mode-block-padding 4)
-  (setq web-mode-enable-block-face t)
-  (setq web-mode-script-padding 4)
-  (setq web-mode-style-padding 4)
   (with-eval-after-load-feature 'web-mode
+    (setq web-mode-block-padding 4)
+    (setq web-mode-enable-block-face t)
+    (setq web-mode-script-padding 4)
+    (setq web-mode-style-padding 4)
     ;; (setq web-mode-enable-auto-indentation nil)
     (setq web-mode-enable-current-element-highlight nil)
     (setq web-mode-enable-current-column-highlight nil)
@@ -1064,7 +1064,7 @@
 (el-get-bundle dap-mode
   :type github
   :pkgname "yyoncho/dap-mode"
-  :depends tree-mode bui
+  :depends (tree-mode bui)
   (dap-mode 1)
   (dap-ui-mode 1))
 
