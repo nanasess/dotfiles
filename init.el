@@ -988,7 +988,6 @@
 		 (concat user-emacs-directory "el-get/php-mode/skeleton"))
     (define-key php-mode-map (kbd "M-.") 'phpactor-goto-definition)
 
-    (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
     ;; (add-hook 'php-mode-hook #'lsp)
     (add-hook 'php-mode-hook 'php-c-style)))
