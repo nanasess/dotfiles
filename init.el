@@ -39,10 +39,15 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
-(el-get-bundle tarao/el-get-lock)
+(el-get-bundle! el-get-lock
+  :type github
+  :pkgname "tarao/el-get-lock")
 (el-get-lock)
 
-(el-get-bundle tarao/with-eval-after-load-feature-el)
+(el-get-bundle with-eval-after-load-feature-el
+  :type github
+  :features with-eval-after-load-feature
+  :pkgname "tarao/with-eval-after-load-feature-el")
 
 ;; (el-get-bundle esup)
 ;; (el-get-bundle! initchart
@@ -667,48 +672,47 @@
 (el-get-bundle emacs-async)
 (el-get-bundle transient)
 (el-get-bundle with-editor)
-(el-get-bundle magit)
+(el-get-bundle magit
+  (with-eval-after-load-feature 'magit
+    ;; see https://stackoverflow.com/a/32914548/4956633
+    (defun visit-gh-pull-request (repo)
+      "Visit the current branch's PR on Github."
+      (interactive)
+      (message repo)
+      (browse-url
+       (format "https://github.com/%s/pull/new/%s"
+	       (replace-regexp-in-string
+		"\\`.+github\\.com:\\(.+\\)\\(\\.git\\)?\\'" "\\1"
+		repo)
+	       (magit-get-current-branch))))
 
-;; see https://stackoverflow.com/a/32914548/4956633
-(defun endless/visit-pull-request-url ()
-  "Visit the current branch's PR on Github."
-  (interactive)
-  (let ((repo (magit-get "remote" (magit-get-remote) "url")))
-    (if (not repo)
-	(setq repo (magit-get "remote" (magit-get-push-remote) "url")))
-    (if (string-match "github\\.com" repo)
-	(visit-gh-pull-request repo)
-      (visit-bb-pull-request repo))))
+    ;; Bitbucket pull requests are kinda funky, it seems to try to just do the
+    ;; right thing, so there's no branches to include.
+    ;; https://bitbucket.org/<username>/<project>/pull-request/new
+    (defun visit-bb-pull-request (repo)
+      (message repo)
+      (browse-url
+       (format "https://bitbucket.org/%s/pull-request/new?source=%s&t=1"
+	       (replace-regexp-in-string
+		"\\`.+bitbucket\\.org:\\(.+\\)\\.git\\'" "\\1"
+		repo)
+	       (magit-get-current-branch))))
+    (defun endless/visit-pull-request-url ()
+      "Visit the current branch's PR on Github."
+      (interactive)
+      (let ((repo (magit-get "remote" (magit-get-remote) "url")))
+	(if (not repo)
+	    (setq repo (magit-get "remote" (magit-get-push-remote) "url")))
+	(if (string-match "github\\.com" repo)
+	    (visit-gh-pull-request repo)
+	  (visit-bb-pull-request repo))))
 
-(defun visit-gh-pull-request (repo)
-  "Visit the current branch's PR on Github."
-  (interactive)
-  (message repo)
-  (browse-url
-   (format "https://github.com/%s/pull/new/%s"
-	   (replace-regexp-in-string
-	    "\\`.+github\\.com:\\(.+\\)\\(\\.git\\)?\\'" "\\1"
-	    repo)
-	   (magit-get-current-branch))))
-
-;; Bitbucket pull requests are kinda funky, it seems to try to just do the
-;; right thing, so there's no branches to include.
-;; https://bitbucket.org/<username>/<project>/pull-request/new
-(defun visit-bb-pull-request (repo)
-  (message repo)
-  (browse-url
-   (format "https://bitbucket.org/%s/pull-request/new?source=%s&t=1"
-	   (replace-regexp-in-string
-	    "\\`.+bitbucket\\.org:\\(.+\\)\\.git\\'" "\\1"
-	    repo)
-	   (magit-get-current-branch))))
-(with-eval-after-load-feature 'magit
-  (setq magit-diff-refine-hunk t)
-  ;; visit PR for github or bitbucket repositories with "v"
-  (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
-  (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
-  (define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
-  (remove-hook 'server-switch-hook 'magit-commit-diff))
+    (setq magit-diff-refine-hunk t)
+    ;; visit PR for github or bitbucket repositories with "v"
+    (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
+    (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
+    (define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
+    (remove-hook 'server-switch-hook 'magit-commit-diff)))
 (global-set-key (kbd "C-z m") 'magit-status)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -907,14 +911,15 @@
 ;;;
 ;;; Language-server settings
 ;;;
+(el-get-bundle request)
 (el-get-bundle spinner)
 (el-get-bundle f)
 (el-get-bundle ht)
-(el-get-bundle lsp
+(el-get-bundle lsp-mode
   :type github
   :pkgname "emacs-lsp/lsp-mode"
   :depends (spinner f ht)
-  (with-eval-after-load-feature 'lsp
+  (with-eval-after-load-feature 'lsp-mode
     ;; https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp
     (setq lsp-print-io nil)
     (setq lsp-print-performance nil)
@@ -1004,7 +1009,9 @@
 (el-get-bundle phpactor
   :type github
   :pkgname "emacs-php/phpactor.el"
-  :depends (f composer company-mode))
+  :depends (f composer company-mode)
+  (with-eval-after-load-feature 'phpactor
+    (setq phpactor--debug nil)))
 
 (el-get-bundle phpstan
   :type github
@@ -1012,7 +1019,6 @@
 
 (defun php-c-style ()
   (interactive)
-  (setq phpactor--debug nil)
   (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
   (require 'php-project)
   (require 'php-ext)
@@ -1049,7 +1055,6 @@
 (defun java-c-style ()
   (require 'lsp-java)
   (define-key java-mode-map [return] 'newline-and-indent))
-(el-get-bundle request)
 (el-get-bundle lsp-java
   :type github
   :pkgname "emacs-lsp/lsp-java"
@@ -1120,7 +1125,6 @@
     (setq c-basic-offset 4)
     (setq truncate-lines t)
     (setq tab-width 4)
-    (setq evil-shift-width 4)
     (setq flycheck-idle-change-delay 2)
     (omnisharp-mode 1))
   (add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
@@ -1271,10 +1275,11 @@
 ;;; auto-async-byte-compile settings
 ;;;
 
-;; (el-get-bundle auto-async-byte-compile)
-;; (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
-;; (setq auto-async-byte-compile-suppress-warnings t)
-;; (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
+(el-get-bundle auto-async-byte-compile)
+(setq auto-async-byte-compile-init-file (concat user-emacs-directory "init.el"))
+(setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
+(setq auto-async-byte-compile-suppress-warnings t)
+(add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
