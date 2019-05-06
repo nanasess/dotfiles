@@ -736,7 +736,7 @@
 ;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
 (setq howm-process-coding-system 'utf-8-unix)
 (setq howm-todo-menu-types "[-+~!]")
-(el-get-bundle howm
+(el-get-bundle! howm
   :type git
   :url "git://git.osdn.jp/gitroot/howm/howm.git"
   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make")))
