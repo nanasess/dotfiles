@@ -663,6 +663,9 @@
 ;;;
 
 (setenv "EDITOR" "emacsclient")
+(defun visit-gh-pull-request (repo) nil)
+(defun visit-bb-pull-request (repo) nil)
+(defun endless/visit-pull-request-url () nil)
 (el-get-bundle emacs-async)
 (el-get-bundle transient)
 (el-get-bundle with-editor)
