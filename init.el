@@ -109,9 +109,9 @@
 
 (setq skk-user-directory (concat external-directory "ddskk")
       skk-init-file (concat user-initial-directory "skk-init.el")
-      skk-isearch-start-mode 'latin
-      skk-preload t)
+      skk-isearch-start-mode 'latin)
 (el-get-bundle ddskk)
+(setq skk-preload nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
