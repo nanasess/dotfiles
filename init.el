@@ -115,15 +115,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; line-number settings
-;;;
-
-(line-number-mode 1)
-(column-number-mode 1)
-(size-indication-mode 1)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; global key-bindings
 ;;;
 
@@ -181,13 +172,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; show EOF settings
-;;;
-
-(setq eol-mnemonic-dos "(DOS)")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; face settings
 ;;;
 
@@ -239,6 +223,16 @@
 ;; use solarized.
 (el-get-bundle solarized-emacs
   (load-theme 'solarized-light t))
+
+(el-get-bundle! smart-mode-line)
+(setq sml/no-confirm-load-theme t)
+(defvar sml/theme 'respectful)
+(defvar sml/shorten-directory -1)
+(sml/setup)
+(line-number-mode 1)
+(column-number-mode 1)
+(size-indication-mode 1)
+(setq eol-mnemonic-dos "(DOS)")
 
 (el-get-bundle symbol-overlay
   :type github
