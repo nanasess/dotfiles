@@ -985,12 +985,13 @@
 (el-get-bundle php-mode
   :type github
   :pkgname "emacs-php/php-mode"
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
+  :load-path ("." "skeleton")
+  :autoloads "php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
     (setq php-manual-url "http://jp2.php.net/manual/ja/"
 	  php-mode-coding-style 'Symfony2
 	  php-search-url "http://jp2.php.net/")
-    (add-to-list 'load-path
-		 (concat user-emacs-directory "el-get/php-mode/skeleton"))
     (define-key php-mode-map (kbd "M-.") 'phpactor-goto-definition)
 
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
@@ -1010,6 +1011,7 @@
   :type github
   :pkgname "emacs-php/phpactor.el"
   :depends (f composer company-mode)
+  :autoloads "company-phpactor"
   (with-eval-after-load-feature 'phpactor
     (setq phpactor--debug nil)))
 
@@ -1020,11 +1022,7 @@
 (defun php-c-style ()
   (interactive)
   (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
-  (require 'php-project)
-  (require 'php-ext)
   (require 'flycheck-phpstan)
-  (require 'phpactor)
-  (require 'company-phpactor)
   (make-local-variable 'company-backends)
   (push '(company-phpactor :with company-yasnippet) company-backends)
   (make-local-variable 'eldoc-documentation-function)
@@ -1034,7 +1032,6 @@
   (electric-layout-mode t)
   (electric-pair-local-mode t)
   (flycheck-mode t)
-  (flycheck-select-checker 'phpstan)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
