@@ -1396,21 +1396,6 @@
   (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
   (global-set-key (kbd "C-z x") 'helm-howm-do-ag))
 
-(with-eval-after-load 'helm-migemo
-  (defun helm-compile-source--candidates-in-buffer (source)
-    (helm-aif (assoc 'candidates-in-buffer source)
-	(append source
-		`((candidates
-		   . ,(or (cdr it)
-                          (lambda ()
-                            ;; Do not use `source' because other plugins
-                            ;; (such as helm-migemo) may change it
-                            (helm-candidates-in-buffer (helm-get-current-source)))))
-                  (volatile) (match identity)))
-      source))
-  (defalias 'helm-mp-3-get-patterns 'helm-mm-3-get-patterns)
-  (defalias 'helm-mp-3-search-base 'helm-mm-3-search-base))
-
 (el-get-bundle helm-c-yasnippet)
 (setq helm-yas-space-match-any-greedy t)
 (global-set-key (kbd "C-c y") 'helm-yas-complete)
