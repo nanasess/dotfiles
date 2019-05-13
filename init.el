@@ -834,7 +834,8 @@
 	      '(:with company-yasnippet))))
 
   (with-eval-after-load-feature 'company
-    (setq company-minimum-prefix-length 2
+    (setq company-idle-delay 0.2
+          company-minimum-prefix-length 2
 	  company-selection-wrap-around t)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous)
@@ -1426,26 +1427,16 @@
 ;;; popwin settings
 ;;;
 
-;; (el-get-bundle! popwin
-;;   (popwin-mode 1)
-;;   (setq popwin:special-display-config
-;; 	(append
-;; 	 '(("*Async Shell Command*"		:noselect t)
-;; 	   ("^\*bzr-status.*\*"			:regexp t :noselect t)
-;; 	   ("^\*xgit-status.*\*"			:regexp t :noselect t)
-;; 	   ("*quickrun*"				:noselect t :tail t)
-;; 	   ("^\*karma.*\*"			:regexp t :noselect t :tail t))
-;; 	 popwin:special-display-config))
-
-;;   (global-set-key (kbd "C-x C-p") popwin:keymap)
-;;   (setq auto-async-byte-compile-display-function 'popwin:popup-buffer-tail))
+(el-get-bundle popwin)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; auto-save settings
 ;;;
 
-(el-get-bundle! auto-save-buffers-enhanced in kentaro/auto-save-buffers-enhanced)
+(el-get-bundle auto-save-buffers-enhanced
+  :type github
+  :pkgname "kentaro/auto-save-buffers-enhanced")
 (setq auto-save-buffers-enhanced-interval 1.5)
 (setq auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
 (setq auto-save-buffers-enhanced-file-related-with-scratch-buffer
