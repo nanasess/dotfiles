@@ -406,6 +406,9 @@
 ;;;
 
 (el-get-bundle web-mode
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(tpl\\)\\'" . web-mode))
   (with-eval-after-load-feature 'web-mode
     (setq web-mode-block-padding 4)
     (setq web-mode-enable-block-face t)
@@ -416,17 +419,15 @@
     (setq web-mode-enable-current-column-highlight nil)
     (add-to-list 'auto-mode-alist '("\\.\\(twig\\|html\\)\\'" . web-mode))
     (add-hook 'web-mode-hook 'basic-indent)
-    (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
     (add-hook 'web-mode-hook
 	      #'(lambda ()
 		  (when (string-equal "tsx" (file-name-extension buffer-file-name))
 		    (setup-tide-mode))))
-    (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+
     (add-hook 'web-mode-hook
 	      #'(lambda ()
 		  (when (string-equal "jsx" (file-name-extension buffer-file-name))
-		    (setup-tide-mode))))
-    (add-to-list 'auto-mode-alist '("\\.\\(tpl\\)\\'" . web-mode))))
+		    (setup-tide-mode))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -834,7 +835,7 @@
 	      '(:with company-yasnippet))))
 
   (with-eval-after-load-feature 'company
-    (setq company-idle-delay 0.2
+    (setq company-idle-delay 0
           company-minimum-prefix-length 2
 	  company-selection-wrap-around t)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
@@ -984,7 +985,8 @@
   :type github
   :pkgname "emacs-php/php-mode"
   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-  :load-path ("." "skeleton")
+	   ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l")
+	   ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
   :autoloads "php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
     (setq php-manual-url "http://jp2.php.net/manual/ja/"
@@ -1000,6 +1002,10 @@
   :type github
   :pkgname "emacs-php/php-runtime.el")
 
+(el-get-bundle php-skeleton
+  :type github
+  :pkgname "emacs-php/php-skeleton")
+
 (el-get-bundle composer
   :type github
   :pkgname "emacs-php/composer.el"
@@ -1012,6 +1018,13 @@
   :autoloads "company-phpactor"
   (with-eval-after-load-feature 'phpactor
     (setq phpactor--debug nil)))
+;; (setq lsp-clients-phpactor-server-command "phpactor server:start --stdio")
+;; (lsp-register-client
+;;  (make-lsp-client :new-connection (lsp-stdio-connection
+;;                                    (lambda () lsp-clients-php-server-command))
+;;                   :major-modes '(php-mode)
+;;                   :priority -2
+;;                   :server-id 'php-ls))
 
 (el-get-bundle phpstan
   :type github
@@ -1020,14 +1033,19 @@
 (defun php-c-style ()
   (interactive)
   (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
+  (require 'php-skeleton)
+  (require 'php-skeleton-exceptions)
   (require 'flycheck-phpstan)
   (make-local-variable 'company-backends)
   (push '(company-phpactor :with company-yasnippet) company-backends)
   (make-local-variable 'eldoc-documentation-function)
   (setq eldoc-documentation-function 'phpactor-hover)
   (eldoc-mode t)
+  (c-toggle-auto-newline 1)
+  (c-toggle-auto-hungry-state 1)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
+  ;; (setq-local electric-layout-rules '((?{ . around)))
   (electric-pair-local-mode t)
   (flycheck-mode t)
   (set (make-local-variable 'comment-start) "// ")
@@ -1037,11 +1055,11 @@
 (el-get-bundle phpunit
   :type github
   :pkgname "nlamirault/phpunit.el"
+  (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode))
   (with-eval-after-load-feature 'phpunit
-    (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class)
-    (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode))
+    (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class))
     (setq phpunit-configuration-file  "phpunit.xml.dist")
-    (setq phpunit-default-program  "phpunit")))
+    (setq phpunit-default-program  "phpunit"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1270,11 +1288,11 @@
 ;;; auto-async-byte-compile settings
 ;;;
 
-(el-get-bundle auto-async-byte-compile)
-(setq auto-async-byte-compile-init-file (concat user-emacs-directory "init.el"))
-(setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
-(setq auto-async-byte-compile-suppress-warnings t)
-(add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
+;; (el-get-bundle auto-async-byte-compile)
+;; (setq auto-async-byte-compile-init-file (concat user-emacs-directory "init.el"))
+;; (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
+;; (setq auto-async-byte-compile-suppress-warnings t)
+;; (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
