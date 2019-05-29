@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((php-skeleton :checksum "208202c772be1320857d7b1ade9be28a8ddb35e5")
+      '((esup :checksum "5acb60e8d7a8fef854178f325682765820522b10")
+        (php-skeleton :checksum "208202c772be1320857d7b1ade9be28a8ddb35e5")
         (helm-lsp :checksum "3a58ca4cfd94b9ab1e15e819d3b16ef568e8889b")
         (auto-save-buffers-enhanced :checksum "461e8c816c1b7c650be5f209078b381fe55da8c6")
         (popwin :checksum "95dea14c60019d6cccf9a3b33e0dec4e1f22c304")
@@ -36,7 +37,7 @@
         (phpactor :checksum "5dc331636786bdcee9ce2868d4d313c40aca1303")
         (composer :checksum "6c1578b2352c81cc9a22616a70db2a14b7d2b67f")
         (php-runtime :checksum "017e0e70f07d6b25e37d5c5f4d271a914b677631")
-        (php-mode :checksum "d75517c4f4ebf5572ede02d73e5df717f5418e21")
+        (php-mode :checksum "f7dbbea81de2048ec1c3eef2aa0cf593dd50aace")
         (company-lsp :checksum "cf4e17094291c4eb6607cf073e848dbab58b9407")
         (lsp-ui :checksum "136227da4e5b18f5cc6339263581baa30940021f")
         (lsp-mode :checksum "c1c5d25ba12c315d41463f785b9c80134b0db142")

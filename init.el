@@ -5,7 +5,14 @@
 
 ;;; Code:
 
-
+;; see https://github.com/jschaf/esup/issues/54#issue-317095645
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -585,8 +592,8 @@
 ;;;
 
 (el-get-bundle yasnippet)
+(add-hook 'after-init-hook 'yas-global-mode)
 (el-get-bundle yasnippet-snippets)
-(yas-global-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -835,7 +842,7 @@
 	      '(:with company-yasnippet))))
 
   (with-eval-after-load-feature 'company
-    (setq company-idle-delay 0
+    (setq company-idle-delay 0.3
           company-minimum-prefix-length 2
 	  company-selection-wrap-around t)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
@@ -1676,7 +1683,7 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 			    'po-find-file-coding-system)
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
-(setq gc-cons-threshold 800000)
+;; (setq gc-cons-threshold 800000)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
