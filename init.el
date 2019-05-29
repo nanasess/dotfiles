@@ -829,7 +829,7 @@
     (define-key ac-completing-map [return] 'ac-complete)))
 
 (el-get-bundle company-mode
-  (global-company-mode 1)
+  (add-hook 'after-init-hook 'global-company-mode)
   (global-set-key (kbd "C-M-i") 'company-complete)
   ;; Add yasnippet support for all company backends
   ;; https://github.com/syl20bnr/spacemacs/pull/179
