@@ -1547,10 +1547,10 @@
 (setq idm-database-file (concat external-directory ".idm-db.gpg"))
 (setq idm-copy-action 'kill-new)
 (setq idm-gen-password-cmd mkpasswd-command)
-(el-get-bundle id-manager
+(el-get-bundle emacs-id-manager
   :type github
-  :pkgname "kiwanami/emacs-id-manager"
-  :depends helm)
+  :autoloads "id-manager"
+  :pkgname "kiwanami/emacs-id-manager")
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 (setenv "GPG_AGENT_INFO" nil)
 
