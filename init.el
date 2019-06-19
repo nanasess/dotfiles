@@ -5,7 +5,14 @@
 
 ;;; Code:
 
-
+;; see https://github.com/jschaf/esup/issues/54#issue-317095645
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -39,10 +46,15 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
-(el-get-bundle tarao/el-get-lock)
+(el-get-bundle! el-get-lock
+  :type github
+  :pkgname "tarao/el-get-lock")
 (el-get-lock)
 
-(el-get-bundle tarao/with-eval-after-load-feature-el)
+(el-get-bundle with-eval-after-load-feature-el
+  :type github
+  :features with-eval-after-load-feature
+  :pkgname "tarao/with-eval-after-load-feature-el")
 
 ;; (el-get-bundle esup)
 ;; (el-get-bundle! initchart
@@ -104,18 +116,9 @@
 
 (setq skk-user-directory (concat external-directory "ddskk")
       skk-init-file (concat user-initial-directory "skk-init.el")
-      skk-isearch-start-mode 'latin
-      skk-preload t)
+      skk-isearch-start-mode 'latin)
 (el-get-bundle ddskk)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; line-number settings
-;;;
-
-(line-number-mode 1)
-(column-number-mode 1)
-(size-indication-mode 1)
+(setq skk-preload nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -176,13 +179,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; show EOF settings
-;;;
-
-(setq eol-mnemonic-dos "(DOS)")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; face settings
 ;;;
 
@@ -235,10 +231,19 @@
 (el-get-bundle solarized-emacs
   (load-theme 'solarized-light t))
 
+(el-get-bundle! smart-mode-line)
+(setq sml/no-confirm-load-theme t)
+(defvar sml/theme 'respectful)
+(defvar sml/shorten-directory -1)
+(sml/setup)
+(line-number-mode 1)
+(column-number-mode 1)
+(size-indication-mode 1)
+(setq eol-mnemonic-dos "(DOS)")
+
 (el-get-bundle symbol-overlay
   :type github
   :pkgname "wolray/symbol-overlay"
-  :features symbol-overlay
   (with-eval-after-load-feature 'symbol-overlay
     (global-set-key (kbd "M-i") 'symbol-overlay-put)
     (global-set-key (kbd "M-n") 'symbol-overlay-switch-forward)
@@ -248,10 +253,9 @@
 
 (load "openweathermap-api-key" t)
 (when openweathermap-api-key
-    (el-get-bundle sky-color-clock
+    (el-get-bundle! sky-color-clock
       :type github
       :pkgname "zk-phi/sky-color-clock"
-      :features sky-color-clock
       (with-eval-after-load-feature 'sky-color-clock
 	(sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
 	(setq-default mode-line-format
@@ -408,28 +412,29 @@
 ;;; web-mode settings
 ;;;
 
-(el-get-bundle! web-mode
-  (setq web-mode-block-padding 4)
-  (setq web-mode-enable-block-face t)
-  (setq web-mode-script-padding 4)
-  (setq web-mode-style-padding 4)
+(el-get-bundle web-mode
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(tpl\\)\\'" . web-mode))
   (with-eval-after-load-feature 'web-mode
+    (setq web-mode-block-padding 4)
+    (setq web-mode-enable-block-face t)
+    (setq web-mode-script-padding 4)
+    (setq web-mode-style-padding 4)
     ;; (setq web-mode-enable-auto-indentation nil)
     (setq web-mode-enable-current-element-highlight nil)
     (setq web-mode-enable-current-column-highlight nil)
     (add-to-list 'auto-mode-alist '("\\.\\(twig\\|html\\)\\'" . web-mode))
     (add-hook 'web-mode-hook 'basic-indent)
-    (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
     (add-hook 'web-mode-hook
 	      #'(lambda ()
 		  (when (string-equal "tsx" (file-name-extension buffer-file-name))
 		    (setup-tide-mode))))
-    (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+
     (add-hook 'web-mode-hook
 	      #'(lambda ()
 		  (when (string-equal "jsx" (file-name-extension buffer-file-name))
-		    (setup-tide-mode))))
-    (add-to-list 'auto-mode-alist '("\\.\\(tpl\\)\\'" . web-mode))))
+		    (setup-tide-mode))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -587,8 +592,8 @@
 ;;;
 
 (el-get-bundle yasnippet)
+(add-hook 'after-init-hook 'yas-global-mode)
 (el-get-bundle yasnippet-snippets)
-(yas-global-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -617,10 +622,9 @@
 ;;; session settings
 ;;;
 
-(el-get-bundle session
+(el-get-bundle! session
   :type github
   :pkgname "nanasess/emacs-session"
-  :features session
   (add-hook 'after-init-hook 'session-initialize)
   (setq session-save-print-spec '(t nil 40000)))
 
@@ -667,51 +671,53 @@
 ;;;
 
 (setenv "EDITOR" "emacsclient")
+(defun visit-gh-pull-request (repo) nil)
+(defun visit-bb-pull-request (repo) nil)
+(defun endless/visit-pull-request-url () nil)
 (el-get-bundle emacs-async)
 (el-get-bundle transient)
 (el-get-bundle with-editor)
-(el-get-bundle magit)
+(el-get-bundle magit
+  (with-eval-after-load-feature 'magit
+    ;; see https://stackoverflow.com/a/32914548/4956633
+    (defun visit-gh-pull-request (repo)
+      "Visit the current branch's PR on Github."
+      (interactive)
+      (message repo)
+      (browse-url
+       (format "https://github.com/%s/pull/new/%s"
+	       (replace-regexp-in-string
+		"\\`.+github\\.com:\\(.+\\)\\(\\.git\\)?\\'" "\\1"
+		repo)
+	       (magit-get-current-branch))))
 
-;; see https://stackoverflow.com/a/32914548/4956633
-(defun endless/visit-pull-request-url ()
-  "Visit the current branch's PR on Github."
-  (interactive)
-  (let ((repo (magit-get "remote" (magit-get-remote) "url")))
-    (if (not repo)
-	(setq repo (magit-get "remote" (magit-get-push-remote) "url")))
-    (if (string-match "github\\.com" repo)
-	(visit-gh-pull-request repo)
-      (visit-bb-pull-request repo))))
+    ;; Bitbucket pull requests are kinda funky, it seems to try to just do the
+    ;; right thing, so there's no branches to include.
+    ;; https://bitbucket.org/<username>/<project>/pull-request/new
+    (defun visit-bb-pull-request (repo)
+      (message repo)
+      (browse-url
+       (format "https://bitbucket.org/%s/pull-request/new?source=%s&t=1"
+	       (replace-regexp-in-string
+		"\\`.+bitbucket\\.org:\\(.+\\)\\.git\\'" "\\1"
+		repo)
+	       (magit-get-current-branch))))
+    (defun endless/visit-pull-request-url ()
+      "Visit the current branch's PR on Github."
+      (interactive)
+      (let ((repo (magit-get "remote" (magit-get-remote) "url")))
+	(if (not repo)
+	    (setq repo (magit-get "remote" (magit-get-push-remote) "url")))
+	(if (string-match "github\\.com" repo)
+	    (visit-gh-pull-request repo)
+	  (visit-bb-pull-request repo))))
 
-(defun visit-gh-pull-request (repo)
-  "Visit the current branch's PR on Github."
-  (interactive)
-  (message repo)
-  (browse-url
-   (format "https://github.com/%s/pull/new/%s"
-	   (replace-regexp-in-string
-	    "\\`.+github\\.com:\\(.+\\)\\(\\.git\\)?\\'" "\\1"
-	    repo)
-	   (magit-get-current-branch))))
-
-;; Bitbucket pull requests are kinda funky, it seems to try to just do the
-;; right thing, so there's no branches to include.
-;; https://bitbucket.org/<username>/<project>/pull-request/new
-(defun visit-bb-pull-request (repo)
-  (message repo)
-  (browse-url
-   (format "https://bitbucket.org/%s/pull-request/new?source=%s&t=1"
-	   (replace-regexp-in-string
-	    "\\`.+bitbucket\\.org:\\(.+\\)\\.git\\'" "\\1"
-	    repo)
-	   (magit-get-current-branch))))
-(with-eval-after-load-feature 'magit
-  (setq magit-diff-refine-hunk t)
-  ;; visit PR for github or bitbucket repositories with "v"
-  (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
-  (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
-  (define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
-  (remove-hook 'server-switch-hook 'magit-commit-diff))
+    (setq magit-diff-refine-hunk t)
+    ;; visit PR for github or bitbucket repositories with "v"
+    (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
+    (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
+    (define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
+    (remove-hook 'server-switch-hook 'magit-commit-diff)))
 (global-set-key (kbd "C-z m") 'magit-status)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -823,7 +829,7 @@
     (define-key ac-completing-map [return] 'ac-complete)))
 
 (el-get-bundle company-mode
-  (global-company-mode 1)
+  (add-hook 'after-init-hook 'global-company-mode)
   (global-set-key (kbd "C-M-i") 'company-complete)
   ;; Add yasnippet support for all company backends
   ;; https://github.com/syl20bnr/spacemacs/pull/179
@@ -836,7 +842,8 @@
 	      '(:with company-yasnippet))))
 
   (with-eval-after-load-feature 'company
-    (setq company-minimum-prefix-length 2
+    (setq company-idle-delay 0.3
+          company-minimum-prefix-length 2
 	  company-selection-wrap-around t)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous)
@@ -869,7 +876,6 @@
 (el-get-bundle git-complete
   :type github
   :pkgname "zk-phi/git-complete"
-  :features git-complete
   :depends popup
   (with-eval-after-load-feature 'git-complete
     (setq git-complete-enable-autopair t)
@@ -911,14 +917,15 @@
 ;;;
 ;;; Language-server settings
 ;;;
+(el-get-bundle request)
 (el-get-bundle spinner)
 (el-get-bundle f)
 (el-get-bundle ht)
-(el-get-bundle lsp
+(el-get-bundle lsp-mode
   :type github
   :pkgname "emacs-lsp/lsp-mode"
   :depends (spinner f ht)
-  (with-eval-after-load-feature 'lsp
+  (with-eval-after-load-feature 'lsp-mode
     ;; https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp
     (setq lsp-print-io nil)
     (setq lsp-print-performance nil)
@@ -933,7 +940,6 @@
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
-  :features lsp-ui
   (with-eval-after-load-feature 'lsp-ui
     ;; lsp-ui-doc
     (setq lsp-ui-doc-enable t)
@@ -972,7 +978,6 @@
 (el-get-bundle company-lsp
   :type github
   :pkgname "tigersoldier/company-lsp"
-  :features company-lsp
   (with-eval-after-load-feature 'company-lsp
     (setq company-lsp-cache-candidates t) ;; always using cache
     (setq company-lsp-async t)
@@ -986,59 +991,70 @@
 (el-get-bundle php-mode
   :type github
   :pkgname "emacs-php/php-mode"
-  :features php-mode
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
+	   ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l")
+	   ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
+  :autoloads "php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
-    (require 'php-project)
     (setq php-manual-url "http://jp2.php.net/manual/ja/"
 	  php-mode-coding-style 'Symfony2
 	  php-search-url "http://jp2.php.net/")
-    (add-to-list 'load-path
-		 (concat user-emacs-directory "el-get/php-mode/skeleton"))
-    (require 'php-ext)
     (define-key php-mode-map (kbd "M-.") 'phpactor-goto-definition)
 
-    (define-key php-mode-map (kbd "C-z C-t") 'quickrun)
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
     ;; (add-hook 'php-mode-hook #'lsp)
     (add-hook 'php-mode-hook 'php-c-style)))
 
 (el-get-bundle php-runtime
   :type github
-  :pkgname "emacs-php/php-runtime.el"
-  :features php-runtime)
+  :pkgname "emacs-php/php-runtime.el")
+
+(el-get-bundle php-skeleton
+  :type github
+  :pkgname "emacs-php/php-skeleton")
 
 (el-get-bundle composer
   :type github
   :pkgname "emacs-php/composer.el"
-  :features composer
   :depends request)
 
 (el-get-bundle phpactor
   :type github
   :pkgname "emacs-php/phpactor.el"
-  :depends f composer company)
+  :depends (f composer company-mode)
+  :autoloads "company-phpactor"
+  (with-eval-after-load-feature 'phpactor
+    (setq phpactor--debug nil)))
+;; (setq lsp-clients-phpactor-server-command "phpactor server:start --stdio")
+;; (lsp-register-client
+;;  (make-lsp-client :new-connection (lsp-stdio-connection
+;;                                    (lambda () lsp-clients-php-server-command))
+;;                   :major-modes '(php-mode)
+;;                   :priority -2
+;;                   :server-id 'php-ls))
 
 (el-get-bundle phpstan
   :type github
-  :pkgname "emacs-php/phpstan.el"
-  :features flycheck-phpstan)
+  :pkgname "emacs-php/phpstan.el")
 
 (defun php-c-style ()
   (interactive)
-  ;; (setq phpactor--debug 1)
   (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
-  (require 'phpactor)
-  (require 'company-phpactor)
+  (require 'php-skeleton)
+  (require 'php-skeleton-exceptions)
+  (require 'flycheck-phpstan)
   (make-local-variable 'company-backends)
   (push '(company-phpactor :with company-yasnippet) company-backends)
   (make-local-variable 'eldoc-documentation-function)
   (setq eldoc-documentation-function 'phpactor-hover)
   (eldoc-mode t)
+  (c-toggle-auto-newline 1)
+  (c-toggle-auto-hungry-state 1)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
+  ;; (setq-local electric-layout-rules '((?{ . around)))
   (electric-pair-local-mode t)
   (flycheck-mode t)
-  (flycheck-select-checker 'phpstan)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
@@ -1046,21 +1062,22 @@
 (el-get-bundle phpunit
   :type github
   :pkgname "nlamirault/phpunit.el"
-  :features phpunit
-  (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class)
   (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode))
-  (setq phpunit-configuration-file  "phpunit.xml.dist")
-  (setq phpunit-default-program  "phpunit"))
+  (with-eval-after-load-feature 'phpunit
+    (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class))
+    (setq phpunit-configuration-file  "phpunit.xml.dist")
+    (setq phpunit-default-program  "phpunit"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Java settings
 ;;;
-(el-get-bundle request)
+(defun java-c-style ()
+  (require 'lsp-java)
+  (define-key java-mode-map [return] 'newline-and-indent))
 (el-get-bundle lsp-java
   :type github
   :pkgname "emacs-lsp/lsp-java"
-  :features lsp-java
   (with-eval-after-load-feature 'lsp-java
     (add-hook 'java-mode-hook #'company-backends-with-yas)
     (add-hook 'java-mode-hook #'lsp)))
@@ -1071,14 +1088,12 @@
 (el-get-bundle dap-mode
   :type github
   :pkgname "yyoncho/dap-mode"
-  :depends tree-mode bui
-  :features dap-java
+  :depends (tree-mode bui)
   (dap-mode 1)
   (dap-ui-mode 1))
 
 (add-hook 'java-mode-hook 'basic-indent)
-(with-eval-after-load-feature 'cc-mode
-     (define-key java-mode-map [return] 'newline-and-indent))
+(add-hook 'java-mode-hook 'java-c-style)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1130,7 +1145,6 @@
     (setq c-basic-offset 4)
     (setq truncate-lines t)
     (setq tab-width 4)
-    (setq evil-shift-width 4)
     (setq flycheck-idle-change-delay 2)
     (omnisharp-mode 1))
   (add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
@@ -1192,8 +1206,7 @@
 
 (el-get-bundle lsp-haskell
   :type github
-  :pkgname "emacs-lsp/lsp-haskell"
-  :features lsp-haskell)
+  :pkgname "emacs-lsp/lsp-haskell")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1283,6 +1296,7 @@
 ;;;
 
 ;; (el-get-bundle auto-async-byte-compile)
+;; (setq auto-async-byte-compile-init-file (concat user-emacs-directory "init.el"))
 ;; (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
 ;; (setq auto-async-byte-compile-suppress-warnings t)
 ;; (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
@@ -1408,21 +1422,6 @@
   (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
   (global-set-key (kbd "C-z x") 'helm-howm-do-ag))
 
-(with-eval-after-load 'helm-migemo
-  (defun helm-compile-source--candidates-in-buffer (source)
-    (helm-aif (assoc 'candidates-in-buffer source)
-	(append source
-		`((candidates
-		   . ,(or (cdr it)
-                          (lambda ()
-                            ;; Do not use `source' because other plugins
-                            ;; (such as helm-migemo) may change it
-                            (helm-candidates-in-buffer (helm-get-current-source)))))
-                  (volatile) (match identity)))
-      source))
-  (defalias 'helm-mp-3-get-patterns 'helm-mm-3-get-patterns)
-  (defalias 'helm-mp-3-search-base 'helm-mm-3-search-base))
-
 (el-get-bundle helm-c-yasnippet)
 (setq helm-yas-space-match-any-greedy t)
 (global-set-key (kbd "C-c y") 'helm-yas-complete)
@@ -1453,26 +1452,16 @@
 ;;; popwin settings
 ;;;
 
-;; (el-get-bundle! popwin
-;;   (popwin-mode 1)
-;;   (setq popwin:special-display-config
-;; 	(append
-;; 	 '(("*Async Shell Command*"		:noselect t)
-;; 	   ("^\*bzr-status.*\*"			:regexp t :noselect t)
-;; 	   ("^\*xgit-status.*\*"			:regexp t :noselect t)
-;; 	   ("*quickrun*"				:noselect t :tail t)
-;; 	   ("^\*karma.*\*"			:regexp t :noselect t :tail t))
-;; 	 popwin:special-display-config))
-
-;;   (global-set-key (kbd "C-x C-p") popwin:keymap)
-;;   (setq auto-async-byte-compile-display-function 'popwin:popup-buffer-tail))
+(el-get-bundle popwin)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; auto-save settings
 ;;;
 
-(el-get-bundle! auto-save-buffers-enhanced in kentaro/auto-save-buffers-enhanced)
+(el-get-bundle auto-save-buffers-enhanced
+  :type github
+  :pkgname "kentaro/auto-save-buffers-enhanced")
 (setq auto-save-buffers-enhanced-interval 1.5)
 (setq auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
 (setq auto-save-buffers-enhanced-file-related-with-scratch-buffer
@@ -1536,8 +1525,7 @@
 ;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
 (el-get-bundle sqlite-dump
   :type github
-  :pkgname "nanasess/sqlite-dump"
-  :features sqlite-dump)
+  :pkgname "nanasess/sqlite-dump")
 (modify-coding-system-alist 'file "\\.\\(db\\|sqlite\\)\\'" 'raw-text-unix)
 (add-to-list 'auto-mode-alist '("\\.\\(db\\|sqlite\\)\\'" . sqlite-dump))
 
@@ -1559,11 +1547,10 @@
 (setq idm-database-file (concat external-directory ".idm-db.gpg"))
 (setq idm-copy-action 'kill-new)
 (setq idm-gen-password-cmd mkpasswd-command)
-(el-get-bundle id-manager
+(el-get-bundle emacs-id-manager
   :type github
-  :pkgname "kiwanami/emacs-id-manager"
-  :depends helm
-  :features id-manager)
+  :autoloads "id-manager"
+  :pkgname "kiwanami/emacs-id-manager")
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 (setenv "GPG_AGENT_INFO" nil)
 
@@ -1696,7 +1683,7 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 			    'po-find-file-coding-system)
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
-(setq gc-cons-threshold 800000)
+;; (setq gc-cons-threshold 800000)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
