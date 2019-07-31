@@ -724,8 +724,10 @@
       (browse-url
        (format "https://github.com/%s/pull/new/%s"
 	       (replace-regexp-in-string
-		"\\`.+github\\.com:\\(.+\\)\\(\\.git\\)?\\'" "\\1"
-		repo)
+		"\\.git$" ""
+		(replace-regexp-in-string
+		 "\\`.+github\\.com:\\(.+\\)\\(\\.git\\)?\\'" "\\1"
+		 repo))
 	       (magit-get-current-branch))))
 
     ;; Bitbucket pull requests are kinda funky, it seems to try to just do the
