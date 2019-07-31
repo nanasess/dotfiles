@@ -235,11 +235,48 @@
 (setq sml/no-confirm-load-theme t)
 (defvar sml/theme 'respectful)
 (defvar sml/shorten-directory -1)
+
+;; https://qiita.com/kai2nenobu/items/ddf94c0e5a36919bc6db
+(set 'eol-mnemonic-dos "(CRLF)")
+(set 'eol-mnemonic-unix "(LF)")
+(set 'eol-mnemonic-mac "(CR)")
+(set 'eol-mnemonic-undecided "(?)")
+
+(defun my/coding-system-name-mnemonic (coding-system)
+  (let* ((base (coding-system-base coding-system))
+         (name (symbol-name base)))
+    (cond ((string-prefix-p "utf-8" name) "UTF8")
+          ((string-prefix-p "utf-16" name) "UTF16")
+          ((string-prefix-p "utf-7" name) "UTF7")
+          ((string-prefix-p "japanese-shift-jis" name) "SJIS")
+          ;; ((string-match "cp\\([0-9]+\\)" name) (match-string 1 name))
+          ((string-match "japanese-iso-8bit" name) "EUC")
+          (t (format "%s" name)))))
+
+(defun my/coding-system-bom-mnemonic (coding-system)
+  (let ((name (symbol-name coding-system)))
+    (cond ((string-match "be-with-signature" name) "[BE]")
+          ((string-match "le-with-signature" name) "[LE]")
+          ((string-match "-with-signature" name) "[BOM]")
+          (t ""))))
+
+(defun my/buffer-coding-system-mnemonic ()
+  "Return a mnemonic for `buffer-file-coding-system'."
+  (let* ((code buffer-file-coding-system)
+         (name (my/coding-system-name-mnemonic code))
+         (bom (my/coding-system-bom-mnemonic code)))
+    (format "%s%s" name bom)))
+
+(setq sml/mule-info
+      (cl-substitute '(:eval (my/buffer-coding-system-mnemonic))
+		     "%z" mode-line-mule-info :test 'equal))
+
+(setq sml/show-eol nil)
 (sml/setup)
+
 (line-number-mode 1)
 (column-number-mode 1)
 (size-indication-mode 1)
-(setq eol-mnemonic-dos "(DOS)")
 
 (el-get-bundle symbol-overlay
   :type github
