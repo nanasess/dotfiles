@@ -720,6 +720,10 @@
     (remove-hook 'server-switch-hook 'magit-commit-diff)))
 (global-set-key (kbd "C-z m") 'magit-status)
 
+(with-eval-after-load-feature 'smerge-mode
+  (define-key smerge-mode-map (kbd "M-n") 'smerge-next)
+  (define-key smerge-mode-map (kbd "M-p") 'smerge-prev))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; howm settings
