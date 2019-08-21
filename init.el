@@ -320,6 +320,10 @@
 ;;; dired-x settings
 ;;;
 
+(el-get-bundle emacs-async
+  (autoload 'dired-async-mode "dired-async.el" nil t)
+  (dired-async-mode 1))
+
 (add-hook 'dired-mode-hook
 	  #'(lambda ()
 	      (local-set-key (kbd "C-t") 'other-window)
