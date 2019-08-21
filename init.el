@@ -1043,14 +1043,14 @@
 	   ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
   :autoloads "php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
+    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
+    (add-hook 'php-mode-hook 'php-c-style)
+    (define-key php-mode-map (kbd "M-.") 'phpactor-goto-definition))
+    ;; (add-hook 'php-mode-hook #'lsp))
+  (with-eval-after-load-feature 'php
     (setq php-manual-url "http://jp2.php.net/manual/ja/"
 	  php-mode-coding-style 'Symfony2
-	  php-search-url "http://jp2.php.net/")
-    (define-key php-mode-map (kbd "M-.") 'phpactor-goto-definition)
-
-    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-    ;; (add-hook 'php-mode-hook #'lsp)
-    (add-hook 'php-mode-hook 'php-c-style)))
+	  php-search-url "http://jp2.php.net/")))
 
 (el-get-bundle php-runtime
   :type github
@@ -1065,13 +1065,14 @@
   :pkgname "emacs-php/composer.el"
   :depends request)
 
+(setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
+(setq phpactor--debug nil)
 (el-get-bundle phpactor
   :type github
   :pkgname "emacs-php/phpactor.el"
   :depends (f composer company-mode)
   :autoloads "company-phpactor"
-  (with-eval-after-load-feature 'phpactor
-    (setq phpactor--debug nil)))
+  (with-eval-after-load-feature 'phpactor))
 ;; (setq lsp-clients-phpactor-server-command "phpactor server:start --stdio")
 ;; (lsp-register-client
 ;;  (make-lsp-client :new-connection (lsp-stdio-connection
@@ -1086,7 +1087,6 @@
 
 (defun php-c-style ()
   (interactive)
-  (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
   (require 'php-skeleton)
   (require 'php-skeleton-exceptions)
   (require 'flycheck-phpstan)
