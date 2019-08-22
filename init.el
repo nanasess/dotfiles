@@ -897,12 +897,11 @@
   (with-eval-after-load-feature 'company-dabbrev
     (setq company-dabbrev-downcase nil)))
 
-(el-get-bundle pos-tip)
-(el-get-bundle company-quickhelp
-  :depends pos-tip
-  (with-eval-after-load-feature 'company-quickhelp
-    (setq company-quickhelp-use-propertized-text t)))
-;; (company-quickhelp-mode)
+(el-get-bundle posframe)
+(el-get-bundle company-posframe
+  :type github
+  :pkgname "tumashu/company-posframe"
+  (company-posframe-mode 1))
 
 (el-get-bundle git-complete
   :type github
@@ -1014,6 +1013,14 @@
     (setq company-lsp-async t)
     (setq company-lsp-enable-recompletion nil)))
 
+(el-get-bundle eldoc-box
+  :type github
+  :pkgname "casouri/eldoc-box"
+  (defface eldoc-box-border '((t (:background "gray"))) nil
+    :group 'font-lock-highlighting-faces)
+  (defface eldoc-box-body '((t . (:background "white"))) nil
+    :group 'font-lock-highlighting-faces))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; PHP settings
@@ -1079,6 +1086,8 @@
   (make-local-variable 'eldoc-documentation-function)
   (setq eldoc-documentation-function 'phpactor-hover)
   (eldoc-mode t)
+  (eldoc-box-hover-mode 1)
+  ;; (eldoc-box-hover-at-point-mode 1)
   (c-toggle-auto-newline 1)
   (c-toggle-auto-hungry-state 1)
   (electric-indent-local-mode t)
