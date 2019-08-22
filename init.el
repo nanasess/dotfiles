@@ -856,24 +856,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; auto-complete.el settings
+;;; company-mode settings
 ;;;
-
-(el-get-bundle auto-complete
-  :type github
-  :pkgname "auto-complete/auto-complete"
-  :depends (popup fuzzy)
-  (auto-complete-mode -1)
-  (global-auto-complete-mode -1)
-  (with-eval-after-load-feature 'auto-complete
-      (add-to-list 'ac-dictionary-directories
-		   (expand-file-name
-		    (concat user-site-lisp-directory "auto-complete/dict")))
-    (setq ac-delay 0.1)
-    (setq ac-auto-show-menu 0.3)
-    (setq ac-use-menu-map t)
-    (define-key ac-completing-map [tab] 'ac-complete)
-    (define-key ac-completing-map [return] 'ac-complete)))
 
 (el-get-bundle company-mode
   (add-hook 'after-init-hook 'global-company-mode)
@@ -1157,8 +1141,10 @@
 
 ;; XXX omnisharp-utils.el で (require 'shut-up) しないと動かないかも
 (el-get-bundle shut-up in cask/shut-up)
-(el-get-bundle omnisharp-mode
-  :depends (csharp-mode shut-up dash s f))
+(el-get-bundle omnisharp-emacs
+  :type github
+  :pkgname "OmniSharp/omnisharp-emacs"
+  :depends (csharp-mode popup shut-up dash s f))
 ;; (el-get-bundle company)
 ;; (el-get-bundle ac-company)
 ;; (eval-after-load 'company
@@ -1562,11 +1548,11 @@
 ;;; e.g.) dbi:Pg:dbname=dbname;host=hostname;password=password
 ;;;
 
-(el-get-bundle edbi
-  (with-eval-after-load-feature 'edbi
-    (setq edbi:query-result-fix-header nil
-	  edbi:ds-history-list-num 50
-	  edbi:query-result-column-max-width nil)))
+;; (el-get-bundle edbi
+;;   (with-eval-after-load-feature 'edbi
+;;     (setq edbi:query-result-fix-header nil
+;; 	  edbi:ds-history-list-num 50
+;; 	  edbi:query-result-column-max-width nil)))
 
 ;;; sqlite-dump
 ;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
