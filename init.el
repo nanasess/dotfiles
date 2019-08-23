@@ -873,7 +873,7 @@
 	      '(:with company-yasnippet))))
 
   (with-eval-after-load-feature 'company
-    (setq company-idle-delay 0.3
+    (setq company-idle-delay 0.1
           company-minimum-prefix-length 2
 	  company-selection-wrap-around t)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
@@ -1058,6 +1058,7 @@
 
 (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
 (setq phpactor--debug nil)
+(setq company-phpactor-request-async t)
 (el-get-bundle phpactor
   :type github
   :pkgname "emacs-php/phpactor.el"
