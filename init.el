@@ -409,7 +409,6 @@
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
   (company-mode +1)
-  (auto-complete-mode -1)
   (flycheck-add-mode 'typescript-tslint 'web-mode)
   (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append))
 
@@ -875,7 +874,8 @@
   (with-eval-after-load-feature 'company
     (setq company-idle-delay 0.1
           company-minimum-prefix-length 2
-	  company-selection-wrap-around t)
+          company-tooltip-align-annotations t
+          company-selection-wrap-around t)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous)
     (define-key company-search-map (kbd "C-n") 'company-select-next)
@@ -886,10 +886,6 @@
 
     ;; TABで候補を設定
     (define-key company-active-map (kbd "C-i") 'company-complete-selection)
-
-    ;; 各種メジャーモードでも C-M-iで company-modeの補完を使う
-    (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
-
     (defun company-backends-with-yas ()
       (interactive)
       (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))))
@@ -897,11 +893,79 @@
   (with-eval-after-load-feature 'company-dabbrev
     (setq company-dabbrev-downcase nil)))
 
-(el-get-bundle posframe)
-(el-get-bundle company-posframe
+(add-hook 'emacs-lisp-mode-hook
+	  #'(lambda ()
+	      (make-local-variable 'company-backends)
+	      (push '(company-elisp :with company-yasnippet) company-backends)))
+(add-hook 'emacs-lisp-mode-hook #'company-backends-with-yas)
+
+(el-get-bundle all-the-icons)
+(el-get-bundle company-box
   :type github
-  :pkgname "tumashu/company-posframe"
-  (company-posframe-mode 1))
+  :pkgname "sebastiencs/company-box"
+  (add-hook 'company-mode-hook 'company-box-mode)
+  (with-eval-after-load-feature 'company-box
+    (setq company-box-enable-icon t)
+    (setq company-box-show-single-candidate t)
+    ;; (setq company-box-max-candidates 50)
+    (setq company-box-doc-delay 0.5)
+    (setq company-box-icons-alist 'company-box-icons-all-the-icons)
+    ;; see https://github.com/zenith-john/zenith-emacs/blob/8d85e5e5d9e477873762452063683609ae2dc91e/config/init-company.el
+    (defconst company-box-icons--phpactor-alist
+      '(("interface" . Interface)
+	("class" . Class)
+	("method" . Method)
+	("function" . Function)
+	("property" . Property)
+	("constant" . Constant)
+	("variable" . Variable)
+	("interface" . Interface)
+	("module" . Module)
+	("template" . Template)))
+    (defun company-box-icons--phpactor (candidate)
+      (when (derived-mode-p 'php-mode)
+	(let ((key (get-text-property 0 'type candidate)))
+	  (cdr (assoc key company-box-icons--phpactor-alist)))))
+    (setq company-box-icons-functions
+	  '(company-box-icons--yasnippet company-box-icons--lsp company-box-icons--elisp company-box-icons--phpactor))
+
+    (setq company-box-icons-all-the-icons
+	  `((Unknown       . ,(all-the-icons-material "find_in_page"             :height 0.8 :face 'all-the-icons-silver))
+	    (Text          . ,(all-the-icons-material "text_fields"              :height 0.8 :face 'all-the-icons-green))
+	    (Method        . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+	    (Function      . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+	    (Constructor   . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+	    (Field         . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+	    (Variable      . ,(all-the-icons-material "adjust"                   :height 0.8 :face 'all-the-icons-blue))
+	    (Class         . ,(all-the-icons-material "class"                    :height 0.8 :face 'all-the-icons-purple))
+	    (Interface     . ,(all-the-icons-material "settings_input_component" :height 0.8 :face 'all-the-icons-purple))
+	    (Module        . ,(all-the-icons-material "view_module"              :height 0.8 :face 'all-the-icons-purple))
+	    (Property      . ,(all-the-icons-material "settings_applications"    :height 0.8 :face 'all-the-icons-purple))
+	    (Unit          . ,(all-the-icons-material "straighten"               :height 0.8 :face 'all-the-icons-purple))
+	    (Value         . ,(all-the-icons-material "filter_1"                 :height 0.8 :face 'all-the-icons-purple))
+	    (Enum          . ,(all-the-icons-material "plus_one"                 :height 0.8 :face 'all-the-icons-purple))
+	    (Keyword       . ,(all-the-icons-material "filter_center_focus"      :height 0.8 :face 'all-the-icons-purple))
+	    (Snippet       . ,(all-the-icons-material "short_text"               :height 0.8 :face 'all-the-icons-purple))
+	    (Color         . ,(all-the-icons-material "color_lens"               :height 0.8 :face 'all-the-icons-purple))
+	    (File          . ,(all-the-icons-material "insert_drive_file"        :height 0.8 :face 'all-the-icons-purple))
+	    (Reference     . ,(all-the-icons-material "collections_bookmark"     :height 0.8 :face 'all-the-icons-purple))
+	    (Folder        . ,(all-the-icons-material "folder"                   :height 0.8 :face 'all-the-icons-purple))
+	    (EnumMember    . ,(all-the-icons-material "people"                   :height 0.8 :face 'all-the-icons-purple))
+	    (Constant      . ,(all-the-icons-material "pause_circle_filled"      :height 0.8 :face 'all-the-icons-purple))
+	    (Struct        . ,(all-the-icons-material "streetview"               :height 0.8 :face 'all-the-icons-purple))
+	    (Event         . ,(all-the-icons-material "event"                    :height 0.8 :face 'all-the-icons-purple))
+	    (Operator      . ,(all-the-icons-material "control_point"            :height 0.8 :face 'all-the-icons-purple))
+	    (TypeParameter . ,(all-the-icons-material "class"                    :height 0.8 :face 'all-the-icons-purple))
+	    ;; (Template   . ,(company-box-icons-image "Template.png"))))
+	    (Yasnippet     . ,(all-the-icons-material "short_text"               :height 0.8 :face 'all-the-icons-green))
+	    (ElispFunction . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+	    (ElispVariable . ,(all-the-icons-material "check_circle"             :height 0.8 :face 'all-the-icons-blue))
+	    (ElispFeature  . ,(all-the-icons-material "stars"                    :height 0.8 :face 'all-the-icons-orange))
+	    (ElispFace     . ,(all-the-icons-material "format_paint"             :height 0.8 :face 'all-the-icons-pink))))
+    (setq company-box-backends-colors
+	  '((company-yasnippet . (:selected (:background "NavajoWhite" :foreground "black")))
+	    (company-dabbrev . (:selected (:background "PaleTurquoise" :foreground "black")))))))
+
 
 (el-get-bundle git-complete
   :type github
@@ -1020,6 +1084,7 @@
     :group 'font-lock-highlighting-faces)
   (defface eldoc-box-body '((t . (:background "white"))) nil
     :group 'font-lock-highlighting-faces))
+(setq eldoc-box-clear-with-C-g t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1086,7 +1151,6 @@
   (push '(company-phpactor :with company-yasnippet) company-backends)
   (make-local-variable 'eldoc-documentation-function)
   (setq eldoc-documentation-function 'phpactor-hover)
-  (eldoc-mode t)
   (eldoc-box-hover-mode 1)
   ;; (eldoc-box-hover-at-point-mode 1)
   (c-toggle-auto-newline 1)
@@ -1096,6 +1160,10 @@
   ;; (setq-local electric-layout-rules '((?{ . around)))
   (electric-pair-local-mode t)
   (flycheck-mode t)
+  ;; If you feel phumped and phpcs annoying, invalidate them.
+  (when (boundp 'flycheck-disabled-checkers)
+    (add-to-list 'flycheck-disabled-checkers 'php-phpmd)
+    (add-to-list 'flycheck-disabled-checkers 'php-phpcs))
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
