@@ -905,6 +905,30 @@
   :pkgname "sebastiencs/company-box"
   (add-hook 'company-mode-hook 'company-box-mode)
   (with-eval-after-load-feature 'company-box
+    (defun company-box--update-width (&optional no-update height)
+      (unless no-update
+	(redisplay))
+      (-let* ((frame (company-box--get-frame))
+	      (window (frame-parameter nil 'company-box-window))
+	      (start (window-start window))
+	      (char-width (frame-char-width frame))
+	      (end (or (and height (with-current-buffer (window-buffer window)
+				     (save-excursion
+				       (goto-char start)
+				       (forward-line height)
+				       (point))))
+		       (window-end window)))
+	      ;; (max-width (- (* 3 (frame-pixel-width)) company-box--x char-width))
+	      (max-width (- (x-display-pixel-width) company-box--x char-width))
+	      (width (+ (company-box--calc-len (window-buffer window) start end char-width)
+			(if (company-box--scrollbar-p frame) (* 2 char-width) 0)
+			char-width))
+	      (width (max (min width max-width)
+			  (* company-tooltip-minimum-width char-width)))
+	      (diff (abs (- (frame-pixel-width frame) width))))
+    (or (and no-update width)
+        (and (> diff 2) (set-frame-width frame width nil t)))))
+
     (setq company-box-enable-icon t)
     (setq company-box-show-single-candidate t)
     ;; (setq company-box-max-candidates 50)
