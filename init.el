@@ -918,8 +918,10 @@
 				       (forward-line height)
 				       (point))))
 		       (window-end window)))
-	      ;; (max-width (- (* 3 (frame-pixel-width)) company-box--x char-width))
-	      (max-width (- (x-display-pixel-width) company-box--x char-width))
+	      ;; (max-width (- (frame-pixel-width) company-box--x char-width))
+	      (max-width (- (x-display-pixel-width)
+			    (max (eval (frame-parameter nil 'left)) 0)
+			    company-box--x char-width))
 	      (width (+ (company-box--calc-len (window-buffer window) start end char-width)
 			(if (company-box--scrollbar-p frame) (* 2 char-width) 0)
 			char-width))
@@ -1157,6 +1159,7 @@
 (el-get-bundle phpactor
   :type github
   :pkgname "emacs-php/phpactor.el"
+  :branch "develop"
   :depends (f composer company-mode)
   :autoloads "company-phpactor"
   (with-eval-after-load-feature 'phpactor))
