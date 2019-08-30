@@ -950,8 +950,13 @@
       (when (derived-mode-p 'php-mode)
 	(let ((key (get-text-property 0 'type candidate)))
 	  (cdr (assoc key company-box-icons--phpactor-alist)))))
+    (defun company-box-icons--yasnippet+ (candidate)
+      (message "%s" (get-text-property 0 'yas-annotation candidate))
+      (when (get-text-property 0 'yas-annotation candidate)
+	'Yasnippet))
+
     (setq company-box-icons-functions
-	  '(company-box-icons--yasnippet company-box-icons--lsp company-box-icons--elisp company-box-icons--phpactor))
+	  '(company-box-icons--yasnippet+ company-box-icons--lsp company-box-icons--elisp company-box-icons--phpactor))
 
     (setq company-box-icons-all-the-icons
 	  `((Unknown       . ,(all-the-icons-material "find_in_page"             :height 0.8 :face 'all-the-icons-silver))
@@ -981,15 +986,16 @@
 	    (Operator      . ,(all-the-icons-material "control_point"            :height 0.8 :face 'all-the-icons-purple))
 	    (TypeParameter . ,(all-the-icons-material "class"                    :height 0.8 :face 'all-the-icons-purple))
 	    ;; (Template   . ,(company-box-icons-image "Template.png"))))
-	    (Yasnippet     . ,(all-the-icons-material "short_text"               :height 0.8 :face 'all-the-icons-green))
+	    (Yasnippet     . ,(all-the-icons-material "share"               :height 0.8 :face 'all-the-icons-green))
 	    (ElispFunction . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
 	    (ElispVariable . ,(all-the-icons-material "check_circle"             :height 0.8 :face 'all-the-icons-blue))
 	    (ElispFeature  . ,(all-the-icons-material "stars"                    :height 0.8 :face 'all-the-icons-orange))
 	    (ElispFace     . ,(all-the-icons-material "format_paint"             :height 0.8 :face 'all-the-icons-pink))))
     (setq company-box-backends-colors
-	  '((company-yasnippet . (:selected (:background "NavajoWhite" :foreground "black")))
-	    (company-dabbrev . (:selected (:background "PaleTurquoise" :foreground "black")))))))
-
+	  '((company-yasnippet . (:selected (:background "#DEB542" :weight bold)))
+	    (company-dabbrev . (:selected (:background "PaleTurquoise" :weight bold)))))
+    (defface company-box-scrollbar
+      '((t (:background "#073642" :weight bold))) nil :group 'company-box)))
 
 (el-get-bundle git-complete
   :type github
