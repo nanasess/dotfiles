@@ -241,7 +241,8 @@
   :pkgname "seagle0128/doom-modeline"
   (doom-modeline-mode 1)
   (with-eval-after-load-feature 'doom-modeline-core
-    (setq doom-modeline-vcs-max-length 999)))
+    (setq doom-modeline-vcs-max-length 999)
+    (setq doom-modeline-buffer-file-name-style 'buffer-name)))
 
 (line-number-mode 1)
 (column-number-mode 1)
