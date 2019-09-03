@@ -230,7 +230,7 @@
 ;; use solarized.
 (el-get-bundle solarized-emacs
   (load-theme 'solarized-light t))
-
+(el-get-bundle diminish)
 (el-get-bundle! smart-mode-line)
 (setq sml/no-confirm-load-theme t)
 (defvar sml/theme 'respectful)
@@ -631,7 +631,9 @@
 ;;; yasnippet settings
 ;;;
 
-(el-get-bundle yasnippet)
+(el-get-bundle yasnippet
+  (with-eval-after-load-feature 'yas-global-mode
+    (diminish 'yas-minor-mode)))
 (add-hook 'after-init-hook 'yas-global-mode)
 (el-get-bundle yasnippet-snippets)
 
@@ -872,6 +874,7 @@
 	      '(:with company-yasnippet))))
 
   (with-eval-after-load-feature 'company
+    (diminish 'company-mode)
     (setq company-idle-delay 0.1
           company-minimum-prefix-length 2
           company-tooltip-align-annotations t
@@ -905,6 +908,7 @@
   :pkgname "sebastiencs/company-box"
   (add-hook 'company-mode-hook 'company-box-mode)
   (with-eval-after-load-feature 'company-box
+    (diminish 'company-box-mode)
     (defun company-box--update-width (&optional no-update height)
       (unless no-update
 	(redisplay))
@@ -1453,6 +1457,8 @@
 (el-get-bundle helm
   (with-eval-after-load-feature 'helm
     (helm-migemo-mode 1)
+    (diminish 'helm-mode)
+    (diminish 'helm-migemo-mode)
     (define-key helm-map (kbd "C-v") 'helm-next-source)
     (define-key helm-map (kbd "M-v") 'helm-previous-source)
 
