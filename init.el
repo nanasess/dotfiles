@@ -240,7 +240,8 @@
   :depends (all-the-icons dash eldoc-eval shrink-path)
   :pkgname "seagle0128/doom-modeline"
   (doom-modeline-mode 1)
-  (setq doom-modeline-vcs-max-length 999))
+  (with-eval-after-load-feature 'doom-modeline-core
+    (setq doom-modeline-vcs-max-length 999)))
 
 (line-number-mode 1)
 (column-number-mode 1)
