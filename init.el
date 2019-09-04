@@ -225,6 +225,15 @@
   :depends (dash f s))
 (el-get-bundle all-the-icons)
 
+(load "openweathermap-api-key" t)
+(when openweathermap-api-key
+  (el-get-bundle! sky-color-clock
+      :type github
+      :pkgname "zk-phi/sky-color-clock"
+      (with-eval-after-load-feature 'sky-color-clock
+	(sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
+	(sky-color-clock-initialize-openweathermap-client openweathermap-api-key 1855207))))
+
 (el-get-bundle doom-modeline
   :type github
   :depends (all-the-icons dash eldoc-eval shrink-path)
@@ -236,9 +245,14 @@
 		  (setf (alist-get "\\.php$" all-the-icons-icon-alist nil nil #'equal)
 			'(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
 		  (setf (alist-get 'php-mode all-the-icons-mode-icon-alist nil nil #'equal)
-			'(all-the-icons-fileicon "php" :face all-the-icons-lpurple))))
+			'(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
+		  (doom-modeline-def-modeline 'main
+		    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
+		    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker sky-color-clock))))
     (setq doom-modeline-vcs-max-length 999)
-    (setq doom-modeline-buffer-file-name-style 'buffer-name)))
+    (setq doom-modeline-buffer-file-name-style 'buffer-name)
+    (doom-modeline-def-segment sky-color-clock
+      (sky-color-clock))))
 
 (line-number-mode 1)
 (column-number-mode 1)
@@ -253,17 +267,6 @@
     (global-set-key (kbd "M-p") 'symbol-overlay-switch-backward)
     (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
     (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)))
-
-(load "openweathermap-api-key" t)
-(when openweathermap-api-key
-  (el-get-bundle! sky-color-clock
-      :type github
-      :pkgname "zk-phi/sky-color-clock"
-      (with-eval-after-load-feature 'sky-color-clock
-	(sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
-	(setq-default mode-line-format
-		      (append mode-line-format '((:eval (sky-color-clock)))))
-	(sky-color-clock-initialize-openweathermap-client openweathermap-api-key 1855207))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
