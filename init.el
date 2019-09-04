@@ -1080,9 +1080,9 @@
 (el-get-bundle eldoc-box
   :type github
   :pkgname "casouri/eldoc-box"
-  (defface eldoc-box-border '((t (:background "gray"))) nil
+  (defface eldoc-box-border '((t (:background "#E1DBCD"))) nil ; base4
     :group 'font-lock-highlighting-faces)
-  (defface eldoc-box-body '((t . (:background "white"))) nil
+  (defface eldoc-box-body '((t . (:background "#FFFBEA"))) nil ; bg-alt
     :group 'font-lock-highlighting-faces))
 (setq eldoc-box-clear-with-C-g t)
 
