@@ -224,12 +224,19 @@
   :pkgname "zbelial/shrink-path.el"
   :depends (dash f s))
 (el-get-bundle all-the-icons)
+
 (el-get-bundle doom-modeline
   :type github
   :depends (all-the-icons dash eldoc-eval shrink-path)
   :pkgname "seagle0128/doom-modeline"
   (add-hook 'after-init-hook 'doom-modeline-mode)
   (with-eval-after-load-feature 'doom-modeline-core
+    (add-hook 'doom-modeline-mode-hook
+	      #'(lambda ()
+		  (setf (alist-get "\\.php$" all-the-icons-icon-alist nil nil #'equal)
+			'(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
+		  (setf (alist-get 'php-mode all-the-icons-mode-icon-alist nil nil #'equal)
+			'(all-the-icons-fileicon "php" :face all-the-icons-lpurple))))
     (setq doom-modeline-vcs-max-length 999)
     (setq doom-modeline-buffer-file-name-style 'buffer-name)))
 
