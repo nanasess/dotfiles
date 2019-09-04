@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((doom-modeline :checksum "5b523bef6598f05da254604729d4fa6406b7d726")
+      '((doom-themes :checksum "470dd52ec4761a0b2c1f2c0309233e1fba04e598")
+        (doom-modeline :checksum "5b523bef6598f05da254604729d4fa6406b7d726")
         (shrink-path :checksum "9d06c453d1537df46a4b703a29213cc7f7857aa0")
         (eldoc-eval :checksum "a67fe3637378dcb6c5f9e140acc8131f0d2346b3")
         (eldoc-box :checksum "8aa2b6d35a557864ff64762774fd5b4960cbeff0")
@@ -92,7 +93,7 @@
         (symbol-overlay :checksum "75c6ba66c087bff4a1f9246c5dcfe9a272d29ea7")
         (smart-mode-line :checksum "268319aafee710ce8916c8612a5a8dcdce55fc1b")
         (rich-minority :checksum "a03e693f6f9232cf75363aaaf1cb041f21675c19")
-        (solarized-emacs :checksum "74c6b5acd6892faeafd08029898663d81ab0a4d5")
+        (solarized-emacs :checksum "55cd77b61b6968048c61e13358ba487d217f24c0")
         (dash :checksum "258c324d9840901db83b2cabef3fa75bba57c1ba")
         (recentf-ext :checksum "95f81dfac24d3f67002024f0a24e6b997bf6d647")
         (ddskk :checksum "ad61579af269291b4446f4bab0a58522cc454f1c")

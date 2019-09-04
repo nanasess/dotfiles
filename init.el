@@ -182,40 +182,32 @@
 ;;; face settings
 ;;;
 
-;; (set-background-color "ivory")
-;; (set-face-foreground 'font-lock-keyword-face "#7f007f")
-
-(defface hlline-face
-  '((((class color) (background light))
-     (:background "Beige"))) nil :group 'font-lock-highlighting-faces)
-
-(setq hl-line-face 'hlline-face)
 (setq visible-bell t)
+;; use solarized.
+(el-get-bundle doom-themes)
+(load-theme 'doom-solarized-light t)
+
+(require 'whitespace)
 (setq whitespace-style
-    '(spaces tabs newline space-mark tab-mark newline-mark))
-
-(defface my-mark-whitespace '((t (:background "gray"))) nil
-  :group 'font-lock-highlighting-faces)
-(defface my-mark-tabs '((t (:background "Gainsboro"))) nil
-  :group 'font-lock-highlighting-faces)
-(defface my-mark-lineendsspaces '((t (:foreground "SteelBlue" :underline t))) nil
-  :group 'font-lock-highlighting-faces)
-(defvar my-mark-whitespace 'my-mark-whitespace)
-(defvar my-mark-tabs 'my-mark-tabs)
-(defvar my-mark-lineendsspaces 'my-mark-lineendsspaces)
-
-(defadvice font-lock-mode (before my-font-lock-mode ())
-  (font-lock-add-keywords
-   major-mode
-   '(("\t" 0 my-mark-tabs append)
-     ("　" 0 my-mark-whitespace append)
-     ("[ \t]+$" 0 my-mark-lineendsspaces append))))
-(ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
-(ad-activate 'font-lock-mode)
-
-(add-hook 'diff-mode-hook
-	  #'(lambda ()
-	      (set-face-bold 'diff-refine-change t)))
+      '(face trailing tabs spaces space-mark tab-mark))
+(setq whitespace-display-mappings nil)
+(setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+(setq whitespace-space-regexp "\\(\u3000+\\)")
+(set-face-attribute 'whitespace-trailing nil
+		    :foreground nil
+		    :background "#FDF6E3"
+		    :underline t)
+(set-face-attribute 'whitespace-tab nil
+		    ;; base4
+		    :foreground "#E1DBCD"
+		    :background "#E1DBCD"
+		    :underline nil)
+(set-face-attribute 'whitespace-space nil
+		    ;; base5
+		    :foreground "#D6D6D6"
+		    :background "#D6D6D6"
+		    :underline nil)
+(global-whitespace-mode t)
 
 ;; see also http://rubikitch.com/2015/05/14/global-hl-line-mode-timer/
 (global-hl-line-mode 0)
@@ -227,9 +219,6 @@
       (run-with-idle-timer 0.1 t 'global-hl-line-timer-function))
 ;; (cancel-timer global-hl-line-timer)
 
-;; use solarized.
-(el-get-bundle solarized-emacs
-  (load-theme 'solarized-light t))
 (el-get-bundle shrink-path
   :type github
   :pkgname "zbelial/shrink-path.el"
@@ -239,7 +228,7 @@
   :type github
   :depends (all-the-icons dash eldoc-eval shrink-path)
   :pkgname "seagle0128/doom-modeline"
-  (doom-modeline-mode 1)
+  (add-hook 'after-init-hook 'doom-modeline-mode)
   (with-eval-after-load-feature 'doom-modeline-core
     (setq doom-modeline-vcs-max-length 999)
     (setq doom-modeline-buffer-file-name-style 'buffer-name)))
