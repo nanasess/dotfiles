@@ -117,7 +117,13 @@
 (setq skk-user-directory (concat external-directory "ddskk")
       skk-init-file (concat user-initial-directory "skk-init.el")
       skk-isearch-start-mode 'latin)
-(el-get-bundle ddskk)
+(el-get-bundle ddskk
+  (with-eval-after-load-feature 'skk
+    ;; see https://uwabami.github.io/cc-env/Emacs.html
+    (defun disable-skk-setup-modeline ()
+      (setq skk-indicator-alist (skk-make-indicator-alist))
+      (force-mode-line-update t))
+    (advice-add 'skk-setup-modeline :override 'disable-skk-setup-modeline)))
 (setq skk-preload nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -251,12 +257,22 @@
 		  (setf (alist-get 'csharp-mode all-the-icons-mode-icon-alist nil nil #'equal)
 			'(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
 		  (doom-modeline-def-modeline 'main
-		    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
+		    '(bar input-method-skk workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
 		    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker sky-color-clock))))
     (setq doom-modeline-vcs-max-length 999)
     (setq doom-modeline-buffer-file-name-style 'buffer-name)
     (doom-modeline-def-segment sky-color-clock
-      (sky-color-clock))))
+      (sky-color-clock))
+
+    (doom-modeline-def-segment input-method-skk
+      "The current ddskk status."
+      (concat
+       (doom-modeline-spc)
+       (propertize
+        (cond
+         ((not (boundp 'skk-modeline-input-mode)) "[--]")
+	 (t (if (string= "" skk-modeline-input-mode) "[--]"
+	      (substring (format "%s" skk-modeline-input-mode) 2 -1)))))))))
 
 (line-number-mode 1)
 (column-number-mode 1)
