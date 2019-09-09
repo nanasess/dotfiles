@@ -35,7 +35,7 @@
         (lsp-haskell :checksum "33e3ac438338b0a78971cd26aa919482d290c51b")
         (haskell-mode :checksum "23978d384ffe6ef7d82b7c2559ac8581c8b5d59d")
         (omnisharp-mode :checksum "b5afa053c8d3771d5567538bae89a03cc66e826c")
-        (csharp-mode :checksum "239527c1f27cf5246505f1faf23269487fdbfdd2")
+        (csharp-mode :checksum "e7e96e3b0cb69d98b4e12eda269719c9b23453ed")
         (shut-up :checksum "081d6b01e3ba0e60326558e545c4019219e046ce")
         (csv-mode :checksum "f13ff11870ab406b9fc871a980290df2747e3d32")
         (dap-mode :checksum "c46f1e96df2b3040c95c92022e4d05ab77e5189a")
