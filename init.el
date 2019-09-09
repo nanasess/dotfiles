@@ -244,8 +244,12 @@
 	      #'(lambda ()
 		  (setf (alist-get "\\.php$" all-the-icons-icon-alist nil nil #'equal)
 			'(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
+		  (setf (alist-get "\\.csx?$" all-the-icons-icon-alist nil nil #'equal)
+			'(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
 		  (setf (alist-get 'php-mode all-the-icons-mode-icon-alist nil nil #'equal)
 			'(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
+		  (setf (alist-get 'csharp-mode all-the-icons-mode-icon-alist nil nil #'equal)
+			'(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
 		  (doom-modeline-def-modeline 'main
 		    '(bar workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
 		    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker sky-color-clock))))
@@ -929,7 +933,7 @@
 	  '(company-box-icons--yasnippet+ company-box-icons--lsp company-box-icons--elisp company-box-icons--phpactor))
 
     (setq company-box-icons-all-the-icons
-	  `((Unknown       . ,(all-the-icons-material "find_in_page"             :height 0.8 :face 'all-the-icons-silver))
+	  `((Unknown       . ,(all-the-icons-material "find_in_page"             :height 0.8 :face 'all-the-icons-blue-alt))
 	    (Text          . ,(all-the-icons-material "text_fields"              :height 0.8 :face 'all-the-icons-green))
 	    (Method        . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
 	    (Function      . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
