@@ -262,7 +262,8 @@
     (setq doom-modeline-vcs-max-length 999)
     (setq doom-modeline-buffer-file-name-style 'buffer-name)
     (doom-modeline-def-segment sky-color-clock
-      (sky-color-clock))
+      (concat (doom-modeline-spc)
+	      (sky-color-clock)))
 
     (doom-modeline-def-segment input-method-skk
       "The current ddskk status."
