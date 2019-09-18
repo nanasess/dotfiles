@@ -335,6 +335,8 @@
   (setq tab-width 4)
   (setq indent-tabs-mode nil))
 
+(el-get-bundle prettier-js)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Misc settings
@@ -412,6 +414,7 @@
 ;; (add-hook 'before-save-hook 'tide-format-before-save)
 
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
+(add-hook 'typescript-mode-hook 'prettier-js-mode)
 
 ;; format options
 (setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
@@ -458,7 +461,7 @@
     (setq web-mode-enable-current-element-highlight nil)
     (setq web-mode-enable-current-column-highlight nil)
     (add-to-list 'auto-mode-alist '("\\.\\(twig\\|html\\)\\'" . web-mode))
-    (add-hook 'web-mode-hook 'basic-indent)
+    (add-hook 'web-mode-hook 'prettier-js-mode)
     (add-hook 'web-mode-hook
 	      #'(lambda ()
 		  (when (string-equal "tsx" (file-name-extension buffer-file-name))

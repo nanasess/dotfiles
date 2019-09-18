@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((doom-themes :checksum "470dd52ec4761a0b2c1f2c0309233e1fba04e598")
+      '((prettier-js :checksum "e9b73e81d3e1642aec682195f127a42dfb0b5774")
+        (doom-themes :checksum "470dd52ec4761a0b2c1f2c0309233e1fba04e598")
         (doom-modeline :checksum "5b523bef6598f05da254604729d4fa6406b7d726")
         (shrink-path :checksum "9d06c453d1537df46a4b703a29213cc7f7857aa0")
         (eldoc-eval :checksum "a67fe3637378dcb6c5f9e140acc8131f0d2346b3")
