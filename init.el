@@ -117,7 +117,13 @@
 (setq skk-user-directory (concat external-directory "ddskk")
       skk-init-file (concat user-initial-directory "skk-init.el")
       skk-isearch-start-mode 'latin)
-(el-get-bundle ddskk)
+(el-get-bundle ddskk
+  (with-eval-after-load-feature 'skk
+    ;; see https://uwabami.github.io/cc-env/Emacs.html
+    (defun disable-skk-setup-modeline ()
+      (setq skk-indicator-alist (skk-make-indicator-alist))
+      (force-mode-line-update t))
+    (advice-add 'skk-setup-modeline :override 'disable-skk-setup-modeline)))
 (setq skk-preload nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -182,40 +188,35 @@
 ;;; face settings
 ;;;
 
-;; (set-background-color "ivory")
-;; (set-face-foreground 'font-lock-keyword-face "#7f007f")
-
-(defface hlline-face
-  '((((class color) (background light))
-     (:background "Beige"))) nil :group 'font-lock-highlighting-faces)
-
-(setq hl-line-face 'hlline-face)
 (setq visible-bell t)
+;; use solarized.
+(el-get-bundle doom-themes)
+(load-theme 'doom-solarized-light t)
+(set-face-attribute 'font-lock-comment-face nil :slant 'normal)
+(set-face-attribute 'font-lock-type-face nil :slant 'normal :weight 'bold)
+(set-face-attribute 'font-lock-builtin-face nil :slant 'normal :weight 'bold)
+
+(require 'whitespace)
 (setq whitespace-style
-    '(spaces tabs newline space-mark tab-mark newline-mark))
-
-(defface my-mark-whitespace '((t (:background "gray"))) nil
-  :group 'font-lock-highlighting-faces)
-(defface my-mark-tabs '((t (:background "Gainsboro"))) nil
-  :group 'font-lock-highlighting-faces)
-(defface my-mark-lineendsspaces '((t (:foreground "SteelBlue" :underline t))) nil
-  :group 'font-lock-highlighting-faces)
-(defvar my-mark-whitespace 'my-mark-whitespace)
-(defvar my-mark-tabs 'my-mark-tabs)
-(defvar my-mark-lineendsspaces 'my-mark-lineendsspaces)
-
-(defadvice font-lock-mode (before my-font-lock-mode ())
-  (font-lock-add-keywords
-   major-mode
-   '(("\t" 0 my-mark-tabs append)
-     ("　" 0 my-mark-whitespace append)
-     ("[ \t]+$" 0 my-mark-lineendsspaces append))))
-(ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
-(ad-activate 'font-lock-mode)
-
-(add-hook 'diff-mode-hook
-	  #'(lambda ()
-	      (set-face-bold 'diff-refine-change t)))
+      '(face trailing tabs spaces space-mark tab-mark))
+(setq whitespace-display-mappings nil)
+(setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+(setq whitespace-space-regexp "\\(\u3000+\\)")
+(set-face-attribute 'whitespace-trailing nil
+		    :foreground nil
+		    :background "#FDF6E3"
+		    :underline t)
+(set-face-attribute 'whitespace-tab nil
+		    ;; base4
+		    :foreground "#E1DBCD"
+		    :background "#E1DBCD"
+		    :underline nil)
+(set-face-attribute 'whitespace-space nil
+		    ;; base5
+		    :foreground "#D6D6D6"
+		    :background "#D6D6D6"
+		    :underline nil)
+(global-whitespace-mode t)
 
 ;; see also http://rubikitch.com/2015/05/14/global-hl-line-mode-timer/
 (global-hl-line-mode 0)
@@ -227,52 +228,55 @@
       (run-with-idle-timer 0.1 t 'global-hl-line-timer-function))
 ;; (cancel-timer global-hl-line-timer)
 
-;; use solarized.
-(el-get-bundle solarized-emacs
-  (load-theme 'solarized-light t))
+(el-get-bundle shrink-path
+  :type github
+  :pkgname "zbelial/shrink-path.el"
+  :depends (dash f s))
+(el-get-bundle all-the-icons)
 
-(el-get-bundle! smart-mode-line)
-(setq sml/no-confirm-load-theme t)
-(defvar sml/theme 'respectful)
-(defvar sml/shorten-directory -1)
+(load "openweathermap-api-key" t)
+(when openweathermap-api-key
+  (el-get-bundle! sky-color-clock
+      :type github
+      :pkgname "zk-phi/sky-color-clock"
+      (with-eval-after-load-feature 'sky-color-clock
+	(sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
+	(sky-color-clock-initialize-openweathermap-client openweathermap-api-key 1855207))))
 
-;; https://qiita.com/kai2nenobu/items/ddf94c0e5a36919bc6db
-(set 'eol-mnemonic-dos "(CRLF)")
-(set 'eol-mnemonic-unix "(LF)")
-(set 'eol-mnemonic-mac "(CR)")
-(set 'eol-mnemonic-undecided "(?)")
+(el-get-bundle doom-modeline
+  :type github
+  :depends (all-the-icons dash eldoc-eval shrink-path)
+  :pkgname "seagle0128/doom-modeline"
+  (add-hook 'after-init-hook 'doom-modeline-mode)
+  (with-eval-after-load-feature 'doom-modeline-core
+    (add-hook 'doom-modeline-mode-hook
+	      #'(lambda ()
+		  (setf (alist-get "\\.php$" all-the-icons-icon-alist nil nil #'equal)
+			'(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
+		  (setf (alist-get "\\.csx?$" all-the-icons-icon-alist nil nil #'equal)
+			'(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
+		  (setf (alist-get 'php-mode all-the-icons-mode-icon-alist nil nil #'equal)
+			'(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
+		  (setf (alist-get 'csharp-mode all-the-icons-mode-icon-alist nil nil #'equal)
+			'(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
+		  (doom-modeline-def-modeline 'main
+		    '(bar input-method-skk workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
+		    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker sky-color-clock))))
+    (setq doom-modeline-vcs-max-length 999)
+    (setq doom-modeline-buffer-file-name-style 'buffer-name)
+    (doom-modeline-def-segment sky-color-clock
+      (concat (doom-modeline-spc)
+	      (sky-color-clock)))
 
-(defun my/coding-system-name-mnemonic (coding-system)
-  (let* ((base (coding-system-base coding-system))
-         (name (symbol-name base)))
-    (cond ((string-prefix-p "utf-8" name) "UTF8")
-          ((string-prefix-p "utf-16" name) "UTF16")
-          ((string-prefix-p "utf-7" name) "UTF7")
-          ((string-prefix-p "japanese-shift-jis" name) "SJIS")
-          ;; ((string-match "cp\\([0-9]+\\)" name) (match-string 1 name))
-          ((string-match "japanese-iso-8bit" name) "EUC")
-          (t (format "%s" name)))))
-
-(defun my/coding-system-bom-mnemonic (coding-system)
-  (let ((name (symbol-name coding-system)))
-    (cond ((string-match "be-with-signature" name) "[BE]")
-          ((string-match "le-with-signature" name) "[LE]")
-          ((string-match "-with-signature" name) "[BOM]")
-          (t ""))))
-
-(defun my/buffer-coding-system-mnemonic ()
-  "Return a mnemonic for `buffer-file-coding-system'."
-  (let* ((code buffer-file-coding-system)
-         (name (my/coding-system-name-mnemonic code))
-         (bom (my/coding-system-bom-mnemonic code)))
-    (format "%s%s" name bom)))
-
-(setq sml/mule-info
-      (cl-substitute '(:eval (my/buffer-coding-system-mnemonic))
-		     "%z" mode-line-mule-info :test 'equal))
-
-(setq sml/show-eol nil)
-(sml/setup)
+    (doom-modeline-def-segment input-method-skk
+      "The current ddskk status."
+      (concat
+       (doom-modeline-spc)
+       (propertize
+        (cond
+         ((not (boundp 'skk-modeline-input-mode)) "[--]")
+	 (t (if (string= "" skk-modeline-input-mode) "[--]"
+	      (substring (format "%s" skk-modeline-input-mode) 2 -1)))))))))
 
 (line-number-mode 1)
 (column-number-mode 1)
@@ -287,17 +291,6 @@
     (global-set-key (kbd "M-p") 'symbol-overlay-switch-backward)
     (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
     (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all)))
-
-(load "openweathermap-api-key" t)
-(when openweathermap-api-key
-    (el-get-bundle! sky-color-clock
-      :type github
-      :pkgname "zk-phi/sky-color-clock"
-      (with-eval-after-load-feature 'sky-color-clock
-	(sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
-	(setq-default mode-line-format
-		      (append mode-line-format '((:eval (sky-color-clock)))))
-	(sky-color-clock-initialize-openweathermap-client openweathermap-api-key 1855207))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -320,6 +313,10 @@
 ;;; dired-x settings
 ;;;
 
+(el-get-bundle emacs-async
+  (autoload 'dired-async-mode "dired-async.el" nil t)
+  (dired-async-mode 1))
+
 (add-hook 'dired-mode-hook
 	  #'(lambda ()
 	      (local-set-key (kbd "C-t") 'other-window)
@@ -337,6 +334,8 @@
 (defun basic-indent ()
   (setq tab-width 4)
   (setq indent-tabs-mode nil))
+
+(el-get-bundle prettier-js)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -405,7 +404,6 @@
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
   (company-mode +1)
-  (auto-complete-mode -1)
   (flycheck-add-mode 'typescript-tslint 'web-mode)
   (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append))
 
@@ -416,6 +414,7 @@
 ;; (add-hook 'before-save-hook 'tide-format-before-save)
 
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
+(add-hook 'typescript-mode-hook 'prettier-js-mode)
 
 ;; format options
 (setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
@@ -462,7 +461,7 @@
     (setq web-mode-enable-current-element-highlight nil)
     (setq web-mode-enable-current-column-highlight nil)
     (add-to-list 'auto-mode-alist '("\\.\\(twig\\|html\\)\\'" . web-mode))
-    (add-hook 'web-mode-hook 'basic-indent)
+    (add-hook 'web-mode-hook 'prettier-js-mode)
     (add-hook 'web-mode-hook
 	      #'(lambda ()
 		  (when (string-equal "tsx" (file-name-extension buffer-file-name))
@@ -852,24 +851,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; auto-complete.el settings
+;;; company-mode settings
 ;;;
-
-(el-get-bundle auto-complete
-  :type github
-  :pkgname "auto-complete/auto-complete"
-  :depends (popup fuzzy)
-  (auto-complete-mode -1)
-  (global-auto-complete-mode -1)
-  (with-eval-after-load-feature 'auto-complete
-      (add-to-list 'ac-dictionary-directories
-		   (expand-file-name
-		    (concat user-site-lisp-directory "auto-complete/dict")))
-    (setq ac-delay 0.1)
-    (setq ac-auto-show-menu 0.3)
-    (setq ac-use-menu-map t)
-    (define-key ac-completing-map [tab] 'ac-complete)
-    (define-key ac-completing-map [return] 'ac-complete)))
 
 (el-get-bundle company-mode
   (add-hook 'after-init-hook 'global-company-mode)
@@ -885,9 +868,10 @@
 	      '(:with company-yasnippet))))
 
   (with-eval-after-load-feature 'company
-    (setq company-idle-delay 0.3
+    (setq company-idle-delay 0.1
           company-minimum-prefix-length 2
-	  company-selection-wrap-around t)
+          company-tooltip-align-annotations t
+          company-selection-wrap-around t)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous)
     (define-key company-search-map (kbd "C-n") 'company-select-next)
@@ -898,10 +882,6 @@
 
     ;; TABで候補を設定
     (define-key company-active-map (kbd "C-i") 'company-complete-selection)
-
-    ;; 各種メジャーモードでも C-M-iで company-modeの補完を使う
-    (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
-
     (defun company-backends-with-yas ()
       (interactive)
       (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))))
@@ -909,12 +889,111 @@
   (with-eval-after-load-feature 'company-dabbrev
     (setq company-dabbrev-downcase nil)))
 
-(el-get-bundle pos-tip)
-(el-get-bundle company-quickhelp
-  :depends pos-tip
-  (with-eval-after-load-feature 'company-quickhelp
-    (setq company-quickhelp-use-propertized-text t)))
-;; (company-quickhelp-mode)
+(add-hook 'emacs-lisp-mode-hook
+	  #'(lambda ()
+	      (make-local-variable 'company-backends)
+	      (push '(company-elisp :with company-yasnippet) company-backends)))
+(add-hook 'emacs-lisp-mode-hook #'company-backends-with-yas)
+
+(el-get-bundle company-box
+  :type github
+  :pkgname "sebastiencs/company-box"
+  (add-hook 'company-mode-hook 'company-box-mode)
+  (with-eval-after-load-feature 'company-box
+    (defun company-box--update-width (&optional no-update height)
+      (unless no-update
+	(redisplay))
+      (-let* ((frame (company-box--get-frame))
+	      (window (frame-parameter nil 'company-box-window))
+	      (start (window-start window))
+	      (char-width (frame-char-width frame))
+	      (end (or (and height (with-current-buffer (window-buffer window)
+				     (save-excursion
+				       (goto-char start)
+				       (forward-line height)
+				       (point))))
+		       (window-end window)))
+	      ;; (max-width (- (frame-pixel-width) company-box--x char-width))
+	      (max-width (- (x-display-pixel-width)
+			    (max (eval (frame-parameter nil 'left)) 0)
+			    company-box--x char-width))
+	      (width (+ (company-box--calc-len (window-buffer window) start end char-width)
+			(if (company-box--scrollbar-p frame) (* 2 char-width) 0)
+			char-width))
+	      (width (max (min width max-width)
+			  (* company-tooltip-minimum-width char-width)))
+	      (diff (abs (- (frame-pixel-width frame) width))))
+    (or (and no-update width)
+        (and (> diff 2) (set-frame-width frame width nil t)))))
+
+    (setq company-box-enable-icon t)
+    (setq company-box-show-single-candidate t)
+    ;; (setq company-box-max-candidates 50)
+    (setq company-box-doc-delay 0.5)
+    (setq company-box-icons-alist 'company-box-icons-all-the-icons)
+    ;; see https://github.com/zenith-john/zenith-emacs/blob/8d85e5e5d9e477873762452063683609ae2dc91e/config/init-company.el
+    (defconst company-box-icons--phpactor-alist
+      '(("interface" . Interface)
+	("class" . Class)
+	("method" . Method)
+	("function" . Function)
+	("property" . Property)
+	("constant" . Constant)
+	("variable" . Variable)
+	("interface" . Interface)
+	("module" . Module)
+	("template" . Template)))
+    (defun company-box-icons--phpactor (candidate)
+      ;; (message "omnisharp-item: %s" (get-text-property 0 'omnisharp-item candidate))
+      (when (derived-mode-p 'php-mode)
+	(let ((key (get-text-property 0 'type candidate)))
+	  (cdr (assoc key company-box-icons--phpactor-alist)))))
+    (defun company-box-icons--yasnippet+ (candidate)
+      (message "%s" (get-text-property 0 'yas-annotation candidate))
+      (when (get-text-property 0 'yas-annotation candidate)
+	'Yasnippet))
+
+    (setq company-box-icons-functions
+	  '(company-box-icons--yasnippet+ company-box-icons--lsp company-box-icons--elisp company-box-icons--phpactor))
+
+    (setq company-box-icons-all-the-icons
+	  `((Unknown       . ,(all-the-icons-material "find_in_page"             :height 0.8 :face 'all-the-icons-blue-alt))
+	    (Text          . ,(all-the-icons-material "text_fields"              :height 0.8 :face 'all-the-icons-green))
+	    (Method        . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+	    (Function      . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+	    (Constructor   . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+	    (Field         . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+	    (Variable      . ,(all-the-icons-material "adjust"                   :height 0.8 :face 'all-the-icons-blue))
+	    (Class         . ,(all-the-icons-material "class"                    :height 0.8 :face 'all-the-icons-purple))
+	    (Interface     . ,(all-the-icons-material "settings_input_component" :height 0.8 :face 'all-the-icons-purple))
+	    (Module        . ,(all-the-icons-material "view_module"              :height 0.8 :face 'all-the-icons-purple))
+	    (Property      . ,(all-the-icons-material "settings_applications"    :height 0.8 :face 'all-the-icons-purple))
+	    (Unit          . ,(all-the-icons-material "straighten"               :height 0.8 :face 'all-the-icons-purple))
+	    (Value         . ,(all-the-icons-material "filter_1"                 :height 0.8 :face 'all-the-icons-purple))
+	    (Enum          . ,(all-the-icons-material "plus_one"                 :height 0.8 :face 'all-the-icons-purple))
+	    (Keyword       . ,(all-the-icons-material "filter_center_focus"      :height 0.8 :face 'all-the-icons-purple))
+	    (Snippet       . ,(all-the-icons-material "short_text"               :height 0.8 :face 'all-the-icons-purple))
+	    (Color         . ,(all-the-icons-material "color_lens"               :height 0.8 :face 'all-the-icons-purple))
+	    (File          . ,(all-the-icons-material "insert_drive_file"        :height 0.8 :face 'all-the-icons-purple))
+	    (Reference     . ,(all-the-icons-material "collections_bookmark"     :height 0.8 :face 'all-the-icons-purple))
+	    (Folder        . ,(all-the-icons-material "folder"                   :height 0.8 :face 'all-the-icons-purple))
+	    (EnumMember    . ,(all-the-icons-material "people"                   :height 0.8 :face 'all-the-icons-purple))
+	    (Constant      . ,(all-the-icons-material "pause_circle_filled"      :height 0.8 :face 'all-the-icons-purple))
+	    (Struct        . ,(all-the-icons-material "streetview"               :height 0.8 :face 'all-the-icons-purple))
+	    (Event         . ,(all-the-icons-material "event"                    :height 0.8 :face 'all-the-icons-purple))
+	    (Operator      . ,(all-the-icons-material "control_point"            :height 0.8 :face 'all-the-icons-purple))
+	    (TypeParameter . ,(all-the-icons-material "class"                    :height 0.8 :face 'all-the-icons-purple))
+	    ;; (Template   . ,(company-box-icons-image "Template.png"))))
+	    (Yasnippet     . ,(all-the-icons-material "share"               :height 0.8 :face 'all-the-icons-green))
+	    (ElispFunction . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+	    (ElispVariable . ,(all-the-icons-material "check_circle"             :height 0.8 :face 'all-the-icons-blue))
+	    (ElispFeature  . ,(all-the-icons-material "stars"                    :height 0.8 :face 'all-the-icons-orange))
+	    (ElispFace     . ,(all-the-icons-material "format_paint"             :height 0.8 :face 'all-the-icons-pink))))
+    (setq company-box-backends-colors
+	  '((company-yasnippet . (:selected (:background "#DEB542" :weight bold)))
+	    (company-dabbrev . (:selected (:background "PaleTurquoise" :weight bold)))))
+    (defface company-box-scrollbar
+      '((t (:background "#073642" :weight bold))) nil :group 'company-box)))
 
 (el-get-bundle git-complete
   :type github
@@ -1026,6 +1105,15 @@
     (setq company-lsp-async t)
     (setq company-lsp-enable-recompletion nil)))
 
+(el-get-bundle eldoc-box
+  :type github
+  :pkgname "casouri/eldoc-box"
+  (defface eldoc-box-border '((t (:background "#E1DBCD"))) nil ; base4
+    :group 'font-lock-highlighting-faces)
+  (defface eldoc-box-body '((t . (:background "#FFFBEA"))) nil ; bg-alt
+    :group 'font-lock-highlighting-faces))
+(setq eldoc-box-clear-with-C-g t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; PHP settings
@@ -1039,14 +1127,14 @@
 	   ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
   :autoloads "php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
+    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
+    (add-hook 'php-mode-hook 'php-c-style)
+    (define-key php-mode-map (kbd "M-.") 'phpactor-goto-definition))
+    ;; (add-hook 'php-mode-hook #'lsp))
+  (with-eval-after-load-feature 'php
     (setq php-manual-url "http://jp2.php.net/manual/ja/"
 	  php-mode-coding-style 'Symfony2
-	  php-search-url "http://jp2.php.net/")
-    (define-key php-mode-map (kbd "M-.") 'phpactor-goto-definition)
-
-    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-    ;; (add-hook 'php-mode-hook #'lsp)
-    (add-hook 'php-mode-hook 'php-c-style)))
+	  php-search-url "http://jp2.php.net/")))
 
 (el-get-bundle php-runtime
   :type github
@@ -1061,13 +1149,16 @@
   :pkgname "emacs-php/composer.el"
   :depends request)
 
+(setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
+(setq phpactor--debug nil)
+(setq company-phpactor-request-async t)
 (el-get-bundle phpactor
   :type github
   :pkgname "emacs-php/phpactor.el"
+  :branch "develop"
   :depends (f composer company-mode)
   :autoloads "company-phpactor"
-  (with-eval-after-load-feature 'phpactor
-    (setq phpactor--debug nil)))
+  (with-eval-after-load-feature 'phpactor))
 ;; (setq lsp-clients-phpactor-server-command "phpactor server:start --stdio")
 ;; (lsp-register-client
 ;;  (make-lsp-client :new-connection (lsp-stdio-connection
@@ -1082,7 +1173,6 @@
 
 (defun php-c-style ()
   (interactive)
-  (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
   (require 'php-skeleton)
   (require 'php-skeleton-exceptions)
   (require 'flycheck-phpstan)
@@ -1090,7 +1180,8 @@
   (push '(company-phpactor :with company-yasnippet) company-backends)
   (make-local-variable 'eldoc-documentation-function)
   (setq eldoc-documentation-function 'phpactor-hover)
-  (eldoc-mode t)
+  (eldoc-box-hover-mode 1)
+  ;; (eldoc-box-hover-at-point-mode 1)
   (c-toggle-auto-newline 1)
   (c-toggle-auto-hungry-state 1)
   (electric-indent-local-mode t)
@@ -1098,6 +1189,10 @@
   ;; (setq-local electric-layout-rules '((?{ . around)))
   (electric-pair-local-mode t)
   (flycheck-mode t)
+  ;; If you feel phumped and phpcs annoying, invalidate them.
+  (when (boundp 'flycheck-disabled-checkers)
+    (add-to-list 'flycheck-disabled-checkers 'php-phpmd)
+    (add-to-list 'flycheck-disabled-checkers 'php-phpcs))
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
@@ -1153,8 +1248,10 @@
 
 ;; XXX omnisharp-utils.el で (require 'shut-up) しないと動かないかも
 (el-get-bundle shut-up in cask/shut-up)
-(el-get-bundle omnisharp-mode
-  :depends (csharp-mode shut-up dash s f))
+(el-get-bundle omnisharp-emacs
+  :type github
+  :pkgname "OmniSharp/omnisharp-emacs"
+  :depends (csharp-mode popup shut-up dash s f))
 ;; (el-get-bundle company)
 ;; (el-get-bundle ac-company)
 ;; (eval-after-load 'company
@@ -1221,7 +1318,11 @@
     (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-fix-usings)
     ;; (define-key omnisharp-mode-map (kbd "<RET>") 'csharp-newline-and-indent)
 
-    (add-to-list 'company-backends 'company-omnisharp)
+    ;; (make-local-variable 'company-backends)
+    ;; (push '(company-omnisharp :with company-yasnippet) company-backends)
+    (add-to-list 'company-backends '(company-omnisharp :with company-yasnippet))
+    (eldoc-box-hover-mode 1)
+    ;; (eldoc-box-hover-at-point-mode 1)
     ;; (define-key omnisharp-mode-map "\C-c\C-t\C-s" (lambda() (interactive) (omnisharp-unit-test "single")))
     ;; (define-key omnisharp-mode-map "\C-c\C-t\C-r" (lambda() (interactive) (omnisharp-unit-test "fixture")))
     ;; (define-key omnisharp-mode-map "\C-c\C-t\C-e" (lambda() (interactive) (omnisharp-unit-test "all")))
@@ -1558,11 +1659,11 @@
 ;;; e.g.) dbi:Pg:dbname=dbname;host=hostname;password=password
 ;;;
 
-(el-get-bundle edbi
-  (with-eval-after-load-feature 'edbi
-    (setq edbi:query-result-fix-header nil
-	  edbi:ds-history-list-num 50
-	  edbi:query-result-column-max-width nil)))
+;; (el-get-bundle edbi
+;;   (with-eval-after-load-feature 'edbi
+;;     (setq edbi:query-result-fix-header nil
+;; 	  edbi:ds-history-list-num 50
+;; 	  edbi:query-result-column-max-width nil)))
 
 ;;; sqlite-dump
 ;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
@@ -1726,7 +1827,7 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 			    'po-find-file-coding-system)
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
-;; (setq gc-cons-threshold 800000)
+(setq gc-cons-threshold 800000)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
