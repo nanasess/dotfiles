@@ -1,0 +1,12 @@
+#!/bin/sh
+$HOME/.phpbrew/php/php-7.3.10/bin/php \
+    -d apc.enable_cli=1 \
+    -d opcache.enable_cli=1 \
+    -d opcache.memory_consumption=256 \
+    -d opcache.interned_strings_buffer=8 \
+    -d opcache.revalidate_freq=60 \
+    -d opcache.fast_shutdown=1 \
+    -d opcache.max_accelerated_files=20000 \
+    -d realpath_cache_size=4096K \
+    -d realpath_cache_ttl=600 \
+    "$@"
