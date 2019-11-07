@@ -1397,6 +1397,8 @@
 ;;; mew settings
 ;;;
 
+(setq mew-rc-file "~/.mew.d/.mew.el")
+(setq mew-thread-indent-strings [" +" " +" " |" "  "])
 (el-get-bundle mew)
 ;; mm-version
 (require 'mm-version)
