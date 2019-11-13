@@ -335,6 +335,9 @@
   (setq tab-width 4)
   (setq indent-tabs-mode nil))
 
+(el-get-bundle editorconfig
+  (add-hook 'after-init-hook 'editorconfig-mode))
+
 (el-get-bundle prettier-js)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -431,17 +434,17 @@
 ;;; nXML-mode settings
 ;;;
 
-(add-to-list 'auto-mode-alist
-	     '("\\.\\(xml\\|xsl\\|rng\\)\\'" . nxml-mode))
+;; (add-to-list 'auto-mode-alist
+;; 	     '("\\.\\(xml\\|xsl\\|rng\\)\\'" . nxml-mode))
 
-(with-eval-after-load-feature 'nxml-mode
-  (add-hook 'nxml-mode-hook
-	    #'(lambda ()
-		(rng-validate-mode 0)
-		(set (make-local-variable 'nxml-slash-auto-complete-flag) t)
-		(set (make-local-variable 'nxml-child-indent) 2)
-		(set (make-local-variable 'indent-tabs-mode) nil)
-		(set (make-local-variable 'tab-width) 2))))
+;; (with-eval-after-load-feature 'nxml-mode
+;;   (add-hook 'nxml-mode-hook
+;; 	    #'(lambda ()
+;; 		(rng-validate-mode 0)
+;; 		(set (make-local-variable 'nxml-slash-auto-complete-flag) t)
+;; 		(set (make-local-variable 'nxml-child-indent) 2)
+;; 		(set (make-local-variable 'indent-tabs-mode) nil)
+;; 		(set (make-local-variable 'tab-width) 2))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -479,11 +482,12 @@
 
 (el-get-bundle yaml-mode
   (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-  (with-eval-after-load-feature 'yaml-mode
-    (add-hook 'yaml-mode-hook
-	      #'(lambda ()
-		  (define-key yaml-mode-map "\C-m" 'newline-and-indent)
-		  (setq yaml-indent-offset 2)))))
+  ;; (with-eval-after-load-feature 'yaml-mode
+  ;;   (add-hook 'yaml-mode-hook
+  ;; 	      #'(lambda ()
+  ;; 		  (define-key yaml-mode-map "\C-m" 'newline-and-indent)
+  ;; 		  (setq yaml-indent-offset 2))))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
