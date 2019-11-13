@@ -23,3 +23,6 @@ server
 /secret.d/*
 !/secret.d/.gitkeep
 /haskell-ide-engine
+/migemo-pattern
+/recentf
+/transient
