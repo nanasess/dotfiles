@@ -335,6 +335,9 @@
   (setq tab-width 4)
   (setq indent-tabs-mode nil))
 
+(el-get-bundle editorconfig
+  (add-hook 'after-init-hook 'editorconfig-mode))
+
 (el-get-bundle prettier-js)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -381,14 +384,8 @@
   (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
   (add-hook 'js-mode-hook 'js2-minor-mode)
   (with-eval-after-load-feature 'js2-mode
-    (setq js2-basic-offset 4
-	  js2-bounce-indent-p t)
     (electric-indent-local-mode 0)
-    (define-key js2-mode-map (kbd "RET") 'js2-line-break)
-    (add-hook 'js2-mode-hook 'disabled-indent-tabs-mode)))
-
-(defun disabled-indent-tabs-mode ()
-  (set-variable 'indent-tabs-mode nil))
+    (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -426,22 +423,6 @@
 ;; (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; nXML-mode settings
-;;;
-
-(add-to-list 'auto-mode-alist
-	     '("\\.\\(xml\\|xsl\\|rng\\)\\'" . nxml-mode))
-
-(with-eval-after-load-feature 'nxml-mode
-  (add-hook 'nxml-mode-hook
-	    #'(lambda ()
-		(rng-validate-mode 0)
-		(set (make-local-variable 'nxml-slash-auto-complete-flag) t)
-		(set (make-local-variable 'nxml-child-indent) 2)
-		(set (make-local-variable 'indent-tabs-mode) nil)
-		(set (make-local-variable 'tab-width) 2))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -453,14 +434,17 @@
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(tpl\\)\\'" . web-mode))
   (with-eval-after-load-feature 'web-mode
-    (setq web-mode-block-padding 4)
+    ;; (setq web-mode-block-padding 4)
     (setq web-mode-enable-block-face t)
-    (setq web-mode-script-padding 4)
-    (setq web-mode-style-padding 4)
+    ;; (setq web-mode-script-padding 4)
+    ;; (setq web-mode-style-padding 4)
     ;; (setq web-mode-enable-auto-indentation nil)
     (setq web-mode-enable-current-element-highlight nil)
     (setq web-mode-enable-current-column-highlight nil)
     (add-to-list 'auto-mode-alist '("\\.\\(twig\\|html\\)\\'" . web-mode))
+    (add-hook 'web-mode-hook
+	      #'(lambda ()
+		  (setq web-mode-enable-auto-indentation nil)))
     (add-hook 'web-mode-hook 'prettier-js-mode)
     (add-hook 'web-mode-hook
 	      #'(lambda ()
@@ -470,7 +454,9 @@
     (add-hook 'web-mode-hook
 	      #'(lambda ()
 		  (when (string-equal "jsx" (file-name-extension buffer-file-name))
-		    (setup-tide-mode))))))
+		    (setup-tide-mode))))
+    (add-hook 'editorconfig-custom-hooks
+	      (lambda (hash) (setq web-mode-block-padding 0)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -478,12 +464,7 @@
 ;;;
 
 (el-get-bundle yaml-mode
-  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-  (with-eval-after-load-feature 'yaml-mode
-    (add-hook 'yaml-mode-hook
-	      #'(lambda ()
-		  (define-key yaml-mode-map "\C-m" 'newline-and-indent)
-		  (setq yaml-indent-offset 2)))))
+  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1228,7 +1209,6 @@
   (dap-mode 1)
   (dap-ui-mode 1))
 
-(add-hook 'java-mode-hook 'basic-indent)
 (add-hook 'java-mode-hook 'java-c-style)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1277,12 +1257,9 @@
     (flycheck-mode 1)
     ;; (auto-complete-mode 1)
     (electric-pair-local-mode 1) ;; for Emacs25
-    (setq indent-tabs-mode nil)
     (setq c-syntactic-indentation t)
     (c-set-style "ellemtel")
-    (setq c-basic-offset 4)
     (setq truncate-lines t)
-    (setq tab-width 4)
     (setq flycheck-idle-change-delay 2)
     (omnisharp-mode 1))
   (add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
@@ -1372,8 +1349,7 @@
 
 (with-eval-after-load-feature 'css-mode
   (add-hook 'css-mode-hook #'company-backends-with-yas)
-  (add-hook 'css-mode-hook #'lsp)
-  (add-hook 'css-mode-hook 'basic-indent))
+  (add-hook 'css-mode-hook #'lsp))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
