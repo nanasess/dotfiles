@@ -442,6 +442,9 @@
     (setq web-mode-enable-current-element-highlight nil)
     (setq web-mode-enable-current-column-highlight nil)
     (add-to-list 'auto-mode-alist '("\\.\\(twig\\|html\\)\\'" . web-mode))
+    (add-hook 'web-mode-hook
+	      #'(lambda ()
+		  (setq web-mode-enable-auto-indentation nil)))
     (add-hook 'web-mode-hook 'prettier-js-mode)
     (add-hook 'web-mode-hook
 	      #'(lambda ()
