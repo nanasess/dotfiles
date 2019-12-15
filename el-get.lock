@@ -1,5 +1,7 @@
 (setq el-get-lock-package-versions
-      '((editorconfig :checksum "59c734af576b6ea505718a2294eae9f3facac477")
+      '((dumb-jump :checksum "738d40ceb7e2d6a3a26f7f27a31ba93924baaa2d")
+        (smart-jump :checksum "07800ddd508cf620e6360e4a1f5bb25f8eab3ab1")
+        (editorconfig :checksum "59c734af576b6ea505718a2294eae9f3facac477")
         (el-get :checksum "29b43a17559bbf38d7a1db1edd5b524cacc4401f")
         (prettier-js :checksum "e9b73e81d3e1642aec682195f127a42dfb0b5774")
         (doom-themes :checksum "190e1ecce2bdba0306b1b46b828fba5435f3978a")
@@ -47,7 +49,7 @@
         (lsp-java :checksum "52f61a539b9627122b39d9aff3885a1d94247d9a")
         (phpunit :checksum "fe6bc91c3bd8b329c6d26ad883a025f06b5121ee")
         (phpstan :checksum "525792fc4a9ecb5dc577a7c416e298e0c45c6183")
-        (phpactor :checksum "f7c12337bc0f426b565564951bf7a42364e0f531")
+        (phpactor :checksum "b69f2d9b2490c26c782d327344a54c19b5142cb3")
         (composer :checksum "6c1578b2352c81cc9a22616a70db2a14b7d2b67f")
         (php-runtime :checksum "017e0e70f07d6b25e37d5c5f4d271a914b677631")
         (php-mode :checksum "282259368e036ace3b9da532e56a049992380007")

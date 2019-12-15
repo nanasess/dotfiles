@@ -684,6 +684,18 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; smart-jump settings
+;;;
+(el-get-bundle dumb-jump
+  :type github
+  :pkgname "jacktasia/dumb-jump")
+(el-get-bundle smart-jump
+  :type github
+  :depends dumb-jump
+  :pkgname "jojojames/smart-jump")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; magit settings
 ;;;
 
@@ -1107,8 +1119,7 @@
   :autoloads "php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-    (add-hook 'php-mode-hook 'php-c-style)
-    (define-key php-mode-map (kbd "M-.") 'phpactor-goto-definition))
+    (add-hook 'php-mode-hook 'php-c-style))
     ;; (add-hook 'php-mode-hook #'lsp))
   (with-eval-after-load-feature 'php
     (setq php-manual-url "http://jp2.php.net/manual/ja/"
@@ -1134,8 +1145,8 @@
 (el-get-bundle phpactor
   :type github
   :pkgname "emacs-php/phpactor.el"
-  :branch "develop"
-  :depends (f composer company-mode)
+  :branch "master"
+  :depends (f composer company-mode smart-jump)
   :autoloads "company-phpactor"
   (with-eval-after-load-feature 'phpactor))
 ;; (setq lsp-clients-phpactor-server-command "phpactor server:start --stdio")
@@ -1168,6 +1179,7 @@
   ;; (setq-local electric-layout-rules '((?{ . around)))
   (electric-pair-local-mode t)
   (flycheck-mode t)
+  (phpactor-smart-jump-register)
   ;; If you feel phumped and phpcs annoying, invalidate them.
   (when (boundp 'flycheck-disabled-checkers)
     (add-to-list 'flycheck-disabled-checkers 'php-phpmd)
