@@ -1814,7 +1814,7 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
 			    'po-find-file-coding-system)
 
-(define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
+(define-key minibuffer-local-map (kbd "C-z C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
