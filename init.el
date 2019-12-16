@@ -1,4 +1,4 @@
-;;; init.el --- Emacs initialization file.
+; init.el --- Emacs initialization file.
 
 ;; Author: Kentaro Ohkouchi  <nanasess@fsm.ne.jp>
 ;; URL: git://github.com/nanasess/dot.emacs.git
@@ -115,8 +115,7 @@
 ;;;
 
 (setq skk-user-directory (concat external-directory "ddskk")
-      skk-init-file (concat user-initial-directory "skk-init.el")
-      skk-isearch-start-mode 'latin)
+      skk-init-file (concat user-initial-directory "skk-init.el"))
 (el-get-bundle ddskk
   (with-eval-after-load-feature 'skk
     ;; see https://uwabami.github.io/cc-env/Emacs.html
@@ -1814,7 +1813,17 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
 			    'po-find-file-coding-system)
 
-(define-key minibuffer-local-map (kbd "C-z C-j") 'skk-kakutei)
+(define-key minibuffer-local-map (kbd "C-c C-j") 'skk-kakutei)
+(define-key minibuffer-local-map (kbd "C-z j") 'skk-isearch-skk-kakutei)
+(defun switch-to-minibuffer ()
+  "Switch to minibuffer window."
+  (interactive)
+  (if (active-minibuffer-window)
+      (select-window (active-minibuffer-window))
+    (error "Minibuffer is not active")))
+
+(global-set-key "\C-co" 'switch-to-minibuffer) ;; Bind to `C-c o'
+
 (setq gc-cons-threshold 800000)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
