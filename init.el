@@ -371,13 +371,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; JavaScript-mode settings
-;;;
-
-;; (add-hook 'javascript-mode-hook 'basic-indent)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; js2-mode settings
 ;;;
 
@@ -417,12 +410,6 @@
 ;; format options
 (setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
 (add-hook 'js2-mode-hook #'setup-tide-mode)
-
-;; (el-get 'sync 'jade-mode)
-;; (require 'sws-mode)
-;; (require 'jade-mode)
-;; (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
-;; (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -578,18 +565,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; point-undo settings
-;;;
-;;; (auto-install-from-emacswiki "point-undo.el")
-;;;
-
-;; (el-get 'sync 'point-undo)
-;; (require 'point-undo)
-;; (define-key global-map (kbd "C-M-,") 'point-undo)
-;; (define-key global-map (kbd "C-M-.") 'point-redo)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; visual-regexp settings
 ;;;
 
@@ -628,13 +603,6 @@
 	      ;; yasnippet (using the new org-cycle hooks)
 	      (setq ac-use-overriding-local-map t)))
 
-;;; org-html5presentation
-;; (el-get 'sync 'org-html5presentation)
-
-;;; org-tree-slide
-;; http://pastelwill.jp/wiki/doku.php?id=emacs:org-tree-slide
-;; (el-get 'sync 'org-tree-slide)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; session settings
@@ -668,20 +636,6 @@
 
 ;; see https://github.com/magnars/expand-region.el/issues/220
 (setq shift-select-mode nil)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; vc-svn settings
-;;;
-
-(add-to-list 'process-coding-system-alist '("svn" . utf-8))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; psvn settings
-;;;
-
-(el-get-bundle dsvn)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -818,30 +772,6 @@
 	      (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
 
 (global-set-key (kbd "C-z c") 'howm-create)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; quickrun.el settings
-;;;
-(defun quickrun/phpunit-outputter ()
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward "" nil t)
-      (replace-match "" nil nil)))
-  (highlight-phrase "OK.*$" 'phpunit-pass)
-  (highlight-phrase "ERRORS.*$" 'phpunit-fail))
-(el-get-bundle quickrun
-  (with-eval-after-load-feature 'quickrun
-    (add-to-list 'quickrun-file-alist '("Test\\.php\\'" . "phpunit"))
-    (quickrun-add-command "phpunit" '((:command . "phpunit")
-				      (:exec . ("%c -c ~/git-repos/ec-cube/phpunit.xml.dist %s"))
-				      (:outputter . quickrun/phpunit-outputter)))
-    (defface phpunit-pass
-      '((t (:foreground "white" :background "ForestGreen" :weight bold))) nil
-      :group 'font-lock-highlighting-faces)
-    (defface phpunit-fail
-      '((t (:foreground "white" :background "red" :weight bold))) nil
-      :group 'font-lock-highlighting-faces)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1347,13 +1277,6 @@
 ;;; npm i -g dockerfile-language-server-nodejs
 ;;;
 (el-get-bundle dockerfile-mode)
-;; (el-get-bundle lsp-dockerfile
-;;   :type github
-;;   :pkgname "emacs-lsp/lsp-dockerfile"
-;;   :features lsp-dockerfile
-;;   (with-eval-after-load-feature 'dockerfile-mode
-;;     (add-hook 'dockerfile-mode-hook #'company-backends-with-yas)
-;;     (add-hook 'dockerfile-mode-hook #'lsp)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1372,14 +1295,6 @@
 (with-eval-after-load-feature 'sh-script
   (add-hook 'sh-mode-hook #'company-backends-with-yas)
   (add-hook 'sh-mode-hook #'lsp))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; yafolding settings
-;;;
-
-;; (el-get-bundle yafolding)
-;; (add-hook 'prog-mode-hook 'yafolding-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1411,17 +1326,6 @@
 
 (unless (load "twittering-tinyurl-api-key" t t)
   (defvar twittering-bitly-api-key nil))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; pdf-preview settings
-;;;
-
-;; (autoload 'pdf-preview-buffer "pdf-preview" nil t)
-;; (autoload 'pdf-preview-buffer-with-faces "pdf-preview" nil t)
-;; (defvar ps-print-header nil)
-;; (defvar pdf-preview-preview-command "open")
-;; (defvar mew-print-function 'pdf-preview-buffer-with-faces)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1639,20 +1543,6 @@
   (setq inertias-rest-coef 0.1)
   (global-set-key (kbd "C-v") 'inertias-up)
   (global-set-key (kbd "M-v") 'inertias-down))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Emacs DBI settings
-;;;
-;;; cpan RPC::EPC::Service DBI DBD::SQLite DBD::Pg DBD::mysql
-;;; e.g.) dbi:Pg:dbname=dbname;host=hostname;password=password
-;;;
-
-;; (el-get-bundle edbi
-;;   (with-eval-after-load-feature 'edbi
-;;     (setq edbi:query-result-fix-header nil
-;; 	  edbi:ds-history-list-num 50
-;; 	  edbi:query-result-column-max-width nil)))
 
 ;;; sqlite-dump
 ;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
