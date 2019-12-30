@@ -616,15 +616,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; cua-mode settings
-;;;
-
-(if (not (version< "24.3.99" emacs-version))
-    (cua-mode t)
-  (setq cua-enable-cua-keys nil))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; expand-region settings
 ;;;
 
@@ -971,8 +962,8 @@
   :depends (spinner f ht)
   (with-eval-after-load-feature 'lsp-mode
     ;; https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp
-    (setq lsp-print-io nil)
-    (setq lsp-print-performance nil)
+    ;; (setq lsp-print-io nil)
+    ;; (setq lsp-print-performance nil)
     ;; general
     (setq lsp-auto-guess-root t)
     (setq lsp-document-sync-method 'incremental) ;; always send incremental document
@@ -1479,10 +1470,6 @@
        (4 (if (< 1000000 (buffer-size)) 'helm-occur 'helm-swoop)) ; C-u C-s
        (16 'helm-swoop-nomigemo)))))				  ; C-u C-u C-s
 (global-set-key (kbd "C-s") 'isearch-forward-or-helm-swoop-or-helm-occur)
-
-;; (el-get-bundle helm-lsp
-;;   :type github
-;;   :pkgname "emacs-lsp/helm-lsp")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
