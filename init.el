@@ -27,7 +27,7 @@
 (defvar user-site-lisp-directory (locate-user-emacs-file "site-lisp/"))
 (defvar user-misc-directory (locate-user-emacs-file "etc/"))
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
-(defvar external-directory (expand-file-name "~/OneDrive - nanasess.net/emacs/"))
+(defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
 
 (setq load-prefer-newer t)
