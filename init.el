@@ -29,6 +29,7 @@
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
+(defvar company-backends nil)
 
 (setq load-prefer-newer t)
 
@@ -1059,7 +1060,7 @@
 (el-get-bundle composer
   :type github
   :pkgname "emacs-php/composer.el"
-  :depends request)
+  :depends (request))
 
 (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
 (setq phpactor--debug nil)
