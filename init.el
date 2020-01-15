@@ -29,6 +29,7 @@
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
+(defvar company-backends nil)
 
 (setq load-prefer-newer t)
 
@@ -956,6 +957,9 @@
 (el-get-bundle spinner)
 (el-get-bundle f)
 (el-get-bundle ht)
+;; (el-get-bundle treemacs
+;;   :type github
+;;   :pkgname "Alexander-Miller/treemacs")
 (el-get-bundle lsp-mode
   :type github
   :pkgname "emacs-lsp/lsp-mode"
@@ -971,7 +975,10 @@
     (setq lsp-prefer-flymake 'flymake)
     (setq lsp-enable-completion-at-point nil)
     (require 'lsp-clients)))
-
+;; (el-get-bundle lsp-treemacs
+;;   :type github
+;;   :pkgname "emacs-lsp/lsp-treemacs"
+;;   :depends (treemacs))
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
@@ -1059,7 +1066,7 @@
 (el-get-bundle composer
   :type github
   :pkgname "emacs-php/composer.el"
-  :depends request)
+  :depends (request))
 
 (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
 (setq phpactor--debug nil)
@@ -1123,25 +1130,22 @@
 ;;;
 ;;; Java settings
 ;;;
-(defun java-c-style ()
-  (require 'lsp-java)
-  (define-key java-mode-map [return] 'newline-and-indent))
-(el-get-bundle lsp-java
-  :type github
-  :pkgname "emacs-lsp/lsp-java"
-  (with-eval-after-load-feature 'lsp-java
-    (add-hook 'java-mode-hook #'company-backends-with-yas)
-    (add-hook 'java-mode-hook #'lsp)))
+;; (el-get-bundle lsp-java
+;;   :type github
+;;   :pkgname "emacs-lsp/lsp-java"
+;;   (with-eval-after-load-feature 'lsp-java
+;;     (add-hook 'java-mode-hook #'company-backends-with-yas)
+;;     (add-hook 'java-mode-hook #'lsp)))
 (el-get-bundle emacswiki:tree-mode)
 (el-get-bundle bui
   :type github
   :pkgname "alezost/bui.el")
-(el-get-bundle dap-mode
-  :type github
-  :pkgname "yyoncho/dap-mode"
-  :depends (tree-mode bui)
-  (dap-mode 1)
-  (dap-ui-mode 1))
+;; (el-get-bundle dap-mode
+;;   :type github
+;;   :pkgname "yyoncho/dap-mode"
+;;   :depends (tree-mode bui treemacs)
+;;   (dap-mode 1)
+;;   (dap-ui-mode 1))
 
 (add-hook 'java-mode-hook 'java-c-style)
 
