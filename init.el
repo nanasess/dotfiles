@@ -96,8 +96,7 @@
 		   (expand-file-name "~/bin")
 		   (expand-file-name "~/.emacs.d/bin")
 		   (expand-file-name "~/.local/bin")
-		   (expand-file-name "~/.composer/vendor/bin")
-		   (expand-file-name "~/Applications/UpTeX.app/teTeX/bin")))
+		   (expand-file-name "~/.composer/vendor/bin")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
