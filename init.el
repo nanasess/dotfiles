@@ -417,8 +417,11 @@
 ;;;
 ;;; web-mode settings
 ;;;
-
+(el-get-bundle company-web)
 (el-get-bundle web-mode
+  :type github
+  :pkgname "nanasess/web-mode"
+  :branch "eccube-engine"
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(tpl\\)\\'" . web-mode))
@@ -444,6 +447,14 @@
 	      #'(lambda ()
 		  (when (string-equal "jsx" (file-name-extension buffer-file-name))
 		    (setup-tide-mode))))
+    (add-hook 'web-mode-hook
+    	      #'(lambda ()
+    		  (when (string-equal "tpl" (file-name-extension buffer-file-name))
+    		    (web-mode-set-engine "eccube"))))
+    (add-hook 'web-mode-hook
+    	      #'(lambda ()
+		  (make-local-variable 'company-backends)
+		  (push '(company-web-html :with company-yasnippet) company-backends)))
     (add-hook 'editorconfig-custom-hooks
 	      (lambda (hash) (setq web-mode-block-padding 0)))))
 
