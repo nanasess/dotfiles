@@ -566,17 +566,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; goto-chg settings
-;;;
-;;; (auto-install-from-emacswiki "goto-chg.el")
-;;;
-
-(el-get-bundle goto-chg)
-(global-set-key (kbd "C-.") 'goto-last-change)
-(global-set-key (kbd "C-,") 'goto-last-change-reverse)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; visual-regexp settings
 ;;;
 
