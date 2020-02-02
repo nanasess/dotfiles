@@ -416,8 +416,11 @@
 ;;;
 ;;; web-mode settings
 ;;;
-
+(el-get-bundle company-web)
 (el-get-bundle web-mode
+  :type github
+  :pkgname "nanasess/web-mode"
+  :branch "eccube-engine"
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(tpl\\)\\'" . web-mode))
@@ -443,6 +446,14 @@
 	      #'(lambda ()
 		  (when (string-equal "jsx" (file-name-extension buffer-file-name))
 		    (setup-tide-mode))))
+    (add-hook 'web-mode-hook
+    	      #'(lambda ()
+    		  (when (string-equal "tpl" (file-name-extension buffer-file-name))
+    		    (web-mode-set-engine "eccube"))))
+    (add-hook 'web-mode-hook
+    	      #'(lambda ()
+		  (make-local-variable 'company-backends)
+		  (push '(company-web-html :with company-yasnippet) company-backends)))
     (add-hook 'editorconfig-custom-hooks
 	      (lambda (hash) (setq web-mode-block-padding 0)))))
 
@@ -551,17 +562,6 @@
 	migemo-pattern-alist-length 10000
 	migemo-coding-system 'utf-8-unix))
 (el-get-bundle! migemo)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; goto-chg settings
-;;;
-;;; (auto-install-from-emacswiki "goto-chg.el")
-;;;
-
-(el-get-bundle goto-chg)
-(global-set-key (kbd "C-.") 'goto-last-change)
-(global-set-key (kbd "C-,") 'goto-last-change-reverse)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
