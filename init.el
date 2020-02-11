@@ -1343,6 +1343,7 @@
     (define-key helm-map (kbd "C-v") 'helm-next-source)
     (define-key helm-map (kbd "M-v") 'helm-previous-source)
     (define-key helm-map (kbd "C-j") 'skk-kakutei)
+    (define-key helm-map (kbd "C-z") 'helm-execute-persistent-action)
 
     (defun helm-mac-spotlight ()
       "Preconfigured `helm' for `mdfind'."
