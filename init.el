@@ -598,11 +598,6 @@
 (setq org-startup-folded nil)
 (setq org-startup-truncated nil)
 
-(add-hook 'org-mode-hook
-          #'(lambda ()
-	      ;; yasnippet (using the new org-cycle hooks)
-	      (setq ac-use-overriding-local-map t)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; session settings
