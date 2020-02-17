@@ -1541,30 +1541,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; locate settings
-;;;
-
-(defvar locate-home-database (expand-file-name "~/locate.database"))
-(defvar locate-update-command
-  (expand-file-name (concat user-bin-directory "locate.updatedb.sh")))
-(defvar locate-update-command-program-args
-  (list "nice" "-n" "19" locate-update-command))
-
-(defvar helm-c-locate-command
-  (concat "locate -i %s -d " locate-home-database " %s"))
-
-(defun locate-update-home ()
-  "offer to update the locate database in home."
-  (interactive)
-  (set-process-sentinel
-   (apply 'start-process "locate-update-home" "*Messages*"
-	  locate-update-command-program-args)
-   #'(lambda (proc stat)
-       (if (zerop (process-exit-status proc))
-	   (message "locate.updatedb...done")))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; nginx-mode settings
 ;;;
 (el-get-bundle nginx-mode)
