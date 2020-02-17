@@ -1162,11 +1162,6 @@
   :type github
   :pkgname "OmniSharp/omnisharp-emacs"
   :depends (csharp-mode popup shut-up dash s f))
-;; (el-get-bundle company)
-;; (el-get-bundle ac-company)
-;; (eval-after-load 'company
-;;   '(add-to-list 'company-backends 'company-omnisharp))
-;;
 ;; git clone git@github.com:OmniSharp/omnisharp-roslyn.git
 ;; cd omnisharp-roslyn
 ;; ./build.sh
@@ -1178,10 +1173,6 @@
 ;; M-x my-csharp-mode-hook
 ;; M-x my-omnisharp-mode-hook
 (setq omnisharp-server-executable-path "~/bin/omnisharp-osx/run")
-;; (require 'ac-company)
-;; (ac-company-define-source ac-source-company-omnisharp company-omnisharp)
-
-;; (setq omnisharp-debug 1)
 
 (with-eval-after-load-feature 'csharp-mode
   (defun my-csharp-mode-hook ()
@@ -1203,14 +1194,6 @@
   (defun my-omnisharp-mode-hook ()
     (interactive)
     (message "omnisharp-mode enabled")
-    ;; (define-key omnisharp-mode-map "\C-c\C-s" 'omnisharp-start-omnisharp-server)
-    ;; (define-key company-active-map (kbd ".") (lambda() (interactive) (company-complete-selection-insert-key-and-complete '".")))
-    ;; (define-key company-active-map (kbd "]") (lambda() (interactive) (company-complete-selection-insert-key-and-complete '"]")))
-    ;; (define-key company-active-map (kbd "[") (lambda() (interactive) (company-complete-selection-insert-key '"[")))
-    ;; (define-key company-active-map (kbd ")") (lambda() (interactive) (company-complete-selection-insert-key '")")))
-    ;; (define-key company-active-map (kbd "<SPC>") nil)
-    ;; (define-key company-active-map (kbd ";") (lambda() (interactive) (company-complete-selection-insert-key '";")))
-    ;; (define-key company-active-map (kbd ">") (lambda() (interactive) (company-complete-selection-insert-key '">")))
     (define-key omnisharp-mode-map (kbd "}") 'csharp-indent-function-on-closing-brace) 
     (define-key omnisharp-mode-map "\M-/"     'omnisharp-auto-complete)
     (define-key omnisharp-mode-map "."        'omnisharp-add-dot-and-auto-complete)
@@ -1223,17 +1206,9 @@
     (define-key omnisharp-mode-map "\C-c\C-v" 'omnisharp-run-code-action-refactoring)
     (define-key omnisharp-mode-map "\C-c\C-o" 'omnisharp-auto-complete-overrides)
     (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-fix-usings)
-    ;; (define-key omnisharp-mode-map (kbd "<RET>") 'csharp-newline-and-indent)
 
-    ;; (make-local-variable 'company-backends)
-    ;; (push '(company-omnisharp :with company-yasnippet) company-backends)
     (add-to-list 'company-backends '(company-omnisharp :with company-yasnippet))
-    (eldoc-box-hover-mode 1)
-    ;; (eldoc-box-hover-at-point-mode 1)
-    ;; (define-key omnisharp-mode-map "\C-c\C-t\C-s" (lambda() (interactive) (omnisharp-unit-test "single")))
-    ;; (define-key omnisharp-mode-map "\C-c\C-t\C-r" (lambda() (interactive) (omnisharp-unit-test "fixture")))
-    ;; (define-key omnisharp-mode-map "\C-c\C-t\C-e" (lambda() (interactive) (omnisharp-unit-test "all")))
-    )
+    (eldoc-box-hover-mode 1))
   (setq omnisharp-company-strip-trailing-brackets nil)
   (add-hook 'omnisharp-mode-hook 'my-omnisharp-mode-hook))
 
