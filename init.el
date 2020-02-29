@@ -411,6 +411,13 @@
 (setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
 (add-hook 'js2-mode-hook #'setup-tide-mode)
 
+(el-get-bundle json-mode)
+(el-get-bundle flymake-easy)
+(el-get-bundle flymake-json
+  :type github
+  :pkgname "purcell/flymake-json"
+  :depends (json-mode flymake-easy)
+  (add-hook 'json-mode-hook 'flymake-json-load))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

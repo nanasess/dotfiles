@@ -1,5 +1,10 @@
 (setq el-get-lock-package-versions
-      '((company-web :checksum "f0cc9187c9c34f72ad71f5649a69c74f996bae9a")
+      '((flymake-easy :checksum "de41ea49503f71f997e5c359a2ad08df696c0147")
+        (flymake-json :checksum "ae58795f948402e987cda4c15f10354f8ec2d0fd")
+        (json-mode :checksum "0e819e519ae17a2686e0881c4ca51fa873fa9b83")
+        (json-reformat :checksum "8eb6668ed447988aea06467ba8f42e1f2178246f")
+        (json-snatcher :checksum "c4cecc0a5051bd364373aa499c47a1bb7a5ac51c")
+        (company-web :checksum "f0cc9187c9c34f72ad71f5649a69c74f996bae9a")
         (web-completion-data :checksum "c272c94e8a71b779c29653a532f619acad433a4f")
         (powershell :checksum "87826777bd3ebd53740be99b4546bfc11ccc625d")
         (scratch-pop :checksum "7f4172c792b10bd38898dd8963cf0ade91921869")
