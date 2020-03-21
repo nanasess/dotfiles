@@ -414,6 +414,7 @@
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(tpl\\)\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
   (with-eval-after-load-feature 'web-mode
     ;; (setq web-mode-block-padding 4)
     (setq web-mode-enable-block-face t)
