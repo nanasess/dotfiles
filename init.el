@@ -76,11 +76,11 @@
 ;;;
 
 (dolist (sys-type (list (symbol-name system-type)
-			(symbol-name window-system)))
+                        (symbol-name window-system)))
 
   (add-to-list 'load-path
-	       (expand-file-name
-		(concat user-initial-directory "arch/" sys-type)))
+               (expand-file-name
+                (concat user-initial-directory "arch/" sys-type)))
   (load "init" t))
 (add-to-list 'load-path (expand-file-name user-initial-directory))
 (add-to-list 'load-path (expand-file-name user-site-lisp-directory))
@@ -92,12 +92,12 @@
 ;;;
 
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
-		   "/opt/local/sbin" "/opt/local/bin" "/usr/gnu/bin"
-		   (expand-file-name "~/Applications/Emacs.app/Contents/Resources/bin")
-		   (expand-file-name "~/bin")
-		   (expand-file-name "~/.emacs.d/bin")
-		   (expand-file-name "~/.local/bin")
-		   (expand-file-name "~/.composer/vendor/bin")))
+                   "/opt/local/sbin" "/opt/local/bin" "/usr/gnu/bin"
+                   (expand-file-name "~/Applications/Emacs.app/Contents/Resources/bin")
+                   (expand-file-name "~/bin")
+                   (expand-file-name "~/.emacs.d/bin")
+                   (expand-file-name "~/.local/bin")
+                   (expand-file-name "~/.composer/vendor/bin")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
@@ -204,19 +204,19 @@
 (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
 (setq whitespace-space-regexp "\\(\u3000+\\)")
 (set-face-attribute 'whitespace-trailing nil
-		    :foreground nil
-		    :background "#FDF6E3"
-		    :underline t)
+                    :foreground nil
+                    :background "#FDF6E3"
+                    :underline t)
 (set-face-attribute 'whitespace-tab nil
-		    ;; base4
-		    :foreground "#E1DBCD"
-		    :background "#E1DBCD"
-		    :underline nil)
+                    ;; base4
+                    :foreground "#E1DBCD"
+                    :background "#E1DBCD"
+                    :underline nil)
 (set-face-attribute 'whitespace-space nil
-		    ;; base5
-		    :foreground "#D6D6D6"
-		    :background "#D6D6D6"
-		    :underline nil)
+                    ;; base5
+                    :foreground "#D6D6D6"
+                    :background "#D6D6D6"
+                    :underline nil)
 (global-whitespace-mode t)
 
 ;; see also http://rubikitch.com/2015/05/14/global-hl-line-mode-timer/
@@ -238,11 +238,11 @@
 (load "openweathermap-api-key" t)
 (when openweathermap-api-key
   (el-get-bundle! sky-color-clock
-      :type github
-      :pkgname "zk-phi/sky-color-clock"
-      (with-eval-after-load-feature 'sky-color-clock
-	(sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
-	(sky-color-clock-initialize-openweathermap-client openweathermap-api-key 1855207))))
+    :type github
+    :pkgname "zk-phi/sky-color-clock"
+    (with-eval-after-load-feature 'sky-color-clock
+      (sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
+      (sky-color-clock-initialize-openweathermap-client openweathermap-api-key 1855207))))
 
 (el-get-bundle doom-modeline
   :type github
@@ -251,23 +251,23 @@
   (add-hook 'after-init-hook 'doom-modeline-mode)
   (with-eval-after-load-feature 'doom-modeline-core
     (add-hook 'doom-modeline-mode-hook
-	      #'(lambda ()
-		  (setf (alist-get "\\.php$" all-the-icons-icon-alist nil nil #'equal)
-			'(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
-		  (setf (alist-get "\\.csx?$" all-the-icons-icon-alist nil nil #'equal)
-			'(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
-		  (setf (alist-get 'php-mode all-the-icons-mode-icon-alist nil nil #'equal)
-			'(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
-		  (setf (alist-get 'csharp-mode all-the-icons-mode-icon-alist nil nil #'equal)
-			'(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
-		  (doom-modeline-def-modeline 'main
-		    '(bar input-method-skk workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
-		    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker sky-color-clock))))
+              #'(lambda ()
+                  (setf (alist-get "\\.php$" all-the-icons-icon-alist nil nil #'equal)
+                        '(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
+                  (setf (alist-get "\\.csx?$" all-the-icons-icon-alist nil nil #'equal)
+                        '(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
+                  (setf (alist-get 'php-mode all-the-icons-mode-icon-alist nil nil #'equal)
+                        '(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
+                  (setf (alist-get 'csharp-mode all-the-icons-mode-icon-alist nil nil #'equal)
+                        '(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
+                  (doom-modeline-def-modeline 'main
+                    '(bar input-method-skk workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
+                    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker sky-color-clock))))
     (setq doom-modeline-vcs-max-length 999)
     (setq doom-modeline-buffer-file-name-style 'buffer-name)
     (doom-modeline-def-segment sky-color-clock
       (concat (doom-modeline-spc)
-	      (sky-color-clock)))
+              (sky-color-clock)))
 
     (doom-modeline-def-segment input-method-skk
       "The current ddskk status."
@@ -276,8 +276,8 @@
        (propertize
         (cond
          ((not (boundp 'skk-modeline-input-mode)) "[--]")
-	 (t (if (string= "" skk-modeline-input-mode) "[--]"
-	      (substring (format "%s" skk-modeline-input-mode) 2 -1)))))))))
+         (t (if (string= "" skk-modeline-input-mode) "[--]"
+              (substring (format "%s" skk-modeline-input-mode) 2 -1)))))))))
 
 (line-number-mode 1)
 (column-number-mode 1)
@@ -319,12 +319,12 @@
   (dired-async-mode 1))
 
 (add-hook 'dired-mode-hook
-	  #'(lambda ()
-	      (local-set-key (kbd "C-t") 'other-window)
-	      (local-set-key (kbd "r") 'wdired-change-to-wdired-mode)))
+          #'(lambda ()
+              (local-set-key (kbd "C-t") 'other-window)
+              (local-set-key (kbd "r") 'wdired-change-to-wdired-mode)))
 (add-hook 'dired-load-hook
-	  #'(lambda ()
-	      (load "dired-x")))
+          #'(lambda ()
+              (load "dired-x")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -358,16 +358,6 @@
 ;; see https://emacs.stackexchange.com/a/44604
 (defun risky-local-variable-p (sym &optional _ignored) nil)
 (defun safe-local-variable-p (sym val) t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Emacs lisp settings
-;;;
-
-(add-hook 'emacs-lisp-mode-hook
-	  #'(lambda ()
-	      (setq tab-width 8)
-	      (setq indent-tabs-mode t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -428,40 +418,35 @@
   (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
   (with-eval-after-load-feature 'web-mode
-    ;; (setq web-mode-block-padding 4)
     (setq web-mode-enable-block-face t)
-    ;; (setq web-mode-script-padding 4)
-    ;; (setq web-mode-style-padding 4)
-    ;; (setq web-mode-enable-auto-indentation nil)
     (setq web-mode-enable-current-element-highlight nil)
     (setq web-mode-enable-current-column-highlight nil)
     (add-hook 'web-mode-hook
-	      #'(lambda ()
-		  (setq web-mode-enable-auto-indentation nil)))
+              #'(lambda ()
+                  (setq web-mode-enable-auto-indentation nil)))
     (add-hook 'web-mode-hook 'prettier-js-mode)
     (add-hook 'web-mode-hook
-	      #'(lambda ()
-		  (when (string-equal "tsx" (file-name-extension buffer-file-name))
-		    (setup-tide-mode))))
-
+              #'(lambda ()
+                  (when (string-equal "tsx" (file-name-extension buffer-file-name))
+                    (setup-tide-mode))))
     (add-hook 'web-mode-hook
-	      #'(lambda ()
-		  (when (string-equal "jsx" (file-name-extension buffer-file-name))
-		    (setup-tide-mode))))
+              #'(lambda ()
+                  (when (string-equal "jsx" (file-name-extension buffer-file-name))
+                    (setup-tide-mode))))
     (add-hook 'web-mode-hook
-	      #'(lambda ()
-		  (when (string-equal "vue" (file-name-extension buffer-file-name))
-		    (setup-tide-mode))))
+              #'(lambda ()
+                  (when (string-equal "vue" (file-name-extension buffer-file-name))
+                    (setup-tide-mode))))
     (add-hook 'web-mode-hook
-    	      #'(lambda ()
-    		  (when (string-equal "tpl" (file-name-extension buffer-file-name))
-    		    (web-mode-set-engine "eccube"))))
+              #'(lambda ()
+                  (when (string-equal "tpl" (file-name-extension buffer-file-name))
+                    (web-mode-set-engine "eccube"))))
     (add-hook 'web-mode-hook
-    	      #'(lambda ()
-		  (make-local-variable 'company-backends)
-		  (push '(company-web-html :with company-yasnippet) company-backends)))
+              #'(lambda ()
+                  (make-local-variable 'company-backends)
+                  (push '(company-web-html :with company-yasnippet) company-backends)))
     (add-hook 'editorconfig-custom-hooks
-	      (lambda (hash) (setq web-mode-block-padding 0)))))
+              (lambda (hash) (setq web-mode-block-padding 0)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -485,17 +470,17 @@
 ;;;
 
 (add-hook 'view-mode-hook
-	  #'(lambda ()
-	      (setq view-read-only t)
-	      (auto-revert-mode 1)
-	      (setq line-move-visual nil)))
+          #'(lambda ()
+              (setq view-read-only t)
+              (auto-revert-mode 1)
+              (setq line-move-visual nil)))
 (with-eval-after-load-feature 'view
-     (define-key view-mode-map (kbd "h") 'backward-word)
-     (define-key view-mode-map (kbd "l") 'forward-word)
-     (define-key view-mode-map (kbd "j") 'next-line)
-     (define-key view-mode-map (kbd "k") 'previous-line)
-     (define-key view-mode-map " " 'scroll-up)
-     (define-key view-mode-map (kbd "b") 'scroll-down))
+  (define-key view-mode-map (kbd "h") 'backward-word)
+  (define-key view-mode-map (kbd "l") 'forward-word)
+  (define-key view-mode-map (kbd "j") 'next-line)
+  (define-key view-mode-map (kbd "k") 'previous-line)
+  (define-key view-mode-map " " 'scroll-up)
+  (define-key view-mode-map (kbd "b") 'scroll-down))
 (add-to-list 'auto-mode-alist '("\\.log$" . view-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -527,7 +512,7 @@
   "toggle frame size."
   (interactive)
   (cond ((frame-size-greater-p) (normal-size-frame))
-	((wide-size-frame))))
+        ((wide-size-frame))))
 
 (defun toggle-fullscreen ()
   (interactive)
@@ -560,13 +545,13 @@
   (concat external-directory "migemo/dict/utf-8/migemo-dict"))
 (when (file-exists-p migemo-dictionary)
   (setq migemo-command "cmigemo"
-	migemo-options '("-q" "--emacs" "-i" "\a")
-	migemo-user-dictionary nil
-	migemo-regex-dictionary nil
-	migemo-use-pattern-alist t
-	migemo-use-frequent-pattern-alist t
-	migemo-pattern-alist-length 10000
-	migemo-coding-system 'utf-8-unix))
+        migemo-options '("-q" "--emacs" "-i" "\a")
+        migemo-user-dictionary nil
+        migemo-regex-dictionary nil
+        migemo-use-pattern-alist t
+        migemo-use-frequent-pattern-alist t
+        migemo-pattern-alist-length 10000
+        migemo-coding-system 'utf-8-unix))
 (el-get-bundle! migemo)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -662,12 +647,12 @@
       (message repo)
       (browse-url
        (format "https://github.com/%s/pull/new/%s"
-	       (replace-regexp-in-string
-		"\\.git$" ""
-		(replace-regexp-in-string
-		 "\\`.+github\\.com:\\(.+\\)\\(\\.git\\)?\\'" "\\1"
-		 repo))
-	       (magit-get-current-branch))))
+               (replace-regexp-in-string
+                "\\.git$" ""
+                (replace-regexp-in-string
+                 "\\`.+github\\.com:\\(.+\\)\\(\\.git\\)?\\'" "\\1"
+                 repo))
+               (magit-get-current-branch))))
 
     ;; Bitbucket pull requests are kinda funky, it seems to try to just do the
     ;; right thing, so there's no branches to include.
@@ -676,19 +661,19 @@
       (message repo)
       (browse-url
        (format "https://bitbucket.org/%s/pull-request/new?source=%s&t=1"
-	       (replace-regexp-in-string
-		"\\`.+bitbucket\\.org:\\(.+\\)\\.git\\'" "\\1"
-		repo)
-	       (magit-get-current-branch))))
+               (replace-regexp-in-string
+                "\\`.+bitbucket\\.org:\\(.+\\)\\.git\\'" "\\1"
+                repo)
+               (magit-get-current-branch))))
     (defun endless/visit-pull-request-url ()
       "Visit the current branch's PR on Github."
       (interactive)
       (let ((repo (magit-get "remote" (magit-get-remote) "url")))
-	(if (not repo)
-	    (setq repo (magit-get "remote" (magit-get-push-remote) "url")))
-	(if (string-match "github\\.com" repo)
-	    (visit-gh-pull-request repo)
-	  (visit-bb-pull-request repo))))
+        (if (not repo)
+            (setq repo (magit-get "remote" (magit-get-push-remote) "url")))
+        (if (string-match "github\\.com" repo)
+            (visit-gh-pull-request repo)
+          (visit-bb-pull-request repo))))
 
     (setq magit-diff-refine-hunk t)
     ;; visit PR for github or bitbucket repositories with "v"
@@ -734,17 +719,17 @@
 (add-to-list 'auto-mode-alist '("\\.txt$" . gfm-mode))
 (setq howm-template
       (concat howm-view-title-header
-	      (concat
-	       " %title%cursor\n"
-	       "Date: %date\n\n"
-	       "%file\n\n")
-	      (concat
-	       "<!--\n"
-	       "  Local Variables:\n"
-	       "  mode: gfm\n"
-	       "  coding: utf-8-unix\n"
-	       "  End:\n"
-	       "-->\n")))
+              (concat
+               " %title%cursor\n"
+               "Date: %date\n\n"
+               "%file\n\n")
+              (concat
+               "<!--\n"
+               "  Local Variables:\n"
+               "  mode: gfm\n"
+               "  coding: utf-8-unix\n"
+               "  End:\n"
+               "-->\n")))
 (defun howm-save-and-kill-buffer ()
   "kill screen when exiting from howm-mode"
   (interactive)
@@ -760,8 +745,8 @@
           (message "(Deleted %s)" (file-name-nondirectory file-name))))
       (kill-buffer nil))))
 (add-hook 'howm-mode-hook
-	  #'(lambda ()
-	      (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
+          #'(lambda ()
+              (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
 
 (global-set-key (kbd "C-z c") 'howm-create)
 
@@ -771,7 +756,7 @@
 ;;;
 
 (defvar company-mode/enable-yas t
-    "Enable yasnippet for all backends.")
+  "Enable yasnippet for all backends.")
 (el-get-bundle company-mode
   (add-hook 'after-init-hook 'global-company-mode)
   (global-set-key (kbd "C-M-i") 'company-complete)
@@ -779,9 +764,9 @@
   ;; https://github.com/syl20bnr/spacemacs/pull/179
   (defun company-mode/backend-with-yas (backend)
     (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-	backend
+        backend
       (append (if (consp backend) backend (list backend))
-	      '(:with company-yasnippet))))
+              '(:with company-yasnippet))))
   (with-eval-after-load-feature 'company
     (setq company-idle-delay 0.1
           company-minimum-prefix-length 2
@@ -805,9 +790,9 @@
     (setq company-dabbrev-downcase nil)))
 
 (add-hook 'emacs-lisp-mode-hook
-	  #'(lambda ()
-	      (make-local-variable 'company-backends)
-	      (push '(company-elisp :with company-yasnippet) company-backends)))
+          #'(lambda ()
+              (make-local-variable 'company-backends)
+              (push '(company-elisp :with company-yasnippet) company-backends)))
 
 (el-get-bundle company-box
   :type github
@@ -816,29 +801,29 @@
   (with-eval-after-load-feature 'company-box
     (defun company-box--update-width (&optional no-update height)
       (unless no-update
-	(redisplay))
+        (redisplay))
       (-let* ((frame (company-box--get-frame))
-	      (window (frame-parameter nil 'company-box-window))
-	      (start (window-start window))
-	      (char-width (frame-char-width frame))
-	      (end (or (and height (with-current-buffer (window-buffer window)
-				     (save-excursion
-				       (goto-char start)
-				       (forward-line height)
-				       (point))))
-		       (window-end window)))
-	      ;; (max-width (- (frame-pixel-width) company-box--x char-width))
-	      (max-width (- (x-display-pixel-width)
-			    (max (eval (frame-parameter nil 'left)) 0)
-			    company-box--x char-width))
-	      (width (+ (company-box--calc-len (window-buffer window) start end char-width)
-			(if (company-box--scrollbar-p frame) (* 2 char-width) 0)
-			char-width))
-	      (width (max (min width max-width)
-			  (* company-tooltip-minimum-width char-width)))
-	      (diff (abs (- (frame-pixel-width frame) width))))
-    (or (and no-update width)
-        (and (> diff 2) (set-frame-width frame width nil t)))))
+              (window (frame-parameter nil 'company-box-window))
+              (start (window-start window))
+              (char-width (frame-char-width frame))
+              (end (or (and height (with-current-buffer (window-buffer window)
+                                     (save-excursion
+                                       (goto-char start)
+                                       (forward-line height)
+                                       (point))))
+                       (window-end window)))
+              ;; (max-width (- (frame-pixel-width) company-box--x char-width))
+              (max-width (- (x-display-pixel-width)
+                            (max (eval (frame-parameter nil 'left)) 0)
+                            company-box--x char-width))
+              (width (+ (company-box--calc-len (window-buffer window) start end char-width)
+                        (if (company-box--scrollbar-p frame) (* 2 char-width) 0)
+                        char-width))
+              (width (max (min width max-width)
+                          (* company-tooltip-minimum-width char-width)))
+              (diff (abs (- (frame-pixel-width frame) width))))
+        (or (and no-update width)
+            (and (> diff 2) (set-frame-width frame width nil t)))))
 
     (setq company-box-enable-icon t)
     (setq company-box-show-single-candidate t)
@@ -848,64 +833,64 @@
     ;; see https://github.com/zenith-john/zenith-emacs/blob/8d85e5e5d9e477873762452063683609ae2dc91e/config/init-company.el
     (defconst company-box-icons--phpactor-alist
       '(("interface" . Interface)
-	("class" . Class)
-	("method" . Method)
-	("function" . Function)
-	("property" . Property)
-	("constant" . Constant)
-	("variable" . Variable)
-	("interface" . Interface)
-	("module" . Module)
-	("template" . Template)))
+        ("class" . Class)
+        ("method" . Method)
+        ("function" . Function)
+        ("property" . Property)
+        ("constant" . Constant)
+        ("variable" . Variable)
+        ("interface" . Interface)
+        ("module" . Module)
+        ("template" . Template)))
     (defun company-box-icons--phpactor (candidate)
       ;; (message "omnisharp-item: %s" (get-text-property 0 'omnisharp-item candidate))
       (when (derived-mode-p 'php-mode)
-	(let ((key (get-text-property 0 'type candidate)))
-	  (cdr (assoc key company-box-icons--phpactor-alist)))))
+        (let ((key (get-text-property 0 'type candidate)))
+          (cdr (assoc key company-box-icons--phpactor-alist)))))
     (defun company-box-icons--yasnippet+ (candidate)
       (message "%s" (get-text-property 0 'yas-annotation candidate))
       (when (get-text-property 0 'yas-annotation candidate)
-	'Yasnippet))
+        'Yasnippet))
 
     (setq company-box-icons-functions
-	  '(company-box-icons--yasnippet+ company-box-icons--lsp company-box-icons--elisp company-box-icons--phpactor))
+          '(company-box-icons--yasnippet+ company-box-icons--lsp company-box-icons--elisp company-box-icons--phpactor))
 
     (setq company-box-icons-all-the-icons
-	  `((Unknown       . ,(all-the-icons-material "find_in_page"             :height 0.8 :face 'all-the-icons-blue-alt))
-	    (Text          . ,(all-the-icons-material "text_fields"              :height 0.8 :face 'all-the-icons-green))
-	    (Method        . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
-	    (Function      . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
-	    (Constructor   . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
-	    (Field         . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
-	    (Variable      . ,(all-the-icons-material "adjust"                   :height 0.8 :face 'all-the-icons-blue))
-	    (Class         . ,(all-the-icons-material "class"                    :height 0.8 :face 'all-the-icons-purple))
-	    (Interface     . ,(all-the-icons-material "settings_input_component" :height 0.8 :face 'all-the-icons-purple))
-	    (Module        . ,(all-the-icons-material "view_module"              :height 0.8 :face 'all-the-icons-purple))
-	    (Property      . ,(all-the-icons-material "settings_applications"    :height 0.8 :face 'all-the-icons-purple))
-	    (Unit          . ,(all-the-icons-material "straighten"               :height 0.8 :face 'all-the-icons-purple))
-	    (Value         . ,(all-the-icons-material "filter_1"                 :height 0.8 :face 'all-the-icons-purple))
-	    (Enum          . ,(all-the-icons-material "plus_one"                 :height 0.8 :face 'all-the-icons-purple))
-	    (Keyword       . ,(all-the-icons-material "filter_center_focus"      :height 0.8 :face 'all-the-icons-purple))
-	    (Snippet       . ,(all-the-icons-material "short_text"               :height 0.8 :face 'all-the-icons-purple))
-	    (Color         . ,(all-the-icons-material "color_lens"               :height 0.8 :face 'all-the-icons-purple))
-	    (File          . ,(all-the-icons-material "insert_drive_file"        :height 0.8 :face 'all-the-icons-purple))
-	    (Reference     . ,(all-the-icons-material "collections_bookmark"     :height 0.8 :face 'all-the-icons-purple))
-	    (Folder        . ,(all-the-icons-material "folder"                   :height 0.8 :face 'all-the-icons-purple))
-	    (EnumMember    . ,(all-the-icons-material "people"                   :height 0.8 :face 'all-the-icons-purple))
-	    (Constant      . ,(all-the-icons-material "pause_circle_filled"      :height 0.8 :face 'all-the-icons-purple))
-	    (Struct        . ,(all-the-icons-material "streetview"               :height 0.8 :face 'all-the-icons-purple))
-	    (Event         . ,(all-the-icons-material "event"                    :height 0.8 :face 'all-the-icons-purple))
-	    (Operator      . ,(all-the-icons-material "control_point"            :height 0.8 :face 'all-the-icons-purple))
-	    (TypeParameter . ,(all-the-icons-material "class"                    :height 0.8 :face 'all-the-icons-purple))
-	    ;; (Template   . ,(company-box-icons-image "Template.png"))))
-	    (Yasnippet     . ,(all-the-icons-material "share"               :height 0.8 :face 'all-the-icons-green))
-	    (ElispFunction . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
-	    (ElispVariable . ,(all-the-icons-material "check_circle"             :height 0.8 :face 'all-the-icons-blue))
-	    (ElispFeature  . ,(all-the-icons-material "stars"                    :height 0.8 :face 'all-the-icons-orange))
-	    (ElispFace     . ,(all-the-icons-material "format_paint"             :height 0.8 :face 'all-the-icons-pink))))
+          `((Unknown       . ,(all-the-icons-material "find_in_page"             :height 0.8 :face 'all-the-icons-blue-alt))
+            (Text          . ,(all-the-icons-material "text_fields"              :height 0.8 :face 'all-the-icons-green))
+            (Method        . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+            (Function      . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+            (Constructor   . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+            (Field         . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+            (Variable      . ,(all-the-icons-material "adjust"                   :height 0.8 :face 'all-the-icons-blue))
+            (Class         . ,(all-the-icons-material "class"                    :height 0.8 :face 'all-the-icons-purple))
+            (Interface     . ,(all-the-icons-material "settings_input_component" :height 0.8 :face 'all-the-icons-purple))
+            (Module        . ,(all-the-icons-material "view_module"              :height 0.8 :face 'all-the-icons-purple))
+            (Property      . ,(all-the-icons-material "settings_applications"    :height 0.8 :face 'all-the-icons-purple))
+            (Unit          . ,(all-the-icons-material "straighten"               :height 0.8 :face 'all-the-icons-purple))
+            (Value         . ,(all-the-icons-material "filter_1"                 :height 0.8 :face 'all-the-icons-purple))
+            (Enum          . ,(all-the-icons-material "plus_one"                 :height 0.8 :face 'all-the-icons-purple))
+            (Keyword       . ,(all-the-icons-material "filter_center_focus"      :height 0.8 :face 'all-the-icons-purple))
+            (Snippet       . ,(all-the-icons-material "short_text"               :height 0.8 :face 'all-the-icons-purple))
+            (Color         . ,(all-the-icons-material "color_lens"               :height 0.8 :face 'all-the-icons-purple))
+            (File          . ,(all-the-icons-material "insert_drive_file"        :height 0.8 :face 'all-the-icons-purple))
+            (Reference     . ,(all-the-icons-material "collections_bookmark"     :height 0.8 :face 'all-the-icons-purple))
+            (Folder        . ,(all-the-icons-material "folder"                   :height 0.8 :face 'all-the-icons-purple))
+            (EnumMember    . ,(all-the-icons-material "people"                   :height 0.8 :face 'all-the-icons-purple))
+            (Constant      . ,(all-the-icons-material "pause_circle_filled"      :height 0.8 :face 'all-the-icons-purple))
+            (Struct        . ,(all-the-icons-material "streetview"               :height 0.8 :face 'all-the-icons-purple))
+            (Event         . ,(all-the-icons-material "event"                    :height 0.8 :face 'all-the-icons-purple))
+            (Operator      . ,(all-the-icons-material "control_point"            :height 0.8 :face 'all-the-icons-purple))
+            (TypeParameter . ,(all-the-icons-material "class"                    :height 0.8 :face 'all-the-icons-purple))
+            ;; (Template   . ,(company-box-icons-image "Template.png"))))
+            (Yasnippet     . ,(all-the-icons-material "share"               :height 0.8 :face 'all-the-icons-green))
+            (ElispFunction . ,(all-the-icons-material "functions"                :height 0.8 :face 'all-the-icons-purple))
+            (ElispVariable . ,(all-the-icons-material "check_circle"             :height 0.8 :face 'all-the-icons-blue))
+            (ElispFeature  . ,(all-the-icons-material "stars"                    :height 0.8 :face 'all-the-icons-orange))
+            (ElispFace     . ,(all-the-icons-material "format_paint"             :height 0.8 :face 'all-the-icons-pink))))
     (setq company-box-backends-colors
-	  '((company-yasnippet . (:selected (:background "#DEB542" :weight bold)))
-	    (company-dabbrev . (:selected (:background "PaleTurquoise" :weight bold)))))
+          '((company-yasnippet . (:selected (:background "#DEB542" :weight bold)))
+            (company-dabbrev . (:selected (:background "PaleTurquoise" :weight bold)))))
     (defface company-box-scrollbar
       '((t (:background "#073642" :weight bold))) nil :group 'company-box)))
 
@@ -934,20 +919,20 @@
 (add-hook 'markdown-mode-hook 'turn-on-orgtbl)
 (add-hook 'markdown-mode-hook
           #'(lambda()
-	      (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
 (add-hook 'gfm-mode-hook 'turn-on-orgtbl)
 (add-hook 'gfm-mode-hook
           #'(lambda()
-	      (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
 (with-eval-after-load-feature 'org-table
   (add-hook 'markdown-mode-hook
             #'(lambda()
-		(define-key orgtbl-mode-map
-		  (kbd "<backspace>") 'delete-backward-char)))
+                (define-key orgtbl-mode-map
+                  (kbd "<backspace>") 'delete-backward-char)))
   (add-hook 'gfm-mode-hook
             #'(lambda()
-		(define-key orgtbl-mode-map
-		  (kbd "<backspace>") 'delete-backward-char))))
+                (define-key orgtbl-mode-map
+                  (kbd "<backspace>") 'delete-backward-char))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1012,10 +997,10 @@
     (defun ladicle/toggle-lsp-ui-doc ()
       (interactive)
       (if lsp-ui-doc-mode
-        (progn
-          (lsp-ui-doc-mode -1)
-          (lsp-ui-doc--hide-frame))
-	(lsp-ui-doc-mode 1))))
+          (progn
+            (lsp-ui-doc-mode -1)
+            (lsp-ui-doc--hide-frame))
+        (lsp-ui-doc-mode 1))))
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 (el-get-bundle company-lsp
   :type github
@@ -1043,17 +1028,17 @@
   :type github
   :pkgname "emacs-php/php-mode"
   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-	   ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l")
-	   ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
+  ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l")
+  ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
   :autoloads "php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
     (add-hook 'php-mode-hook 'php-c-style))
-    ;; (add-hook 'php-mode-hook #'lsp))
+  ;; (add-hook 'php-mode-hook #'lsp))
   (with-eval-after-load-feature 'php
     (setq php-manual-url "http://jp2.php.net/manual/ja/"
-	  php-mode-coding-style 'Symfony2
-	  php-search-url "http://jp2.php.net/")))
+          php-mode-coding-style 'Symfony2
+          php-search-url "http://jp2.php.net/")))
 
 (el-get-bundle php-runtime
   :type github
@@ -1123,8 +1108,8 @@
   (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode))
   (with-eval-after-load-feature 'phpunit
     (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class))
-    (setq phpunit-configuration-file  "phpunit.xml.dist")
-    (setq phpunit-default-program  "phpunit"))
+  (setq phpunit-configuration-file  "phpunit.xml.dist")
+  (setq phpunit-default-program  "phpunit"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1193,14 +1178,14 @@
     (omnisharp-mode 1))
   (add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
   (add-hook 'csharp-mode-hook
-	    #'(lambda ()
-		;; (add-to-list 'ac-sources 'ac-source-omnisharp)
-		(add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck))))
+            #'(lambda ()
+                ;; (add-to-list 'ac-sources 'ac-source-omnisharp)
+                (add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck))))
 (with-eval-after-load-feature 'omnisharp
   (defun my-omnisharp-mode-hook ()
     (interactive)
     (message "omnisharp-mode enabled")
-    (define-key omnisharp-mode-map (kbd "}") 'csharp-indent-function-on-closing-brace) 
+    (define-key omnisharp-mode-map (kbd "}") 'csharp-indent-function-on-closing-brace)
     (define-key omnisharp-mode-map "\M-/"     'omnisharp-auto-complete)
     (define-key omnisharp-mode-map "."        'omnisharp-add-dot-and-auto-complete)
     (define-key omnisharp-mode-map "\C-c\C-c" 'omnisharp-code-format)
@@ -1325,7 +1310,7 @@
       "Preconfigured `helm' for `mdfind'."
       (interactive)
       (let ((helm-ff-transformer-show-only-basename nil))
-	(helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))))
+        (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))))
 
 (defconst helm-for-files-preferred-list
   '(helm-source-buffers-list
@@ -1362,11 +1347,11 @@
 
 (el-get-bundle wgrep
   (with-eval-after-load-feature 'wgrep
-  (setq wgrep-enable-key "r")))
+    (setq wgrep-enable-key "r")))
 
 (add-hook 'helm-gtags-mode-hook
-	  #'(lambda ()
-	      (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
+          #'(lambda ()
+              (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
 
 (global-set-key (kbd "C-;") 'helm-for-files)
 (global-set-key (kbd "M-x") 'helm-M-x)
@@ -1394,7 +1379,7 @@
   (if (listp (ad-get-arg 4))
       (ad-set-arg 4 (car (ad-get-arg 4))))
   (cl-letf (((symbol-function 'regexp-quote)
-          (symbol-function 'identity)))
+             (symbol-function 'identity)))
     ad-do-it))
 
 (defadvice find-file (around ad-find-file activate)
@@ -1447,9 +1432,9 @@
         (helm-swoop-pre-input-function 'ignore))
     (call-interactively
      (case use-helm-swoop
-       (1 'isearch-forward)		; C-s
+       (1 'isearch-forward)             ; C-s
        (4 (if (< 1000000 (buffer-size)) 'helm-occur 'helm-swoop)) ; C-u C-s
-       (16 'helm-swoop-nomigemo)))))				  ; C-u C-u C-s
+       (16 'helm-swoop-nomigemo)))))                              ; C-u C-u C-s
 (global-set-key (kbd "C-s") 'isearch-forward-or-helm-swoop-or-helm-occur)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1560,7 +1545,7 @@
 (defvar apachectl-program-command "/usr/local/sbin/apachectl")
 (defvar apachectl-buffer-name "*apachectl*")
 (defun executable-apachectl (args)
-"Executable apachectl command.
+  "Executable apachectl command.
 required setting with sudoers.
 
 e.g.)
@@ -1577,12 +1562,12 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
       (buffer-disable-undo)
       (set-process-sentinel
        (apply 'start-process (format "apachectl %s" args) (current-buffer)
-	      apachectl-command)
+              apachectl-command)
        #'(lambda (proc stat)
-	   (cond ((zerop (process-exit-status proc))
-		  (message "%s... successful!" proc))
-		 ((popwin:popup-buffer-tail apachectl-buffer-name)
-		  (error "%s... failur!" proc))))))))
+           (cond ((zerop (process-exit-status proc))
+                  (message "%s... successful!" proc))
+                 ((popwin:popup-buffer-tail apachectl-buffer-name)
+                  (error "%s... failur!" proc))))))))
 (defun apachectl/start ()
   (interactive)
   (executable-apachectl "start"))
@@ -1609,11 +1594,11 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
   (let ((buf (get-buffer-create "*convert*")) str ret)
     (setq str (buffer-substring (region-beginning) (region-end)))
     (with-current-buffer
-	buf (setq ret (buffer-string))
-	(setq str (replace-regexp-in-string
-		   "\\\\\\\\[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+" "/Volumes" str))
-	(setq str (replace-regexp-in-string "\\\\" "/" str))
-	(insert str))
+        buf (setq ret (buffer-string))
+        (setq str (replace-regexp-in-string
+                   "\\\\\\\\[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+" "/Volumes" str))
+        (setq str (replace-regexp-in-string "\\\\" "/" str))
+        (insert str))
     (kill-buffer buf)
     (message "%s" str)
     (kill-new str)
@@ -1625,11 +1610,11 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
   (let ((buf (get-buffer-create "*convert*")) str ret)
     (setq str (buffer-substring (region-beginning) (region-end)))
     (with-current-buffer
-	buf (setq ret (buffer-string))
-	(setq str (ucs-normalize-NFC-string str))
-	(setq str (replace-regexp-in-string "smb://" "\\\\\\\\" str))
-	(setq str (replace-regexp-in-string "/" "\\\\" str))
-	(insert str))
+        buf (setq ret (buffer-string))
+        (setq str (ucs-normalize-NFC-string str))
+        (setq str (replace-regexp-in-string "smb://" "\\\\\\\\" str))
+        (setq str (replace-regexp-in-string "/" "\\\\" str))
+        (insert str))
     (kill-buffer buf)
     (message "%s" str)
     (kill-new str)
@@ -1643,11 +1628,11 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 
 (el-get-bundle po-mode)
 (setq auto-mode-alist (cons '("\\.po\\'\\|\\.po\\." . po-mode)
-			    auto-mode-alist))
+                            auto-mode-alist))
 
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
-			    'po-find-file-coding-system)
+                            'po-find-file-coding-system)
 
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
