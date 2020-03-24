@@ -381,6 +381,12 @@
     (electric-indent-local-mode 0)
     (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
 
+;; for json format
+;; see https://qiita.com/saku/items/d97e930ffc9ca39ac976
+(defun jq-format (beg end)
+  (interactive "r")
+  (shell-command-on-region beg end "jq ." nil t))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; tide settings
@@ -1194,7 +1200,7 @@
   (defun my-omnisharp-mode-hook ()
     (interactive)
     (message "omnisharp-mode enabled")
-    (define-key omnisharp-mode-map (kbd "}") 'csharp-indent-function-on-closing-brace) 
+    (define-key omnisharp-mode-map (kbd "}") 'csharp-indent-function-on-closing-brace)
     (define-key omnisharp-mode-map "\M-/"     'omnisharp-auto-complete)
     (define-key omnisharp-mode-map "."        'omnisharp-add-dot-and-auto-complete)
     (define-key omnisharp-mode-map "\C-c\C-c" 'omnisharp-code-format)
