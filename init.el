@@ -1242,6 +1242,7 @@ See https://github.com/emacs-lsp/lsp-mode."
   :pkgname "haskell/haskell-mode"
   ;; :info "."
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
+  (setq haskell-stylish-on-save t)
   (with-eval-after-load-feature 'haskell-mode
     (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
     (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
