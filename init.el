@@ -954,8 +954,20 @@
 (el-get-bundle lsp-mode
   :type github
   :pkgname "emacs-lsp/lsp-mode"
-  :depends (spinner f ht)
-  (with-eval-after-load-feature 'lsp-mode
+  :depends (spinner f ht flycheck)
+  (with-eval-after-load-feature 'lsp
+    ;; see https://github.com/emacs-lsp/lsp-mode/blob/e2d3cdfa8e09731da3caae0f29748211753814ef/lsp-mode.el#L7719-L7729
+    (flycheck-define-generic-checker 'lsp
+      "A syntax checker using the Language Server Protocol (LSP)
+provided by lsp-mode.
+See https://github.com/emacs-lsp/lsp-mode."
+      :start #'lsp--flycheck-start
+      :modes '(python-mode)
+      :predicate (lambda () lsp-mode)
+      :error-explainer (lambda (e)
+                         (cond ((string-prefix-p "clang-tidy" (flycheck-error-message e))
+                                (lsp-cpp-flycheck-clang-tidy-error-explainer e))
+                               (t (flycheck-error-message e)))))
     ;; https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp
     ;; (setq lsp-print-io nil)
     ;; (setq lsp-print-performance nil)
@@ -963,7 +975,7 @@
     (setq lsp-auto-guess-root t)
     (setq lsp-document-sync-method 'incremental) ;; always send incremental document
     (setq lsp-response-timeout 5)
-    (setq lsp-prefer-flymake 'flymake)
+    (setq lsp-diagnostic-package :auto)
     (setq lsp-enable-completion-at-point nil)
     (require 'lsp-clients)))
 ;; (el-get-bundle lsp-treemacs
@@ -983,8 +995,6 @@
     (setq lsp-ui-doc-max-height 30)
     (setq lsp-ui-doc-use-childframe t)
     (setq lsp-ui-doc-use-webkit t)
-    ;; lsp-ui-flycheck
-    (setq lsp-ui-flycheck-enable nil)
     ;; lsp-ui-sideline
     (setq lsp-ui-sideline-enable nil)
     (setq lsp-ui-sideline-ignore-duplicate t)
@@ -1213,8 +1223,19 @@
 ;;;
 ;;; haskell-ide-engine settings
 ;;;
-;;; git clone git@github.com:haskell/haskell-ide-engine.git ~/.emacs.d/haskell-ide-engine
+;;; git clone --recurse-submodules git@github.com:haskell/haskell-ide-engine.git ~/.emacs.d/haskell-ide-engine
+;;; cd haskell-ide-engine
+;;; ./install.hs hie-x.x.x
+;;; ./install.hs data
+;;; stack install stylish-haskell
+;;; stack install hlint
 ;;;
+(el-get-bundle lsp-haskell
+  :type github
+  :pkgname "emacs-lsp/lsp-haskell"
+  (setq lsp-haskell-process-path-hie "hie-wrapper")
+  (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
+  (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on))
 
 (el-get-bundle haskell-mode
   :type github
@@ -1224,12 +1245,8 @@
   (with-eval-after-load-feature 'haskell-mode
     (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
     (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-    (add-hook 'haskell-mode-hook #'company-backends-with-yas)
-    (add-hook 'haskell-mode-hook #'lsp)))
-
-(el-get-bundle lsp-haskell
-  :type github
-  :pkgname "emacs-lsp/lsp-haskell")
+    (add-hook 'haskell-mode-hook #'lsp)
+    (add-hook 'lsp-after-initialize-hook 'lsp--auto-configure)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
