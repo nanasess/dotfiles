@@ -1246,8 +1246,8 @@ See https://github.com/emacs-lsp/lsp-mode."
   (with-eval-after-load-feature 'haskell-mode
     (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
     (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-    (add-hook 'haskell-mode-hook #'lsp)
-    (add-hook 'lsp-after-initialize-hook 'lsp--auto-configure)))
+    (add-hook 'haskell-mode-hook #'company-backends-with-yas)
+    (add-hook 'haskell-mode-hook #'lsp)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
