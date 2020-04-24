@@ -1052,9 +1052,9 @@ See https://github.com/emacs-lsp/lsp-mode."
     (add-hook 'php-mode-hook 'php-c-style))
   ;; (add-hook 'php-mode-hook #'lsp))
   (with-eval-after-load-feature 'php
-    (setq php-manual-url "http://jp2.php.net/manual/ja/"
+    (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
-          php-search-url "http://jp2.php.net/")))
+          php-search-url "https://www.php.net/")))
 
 (el-get-bundle php-runtime
   :type github
