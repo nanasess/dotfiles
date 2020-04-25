@@ -19,7 +19,7 @@
         (font-lock+ :checksum "829cf337e9ec10116f6ec47e759fc72b7a8dda48")
         (company-box :checksum "8fc6168f2d3a0275156dd3fdf46ba496adbab226")
         (omnisharp-emacs :checksum "e658a18a762438c3e1737612737b05d02a21ca2a")
-        (emacs-id-manager :checksum "14ebc35db298aac4dedc8aa188bc46bacab81f3b")
+        (emacs-id-manager :checksum "8204f328a9947ec943d3e580a23700eb8b4002c2")
         (esup :checksum "5acb60e8d7a8fef854178f325682765820522b10")
         (php-skeleton :checksum "208202c772be1320857d7b1ade9be28a8ddb35e5")
         (helm-lsp :checksum "3a58ca4cfd94b9ab1e15e819d3b16ef568e8889b")

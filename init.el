@@ -1550,7 +1550,7 @@ See https://github.com/emacs-lsp/lsp-mode."
 (el-get-bundle emacs-id-manager
   :type github
   :autoloads "id-manager"
-  :pkgname "kiwanami/emacs-id-manager")
+  :pkgname "nanasess/emacs-id-manager")
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 (setenv "GPG_AGENT_INFO" nil)
 
