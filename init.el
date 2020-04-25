@@ -1022,6 +1022,7 @@ See https://github.com/emacs-lsp/lsp-mode."
   :type github
   :pkgname "tigersoldier/company-lsp"
   (with-eval-after-load-feature 'company-lsp
+    (setq company-lsp-enable-snippet t)
     (setq company-lsp-cache-candidates t) ;; always using cache
     (setq company-lsp-async t)
     (setq company-lsp-enable-recompletion nil)))
