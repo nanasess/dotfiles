@@ -956,6 +956,7 @@
   :pkgname "emacs-lsp/lsp-mode"
   :depends (spinner f ht flycheck)
   (with-eval-after-load-feature 'lsp
+    (require 'flycheck)
     ;; see https://github.com/emacs-lsp/lsp-mode/blob/e2d3cdfa8e09731da3caae0f29748211753814ef/lsp-mode.el#L7719-L7729
     (flycheck-define-generic-checker 'lsp
       "A syntax checker using the Language Server Protocol (LSP)
@@ -1262,6 +1263,8 @@ See https://github.com/emacs-lsp/lsp-mode."
 ;;;
 ;;; CSS settings
 ;;;
+;;; see https://github.com/vscode-langservers/vscode-css-languageserver-bin
+;;;
 
 (with-eval-after-load-feature 'css-mode
   (add-hook 'css-mode-hook #'company-backends-with-yas)
@@ -1271,7 +1274,8 @@ See https://github.com/emacs-lsp/lsp-mode."
 ;;;
 ;;; shel settings
 ;;;
-
+;;; see https://github.com/bash-lsp/bash-language-server
+;;;
 (with-eval-after-load-feature 'sh-script
   (add-hook 'sh-mode-hook #'company-backends-with-yas)
   (add-hook 'sh-mode-hook #'lsp))
