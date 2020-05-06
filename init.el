@@ -1257,7 +1257,9 @@ See https://github.com/emacs-lsp/lsp-mode."
 ;;;
 ;;; npm i -g dockerfile-language-server-nodejs
 ;;;
-(el-get-bundle dockerfile-mode)
+(el-get-bundle dockerfile-mode
+  (add-hook 'dockerfile-mode-hook #'company-backends-with-yas)
+  (add-hook 'dockerfile-mode-hook #'lsp))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
