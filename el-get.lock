@@ -60,7 +60,7 @@
         (php-mode :checksum "4d0b4a04401a2b9f9ff834f6ed58bc7cc5b878c0")
         (company-lsp :checksum "f921ffa0cdc542c21dc3dd85f2c93df4288e83bd")
         (lsp-ui :checksum "242dfe859c3497c456eaacfd84942e12419529fe")
-        (lsp-mode :checksum "347551b61f31b729848ac7094501f1a0d35a9122")
+        (lsp-mode :checksum "68e2adb378ebdf2e533920d5255fd2b7c5d19750")
         (ht :checksum "66c5f9131242697fabaede5566d87ecda4c14b1f")
         (f :checksum "1814209e2ff43cf2e6d38c4cd476218915f550fb")
         (s :checksum "03410e6a7a2b11e47e1fea3b7d9899c7df26435e")
