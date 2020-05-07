@@ -57,7 +57,7 @@
         (phpactor :checksum "860d7e8784b261ee71deba354d01c3038cd777ab")
         (composer :checksum "269270e13b2be00a9cc7d08bd2a96d6bca64cae2")
         (php-runtime :checksum "017e0e70f07d6b25e37d5c5f4d271a914b677631")
-        (php-mode :checksum "4d0b4a04401a2b9f9ff834f6ed58bc7cc5b878c0")
+        (php-mode :checksum "c5a1dfbeff49362e06bed0485e04f91303d7ba20")
         (company-lsp :checksum "f921ffa0cdc542c21dc3dd85f2c93df4288e83bd")
         (lsp-ui :checksum "242dfe859c3497c456eaacfd84942e12419529fe")
         (lsp-mode :checksum "68e2adb378ebdf2e533920d5255fd2b7c5d19750")
