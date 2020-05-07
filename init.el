@@ -1532,9 +1532,9 @@ See https://github.com/emacs-lsp/lsp-mode."
 ;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
 (el-get-bundle sqlite-dump
   :type github
-  :pkgname "nanasess/sqlite-dump")
-(modify-coding-system-alist 'file "\\.\\(db\\|sqlite\\)\\'" 'raw-text-unix)
-(add-to-list 'auto-mode-alist '("\\.\\(db\\|sqlite\\)\\'" . sqlite-dump))
+  :pkgname "nanasess/sqlite-dump"
+  (modify-coding-system-alist 'file "\\.\\(db\\|sqlite\\)\\'" 'raw-text-unix)
+  (add-to-list 'auto-mode-alist '("\\.\\(db\\|sqlite\\)\\'" . sqlite-dump)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
