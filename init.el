@@ -19,7 +19,7 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(setq gc-cons-threshold (* 128 1024 1024))
+(setq gc-cons-threshold most-positive-fixnum)
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
 
@@ -235,15 +235,6 @@
   :depends (dash f s))
 (el-get-bundle all-the-icons)
 
-(load "openweathermap-api-key" t)
-(when openweathermap-api-key
-  (el-get-bundle! sky-color-clock
-    :type github
-    :pkgname "zk-phi/sky-color-clock"
-    (with-eval-after-load-feature 'sky-color-clock
-      (sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
-      (sky-color-clock-initialize-openweathermap-client openweathermap-api-key 1855207))))
-
 (el-get-bundle doom-modeline
   :type github
   :depends (all-the-icons dash eldoc-eval shrink-path)
@@ -262,12 +253,9 @@
                         '(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
                   (doom-modeline-def-modeline 'main
                     '(bar input-method-skk workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
-                    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker sky-color-clock))))
+                    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker))))
     (setq doom-modeline-vcs-max-length 999)
     (setq doom-modeline-buffer-file-name-style 'buffer-name)
-    (doom-modeline-def-segment sky-color-clock
-      (concat (doom-modeline-spc)
-              (sky-color-clock)))
 
     (doom-modeline-def-segment input-method-skk
       "The current ddskk status."
@@ -298,7 +286,9 @@
 ;;; window-system settings
 ;;;
 
-(cond (window-system (tool-bar-mode 0)))
+(add-hook 'after-init-hook
+          #'(lambda()
+              (cond (window-system (tool-bar-mode 0)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -315,11 +305,11 @@
 ;;;
 
 (el-get-bundle emacs-async
-  (autoload 'dired-async-mode "dired-async.el" nil t)
-  (dired-async-mode 1))
+  (autoload 'dired-async-mode "dired-async.el" nil t))
 
 (add-hook 'dired-mode-hook
           #'(lambda ()
+              (dired-async-mode 1)
               (local-set-key (kbd "C-t") 'other-window)
               (local-set-key (kbd "r") 'wdired-change-to-wdired-mode)))
 (add-hook 'dired-load-hook
@@ -600,11 +590,11 @@
 ;;; session settings
 ;;;
 
-(el-get-bundle! session
-  :type github
-  :pkgname "nanasess/emacs-session"
-  (add-hook 'after-init-hook 'session-initialize)
-  (setq session-save-print-spec '(t nil 40000)))
+;; (el-get-bundle! session
+;;   :type github
+;;   :pkgname "nanasess/emacs-session"
+;;   (add-hook 'after-init-hook 'session-initialize)
+;;   (setq session-save-print-spec '(t nil 40000)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -718,7 +708,7 @@
 ;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
 (setq howm-process-coding-system 'utf-8-unix)
 (setq howm-todo-menu-types "[-+~!]")
-(el-get-bundle! howm
+(el-get-bundle howm
   :type git
   :url "git://git.osdn.jp/gitroot/howm/howm.git"
   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make")))
@@ -1120,15 +1110,6 @@ See https://github.com/emacs-lsp/lsp-mode."
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
 
-(el-get-bundle phpunit
-  :type github
-  :pkgname "nlamirault/phpunit.el"
-  (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode))
-  (with-eval-after-load-feature 'phpunit
-    (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class))
-  (setq phpunit-configuration-file  "phpunit.xml.dist")
-  (setq phpunit-default-program  "phpunit"))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Java settings
@@ -1446,10 +1427,6 @@ See https://github.com/emacs-lsp/lsp-mode."
   (global-set-key (kbd "C-z .") 'hh:resume)
   (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
   (global-set-key (kbd "C-z x") 'helm-howm-do-ag))
-
-(el-get-bundle helm-c-yasnippet)
-(setq helm-yas-space-match-any-greedy t)
-(global-set-key (kbd "C-c y") 'helm-yas-complete)
 
 (el-get-bundle helm-swoop)
 (cl-defun helm-swoop-nomigemo (&key $query ($multiline current-prefix-arg))
