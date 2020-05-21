@@ -574,38 +574,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; markdown-mode settings
-;;;
-
-(el-get-bundle markdown-mode
-  (add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode)))
-
-;; see also http://stackoverflow.com/questions/14275122/editing-markdown-pipe-tables-in-emacs
-(defun cleanup-org-tables ()
-  (save-excursion
-    (goto-char (point-min))
-    (while (search-forward "-+-" nil t) (replace-match "-|-"))))
-
-(add-hook 'markdown-mode-hook 'turn-on-orgtbl)
-(add-hook 'markdown-mode-hook
-          #'(lambda()
-              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
-(add-hook 'gfm-mode-hook 'turn-on-orgtbl)
-(add-hook 'gfm-mode-hook
-          #'(lambda()
-              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
-(with-eval-after-load-feature 'org-table
-  (add-hook 'markdown-mode-hook
-            #'(lambda()
-                (define-key orgtbl-mode-map
-                  (kbd "<backspace>") 'delete-backward-char)))
-  (add-hook 'gfm-mode-hook
-            #'(lambda()
-                (define-key orgtbl-mode-map
-                  (kbd "<backspace>") 'delete-backward-char))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; howm settings
 ;;;
 
@@ -960,43 +928,59 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; markdown-mode settings
+;;;
+
+(el-get-bundle markdown-mode
+  (add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode)))
+
+;; see also http://stackoverflow.com/questions/14275122/editing-markdown-pipe-tables-in-emacs
+(defun cleanup-org-tables ()
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "-+-" nil t) (replace-match "-|-"))))
+
+(add-hook 'markdown-mode-hook 'turn-on-orgtbl)
+(add-hook 'markdown-mode-hook
+          #'(lambda()
+              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+(add-hook 'gfm-mode-hook 'turn-on-orgtbl)
+(add-hook 'gfm-mode-hook
+          #'(lambda()
+              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+(with-eval-after-load-feature 'org-table
+  (add-hook 'markdown-mode-hook
+            #'(lambda()
+                (define-key orgtbl-mode-map
+                  (kbd "<backspace>") 'delete-backward-char)))
+  (add-hook 'gfm-mode-hook
+            #'(lambda()
+                (define-key orgtbl-mode-map
+                  (kbd "<backspace>") 'delete-backward-char))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; Language-server settings
 ;;;
 (el-get-bundle request)
 (el-get-bundle spinner)
 (el-get-bundle f)
 (el-get-bundle ht)
+(el-get-bundle flycheck)
 ;; (el-get-bundle treemacs
 ;;   :type github
 ;;   :pkgname "Alexander-Miller/treemacs")
 (el-get-bundle lsp-mode
   :type github
   :pkgname "emacs-lsp/lsp-mode"
-  :depends (spinner f ht flycheck)
+  :depends (dash f ht hydra spinner markdown-mode)
   (with-eval-after-load-feature 'lsp
-    (require 'flycheck)
-    ;; see https://github.com/emacs-lsp/lsp-mode/blob/e2d3cdfa8e09731da3caae0f29748211753814ef/lsp-mode.el#L7719-L7729
-    (flycheck-define-generic-checker 'lsp
-      "A syntax checker using the Language Server Protocol (LSP)
-provided by lsp-mode.
-See https://github.com/emacs-lsp/lsp-mode."
-      :start #'lsp--flycheck-start
-      :modes '(python-mode)
-      :predicate (lambda () lsp-mode)
-      :error-explainer (lambda (e)
-                         (cond ((string-prefix-p "clang-tidy" (flycheck-error-message e))
-                                (lsp-cpp-flycheck-clang-tidy-error-explainer e))
-                               (t (flycheck-error-message e)))))
-    ;; https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp
-    ;; (setq lsp-print-io nil)
-    ;; (setq lsp-print-performance nil)
     ;; general
     (setq lsp-auto-guess-root t)
     (setq lsp-document-sync-method 'incremental) ;; always send incremental document
     (setq lsp-response-timeout 5)
     (setq lsp-diagnostic-package :auto)
-    (setq lsp-enable-completion-at-point nil)
-    (require 'lsp-clients)))
+    (setq lsp-enable-completion-at-point nil)))
 ;; (el-get-bundle lsp-treemacs
 ;;   :type github
 ;;   :pkgname "emacs-lsp/lsp-treemacs"
@@ -1004,6 +988,7 @@ See https://github.com/emacs-lsp/lsp-mode."
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
+  :depends (dash lsp-mode markdown-mode)
   (with-eval-after-load-feature 'lsp-ui
     ;; lsp-ui-doc
     (setq lsp-ui-doc-enable t)
