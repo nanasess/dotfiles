@@ -589,11 +589,12 @@
 ;;; session settings
 ;;;
 
-;; (el-get-bundle! session
-;;   :type github
-;;   :pkgname "nanasess/emacs-session"
-;;   (add-hook 'after-init-hook 'session-initialize)
-;;   (setq session-save-print-spec '(t nil 40000)))
+(el-get-bundle session
+  :type github
+  :pkgname "nanasess/emacs-session"
+  (with-eval-after-load-feature 'session
+    (setq session-save-print-spec '(t nil 40000))))
+(add-hook 'after-init-hook 'session-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1373,7 +1374,6 @@ See https://github.com/emacs-lsp/lsp-mode."
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-h b") 'helm-descbinds)
 (global-set-key (kbd "C-z l") 'helm-ls-git-ls)
-
 
 ;;;
 ;;; see http://www49.atwiki.jp/ntemacs/pages/32.html
