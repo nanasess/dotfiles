@@ -712,6 +712,7 @@
   :type git
   :url "git://git.osdn.jp/gitroot/howm/howm.git"
   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make")))
+(autoload 'howm-mode "howm" "Hitori Otegaru Wiki Modoki" t)
 (add-to-list 'auto-mode-alist '("\\.txt$" . gfm-mode))
 (setq howm-template
       (concat howm-view-title-header
@@ -1398,21 +1399,22 @@ See https://github.com/emacs-lsp/lsp-mode."
   (let ((current-prefix-arg nil))
     ad-do-it))
 
+(defun helm-howm-do-ag ()
+  (interactive)
+  (helm-grep-ag-1 howm-directory))
+;; use for grep
+(defun helm-howm-do-grep ()
+  (interactive)
+  (helm-do-grep-1
+   (list (car (split-string howm-directory "\n"))) '(4) nil '("*.txt" "*.md")))
+(global-set-key (kbd "C-z s") 'helm-howm-do-grep)
+(global-set-key (kbd "C-z x") 'helm-howm-do-ag)
+
 (with-eval-after-load-feature 'howm
   (require 'helm-howm)
-  (defvar hh:howm-data-directory howm-directory)
   (setq hh:menu-list nil)
   (setq hh:recent-menu-number-limit 100)
-
-  (defun helm-howm-do-ag ()
-    (interactive)
-    (helm-grep-ag-1
-     hh:howm-data-directory))
-  ;; use for grep
-  (defun helm-howm-do-grep ()
-    (interactive)
-    (helm-do-grep-1
-     (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt" "*.md")))
+  (defvar hh:howm-data-directory howm-directory)
 
   (when (executable-find "rg")
     (setq howm-view-use-grep t)
@@ -1424,9 +1426,7 @@ See https://github.com/emacs-lsp/lsp-mode."
     (setq howm-view-grep-file-stdin-option nil))
 
   (global-set-key (kbd "C-z ,") 'hh:menu-command)
-  (global-set-key (kbd "C-z .") 'hh:resume)
-  (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
-  (global-set-key (kbd "C-z x") 'helm-howm-do-ag))
+  (global-set-key (kbd "C-z .") 'hh:resume))
 
 (el-get-bundle helm-swoop)
 (cl-defun helm-swoop-nomigemo (&key $query ($multiline current-prefix-arg))
