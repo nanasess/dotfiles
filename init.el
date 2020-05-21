@@ -342,109 +342,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; js2-mode settings
-;;;
-
-(el-get-bundle js2-mode
-  (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-  (add-hook 'js-mode-hook 'js2-minor-mode)
-  (with-eval-after-load-feature 'js2-mode
-    (electric-indent-local-mode 0)
-    (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
-
-;; for json format
-;; see https://qiita.com/saku/items/d97e930ffc9ca39ac976
-(defun jq-format (beg end)
-  (interactive "r")
-  (shell-command-on-region beg end "jq ." nil t))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; tide settings
-;;;
-
-(el-get-bundle tide)
-(defun setup-tide-mode ()
-  (interactive)
-  (tide-setup)
-  (flycheck-mode +1)
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (eldoc-mode +1)
-  (tide-hl-identifier-mode +1)
-  (company-mode +1)
-  (flycheck-add-mode 'typescript-tslint 'web-mode)
-  (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append))
-
-;; aligns annotation to the right hand side
-(setq company-tooltip-align-annotations t)
-
-;; formats the buffer before saving
-;; (add-hook 'before-save-hook 'tide-format-before-save)
-
-(add-hook 'typescript-mode-hook #'setup-tide-mode)
-(add-hook 'typescript-mode-hook 'prettier-js-mode)
-
-;; format options
-(setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
-(add-hook 'js2-mode-hook #'setup-tide-mode)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; web-mode settings
-;;;
-(el-get-bundle company-web)
-(el-get-bundle web-mode
-  :type github
-  :pkgname "nanasess/web-mode"
-  :branch "eccube-engine"
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.tpl\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-  (with-eval-after-load-feature 'web-mode
-    (setq web-mode-enable-block-face t)
-    (setq web-mode-enable-current-element-highlight nil)
-    (setq web-mode-enable-current-column-highlight nil)
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (setq web-mode-enable-auto-indentation nil)))
-    (add-hook 'web-mode-hook 'prettier-js-mode)
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (when (string-equal "tsx" (file-name-extension buffer-file-name))
-                    (setup-tide-mode))))
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (when (string-equal "jsx" (file-name-extension buffer-file-name))
-                    (setup-tide-mode))))
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (when (string-equal "vue" (file-name-extension buffer-file-name))
-                    (setup-tide-mode))))
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (when (string-equal "tpl" (file-name-extension buffer-file-name))
-                    (web-mode-set-engine "eccube"))))
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (make-local-variable 'company-backends)
-                  (push '(company-web-html :with company-yasnippet) company-backends)))
-    (add-hook 'editorconfig-custom-hooks
-              (lambda (hash) (setq web-mode-block-padding 0)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; yaml-mode settings
-;;;
-
-(el-get-bundle yaml-mode
-  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; SQL settings
 ;;;
 
@@ -677,6 +574,38 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; markdown-mode settings
+;;;
+
+(el-get-bundle markdown-mode
+  (add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode)))
+
+;; see also http://stackoverflow.com/questions/14275122/editing-markdown-pipe-tables-in-emacs
+(defun cleanup-org-tables ()
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "-+-" nil t) (replace-match "-|-"))))
+
+(add-hook 'markdown-mode-hook 'turn-on-orgtbl)
+(add-hook 'markdown-mode-hook
+          #'(lambda()
+              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+(add-hook 'gfm-mode-hook 'turn-on-orgtbl)
+(add-hook 'gfm-mode-hook
+          #'(lambda()
+              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+(with-eval-after-load-feature 'org-table
+  (add-hook 'markdown-mode-hook
+            #'(lambda()
+                (define-key orgtbl-mode-map
+                  (kbd "<backspace>") 'delete-backward-char)))
+  (add-hook 'gfm-mode-hook
+            #'(lambda()
+                (define-key orgtbl-mode-map
+                  (kbd "<backspace>") 'delete-backward-char))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; howm settings
 ;;;
 
@@ -738,6 +667,144 @@
               (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
 
 (global-set-key (kbd "C-z c") 'howm-create)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; helm settings
+;;;
+
+(el-get-bundle helm
+  (with-eval-after-load-feature 'helm
+    (helm-migemo-mode 1)
+    (define-key helm-map (kbd "C-v") 'helm-next-source)
+    (define-key helm-map (kbd "M-v") 'helm-previous-source)
+    (define-key helm-map (kbd "C-j") 'skk-kakutei)
+    (define-key helm-map (kbd "C-z") 'helm-execute-persistent-action)
+
+    (defun helm-mac-spotlight ()
+      "Preconfigured `helm' for `mdfind'."
+      (interactive)
+      (let ((helm-ff-transformer-show-only-basename nil))
+        (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))))
+
+(defconst helm-for-files-preferred-list
+  '(helm-source-buffers-list
+    helm-source-recentf
+    helm-source-file-cache
+    helm-source-files-in-current-dir
+    helm-source-mac-spotlight))
+(setq helm-buffer-max-length 40
+      helm-c-ack-thing-at-point 'symbol
+      helm-ff-auto-update-initial-value nil
+      ;; helm-grep-default-recurse-command "ggrep -a -d recurse %e -n%cH -e %p %f"
+      helm-input-idle-delay 0.2
+      helm-mode t
+      helm-truncate-lines t)
+
+(with-eval-after-load-feature 'helm-grep
+  ;; use ripgrep https://github.com/BurntSushi/ripgrep
+  (when (executable-find "rg")
+    (setq helm-grep-ag-command "rg --color=always -S --no-heading --line-number %s %s %s")))
+
+(el-get-bundle helm-ls-git)
+(el-get-bundle helm-descbinds)
+
+(defadvice helm-grep-highlight-match
+    (around ad-helm-grep-highlight-match activate)
+  (ad-set-arg 1 t)
+  ad-do-it)
+
+(setq helm-gtags-ignore-case t)
+(setq helm-gtags-path-style 'relative)
+;; grep for euc-jp.
+;; (setq helm-grep-default-command "grep -a -d skip %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
+;; (setq helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
+
+(el-get-bundle wgrep
+  (with-eval-after-load-feature 'wgrep
+    (setq wgrep-enable-key "r")))
+
+(add-hook 'helm-gtags-mode-hook
+          #'(lambda ()
+              (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
+
+(global-set-key (kbd "C-;") 'helm-for-files)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-z C-r") 'helm-resume)
+(global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-h b") 'helm-descbinds)
+(global-set-key (kbd "C-z l") 'helm-ls-git-ls)
+
+;;;
+;;; see http://www49.atwiki.jp/ntemacs/pages/32.html
+;;;
+
+(defadvice helm-reduce-file-name (around ad-helm-reduce-file-name activate)
+  (let ((fname (ad-get-arg 0))
+        (level (ad-get-arg 1)))
+    (while (> level 0)
+      (setq fname (expand-file-name (concat fname "/../")))
+      (setq level (1- level)))
+    (setq ad-return-value fname)))
+
+(defadvice helm-completing-read-default-1 (around ad-helm-completing-read-default-1 activate)
+  (if (listp (ad-get-arg 4))
+      (ad-set-arg 4 (car (ad-get-arg 4))))
+  (cl-letf (((symbol-function 'regexp-quote)
+             (symbol-function 'identity)))
+    ad-do-it))
+
+(defadvice find-file (around ad-find-file activate)
+  (let ((current-prefix-arg nil))
+    ad-do-it))
+
+(defun helm-howm-do-ag ()
+  (interactive)
+  (helm-grep-ag-1 howm-directory))
+;; use for grep
+(defun helm-howm-do-grep ()
+  (interactive)
+  (helm-do-grep-1
+   (list (car (split-string howm-directory "\n"))) '(4) nil '("*.txt" "*.md")))
+(global-set-key (kbd "C-z s") 'helm-howm-do-grep)
+(global-set-key (kbd "C-z x") 'helm-howm-do-ag)
+
+(with-eval-after-load-feature 'howm
+  (require 'helm-howm)
+  (setq hh:menu-list nil)
+  (setq hh:recent-menu-number-limit 100)
+  (defvar hh:howm-data-directory howm-directory)
+
+  (when (executable-find "rg")
+    (setq howm-view-use-grep t)
+    (setq howm-view-grep-command "rg")
+    (setq howm-view-grep-option "-nH --no-heading --color never")
+    (setq howm-view-grep-extended-option nil)
+    (setq howm-view-grep-fixed-option "-F")
+    (setq howm-view-grep-expr-option nil)
+    (setq howm-view-grep-file-stdin-option nil))
+
+  (global-set-key (kbd "C-z ,") 'hh:menu-command)
+  (global-set-key (kbd "C-z .") 'hh:resume))
+
+(el-get-bundle helm-swoop)
+(cl-defun helm-swoop-nomigemo (&key $query ($multiline current-prefix-arg))
+  (interactive)
+  (let (helm-migemo-mode)
+    (helm-swoop :$query $query :$multiline $multiline)))
+
+(defun isearch-forward-or-helm-swoop-or-helm-occur (use-helm-swoop)
+  (interactive "p")
+  (let (current-prefix-arg
+        (helm-swoop-pre-input-function 'ignore))
+    (call-interactively
+     (case use-helm-swoop
+       (1 'isearch-forward)             ; C-s
+       (4 (if (< 1000000 (buffer-size)) 'helm-occur 'helm-swoop)) ; C-u C-s
+       (16 'helm-swoop-nomigemo)))))                              ; C-u C-u C-s
+(global-set-key (kbd "C-s") 'isearch-forward-or-helm-swoop-or-helm-occur)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -893,38 +960,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; markdown-mode settings
-;;;
-
-(el-get-bundle markdown-mode
-  (add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode)))
-
-;; see also http://stackoverflow.com/questions/14275122/editing-markdown-pipe-tables-in-emacs
-(defun cleanup-org-tables ()
-  (save-excursion
-    (goto-char (point-min))
-    (while (search-forward "-+-" nil t) (replace-match "-|-"))))
-
-(add-hook 'markdown-mode-hook 'turn-on-orgtbl)
-(add-hook 'markdown-mode-hook
-          #'(lambda()
-              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
-(add-hook 'gfm-mode-hook 'turn-on-orgtbl)
-(add-hook 'gfm-mode-hook
-          #'(lambda()
-              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
-(with-eval-after-load-feature 'org-table
-  (add-hook 'markdown-mode-hook
-            #'(lambda()
-                (define-key orgtbl-mode-map
-                  (kbd "<backspace>") 'delete-backward-char)))
-  (add-hook 'gfm-mode-hook
-            #'(lambda()
-                (define-key orgtbl-mode-map
-                  (kbd "<backspace>") 'delete-backward-char))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; Language-server settings
 ;;;
 (el-get-bundle request)
@@ -1019,6 +1054,109 @@ See https://github.com/emacs-lsp/lsp-mode."
   (defface eldoc-box-body '((t . (:background "#FFFBEA"))) nil ; bg-alt
     :group 'font-lock-highlighting-faces))
 (setq eldoc-box-clear-with-C-g t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; js2-mode settings
+;;;
+
+(el-get-bundle js2-mode
+  (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+  (add-hook 'js-mode-hook 'js2-minor-mode)
+  (with-eval-after-load-feature 'js2-mode
+    (electric-indent-local-mode 0)
+    (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
+
+;; for json format
+;; see https://qiita.com/saku/items/d97e930ffc9ca39ac976
+(defun jq-format (beg end)
+  (interactive "r")
+  (shell-command-on-region beg end "jq ." nil t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; tide settings
+;;;
+
+(el-get-bundle tide)
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1)
+  (flycheck-add-mode 'typescript-tslint 'web-mode)
+  (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+
+;; formats the buffer before saving
+;; (add-hook 'before-save-hook 'tide-format-before-save)
+
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+(add-hook 'typescript-mode-hook 'prettier-js-mode)
+
+;; format options
+(setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
+(add-hook 'js2-mode-hook #'setup-tide-mode)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; web-mode settings
+;;;
+(el-get-bundle company-web)
+(el-get-bundle web-mode
+  :type github
+  :pkgname "nanasess/web-mode"
+  :branch "eccube-engine"
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tpl\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+  (with-eval-after-load-feature 'web-mode
+    (setq web-mode-enable-block-face t)
+    (setq web-mode-enable-current-element-highlight nil)
+    (setq web-mode-enable-current-column-highlight nil)
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (setq web-mode-enable-auto-indentation nil)))
+    (add-hook 'web-mode-hook 'prettier-js-mode)
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (when (string-equal "tsx" (file-name-extension buffer-file-name))
+                    (setup-tide-mode))))
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (when (string-equal "jsx" (file-name-extension buffer-file-name))
+                    (setup-tide-mode))))
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (when (string-equal "vue" (file-name-extension buffer-file-name))
+                    (setup-tide-mode))))
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (when (string-equal "tpl" (file-name-extension buffer-file-name))
+                    (web-mode-set-engine "eccube"))))
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (make-local-variable 'company-backends)
+                  (push '(company-web-html :with company-yasnippet) company-backends)))
+    (add-hook 'editorconfig-custom-hooks
+              (lambda (hash) (setq web-mode-block-padding 0)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; yaml-mode settings
+;;;
+
+(el-get-bundle yaml-mode
+  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1295,144 +1433,6 @@ See https://github.com/emacs-lsp/lsp-mode."
 ;; (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
 ;; (setq auto-async-byte-compile-suppress-warnings t)
 ;; (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; helm settings
-;;;
-
-(el-get-bundle helm
-  (with-eval-after-load-feature 'helm
-    (helm-migemo-mode 1)
-    (define-key helm-map (kbd "C-v") 'helm-next-source)
-    (define-key helm-map (kbd "M-v") 'helm-previous-source)
-    (define-key helm-map (kbd "C-j") 'skk-kakutei)
-    (define-key helm-map (kbd "C-z") 'helm-execute-persistent-action)
-
-    (defun helm-mac-spotlight ()
-      "Preconfigured `helm' for `mdfind'."
-      (interactive)
-      (let ((helm-ff-transformer-show-only-basename nil))
-        (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))))
-
-(defconst helm-for-files-preferred-list
-  '(helm-source-buffers-list
-    helm-source-recentf
-    helm-source-file-cache
-    helm-source-files-in-current-dir
-    helm-source-mac-spotlight))
-(setq helm-buffer-max-length 40
-      helm-c-ack-thing-at-point 'symbol
-      helm-ff-auto-update-initial-value nil
-      ;; helm-grep-default-recurse-command "ggrep -a -d recurse %e -n%cH -e %p %f"
-      helm-input-idle-delay 0.2
-      helm-mode t
-      helm-truncate-lines t)
-
-(with-eval-after-load-feature 'helm-grep
-  ;; use ripgrep https://github.com/BurntSushi/ripgrep
-  (when (executable-find "rg")
-    (setq helm-grep-ag-command "rg --color=always -S --no-heading --line-number %s %s %s")))
-
-(el-get-bundle helm-ls-git)
-(el-get-bundle helm-descbinds)
-
-(defadvice helm-grep-highlight-match
-    (around ad-helm-grep-highlight-match activate)
-  (ad-set-arg 1 t)
-  ad-do-it)
-
-(setq helm-gtags-ignore-case t)
-(setq helm-gtags-path-style 'relative)
-;; grep for euc-jp.
-;; (setq helm-grep-default-command "grep -a -d skip %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
-;; (setq helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
-
-(el-get-bundle wgrep
-  (with-eval-after-load-feature 'wgrep
-    (setq wgrep-enable-key "r")))
-
-(add-hook 'helm-gtags-mode-hook
-          #'(lambda ()
-              (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
-
-(global-set-key (kbd "C-;") 'helm-for-files)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "C-z C-r") 'helm-resume)
-(global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-h b") 'helm-descbinds)
-(global-set-key (kbd "C-z l") 'helm-ls-git-ls)
-
-;;;
-;;; see http://www49.atwiki.jp/ntemacs/pages/32.html
-;;;
-
-(defadvice helm-reduce-file-name (around ad-helm-reduce-file-name activate)
-  (let ((fname (ad-get-arg 0))
-        (level (ad-get-arg 1)))
-    (while (> level 0)
-      (setq fname (expand-file-name (concat fname "/../")))
-      (setq level (1- level)))
-    (setq ad-return-value fname)))
-
-(defadvice helm-completing-read-default-1 (around ad-helm-completing-read-default-1 activate)
-  (if (listp (ad-get-arg 4))
-      (ad-set-arg 4 (car (ad-get-arg 4))))
-  (cl-letf (((symbol-function 'regexp-quote)
-             (symbol-function 'identity)))
-    ad-do-it))
-
-(defadvice find-file (around ad-find-file activate)
-  (let ((current-prefix-arg nil))
-    ad-do-it))
-
-(defun helm-howm-do-ag ()
-  (interactive)
-  (helm-grep-ag-1 howm-directory))
-;; use for grep
-(defun helm-howm-do-grep ()
-  (interactive)
-  (helm-do-grep-1
-   (list (car (split-string howm-directory "\n"))) '(4) nil '("*.txt" "*.md")))
-(global-set-key (kbd "C-z s") 'helm-howm-do-grep)
-(global-set-key (kbd "C-z x") 'helm-howm-do-ag)
-
-(with-eval-after-load-feature 'howm
-  (require 'helm-howm)
-  (setq hh:menu-list nil)
-  (setq hh:recent-menu-number-limit 100)
-  (defvar hh:howm-data-directory howm-directory)
-
-  (when (executable-find "rg")
-    (setq howm-view-use-grep t)
-    (setq howm-view-grep-command "rg")
-    (setq howm-view-grep-option "-nH --no-heading --color never")
-    (setq howm-view-grep-extended-option nil)
-    (setq howm-view-grep-fixed-option "-F")
-    (setq howm-view-grep-expr-option nil)
-    (setq howm-view-grep-file-stdin-option nil))
-
-  (global-set-key (kbd "C-z ,") 'hh:menu-command)
-  (global-set-key (kbd "C-z .") 'hh:resume))
-
-(el-get-bundle helm-swoop)
-(cl-defun helm-swoop-nomigemo (&key $query ($multiline current-prefix-arg))
-  (interactive)
-  (let (helm-migemo-mode)
-    (helm-swoop :$query $query :$multiline $multiline)))
-
-(defun isearch-forward-or-helm-swoop-or-helm-occur (use-helm-swoop)
-  (interactive "p")
-  (let (current-prefix-arg
-        (helm-swoop-pre-input-function 'ignore))
-    (call-interactively
-     (case use-helm-swoop
-       (1 'isearch-forward)             ; C-s
-       (4 (if (< 1000000 (buffer-size)) 'helm-occur 'helm-swoop)) ; C-u C-s
-       (16 'helm-swoop-nomigemo)))))                              ; C-u C-u C-s
-(global-set-key (kbd "C-s") 'isearch-forward-or-helm-swoop-or-helm-occur)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
