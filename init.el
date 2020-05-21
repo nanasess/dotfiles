@@ -239,7 +239,6 @@
   :type github
   :depends (all-the-icons dash eldoc-eval shrink-path)
   :pkgname "seagle0128/doom-modeline"
-  (add-hook 'after-init-hook 'doom-modeline-mode)
   (with-eval-after-load-feature 'doom-modeline-core
     (add-hook 'doom-modeline-mode-hook
               #'(lambda ()
@@ -266,7 +265,7 @@
          ((not (boundp 'skk-modeline-input-mode)) "[--]")
          (t (if (string= "" skk-modeline-input-mode) "[--]"
               (substring (format "%s" skk-modeline-input-mode) 2 -1)))))))))
-
+(add-hook 'after-init-hook 'doom-modeline-mode)
 (line-number-mode 1)
 (column-number-mode 1)
 (size-indication-mode 1)
