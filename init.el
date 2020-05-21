@@ -1069,9 +1069,7 @@ See https://github.com/emacs-lsp/lsp-mode."
   :type github
   :pkgname "emacs-php/phpactor.el"
   :branch "master"
-  :depends (f composer company-mode smart-jump)
-  :autoloads "company-phpactor"
-  (with-eval-after-load-feature 'phpactor))
+  :depends (f composer company-mode smart-jump))
 ;; (setq lsp-clients-phpactor-server-command "phpactor server:start --stdio")
 ;; (lsp-register-client
 ;;  (make-lsp-client :new-connection (lsp-stdio-connection
