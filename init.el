@@ -1410,17 +1410,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; auto-async-byte-compile settings
-;;;
-
-(el-get-bundle auto-async-byte-compile)
-(setq auto-async-byte-compile-init-file (concat user-emacs-directory "init.el"))
-(setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
-(setq auto-async-byte-compile-suppress-warnings t)
-(add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; popwin settings
 ;;;
 
