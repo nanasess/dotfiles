@@ -1198,13 +1198,6 @@
   :pkgname "emacs-php/phpactor.el"
   :branch "master"
   :depends (f composer company-mode smart-jump))
-;; (setq lsp-clients-phpactor-server-command "phpactor server:start --stdio")
-;; (lsp-register-client
-;;  (make-lsp-client :new-connection (lsp-stdio-connection
-;;                                    (lambda () lsp-clients-php-server-command))
-;;                   :major-modes '(php-mode)
-;;                   :priority -2
-;;                   :server-id 'php-ls))
 
 (el-get-bundle phpstan
   :type github
@@ -1521,91 +1514,6 @@
 ;;; nginx-mode settings
 ;;;
 (el-get-bundle nginx-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; apachectl settings
-;;;
-;;;
-
-(defvar apachectl-program-command "/usr/local/sbin/apachectl")
-(defvar apachectl-buffer-name "*apachectl*")
-(defun executable-apachectl (args)
-  "Executable apachectl command.
-required setting with sudoers.
-
-e.g.)
-username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
-         /opt/local/apache2/bin/apachectl start,\\
-         /opt/local/apache2/bin/apachectl stop,\\
-         /opt/local/apache2/bin/apachectl graceful,\\
-         /opt/local/apache2/bin/apachectl restart
-"
-  (interactive)
-  (let ((apachectl-command (list "sudo" apachectl-program-command args)))
-    (with-current-buffer (get-buffer-create apachectl-buffer-name)
-      (erase-buffer)
-      (buffer-disable-undo)
-      (set-process-sentinel
-       (apply 'start-process (format "apachectl %s" args) (current-buffer)
-              apachectl-command)
-       #'(lambda (proc stat)
-           (cond ((zerop (process-exit-status proc))
-                  (message "%s... successful!" proc))
-                 ((popwin:popup-buffer-tail apachectl-buffer-name)
-                  (error "%s... failur!" proc))))))))
-(defun apachectl/start ()
-  (interactive)
-  (executable-apachectl "start"))
-(defun apachectl/stop ()
-  (interactive)
-  (executable-apachectl "stop"))
-(defun apachectl/restart ()
-  (interactive)
-  (executable-apachectl "restart"))
-(defun apachectl/configtest ()
-  (interactive)
-  (executable-apachectl "configtest"))
-(defun apachectl/graceful ()
-  (interactive)
-  (executable-apachectl "graceful"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; convert to path settings
-;;;
-
-(defun convert-win-to-mac-path()
-  (interactive)
-  (let ((buf (get-buffer-create "*convert*")) str ret)
-    (setq str (buffer-substring (region-beginning) (region-end)))
-    (with-current-buffer
-        buf (setq ret (buffer-string))
-        (setq str (replace-regexp-in-string
-                   "\\\\\\\\[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+" "/Volumes" str))
-        (setq str (replace-regexp-in-string "\\\\" "/" str))
-        (insert str))
-    (kill-buffer buf)
-    (message "%s" str)
-    (kill-new str)
-    (delete-region (region-beginning) (region-end))
-    (insert str)))
-
-(defun convert-smb-to-win-path()
-  (interactive)
-  (let ((buf (get-buffer-create "*convert*")) str ret)
-    (setq str (buffer-substring (region-beginning) (region-end)))
-    (with-current-buffer
-        buf (setq ret (buffer-string))
-        (setq str (ucs-normalize-NFC-string str))
-        (setq str (replace-regexp-in-string "smb://" "\\\\\\\\" str))
-        (setq str (replace-regexp-in-string "/" "\\\\" str))
-        (insert str))
-    (kill-buffer buf)
-    (message "%s" str)
-    (kill-new str)
-    (delete-region (region-beginning) (region-end))
-    (insert str)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
