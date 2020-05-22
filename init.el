@@ -317,8 +317,9 @@
   (setq tab-width 4)
   (setq indent-tabs-mode nil))
 
-(el-get-bundle editorconfig
-  (add-hook 'after-init-hook 'editorconfig-mode))
+(el-get-bundle editorconfig)
+(add-hook 'after-init-hook #'(lambda ()
+                               (editorconfig-mode 1)))
 
 (el-get-bundle prettier-js)
 
@@ -782,7 +783,6 @@
 (defvar company-mode/enable-yas t
   "Enable yasnippet for all backends.")
 (el-get-bundle company-mode
-  (add-hook 'after-init-hook 'global-company-mode)
   (global-set-key (kbd "C-M-i") 'company-complete)
   ;; Add yasnippet support for all company backends
   ;; https://github.com/syl20bnr/spacemacs/pull/179
@@ -817,12 +817,14 @@
           #'(lambda ()
               (make-local-variable 'company-backends)
               (push '(company-elisp :with company-yasnippet) company-backends)))
+(add-hook 'after-init-hook 'global-company-mode)
 
 (el-get-bundle company-box
   :type github
   :pkgname "sebastiencs/company-box"
   (add-hook 'company-mode-hook 'company-box-mode)
   (with-eval-after-load-feature 'company-box
+    (require 'all-the-icons)
     (defun company-box--update-width (&optional no-update height)
       (unless no-update
         (redisplay))
@@ -1327,13 +1329,6 @@
 ;;; stack install stylish-haskell
 ;;; stack install hlint
 ;;;
-(el-get-bundle lsp-haskell
-  :type github
-  :pkgname "emacs-lsp/lsp-haskell"
-  (setq lsp-haskell-process-path-hie "hie-wrapper")
-  (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
-  (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on))
-
 (el-get-bundle haskell-mode
   :type github
   :pkgname "haskell/haskell-mode"
@@ -1345,6 +1340,15 @@
     (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
     (add-hook 'haskell-mode-hook #'company-backends-with-yas)
     (add-hook 'haskell-mode-hook #'lsp)))
+
+(el-get-bundle lsp-haskell
+  :type github
+  :pkgname "emacs-lsp/lsp-haskell"
+  :depends (haskell-mode)
+  (with-eval-after-load-feature 'lsp-haskell
+    (setq lsp-haskell-process-path-hie "hie-wrapper")
+    (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
+    (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1613,6 +1617,7 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (el-get-bundle recentf-ext)
 (setq recentf-max-saved-items 50000)
 
+(el-get 'sync)
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
 (custom-set-faces
