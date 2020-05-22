@@ -19,7 +19,7 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(setq gc-cons-threshold (* 128 1024 1024))
+(setq gc-cons-threshold most-positive-fixnum)
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
 
@@ -119,12 +119,22 @@
       skk-init-file (concat user-initial-directory "skk-init.el")
       skk-isearch-start-mode 'latin)
 (el-get-bundle ddskk
-  (with-eval-after-load-feature 'skk
+  :type github
+  :pkgname "skk-dev/ddskk"
+  :info "doc/skk.info"
+  :autoloads "skk-autoloads"
+  :features ("skk-setup")
+  :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
+           (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
+           ("cp" "skk-setup.el.in" "skk-setup.el"))
+  ;; (with-eval-after-load-feature 'skk
     ;; see https://uwabami.github.io/cc-env/Emacs.html
-    (defun disable-skk-setup-modeline ()
-      (setq skk-indicator-alist (skk-make-indicator-alist))
-      (force-mode-line-update t))
-    (advice-add 'skk-setup-modeline :override 'disable-skk-setup-modeline)))
+    ;; (defun disable-skk-setup-modeline ()
+    ;;   (setq skk-indicator-alist (skk-make-indicator-alist))
+    ;;   (force-mode-line-update t))
+    ;; (advice-add 'skk-setup-modeline :override 'disable-skk-setup-modeline))
+  ;; )
+)
 (setq skk-preload nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -161,14 +171,6 @@
 (setq delete-old-versions t
       make-backup-files t
       version-control t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; recentf settings
-;;;
-
-(el-get-bundle recentf-ext)
-(setq recentf-max-saved-items 50000)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -235,20 +237,10 @@
   :depends (dash f s))
 (el-get-bundle all-the-icons)
 
-(load "openweathermap-api-key" t)
-(when openweathermap-api-key
-  (el-get-bundle! sky-color-clock
-    :type github
-    :pkgname "zk-phi/sky-color-clock"
-    (with-eval-after-load-feature 'sky-color-clock
-      (sky-color-clock-initialize 34.8)(setq sky-color-clock-format "")
-      (sky-color-clock-initialize-openweathermap-client openweathermap-api-key 1855207))))
-
 (el-get-bundle doom-modeline
   :type github
   :depends (all-the-icons dash eldoc-eval shrink-path)
   :pkgname "seagle0128/doom-modeline"
-  (add-hook 'after-init-hook 'doom-modeline-mode)
   (with-eval-after-load-feature 'doom-modeline-core
     (add-hook 'doom-modeline-mode-hook
               #'(lambda ()
@@ -261,24 +253,22 @@
                   (setf (alist-get 'csharp-mode all-the-icons-mode-icon-alist nil nil #'equal)
                         '(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
                   (doom-modeline-def-modeline 'main
-                    '(bar input-method-skk workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
-                    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker sky-color-clock))))
+                    '(workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
+                    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker bar))))
     (setq doom-modeline-vcs-max-length 999)
     (setq doom-modeline-buffer-file-name-style 'buffer-name)
-    (doom-modeline-def-segment sky-color-clock
-      (concat (doom-modeline-spc)
-              (sky-color-clock)))
 
-    (doom-modeline-def-segment input-method-skk
-      "The current ddskk status."
-      (concat
-       (doom-modeline-spc)
-       (propertize
-        (cond
-         ((not (boundp 'skk-modeline-input-mode)) "[--]")
-         (t (if (string= "" skk-modeline-input-mode) "[--]"
-              (substring (format "%s" skk-modeline-input-mode) 2 -1)))))))))
-
+    ;; (doom-modeline-def-segment input-method-skk
+    ;;   "The current ddskk status."
+    ;;   (concat
+    ;;    (doom-modeline-spc)
+    ;;    (propertize
+    ;;     (cond
+    ;;      ((not (boundp 'skk-modeline-input-mode)) "[--]")
+    ;;      (t (if (string= "" skk-modeline-input-mode) "[--]"
+    ;;           (substring (format "%s" skk-modeline-input-mode) 2 -1)))))))
+    ))
+(add-hook 'after-init-hook 'doom-modeline-mode)
 (line-number-mode 1)
 (column-number-mode 1)
 (size-indication-mode 1)
@@ -298,7 +288,9 @@
 ;;; window-system settings
 ;;;
 
-(cond (window-system (tool-bar-mode 0)))
+(add-hook 'after-init-hook
+          #'(lambda()
+              (cond (window-system (tool-bar-mode 0)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -315,11 +307,11 @@
 ;;;
 
 (el-get-bundle emacs-async
-  (autoload 'dired-async-mode "dired-async.el" nil t)
-  (dired-async-mode 1))
+  (autoload 'dired-async-mode "dired-async.el" nil t))
 
 (add-hook 'dired-mode-hook
           #'(lambda ()
+              (dired-async-mode 1)
               (local-set-key (kbd "C-t") 'other-window)
               (local-set-key (kbd "r") 'wdired-change-to-wdired-mode)))
 (add-hook 'dired-load-hook
@@ -336,8 +328,9 @@
   (setq tab-width 4)
   (setq indent-tabs-mode nil))
 
-(el-get-bundle editorconfig
-  (add-hook 'after-init-hook 'editorconfig-mode))
+(el-get-bundle editorconfig)
+(add-hook 'after-init-hook #'(lambda ()
+                               (editorconfig-mode 1)))
 
 (el-get-bundle prettier-js)
 
@@ -358,109 +351,6 @@
 ;; see https://emacs.stackexchange.com/a/44604
 (defun risky-local-variable-p (sym &optional _ignored) nil)
 (defun safe-local-variable-p (sym val) t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; js2-mode settings
-;;;
-
-(el-get-bundle js2-mode
-  (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-  (add-hook 'js-mode-hook 'js2-minor-mode)
-  (with-eval-after-load-feature 'js2-mode
-    (electric-indent-local-mode 0)
-    (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
-
-;; for json format
-;; see https://qiita.com/saku/items/d97e930ffc9ca39ac976
-(defun jq-format (beg end)
-  (interactive "r")
-  (shell-command-on-region beg end "jq ." nil t))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; tide settings
-;;;
-
-(el-get-bundle tide)
-(defun setup-tide-mode ()
-  (interactive)
-  (tide-setup)
-  (flycheck-mode +1)
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (eldoc-mode +1)
-  (tide-hl-identifier-mode +1)
-  (company-mode +1)
-  (flycheck-add-mode 'typescript-tslint 'web-mode)
-  (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append))
-
-;; aligns annotation to the right hand side
-(setq company-tooltip-align-annotations t)
-
-;; formats the buffer before saving
-;; (add-hook 'before-save-hook 'tide-format-before-save)
-
-(add-hook 'typescript-mode-hook #'setup-tide-mode)
-(add-hook 'typescript-mode-hook 'prettier-js-mode)
-
-;; format options
-(setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
-(add-hook 'js2-mode-hook #'setup-tide-mode)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; web-mode settings
-;;;
-(el-get-bundle company-web)
-(el-get-bundle web-mode
-  :type github
-  :pkgname "nanasess/web-mode"
-  :branch "eccube-engine"
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.tpl\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-  (with-eval-after-load-feature 'web-mode
-    (setq web-mode-enable-block-face t)
-    (setq web-mode-enable-current-element-highlight nil)
-    (setq web-mode-enable-current-column-highlight nil)
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (setq web-mode-enable-auto-indentation nil)))
-    (add-hook 'web-mode-hook 'prettier-js-mode)
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (when (string-equal "tsx" (file-name-extension buffer-file-name))
-                    (setup-tide-mode))))
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (when (string-equal "jsx" (file-name-extension buffer-file-name))
-                    (setup-tide-mode))))
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (when (string-equal "vue" (file-name-extension buffer-file-name))
-                    (setup-tide-mode))))
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (when (string-equal "tpl" (file-name-extension buffer-file-name))
-                    (web-mode-set-engine "eccube"))))
-    (add-hook 'web-mode-hook
-              #'(lambda ()
-                  (make-local-variable 'company-backends)
-                  (push '(company-web-html :with company-yasnippet) company-backends)))
-    (add-hook 'editorconfig-custom-hooks
-              (lambda (hash) (setq web-mode-block-padding 0)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; yaml-mode settings
-;;;
-
-(el-get-bundle yaml-mode
-  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -600,11 +490,12 @@
 ;;; session settings
 ;;;
 
-(el-get-bundle! session
+(el-get-bundle session
   :type github
   :pkgname "nanasess/emacs-session"
-  (add-hook 'after-init-hook 'session-initialize)
-  (setq session-save-print-spec '(t nil 40000)))
+  (with-eval-after-load-feature 'session
+    (setq session-save-print-spec '(t nil 40000))))
+(add-hook 'after-init-hook 'session-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -718,10 +609,11 @@
 ;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
 (setq howm-process-coding-system 'utf-8-unix)
 (setq howm-todo-menu-types "[-+~!]")
-(el-get-bundle! howm
+(el-get-bundle howm
   :type git
   :url "git://git.osdn.jp/gitroot/howm/howm.git"
   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make")))
+(autoload 'howm-mode "howm" "Hitori Otegaru Wiki Modoki" t)
 (add-to-list 'auto-mode-alist '("\\.txt$" . gfm-mode))
 (setq howm-template
       (concat howm-view-title-header
@@ -758,13 +650,150 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; helm settings
+;;;
+
+(el-get-bundle helm
+  (with-eval-after-load-feature 'helm
+    (helm-migemo-mode 1)
+    (define-key helm-map (kbd "C-v") 'helm-next-source)
+    (define-key helm-map (kbd "M-v") 'helm-previous-source)
+    (define-key helm-map (kbd "C-j") 'skk-kakutei)
+    (define-key helm-map (kbd "C-z") 'helm-execute-persistent-action)
+
+    (defun helm-mac-spotlight ()
+      "Preconfigured `helm' for `mdfind'."
+      (interactive)
+      (let ((helm-ff-transformer-show-only-basename nil))
+        (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))))
+
+(defconst helm-for-files-preferred-list
+  '(helm-source-buffers-list
+    helm-source-recentf
+    helm-source-file-cache
+    helm-source-files-in-current-dir
+    helm-source-mac-spotlight))
+(setq helm-buffer-max-length 40
+      helm-c-ack-thing-at-point 'symbol
+      helm-ff-auto-update-initial-value nil
+      ;; helm-grep-default-recurse-command "ggrep -a -d recurse %e -n%cH -e %p %f"
+      helm-input-idle-delay 0.2
+      helm-mode t
+      helm-truncate-lines t)
+
+(with-eval-after-load-feature 'helm-grep
+  ;; use ripgrep https://github.com/BurntSushi/ripgrep
+  (when (executable-find "rg")
+    (setq helm-grep-ag-command "rg --color=always -S --no-heading --line-number %s %s %s")))
+
+(el-get-bundle helm-ls-git)
+(el-get-bundle helm-descbinds)
+
+(defadvice helm-grep-highlight-match
+    (around ad-helm-grep-highlight-match activate)
+  (ad-set-arg 1 t)
+  ad-do-it)
+
+(setq helm-gtags-ignore-case t)
+(setq helm-gtags-path-style 'relative)
+;; grep for euc-jp.
+;; (setq helm-grep-default-command "grep -a -d skip %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
+;; (setq helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
+
+(el-get-bundle wgrep
+  (with-eval-after-load-feature 'wgrep
+    (setq wgrep-enable-key "r")))
+
+(add-hook 'helm-gtags-mode-hook
+          #'(lambda ()
+              (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
+
+(global-set-key (kbd "C-;") 'helm-for-files)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-z C-r") 'helm-resume)
+(global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-h b") 'helm-descbinds)
+(global-set-key (kbd "C-z l") 'helm-ls-git-ls)
+
+;;;
+;;; see http://www49.atwiki.jp/ntemacs/pages/32.html
+;;;
+
+(defadvice helm-reduce-file-name (around ad-helm-reduce-file-name activate)
+  (let ((fname (ad-get-arg 0))
+        (level (ad-get-arg 1)))
+    (while (> level 0)
+      (setq fname (expand-file-name (concat fname "/../")))
+      (setq level (1- level)))
+    (setq ad-return-value fname)))
+
+(defadvice helm-completing-read-default-1 (around ad-helm-completing-read-default-1 activate)
+  (if (listp (ad-get-arg 4))
+      (ad-set-arg 4 (car (ad-get-arg 4))))
+  (cl-letf (((symbol-function 'regexp-quote)
+             (symbol-function 'identity)))
+    ad-do-it))
+
+(defadvice find-file (around ad-find-file activate)
+  (let ((current-prefix-arg nil))
+    ad-do-it))
+
+(defun helm-howm-do-ag ()
+  (interactive)
+  (helm-grep-ag-1 howm-directory))
+;; use for grep
+(defun helm-howm-do-grep ()
+  (interactive)
+  (helm-do-grep-1
+   (list (car (split-string howm-directory "\n"))) '(4) nil '("*.txt" "*.md")))
+(global-set-key (kbd "C-z s") 'helm-howm-do-grep)
+(global-set-key (kbd "C-z x") 'helm-howm-do-ag)
+
+(with-eval-after-load-feature 'howm
+  (require 'helm-howm)
+  (setq hh:menu-list nil)
+  (setq hh:recent-menu-number-limit 100)
+  (defvar hh:howm-data-directory howm-directory)
+
+  (when (executable-find "rg")
+    (setq howm-view-use-grep t)
+    (setq howm-view-grep-command "rg")
+    (setq howm-view-grep-option "-nH --no-heading --color never")
+    (setq howm-view-grep-extended-option nil)
+    (setq howm-view-grep-fixed-option "-F")
+    (setq howm-view-grep-expr-option nil)
+    (setq howm-view-grep-file-stdin-option nil))
+
+  (global-set-key (kbd "C-z ,") 'hh:menu-command)
+  (global-set-key (kbd "C-z .") 'hh:resume))
+
+(el-get-bundle helm-swoop)
+(cl-defun helm-swoop-nomigemo (&key $query ($multiline current-prefix-arg))
+  (interactive)
+  (let (helm-migemo-mode)
+    (helm-swoop :$query $query :$multiline $multiline)))
+
+(defun isearch-forward-or-helm-swoop-or-helm-occur (use-helm-swoop)
+  (interactive "p")
+  (let (current-prefix-arg
+        (helm-swoop-pre-input-function 'ignore))
+    (call-interactively
+     (case use-helm-swoop
+       (1 'isearch-forward)             ; C-s
+       (4 (if (< 1000000 (buffer-size)) 'helm-occur 'helm-swoop)) ; C-u C-s
+       (16 'helm-swoop-nomigemo)))))                              ; C-u C-u C-s
+(global-set-key (kbd "C-s") 'isearch-forward-or-helm-swoop-or-helm-occur)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; company-mode settings
 ;;;
 
 (defvar company-mode/enable-yas t
   "Enable yasnippet for all backends.")
 (el-get-bundle company-mode
-  (add-hook 'after-init-hook 'global-company-mode)
   (global-set-key (kbd "C-M-i") 'company-complete)
   ;; Add yasnippet support for all company backends
   ;; https://github.com/syl20bnr/spacemacs/pull/179
@@ -799,12 +828,14 @@
           #'(lambda ()
               (make-local-variable 'company-backends)
               (push '(company-elisp :with company-yasnippet) company-backends)))
+(add-hook 'after-init-hook 'global-company-mode)
 
 (el-get-bundle company-box
   :type github
   :pkgname "sebastiencs/company-box"
   (add-hook 'company-mode-hook 'company-box-mode)
   (with-eval-after-load-feature 'company-box
+    (require 'all-the-icons)
     (defun company-box--update-width (&optional no-update height)
       (unless no-update
         (redisplay))
@@ -948,37 +979,21 @@
 (el-get-bundle spinner)
 (el-get-bundle f)
 (el-get-bundle ht)
+(el-get-bundle! flycheck)
 ;; (el-get-bundle treemacs
 ;;   :type github
 ;;   :pkgname "Alexander-Miller/treemacs")
 (el-get-bundle lsp-mode
   :type github
   :pkgname "emacs-lsp/lsp-mode"
-  :depends (spinner f ht flycheck)
+  :depends (dash f ht hydra spinner markdown-mode)
   (with-eval-after-load-feature 'lsp
-    (require 'flycheck)
-    ;; see https://github.com/emacs-lsp/lsp-mode/blob/e2d3cdfa8e09731da3caae0f29748211753814ef/lsp-mode.el#L7719-L7729
-    (flycheck-define-generic-checker 'lsp
-      "A syntax checker using the Language Server Protocol (LSP)
-provided by lsp-mode.
-See https://github.com/emacs-lsp/lsp-mode."
-      :start #'lsp--flycheck-start
-      :modes '(python-mode)
-      :predicate (lambda () lsp-mode)
-      :error-explainer (lambda (e)
-                         (cond ((string-prefix-p "clang-tidy" (flycheck-error-message e))
-                                (lsp-cpp-flycheck-clang-tidy-error-explainer e))
-                               (t (flycheck-error-message e)))))
-    ;; https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp
-    ;; (setq lsp-print-io nil)
-    ;; (setq lsp-print-performance nil)
     ;; general
     (setq lsp-auto-guess-root t)
     (setq lsp-document-sync-method 'incremental) ;; always send incremental document
     (setq lsp-response-timeout 5)
     (setq lsp-diagnostic-package :auto)
-    (setq lsp-enable-completion-at-point nil)
-    (require 'lsp-clients)))
+    (setq lsp-enable-completion-at-point nil)))
 ;; (el-get-bundle lsp-treemacs
 ;;   :type github
 ;;   :pkgname "emacs-lsp/lsp-treemacs"
@@ -986,6 +1001,7 @@ See https://github.com/emacs-lsp/lsp-mode."
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
+  :depends (dash lsp-mode markdown-mode)
   (with-eval-after-load-feature 'lsp-ui
     ;; lsp-ui-doc
     (setq lsp-ui-doc-enable t)
@@ -1039,6 +1055,109 @@ See https://github.com/emacs-lsp/lsp-mode."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; js2-mode settings
+;;;
+
+(el-get-bundle js2-mode
+  (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+  (add-hook 'js-mode-hook 'js2-minor-mode)
+  (with-eval-after-load-feature 'js2-mode
+    (electric-indent-local-mode 0)
+    (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
+
+;; for json format
+;; see https://qiita.com/saku/items/d97e930ffc9ca39ac976
+(defun jq-format (beg end)
+  (interactive "r")
+  (shell-command-on-region beg end "jq ." nil t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; tide settings
+;;;
+
+(el-get-bundle tide)
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1)
+  (flycheck-add-mode 'typescript-tslint 'web-mode)
+  (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+
+;; formats the buffer before saving
+;; (add-hook 'before-save-hook 'tide-format-before-save)
+
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+(add-hook 'typescript-mode-hook 'prettier-js-mode)
+
+;; format options
+(setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
+(add-hook 'js2-mode-hook #'setup-tide-mode)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; web-mode settings
+;;;
+(el-get-bundle company-web)
+(el-get-bundle web-mode
+  :type github
+  :pkgname "nanasess/web-mode"
+  :branch "eccube-engine"
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tpl\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+  (with-eval-after-load-feature 'web-mode
+    (setq web-mode-enable-block-face t)
+    (setq web-mode-enable-current-element-highlight nil)
+    (setq web-mode-enable-current-column-highlight nil)
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (setq web-mode-enable-auto-indentation nil)))
+    (add-hook 'web-mode-hook 'prettier-js-mode)
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (when (string-equal "tsx" (file-name-extension buffer-file-name))
+                    (setup-tide-mode))))
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (when (string-equal "jsx" (file-name-extension buffer-file-name))
+                    (setup-tide-mode))))
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (when (string-equal "vue" (file-name-extension buffer-file-name))
+                    (setup-tide-mode))))
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (when (string-equal "tpl" (file-name-extension buffer-file-name))
+                    (web-mode-set-engine "eccube"))))
+    (add-hook 'web-mode-hook
+              #'(lambda ()
+                  (make-local-variable 'company-backends)
+                  (push '(company-web-html :with company-yasnippet) company-backends)))
+    (add-hook 'editorconfig-custom-hooks
+              (lambda (hash) (setq web-mode-block-padding 0)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; yaml-mode settings
+;;;
+
+(el-get-bundle yaml-mode
+  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; PHP settings
 ;;;
 
@@ -1078,16 +1197,7 @@ See https://github.com/emacs-lsp/lsp-mode."
   :type github
   :pkgname "emacs-php/phpactor.el"
   :branch "master"
-  :depends (f composer company-mode smart-jump)
-  :autoloads "company-phpactor"
-  (with-eval-after-load-feature 'phpactor))
-;; (setq lsp-clients-phpactor-server-command "phpactor server:start --stdio")
-;; (lsp-register-client
-;;  (make-lsp-client :new-connection (lsp-stdio-connection
-;;                                    (lambda () lsp-clients-php-server-command))
-;;                   :major-modes '(php-mode)
-;;                   :priority -2
-;;                   :server-id 'php-ls))
+  :depends (f composer company-mode smart-jump))
 
 (el-get-bundle phpstan
   :type github
@@ -1119,15 +1229,6 @@ See https://github.com/emacs-lsp/lsp-mode."
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
-
-(el-get-bundle phpunit
-  :type github
-  :pkgname "nlamirault/phpunit.el"
-  (add-to-list 'auto-mode-alist '("\\Test.php$'" . phpunit-mode))
-  (with-eval-after-load-feature 'phpunit
-    (define-key php-mode-map (kbd "C-z C-t") 'phpunit-current-class))
-  (setq phpunit-configuration-file  "phpunit.xml.dist")
-  (setq phpunit-default-program  "phpunit"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1232,13 +1333,6 @@ See https://github.com/emacs-lsp/lsp-mode."
 ;;; stack install stylish-haskell
 ;;; stack install hlint
 ;;;
-(el-get-bundle lsp-haskell
-  :type github
-  :pkgname "emacs-lsp/lsp-haskell"
-  (setq lsp-haskell-process-path-hie "hie-wrapper")
-  (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
-  (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on))
-
 (el-get-bundle haskell-mode
   :type github
   :pkgname "haskell/haskell-mode"
@@ -1250,6 +1344,15 @@ See https://github.com/emacs-lsp/lsp-mode."
     (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
     (add-hook 'haskell-mode-hook #'company-backends-with-yas)
     (add-hook 'haskell-mode-hook #'lsp)))
+
+(el-get-bundle lsp-haskell
+  :type github
+  :pkgname "emacs-lsp/lsp-haskell"
+  :depends (haskell-mode)
+  (with-eval-after-load-feature 'lsp-haskell
+    (setq lsp-haskell-process-path-hie "hie-wrapper")
+    (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
+    (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1312,161 +1415,6 @@ See https://github.com/emacs-lsp/lsp-mode."
 
 (unless (load "twittering-tinyurl-api-key" t t)
   (defvar twittering-bitly-api-key nil))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; auto-async-byte-compile settings
-;;;
-
-;; (el-get-bundle auto-async-byte-compile)
-;; (setq auto-async-byte-compile-init-file (concat user-emacs-directory "init.el"))
-;; (setq auto-async-byte-compile-exclude-files-regexp "/mac/") ;dummy
-;; (setq auto-async-byte-compile-suppress-warnings t)
-;; (add-hook 'emacs-lisp-mode-hook 'enable-auto-async-byte-compile-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; helm settings
-;;;
-
-(el-get-bundle helm
-  (with-eval-after-load-feature 'helm
-    (helm-migemo-mode 1)
-    (define-key helm-map (kbd "C-v") 'helm-next-source)
-    (define-key helm-map (kbd "M-v") 'helm-previous-source)
-    (define-key helm-map (kbd "C-j") 'skk-kakutei)
-    (define-key helm-map (kbd "C-z") 'helm-execute-persistent-action)
-
-    (defun helm-mac-spotlight ()
-      "Preconfigured `helm' for `mdfind'."
-      (interactive)
-      (let ((helm-ff-transformer-show-only-basename nil))
-        (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))))
-
-(defconst helm-for-files-preferred-list
-  '(helm-source-buffers-list
-    helm-source-recentf
-    helm-source-file-cache
-    helm-source-files-in-current-dir
-    helm-source-mac-spotlight))
-(setq helm-buffer-max-length 40
-      helm-c-ack-thing-at-point 'symbol
-      helm-ff-auto-update-initial-value nil
-      ;; helm-grep-default-recurse-command "ggrep -a -d recurse %e -n%cH -e %p %f"
-      helm-input-idle-delay 0.2
-      helm-mode t
-      helm-truncate-lines t)
-
-(with-eval-after-load-feature 'helm-grep
-  ;; use ripgrep https://github.com/BurntSushi/ripgrep
-  (when (executable-find "rg")
-    (setq helm-grep-ag-command "rg --color=always -S --no-heading --line-number %s %s %s")))
-
-(el-get-bundle helm-ls-git)
-(el-get-bundle helm-descbinds)
-
-(defadvice helm-grep-highlight-match
-    (around ad-helm-grep-highlight-match activate)
-  (ad-set-arg 1 t)
-  ad-do-it)
-
-(setq helm-gtags-ignore-case t)
-(setq helm-gtags-path-style 'relative)
-;; grep for euc-jp.
-;; (setq helm-grep-default-command "grep -a -d skip %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
-;; (setq helm-grep-default-recurse-command "grep -a -d recurse %e -n%cH -e `echo %p | lv -Ia -Oej` %f | lv -Os -Ia ")
-
-(el-get-bundle wgrep
-  (with-eval-after-load-feature 'wgrep
-    (setq wgrep-enable-key "r")))
-
-(add-hook 'helm-gtags-mode-hook
-          #'(lambda ()
-              (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
-
-(global-set-key (kbd "C-;") 'helm-for-files)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "C-z C-r") 'helm-resume)
-(global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-h b") 'helm-descbinds)
-(global-set-key (kbd "C-z l") 'helm-ls-git-ls)
-
-
-;;;
-;;; see http://www49.atwiki.jp/ntemacs/pages/32.html
-;;;
-
-(defadvice helm-reduce-file-name (around ad-helm-reduce-file-name activate)
-  (let ((fname (ad-get-arg 0))
-        (level (ad-get-arg 1)))
-    (while (> level 0)
-      (setq fname (expand-file-name (concat fname "/../")))
-      (setq level (1- level)))
-    (setq ad-return-value fname)))
-
-(defadvice helm-completing-read-default-1 (around ad-helm-completing-read-default-1 activate)
-  (if (listp (ad-get-arg 4))
-      (ad-set-arg 4 (car (ad-get-arg 4))))
-  (cl-letf (((symbol-function 'regexp-quote)
-             (symbol-function 'identity)))
-    ad-do-it))
-
-(defadvice find-file (around ad-find-file activate)
-  (let ((current-prefix-arg nil))
-    ad-do-it))
-
-(with-eval-after-load-feature 'howm
-  (require 'helm-howm)
-  (defvar hh:howm-data-directory howm-directory)
-  (setq hh:menu-list nil)
-  (setq hh:recent-menu-number-limit 100)
-
-  (defun helm-howm-do-ag ()
-    (interactive)
-    (helm-grep-ag-1
-     hh:howm-data-directory))
-  ;; use for grep
-  (defun helm-howm-do-grep ()
-    (interactive)
-    (helm-do-grep-1
-     (list (car (split-string hh:howm-data-directory "\n"))) '(4) nil '("*.txt" "*.md")))
-
-  (when (executable-find "rg")
-    (setq howm-view-use-grep t)
-    (setq howm-view-grep-command "rg")
-    (setq howm-view-grep-option "-nH --no-heading --color never")
-    (setq howm-view-grep-extended-option nil)
-    (setq howm-view-grep-fixed-option "-F")
-    (setq howm-view-grep-expr-option nil)
-    (setq howm-view-grep-file-stdin-option nil))
-
-  (global-set-key (kbd "C-z ,") 'hh:menu-command)
-  (global-set-key (kbd "C-z .") 'hh:resume)
-  (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
-  (global-set-key (kbd "C-z x") 'helm-howm-do-ag))
-
-(el-get-bundle helm-c-yasnippet)
-(setq helm-yas-space-match-any-greedy t)
-(global-set-key (kbd "C-c y") 'helm-yas-complete)
-
-(el-get-bundle helm-swoop)
-(cl-defun helm-swoop-nomigemo (&key $query ($multiline current-prefix-arg))
-  (interactive)
-  (let (helm-migemo-mode)
-    (helm-swoop :$query $query :$multiline $multiline)))
-
-(defun isearch-forward-or-helm-swoop-or-helm-occur (use-helm-swoop)
-  (interactive "p")
-  (let (current-prefix-arg
-        (helm-swoop-pre-input-function 'ignore))
-    (call-interactively
-     (case use-helm-swoop
-       (1 'isearch-forward)             ; C-s
-       (4 (if (< 1000000 (buffer-size)) 'helm-occur 'helm-swoop)) ; C-u C-s
-       (16 'helm-swoop-nomigemo)))))                              ; C-u C-u C-s
-(global-set-key (kbd "C-s") 'isearch-forward-or-helm-swoop-or-helm-occur)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1569,91 +1517,6 @@ See https://github.com/emacs-lsp/lsp-mode."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; apachectl settings
-;;;
-;;;
-
-(defvar apachectl-program-command "/usr/local/sbin/apachectl")
-(defvar apachectl-buffer-name "*apachectl*")
-(defun executable-apachectl (args)
-  "Executable apachectl command.
-required setting with sudoers.
-
-e.g.)
-username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
-         /opt/local/apache2/bin/apachectl start,\\
-         /opt/local/apache2/bin/apachectl stop,\\
-         /opt/local/apache2/bin/apachectl graceful,\\
-         /opt/local/apache2/bin/apachectl restart
-"
-  (interactive)
-  (let ((apachectl-command (list "sudo" apachectl-program-command args)))
-    (with-current-buffer (get-buffer-create apachectl-buffer-name)
-      (erase-buffer)
-      (buffer-disable-undo)
-      (set-process-sentinel
-       (apply 'start-process (format "apachectl %s" args) (current-buffer)
-              apachectl-command)
-       #'(lambda (proc stat)
-           (cond ((zerop (process-exit-status proc))
-                  (message "%s... successful!" proc))
-                 ((popwin:popup-buffer-tail apachectl-buffer-name)
-                  (error "%s... failur!" proc))))))))
-(defun apachectl/start ()
-  (interactive)
-  (executable-apachectl "start"))
-(defun apachectl/stop ()
-  (interactive)
-  (executable-apachectl "stop"))
-(defun apachectl/restart ()
-  (interactive)
-  (executable-apachectl "restart"))
-(defun apachectl/configtest ()
-  (interactive)
-  (executable-apachectl "configtest"))
-(defun apachectl/graceful ()
-  (interactive)
-  (executable-apachectl "graceful"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; convert to path settings
-;;;
-
-(defun convert-win-to-mac-path()
-  (interactive)
-  (let ((buf (get-buffer-create "*convert*")) str ret)
-    (setq str (buffer-substring (region-beginning) (region-end)))
-    (with-current-buffer
-        buf (setq ret (buffer-string))
-        (setq str (replace-regexp-in-string
-                   "\\\\\\\\[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+" "/Volumes" str))
-        (setq str (replace-regexp-in-string "\\\\" "/" str))
-        (insert str))
-    (kill-buffer buf)
-    (message "%s" str)
-    (kill-new str)
-    (delete-region (region-beginning) (region-end))
-    (insert str)))
-
-(defun convert-smb-to-win-path()
-  (interactive)
-  (let ((buf (get-buffer-create "*convert*")) str ret)
-    (setq str (buffer-substring (region-beginning) (region-end)))
-    (with-current-buffer
-        buf (setq ret (buffer-string))
-        (setq str (ucs-normalize-NFC-string str))
-        (setq str (replace-regexp-in-string "smb://" "\\\\\\\\" str))
-        (setq str (replace-regexp-in-string "/" "\\\\" str))
-        (insert str))
-    (kill-buffer buf)
-    (message "%s" str)
-    (kill-new str)
-    (delete-region (region-beginning) (region-end))
-    (insert str)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; po-mode.el settings
 ;;;
 
@@ -1665,6 +1528,15 @@ username ALL=NOPASSWD: /opt/local/apache2/bin/apachectl configtest,\\
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
                             'po-find-file-coding-system)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; recentf settings
+;;;
+
+(el-get-bundle recentf-ext)
+(setq recentf-max-saved-items 50000)
+
+(el-get 'sync)
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
 (setq gc-cons-threshold 800000)
 (custom-set-faces
