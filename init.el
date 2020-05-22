@@ -968,7 +968,7 @@
 (el-get-bundle spinner)
 (el-get-bundle f)
 (el-get-bundle ht)
-(el-get-bundle flycheck)
+(el-get-bundle! flycheck)
 ;; (el-get-bundle treemacs
 ;;   :type github
 ;;   :pkgname "Alexander-Miller/treemacs")
