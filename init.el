@@ -612,39 +612,49 @@
 (el-get-bundle howm
   :type git
   :url "git://git.osdn.jp/gitroot/howm/howm.git"
-  :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make")))
+  :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
+  (with-eval-after-load-feature 'howm
+    (setq howm-template
+          (concat howm-view-title-header
+                  (concat
+                   " %title%cursor\n"
+                   "Date: %date\n\n"
+                   "%file\n\n")
+                  (concat
+                   "<!--\n"
+                   "  Local Variables:\n"
+                   "  mode: gfm\n"
+                   "  coding: utf-8-unix\n"
+                   "  End:\n"
+                   "-->\n")))
+    (defun howm-save-and-kill-buffer ()
+      "kill screen when exiting from howm-mode"
+      (interactive)
+      (let* ((file-name (buffer-file-name)))
+        (when (and file-name (string-match "\\.txt" file-name))
+          (if (save-excursion
+                (goto-char (point-min))
+                (re-search-forward "[^ \t\r\n]" nil t))
+              (howm-save-buffer)
+            (set-buffer-modified-p nil)
+            (when (file-exists-p file-name)
+              (delete-file file-name)
+              (message "(Deleted %s)" (file-name-nondirectory file-name))))
+          (kill-buffer nil))))
+    (add-hook 'howm-mode-hook
+              #'(lambda ()
+                  (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
+    (when (executable-find "rg")
+      (setq howm-view-use-grep t)
+      (setq howm-view-grep-command "rg")
+      (setq howm-view-grep-option "-nH --no-heading --color never")
+      (setq howm-view-grep-extended-option nil)
+      (setq howm-view-grep-fixed-option "-F")
+      (setq howm-view-grep-expr-option nil)
+      (setq howm-view-grep-file-stdin-option nil))))
+
 (autoload 'howm-mode "howm" "Hitori Otegaru Wiki Modoki" t)
 (add-to-list 'auto-mode-alist '("\\.txt$" . gfm-mode))
-(setq howm-template
-      (concat howm-view-title-header
-              (concat
-               " %title%cursor\n"
-               "Date: %date\n\n"
-               "%file\n\n")
-              (concat
-               "<!--\n"
-               "  Local Variables:\n"
-               "  mode: gfm\n"
-               "  coding: utf-8-unix\n"
-               "  End:\n"
-               "-->\n")))
-(defun howm-save-and-kill-buffer ()
-  "kill screen when exiting from howm-mode"
-  (interactive)
-  (let* ((file-name (buffer-file-name)))
-    (when (and file-name (string-match "\\.txt" file-name))
-      (if (save-excursion
-            (goto-char (point-min))
-            (re-search-forward "[^ \t\r\n]" nil t))
-          (howm-save-buffer)
-        (set-buffer-modified-p nil)
-        (when (file-exists-p file-name)
-          (delete-file file-name)
-          (message "(Deleted %s)" (file-name-nondirectory file-name))))
-      (kill-buffer nil))))
-(add-hook 'howm-mode-hook
-          #'(lambda ()
-              (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
 
 (global-set-key (kbd "C-z c") 'howm-create)
 
