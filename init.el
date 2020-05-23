@@ -1167,7 +1167,12 @@
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
-          php-search-url "https://www.php.net/")))
+          php-search-url "https://www.php.net/"))
+  (with-eval-after-load-feature 'cc-engine
+    (add-hook 'php-mode-hook
+              #'(lambda ()
+                  (setq c-auto-newline 1)
+                  (setq c-hungry-delete-key 1)))))
 
 (el-get-bundle php-runtime
   :type github
@@ -1206,8 +1211,6 @@
   (setq eldoc-documentation-function 'phpactor-hover)
   (eldoc-box-hover-mode 1)
   ;; (eldoc-box-hover-at-point-mode 1)
-  (setq c-auto-newline 1)
-  (setq c-hungry-delete-key 1)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   ;; (setq-local electric-layout-rules '((?{ . around)))
