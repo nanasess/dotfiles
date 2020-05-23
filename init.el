@@ -761,24 +761,6 @@
 (global-set-key (kbd "C-z s") 'helm-howm-do-grep)
 (global-set-key (kbd "C-z x") 'helm-howm-do-ag)
 
-(with-eval-after-load-feature 'howm
-  (require 'helm-howm)
-  (setq hh:menu-list nil)
-  (setq hh:recent-menu-number-limit 100)
-  (defvar hh:howm-data-directory howm-directory)
-
-  (when (executable-find "rg")
-    (setq howm-view-use-grep t)
-    (setq howm-view-grep-command "rg")
-    (setq howm-view-grep-option "-nH --no-heading --color never")
-    (setq howm-view-grep-extended-option nil)
-    (setq howm-view-grep-fixed-option "-F")
-    (setq howm-view-grep-expr-option nil)
-    (setq howm-view-grep-file-stdin-option nil))
-
-  (global-set-key (kbd "C-z ,") 'hh:menu-command)
-  (global-set-key (kbd "C-z .") 'hh:resume))
-
 (el-get-bundle helm-swoop)
 (cl-defun helm-swoop-nomigemo (&key $query ($multiline current-prefix-arg))
   (interactive)
