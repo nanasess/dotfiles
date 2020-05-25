@@ -651,10 +651,55 @@
       (setq howm-view-grep-extended-option nil)
       (setq howm-view-grep-fixed-option "-F")
       (setq howm-view-grep-expr-option nil)
-      (setq howm-view-grep-file-stdin-option nil))))
+      (setq howm-view-grep-file-stdin-option nil))
+
+    (defun parse-howm-title ()
+      (let* ((file-name (buffer-file-name)))
+        (when (and file-name (string-match "\\.txt" file-name))
+          (if (save-excursion
+                (goto-char (point-min))
+                (re-search-forward "^Title: \\(.*\\)$" nil t))
+              (match-string 1)))))
+
+    ;; see https://stackoverflow.com/a/384346
+    (defun rename-file-howm-title ()
+      (interactive)
+      (let ((name (buffer-name))
+            (filename (buffer-file-name))
+            (new-name (parse-howm-title))
+            (new-filename (format "%s.txt" (parse-howm-title))))
+        (if (> (length new-name) 0)
+            (if (not filename)
+                (message "Buffer '%s' is not visiting a file!" name)
+              (if (get-buffer new-name)
+                  (message "A buffer named '%s' already exists!" new-name)
+                (progn
+                  (rename-file filename new-filename 1)
+                  (rename-buffer new-filename)
+                  (set-visited-file-name new-filename)
+                  (set-buffer-modified-p nil)))))))
+    (add-hook 'howm-mode-hook
+              #'(lambda ()
+                  (add-hook 'before-save-hook 'rename-file-howm-title nil 'local)))))
 
 (autoload 'howm-mode "howm" "Hitori Otegaru Wiki Modoki" t)
 (add-to-list 'auto-mode-alist '("\\.txt$" . gfm-mode))
+
+;; see https://stackoverflow.com/a/384346
+(defun rename-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file filename new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))
 
 (global-set-key (kbd "C-z c") 'howm-create)
 
