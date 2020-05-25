@@ -668,7 +668,7 @@
             (filename (buffer-file-name))
             (new-name (parse-howm-title))
             (new-filename (format "%s.txt" (parse-howm-title))))
-        (if (> (length new-name) 0)
+        (if (not (string-empty-p new-name))
             (if (not filename)
                 (message "Buffer '%s' is not visiting a file!" name)
               (if (get-buffer new-name)
