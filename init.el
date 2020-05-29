@@ -5,6 +5,10 @@
 
 ;;; Code:
 
+;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
+(setq gc-cons-percentage 402653184
+      gc-cons-percentage 0.6)
+
 ;; see https://github.com/jschaf/esup/issues/54#issue-317095645
 (add-hook 'emacs-startup-hook
           (lambda ()
@@ -19,7 +23,6 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(setq gc-cons-threshold most-positive-fixnum)
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
 
@@ -1578,7 +1581,10 @@
 
 (el-get 'sync)
 (define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
-(setq gc-cons-threshold 800000)
+
+(setq gc-cons-threshold 100000000
+      gc-cons-percentage 0.1)
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
