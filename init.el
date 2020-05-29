@@ -605,8 +605,6 @@
 (defvar howm-refresh-after-save nil)
 (defvar howm-list-all-title t)
 (defvar howm-schedule-menu-types "[!@\+]")
-(add-hook 'markdown-mode-hook 'howm-mode)
-(add-hook 'org-mode-hook 'howm-mode)
 (defvar howm-view-title-header "Title:")
 (setq howm-view-use-grep t)
 ;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
@@ -686,7 +684,13 @@
                   (add-hook 'before-save-hook 'rename-file-howm-title nil 'local)))))
 
 (autoload 'howm-mode "howm" "Hitori Otegaru Wiki Modoki" t)
-(add-to-list 'auto-mode-alist '("\\.txt$" . gfm-mode))
+;;; Add howm-directory/.dir-locals
+;;
+;; ((nil
+;;   (eval
+;;    (lambda ()
+;;      (when (string-match "\\.txt" (file-name-nondirectory buffer-file-name))
+;;        (howm-mode))))))
 
 ;; see https://stackoverflow.com/a/384346
 (defun rename-file-and-buffer (new-name)
