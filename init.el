@@ -605,8 +605,6 @@
 (defvar howm-refresh-after-save nil)
 (defvar howm-list-all-title t)
 (defvar howm-schedule-menu-types "[!@\+]")
-(add-hook 'markdown-mode-hook 'howm-mode)
-(add-hook 'org-mode-hook 'howm-mode)
 (defvar howm-view-title-header "Title:")
 (setq howm-view-use-grep t)
 ;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
@@ -672,21 +670,29 @@
             (new-name (parse-howm-title))
             (new-filename (format "%s.txt" (parse-howm-title))))
         (if (not (string-empty-p new-name))
-            (if (not filename)
-                (message "Buffer '%s' is not visiting a file!" name)
-              (if (get-buffer new-filename)
-                  (message "A buffer named '%s' already exists!" new-name)
-                (progn
-                  (rename-file filename new-filename 1)
-                  (rename-buffer new-filename)
-                  (set-visited-file-name new-filename)
-                  (set-buffer-modified-p nil)))))))
+            (if (not (string= new-filename "nil.txt"))
+                (if (not filename)
+                    (message "Buffer '%s' is not visiting a file!" name)
+                  (if (get-buffer new-filename)
+                      (message "A buffer named '%s' already exists!" new-name)
+                    (progn
+                      (rename-file filename new-filename 1)
+                      (rename-buffer new-filename)
+                      (set-visited-file-name new-filename)
+                      (set-buffer-modified-p nil))))))))
     (add-hook 'howm-mode-hook
               #'(lambda ()
                   (add-hook 'before-save-hook 'rename-file-howm-title nil 'local)))))
 
-(autoload 'howm-mode "howm" "Hitori Otegaru Wiki Modoki" t)
-(add-to-list 'auto-mode-alist '("\\.txt$" . gfm-mode))
+(autoload 'howm-create "howm" "Hitori Otegaru Wiki Modoki" t)
+;;; Add howm-directory/.dir-locals
+;;
+;; ((nil
+;;   (eval
+;;    (lambda ()
+;;      (when (string-match "\\.txt" (file-name-nondirectory buffer-file-name))
+;;        (howm-mode)
+;;        (gfm-mode))))))
 
 ;; see https://stackoverflow.com/a/384346
 (defun rename-file-and-buffer (new-name)
