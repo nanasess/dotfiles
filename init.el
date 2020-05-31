@@ -684,7 +684,7 @@
               #'(lambda ()
                   (add-hook 'before-save-hook 'rename-file-howm-title nil 'local)))))
 
-(autoload 'howm-create "howm" "Hitori Otegaru Wiki Modoki" t)
+(autoload 'howm-mode "howm" "Hitori Otegaru Wiki Modoki" t)
 ;;; Add howm-directory/.dir-locals
 ;;
 ;; ((nil
