@@ -690,7 +690,8 @@
 ;;   (eval
 ;;    (lambda ()
 ;;      (when (string-match "\\.txt" (file-name-nondirectory buffer-file-name))
-;;        (howm-mode))))))
+;;        (howm-mode)
+;;        (gfm-mode))))))
 
 ;; see https://stackoverflow.com/a/384346
 (defun rename-file-and-buffer (new-name)
