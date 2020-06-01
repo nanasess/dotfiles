@@ -1489,7 +1489,7 @@
 (auto-save-buffers-enhanced t)
 (global-set-key "\C-xas" 'auto-save-buffers-enhanced-toggle-activity)
 
-(el-get-bundle! scratch-pop in zk-phi/scratch-pop)
+(el-get-bundle scratch-pop in zk-phi/scratch-pop)
 (global-set-key (kbd "C-c c") 'scratch-pop)
 (makunbound 'scratch-ext-minor-mode-map)
 (define-minor-mode scratch-ext-minor-mode
