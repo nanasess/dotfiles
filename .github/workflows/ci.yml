@@ -1,0 +1,54 @@
+name: CI
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - '*'
+    paths:
+      - '**'
+      - '!*.md'
+  pull_request:
+    paths:
+      - '**'
+      - '!*.md'
+
+jobs:
+  run-on-mac:
+    name: Run on Mac
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ macos-latest ]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout Emacs
+      uses: actions/checkout@v2
+      with:
+        repository: nanasess/emacs-package
+        ref: for-carbon-emacs
+        path: ./emacs-package
+        submodules: true
+    - name: prepare
+      run: |
+        git config --global user.name "Kentaro Ohkouchi"
+        git config --global user.email nanasess@example.com
+        brew install texinfo pkg-config
+        cd ./emacs-package/emacs && ./autogen.sh
+
+    - name: build emacs
+      working-directory: ./emacs-package
+      run: |
+        export PATH="/usr/local/opt/texinfo/bin:$PATH"
+        export PATH="/usr/local/opt/gnutls/bin:$PATH"
+        make install
+
+    - run: ~/Applications/Emacs.app/Contents/MacOS/Emacs --version
+    - name: bootstrap
+      run: |
+        ~/Applications/Emacs.app/Contents/MacOS/Emacs -q -l init.el --batch
+    - name: byte-compile
+      run: |
+        ~/Applications/Emacs.app/Contents/MacOS/Emacs -q -l init.el --batch -f batch-byte-compile init.el
