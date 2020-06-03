@@ -52,3 +52,24 @@ jobs:
     - name: byte-compile
       run: |
         ~/Applications/Emacs.app/Contents/MacOS/Emacs -q -l init.el --batch -f batch-byte-compile init.el
+  run-on-ubuntu:
+    name: Run on Ubuntu
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ ubuntu-latest ]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: build emacs
+      run: |
+        sudo apt-fast install -y emacs
+
+    - run: emacs --version
+    - name: bootstrap
+      run: |
+        emacs -q -l init.el --batch
+    - name: byte-compile
+      run: |
+        emacs -q -l init.el --batch -f batch-byte-compile init.el
