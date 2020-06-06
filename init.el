@@ -713,6 +713,7 @@
           (set-buffer-modified-p nil))))))
 
 (global-set-key (kbd "C-z c") 'howm-create)
+(global-set-key (kbd "C-c ,c") 'howm-create)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
