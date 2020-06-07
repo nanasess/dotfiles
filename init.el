@@ -610,6 +610,7 @@
 ;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
 (setq howm-process-coding-system 'utf-8-unix)
 (setq howm-todo-menu-types "[-+~!]")
+(defun parse-howm-title () nil)
 (el-get-bundle howm
   :type git
   :url "git://git.osdn.jp/gitroot/howm/howm.git"
@@ -842,6 +843,7 @@
 
 (defvar company-mode/enable-yas t
   "Enable yasnippet for all backends.")
+(defun company-backends-with-yas () nil)
 (el-get-bundle company-mode
   (global-set-key (kbd "C-M-i") 'company-complete)
   ;; Add yasnippet support for all company backends
