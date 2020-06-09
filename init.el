@@ -129,15 +129,7 @@
   :features ("skk-setup")
   :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
            (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
-           ("cp" "skk-setup.el.in" "skk-setup.el"))
-  ;; (with-eval-after-load-feature 'skk
-    ;; see https://uwabami.github.io/cc-env/Emacs.html
-    ;; (defun disable-skk-setup-modeline ()
-    ;;   (setq skk-indicator-alist (skk-make-indicator-alist))
-    ;;   (force-mode-line-update t))
-    ;; (advice-add 'skk-setup-modeline :override 'disable-skk-setup-modeline))
-  ;; )
-)
+           ("cp" "skk-setup.el.in" "skk-setup.el")))
 (setq skk-preload nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -259,18 +251,7 @@
                     '(workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
                     '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker bar))))
     (setq doom-modeline-vcs-max-length 999)
-    (setq doom-modeline-buffer-file-name-style 'buffer-name)
-
-    ;; (doom-modeline-def-segment input-method-skk
-    ;;   "The current ddskk status."
-    ;;   (concat
-    ;;    (doom-modeline-spc)
-    ;;    (propertize
-    ;;     (cond
-    ;;      ((not (boundp 'skk-modeline-input-mode)) "[--]")
-    ;;      (t (if (string= "" skk-modeline-input-mode) "[--]"
-    ;;           (substring (format "%s" skk-modeline-input-mode) 2 -1)))))))
-    ))
+    (setq doom-modeline-buffer-file-name-style 'buffer-name)))
 (add-hook 'after-init-hook 'doom-modeline-mode)
 (line-number-mode 1)
 (column-number-mode 1)
