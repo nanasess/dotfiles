@@ -1098,6 +1098,7 @@
     (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
 
 (el-get-bundle json-mode
+  ;; npm i -g vscode-json-languageserver
   (add-hook 'json-mode-hook #'lsp))
 
 ;; for json format
@@ -1189,6 +1190,7 @@
 ;;;
 
 (el-get-bundle yaml-mode
+  ;; npm i -g yaml-language-server
   (add-hook 'yaml-mode-hook #'lsp)
   (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
 
