@@ -1097,6 +1097,9 @@
     (electric-indent-local-mode 0)
     (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
 
+(el-get-bundle json-mode
+  (add-hook 'json-mode-hook #'lsp))
+
 ;; for json format
 ;; see https://qiita.com/saku/items/d97e930ffc9ca39ac976
 (defun jq-format (beg end)
@@ -1186,6 +1189,7 @@
 ;;;
 
 (el-get-bundle yaml-mode
+  (add-hook 'yaml-mode-hook #'lsp)
   (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
