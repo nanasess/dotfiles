@@ -963,14 +963,6 @@
     (defface company-box-scrollbar
       '((t (:background "#073642" :weight bold))) nil :group 'company-box)))
 
-(el-get-bundle git-complete
-  :type github
-  :pkgname "zk-phi/git-complete"
-  :depends popup
-  (with-eval-after-load-feature 'git-complete
-    (setq git-complete-enable-autopair t)
-    (global-set-key (kbd "C-z /") 'git-complete)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; markdown-mode settings
