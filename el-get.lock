@@ -60,7 +60,7 @@
         (lsp-java :checksum "5c3da6cf3a27dc57df1d537bdacbb318ca628bcf")
         (phpunit :checksum "fe6bc91c3bd8b329c6d26ad883a025f06b5121ee")
         (phpstan :checksum "2f715a186c5fe6576de83d4c0b64a37e2bfce101")
-        (phpactor :checksum "860d7e8784b261ee71deba354d01c3038cd777ab")
+        (phpactor :checksum "8b11b4f6c09a7b09dd137b52c2698d87c8149e85")
         (composer :checksum "8b4867e30efcdf10c6d9a74822aa281404377818")
         (php-runtime :checksum "017e0e70f07d6b25e37d5c5f4d271a914b677631")
         (php-mode :checksum "a7687e454adc2e6c1e13d90beac122af32169eb8")
