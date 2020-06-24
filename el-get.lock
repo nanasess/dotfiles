@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((json-snatcher :checksum "c4cecc0a5051bd364373aa499c47a1bb7a5ac51c")
+      '((emacs-libvterm :checksum "fbd0f097198ee110a895dcff30c0d1be39e8284e")
+        (json-snatcher :checksum "c4cecc0a5051bd364373aa499c47a1bb7a5ac51c")
         (json-reformat :checksum "8eb6668ed447988aea06467ba8f42e1f2178246f")
         (json-mode :checksum "0e819e519ae17a2686e0881c4ca51fa873fa9b83")
         (flymake-easy :checksum "de41ea49503f71f997e5c359a2ad08df696c0147")

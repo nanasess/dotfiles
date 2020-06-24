@@ -1201,7 +1201,7 @@
   (with-eval-after-load-feature 'php-mode
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
     (add-hook 'php-mode-hook 'php-c-style))
-  ;; (add-hook 'php-mode-hook #'lsp))
+    ;; (add-hook 'php-mode-hook #'lsp)
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
@@ -1560,14 +1560,20 @@
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
                             'po-find-file-coding-system)
-;; git clone https://github.com/akermu/emacs-libvterm.git
-;; cd emacs-libvterm
-;; mkdir -p build
-;; cd build
-;; cmake ..
-;; make
-(add-to-list 'load-path (concat user-emacs-directory "emacs-libvterm"))
-(require 'vterm)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;  emacs-libvterm settings
+;;;
+;;; brew install cmake
+;;; M-x vterm-module-compile
+
+(setq vterm-always-compile-module t)
+(el-get-bundle emacs-libvterm
+  :type github
+  :pkgname "akermu/emacs-libvterm"
+  ;; :build `((,el-get-emacs "-q" "-l" "vterm.el" "-batch" "-f" "vterm-module-compile"))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
