@@ -1560,6 +1560,14 @@
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
                             'po-find-file-coding-system)
+;; git clone https://github.com/akermu/emacs-libvterm.git
+;; cd emacs-libvterm
+;; mkdir -p build
+;; cd build
+;; cmake ..
+;; make
+(add-to-list 'load-path (concat user-emacs-directory "emacs-libvterm"))
+(require 'vterm)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
