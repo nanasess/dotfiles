@@ -1573,7 +1573,14 @@
   :type github
   :pkgname "akermu/emacs-libvterm"
   ;; :build `((,el-get-emacs "-q" "-l" "vterm.el" "-batch" "-f" "vterm-module-compile"))
-  )
+  (with-eval-after-load-feature 'vterm
+    (push (list "find-file-below"
+                (lambda (path)
+                  (if-let* ((buf (find-file-noselect path))
+                            (window (display-buffer-below-selected buf nil)))
+                      (select-window window)
+                    (message "Failed to open file: %s" path))))
+          vterm-eval-cmds)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
