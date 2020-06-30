@@ -1201,7 +1201,7 @@
   (with-eval-after-load-feature 'php-mode
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
     (add-hook 'php-mode-hook 'php-c-style))
-  ;; (add-hook 'php-mode-hook #'lsp))
+    ;; (add-hook 'php-mode-hook #'lsp)
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
@@ -1560,6 +1560,27 @@
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
                             'po-find-file-coding-system)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;  emacs-libvterm settings
+;;;
+;;; brew install cmake
+;;; M-x vterm-module-compile
+
+(setq vterm-always-compile-module t)
+(el-get-bundle emacs-libvterm
+  :type github
+  :pkgname "akermu/emacs-libvterm"
+  ;; :build `((,el-get-emacs "-q" "-l" "vterm.el" "-batch" "-f" "vterm-module-compile"))
+  (with-eval-after-load-feature 'vterm
+    (push (list "find-file-below"
+                (lambda (path)
+                  (if-let* ((buf (find-file-noselect path))
+                            (window (display-buffer-below-selected buf nil)))
+                      (select-window window)
+                    (message "Failed to open file: %s" path))))
+          vterm-eval-cmds)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
