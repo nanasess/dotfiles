@@ -230,6 +230,7 @@
   :type github
   :pkgname "zbelial/shrink-path.el"
   :depends (dash f s))
+(el-get-bundle memoize)
 (el-get-bundle all-the-icons)
 
 (el-get-bundle doom-modeline
