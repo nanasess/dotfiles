@@ -1409,6 +1409,10 @@
   (add-hook 'css-mode-hook #'company-backends-with-yas)
   (add-hook 'css-mode-hook #'lsp))
 
+(with-eval-after-load-feature 'scss-mode
+  (add-hook 'scss-mode-hook #'company-backends-with-yas)
+  (add-hook 'scss-mode-hook #'lsp))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; shel settings
