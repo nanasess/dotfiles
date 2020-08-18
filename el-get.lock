@@ -44,7 +44,7 @@
         (wgrep :checksum "f0ef9bfa44db503cdb2f83fcfbd2fa4e2382ef1f")
         (helm-descbinds :checksum "b72515982396b6e336ad7beb6767e95a80fca192")
         (helm-ls-git :checksum "4da1a53f2f0a078ee2e896a914a1b19c0bf1d5ed")
-        (helm :checksum "a3343a370975d9c01df4f1ff42875cc32ae89592")
+        (helm :checksum "3ebf9f25f326df2c05b2c4630b1d2b7462f33e02")
         (auto-async-byte-compile :checksum "fa6e07af93a4ab1c092f7811f3d4732f4874bce3")
         (twittering-mode :checksum "114891e8fdb4f06b1326a6cf795e49c205cf9e29")
         (mew :checksum "5145145f87bfbe80fd91e82ded33033cf78ef54f")
