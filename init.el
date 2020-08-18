@@ -1274,7 +1274,7 @@
 ;;   (with-eval-after-load-feature 'lsp-java
 ;;     (add-hook 'java-mode-hook #'company-backends-with-yas)
 ;;     (add-hook 'java-mode-hook #'lsp)))
-(el-get-bundle emacswiki:tree-mode)
+;; (el-get-bundle emacswiki:tree-mode)
 (el-get-bundle bui
   :type github
   :pkgname "alezost/bui.el")
