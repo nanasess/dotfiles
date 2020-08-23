@@ -978,14 +978,12 @@
     (goto-char (point-min))
     (while (search-forward "-+-" nil t) (replace-match "-|-"))))
 
-(add-hook 'markdown-mode-hook 'turn-on-orgtbl)
 (add-hook 'markdown-mode-hook
           #'(lambda()
+              (require 'org)
+              (orgtbl-mode 1)
               (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
-(add-hook 'gfm-mode-hook 'turn-on-orgtbl)
-(add-hook 'gfm-mode-hook
-          #'(lambda()
-              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+
 (with-eval-after-load-feature 'org-table
   (add-hook 'markdown-mode-hook
             #'(lambda()
