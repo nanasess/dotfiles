@@ -1413,7 +1413,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; shel settings
+;;; shell settings
 ;;;
 ;;; see https://github.com/bash-lsp/bash-language-server
 ;;;
