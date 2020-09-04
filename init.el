@@ -1585,6 +1585,23 @@
                     (message "Failed to open file: %s" path))))
           vterm-eval-cmds)))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; plantuml settings
+;;;
+;;; brew install plantuml
+
+(el-get-bundle plantuml-mode
+  :type github
+  :pkgname "skuro/plantuml-mode"
+  (add-to-list 'auto-mode-alist '("\\.puml$" . plantuml-mode))
+  (with-eval-after-load-feature 'plantuml-mode
+    (setq plantuml-executable-path "plantuml")
+    (setq plantuml-default-exec-mode 'executable)
+    (setq plantuml-output-type "png")
+    (setq plantuml-options "-charset UTF-8")))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; recentf settings

@@ -1,0 +1,6 @@
+#!/bin/bash
+export LANG=ja_JP.UTF-8
+if [[ "$*" != *"-gui"* ]]; then
+  VMARGS="-Djava.awt.headless=true"
+fi
+GRAPHVIZ_DOT="/usr/local/opt/graphviz/bin/dot" exec "/usr/bin/java" $VMARGS -jar /usr/local/opt/plantuml/libexec/plantuml.jar "$@"
