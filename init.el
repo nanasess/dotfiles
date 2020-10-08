@@ -1003,9 +1003,13 @@
 (el-get-bundle f)
 (el-get-bundle ht)
 (el-get-bundle! flycheck)
-;; (el-get-bundle treemacs
-;;   :type github
-;;   :pkgname "Alexander-Miller/treemacs")
+(el-get-bundle treemacs
+  :type github
+  :pkgname "Alexander-Miller/treemacs")
+(el-get-bundle lsp-java
+  :type github
+  :pkgname "emacs-lsp/lsp-java"
+  :depends (markdown-mode dash f ht request))
 (el-get-bundle lsp-mode
   :type github
   :pkgname "emacs-lsp/lsp-mode"
@@ -1015,12 +1019,14 @@
     (setq lsp-auto-guess-root t)
     (setq lsp-document-sync-method 'incremental) ;; always send incremental document
     (setq lsp-response-timeout 5)
-    (setq lsp-diagnostic-package :auto)
-    (setq lsp-enable-completion-at-point nil)))
-;; (el-get-bundle lsp-treemacs
-;;   :type github
-;;   :pkgname "emacs-lsp/lsp-treemacs"
-;;   :depends (treemacs))
+    (setq lsp-diagnostics-provider :auto)
+    (setq lsp-completion-enable t)
+    (setq lsp-completion-enable-additional-text-edit nil))
+    (add-hook 'lsp-mode-hook 'lsp-enable-which-key-integration))
+(el-get-bundle lsp-treemacs
+  :type github
+  :pkgname "emacs-lsp/lsp-treemacs"
+  :depends (treemacs))
 (el-get-bundle lsp-ui
   :type github
   :pkgname "emacs-lsp/lsp-ui"
@@ -1058,6 +1064,7 @@
             (lsp-ui-doc--hide-frame))
         (lsp-ui-doc-mode 1))))
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
 (el-get-bundle company-lsp
   :type github
   :pkgname "tigersoldier/company-lsp"
@@ -1266,13 +1273,11 @@
 ;;;
 ;;; Java settings
 ;;;
-;; (el-get-bundle lsp-java
-;;   :type github
-;;   :pkgname "emacs-lsp/lsp-java"
-;;   (with-eval-after-load-feature 'lsp-java
-;;     (add-hook 'java-mode-hook #'company-backends-with-yas)
-;;     (add-hook 'java-mode-hook #'lsp)))
-;; (el-get-bundle emacswiki:tree-mode)
+
+(with-eval-after-load-feature 'lsp-java
+  (add-hook 'java-mode-hook #'company-backends-with-yas)
+  (add-hook 'java-mode-hook #'lsp))
+
 (el-get-bundle bui
   :type github
   :pkgname "alezost/bui.el")
@@ -1283,7 +1288,7 @@
 ;;   (dap-mode 1)
 ;;   (dap-ui-mode 1))
 
-(add-hook 'java-mode-hook 'java-c-style)
+;; (add-hook 'java-mode-hook 'java-c-style)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
