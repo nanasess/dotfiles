@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((lsp-treemacs :checksum "c54503bec3d7a17eb7b4d30e3ab2f7916a26124c")
+      '((groovy-mode :checksum "26da902d1158c0312628d57578109be54eca2415")
+        (lsp-treemacs :checksum "c54503bec3d7a17eb7b4d30e3ab2f7916a26124c")
         (treemacs :checksum "3b62e40e5f891b648aaa890e423db00f68f984db")
         (emacs-libvterm :checksum "1348404fe9a78b1f1dd810f22892863e124123da")
         (json-snatcher :checksum "c4cecc0a5051bd364373aa499c47a1bb7a5ac51c")

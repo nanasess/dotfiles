@@ -1288,6 +1288,10 @@
 ;;   (dap-mode 1)
 ;;   (dap-ui-mode 1))
 
+(el-get-bundle groovy-mode
+  :type github
+  :pkgname "Groovy-Emacs-Modes/groovy-emacs-modes")
+
 ;; (add-hook 'java-mode-hook 'java-c-style)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
