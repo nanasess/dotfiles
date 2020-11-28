@@ -1274,7 +1274,7 @@
 ;;; Java settings
 ;;;
 
-(with-eval-after-load-feature 'lsp-java
+(with-eval-after-load-feature 'cc-mode
   (add-hook 'java-mode-hook #'company-backends-with-yas)
   (add-hook 'java-mode-hook #'lsp))
 
@@ -1287,6 +1287,10 @@
 ;;   :depends (tree-mode bui treemacs)
 ;;   (dap-mode 1)
 ;;   (dap-ui-mode 1))
+
+(el-get-bundle groovy-mode
+  :type github
+  :pkgname "Groovy-Emacs-Modes/groovy-emacs-modes")
 
 ;; (add-hook 'java-mode-hook 'java-c-style)
 
