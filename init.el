@@ -532,7 +532,7 @@
                (replace-regexp-in-string
                 "\\.git$" ""
                 (replace-regexp-in-string
-                 "\\`.+github\\.com:\\(.+\\)\\(\\.git\\)?\\'" "\\1"
+                 "\\`.+github\\.com.\\(.+\\)\\(\\.git\\)?\\'" "\\1"
                  repo))
                (magit-get-current-branch))))
 
@@ -544,7 +544,7 @@
       (browse-url
        (format "https://bitbucket.org/%s/pull-request/new?source=%s&t=1"
                (replace-regexp-in-string
-                "\\`.+bitbucket\\.org:\\(.+\\)\\.git\\'" "\\1"
+                "\\`.+bitbucket\\.org.\\(.+\\)\\.git\\'" "\\1"
                 repo)
                (magit-get-current-branch))))
     (defun endless/visit-pull-request-url ()
