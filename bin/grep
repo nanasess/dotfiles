@@ -1,6 +1,6 @@
 #!/bin/sh
 
-GREP=grep
+GREP=/usr/bin/grep
 if [ -x "/usr/local/bin/ggrep" ]
 then
     GREP=/usr/local/bin/ggrep
