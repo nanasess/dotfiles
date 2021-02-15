@@ -1,5 +1,10 @@
 #!/bin/sh
-/usr/local/bin/php \
+PHP=php
+if [ -x "/usr/local/bin/php" ]
+then
+    PHP=/usr/local/bin/php
+fi
+$PHP \
     -d apc.enable_cli=1 \
     -d error_log=/tmp/php_error.log \
     -d opcache.enable_cli=1 \
