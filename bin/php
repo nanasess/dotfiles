@@ -1,5 +1,5 @@
 #!/bin/sh
-PHP=php
+PHP=/usr/bin/php
 if [ -x "/usr/local/bin/php" ]
 then
     PHP=/usr/local/bin/php
