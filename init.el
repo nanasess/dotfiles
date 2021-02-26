@@ -863,9 +863,13 @@
               (push '(company-elisp :with company-yasnippet) company-backends)))
 (add-hook 'after-init-hook 'global-company-mode)
 
+(el-get-bundle frame-local
+  :type github
+  :pkgname "sebastiencs/frame-local")
 (el-get-bundle company-box
   :type github
   :pkgname "sebastiencs/company-box"
+  :depends (frame-local)
   (add-hook 'company-mode-hook 'company-box-mode)
   (with-eval-after-load-feature 'company-box
     (require 'all-the-icons)
