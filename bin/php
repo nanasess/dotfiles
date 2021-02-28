@@ -4,8 +4,7 @@ if [ -x "/usr/local/bin/php" ]
 then
     PHP=/usr/local/bin/php
 fi
-$PHP \
-    -d apc.enable_cli=1 \
+ARGS="-d apc.enable_cli=1 \
     -d error_log=/tmp/php_error.log \
     -d opcache.enable_cli=1 \
     -d opcache.memory_consumption=256 \
@@ -14,5 +13,5 @@ $PHP \
     -d opcache.fast_shutdown=1 \
     -d opcache.max_accelerated_files=20000 \
     -d realpath_cache_size=4096K \
-    -d realpath_cache_ttl=600 \
-    "$@"
+    -d realpath_cache_ttl=600"
+$PHP $ARGS "$@"
