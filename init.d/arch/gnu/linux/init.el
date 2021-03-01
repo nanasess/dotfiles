@@ -1,4 +1,5 @@
 ;;----------------------- window settings ---------------------------
+;; sudo apt-get install xfonts-mplus
 (if (display-graphic-p)
     ((create-fontset-from-ascii-font "M+ 1m-12:weight=normal:slant=normal" nil "linux")
      (set-fontset-font "fontset-linux" 'unicode
