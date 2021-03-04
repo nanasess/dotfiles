@@ -1007,9 +1007,11 @@
 (el-get-bundle f)
 (el-get-bundle ht)
 (el-get-bundle! flycheck)
+(add-to-list 'load-path (concat user-emacs-directory "el-get/treemacs/src/elisp"))
 (el-get-bundle treemacs
   :type github
-  :pkgname "Alexander-Miller/treemacs")
+  :pkgname "Alexander-Miller/treemacs"
+  :features ("treemacs"))
 (el-get-bundle lsp-java
   :type github
   :pkgname "emacs-lsp/lsp-java"
@@ -1017,7 +1019,7 @@
 (el-get-bundle lsp-mode
   :type github
   :pkgname "emacs-lsp/lsp-mode"
-  :depends (dash f ht hydra spinner markdown-mode)
+  :depends (dash f ht hydra spinner markdown-mode treemacs)
   (with-eval-after-load-feature 'lsp
     ;; general
     (setq lsp-auto-guess-root t)
@@ -1397,7 +1399,8 @@
   (with-eval-after-load-feature 'lsp-haskell
     (setq lsp-haskell-process-path-hie "hie-wrapper")
     (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
-    (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on)))
+    ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on)
+    ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
