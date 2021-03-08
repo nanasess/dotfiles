@@ -1,6 +1,6 @@
 (setq el-get-lock-package-versions
       '((frame-local :checksum "7ee1106c3bcd4022f48421f8cb1ef4f995da816e")
-        (php-mode :checksum "8cdc727e6d4eef81655b90574784e9540f407cda")
+        (php-mode :checksum "c526aa0756198d68a7ee1eb9042746f01171697e")
         (helm-c-yasnippet :checksum "28699d9a9caa8b4d37fd66368d93b6c65828c235")
         (flymake-easy :checksum "de41ea49503f71f997e5c359a2ad08df696c0147")
         (el-get :checksum "84dd1837f9ac80a329ab0c2de6859777f445f8ff")
