@@ -1203,6 +1203,7 @@
 ;;; PHP settings
 ;;;
 
+(add-to-list 'load-path (concat user-emacs-directory "el-get/php-mode/lisp"))
 (el-get-bundle php-mode
   :type github
   :pkgname "emacs-php/php-mode"
@@ -1212,8 +1213,11 @@
   :autoloads "php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-    (add-hook 'php-mode-hook 'php-c-style))
-    ;; (add-hook 'php-mode-hook #'lsp)
+    (add-hook 'php-mode-hook #'lsp)
+    (add-hook 'php-mode-hook 'php-c-style)
+    (add-hook 'lsp-phpactor-after-open-hook
+              #'(lambda ()
+                  (flycheck-add-next-checker 'lsp 'phpstan))))
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
@@ -1255,18 +1259,18 @@
   (require 'php-skeleton)
   (require 'php-skeleton-exceptions)
   (require 'flycheck-phpstan)
-  (make-local-variable 'company-backends)
-  (push '(company-phpactor :with company-yasnippet) company-backends)
-  (make-local-variable 'eldoc-documentation-function)
-  (setq eldoc-documentation-function 'phpactor-hover)
-  (eldoc-box-hover-mode 1)
+  ;; (make-local-variable 'company-backends)
+  ;; (push '(company-phpactor :with company-yasnippet) company-backends)
+  ;; (make-local-variable 'eldoc-documentation-function)
+  ;; (setq eldoc-documentation-function 'phpactor-hover)
+  ;; (eldoc-box-hover-mode 1)
   ;; (eldoc-box-hover-at-point-mode 1)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   ;; (setq-local electric-layout-rules '((?{ . around)))
   (electric-pair-local-mode t)
   (flycheck-mode t)
-  (phpactor-smart-jump-register)
+  ;; (phpactor-smart-jump-register)
   ;; If you feel phumped and phpcs annoying, invalidate them.
   (when (boundp 'flycheck-disabled-checkers)
     (add-to-list 'flycheck-disabled-checkers 'php-phpmd)
@@ -1398,7 +1402,7 @@
   :depends (haskell-mode)
   (with-eval-after-load-feature 'lsp-haskell
     (setq lsp-haskell-process-path-hie "hie-wrapper")
-    (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
+    ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
     ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on)
     ))
 
