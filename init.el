@@ -1027,7 +1027,8 @@
     (setq lsp-response-timeout 5)
     (setq lsp-diagnostics-provider :auto)
     (setq lsp-completion-enable t)
-    (setq lsp-completion-enable-additional-text-edit nil))
+    (setq lsp-completion-enable-additional-text-edit nil)
+    (setq lsp-prefer-capf t))
     (add-hook 'lsp-mode-hook 'lsp-enable-which-key-integration))
 (el-get-bundle lsp-treemacs
   :type github
@@ -1070,15 +1071,6 @@
             (lsp-ui-doc--hide-frame))
         (lsp-ui-doc-mode 1))))
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-
-(el-get-bundle company-lsp
-  :type github
-  :pkgname "tigersoldier/company-lsp"
-  (with-eval-after-load-feature 'company-lsp
-    (setq company-lsp-enable-snippet t)
-    (setq company-lsp-cache-candidates t) ;; always using cache
-    (setq company-lsp-async t)
-    (setq company-lsp-enable-recompletion nil)))
 
 (el-get-bundle eldoc-box
   :type github
