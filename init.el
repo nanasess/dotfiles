@@ -1195,14 +1195,13 @@
 ;;; PHP settings
 ;;;
 
-(add-to-list 'load-path (concat user-emacs-directory "el-get/php-mode/lisp"))
 (el-get-bundle php-mode
   :type github
   :pkgname "emacs-php/php-mode"
   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
   ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l")
   ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
-  :autoloads "php-mode-autoloads"
+  :autoloads "lisp/php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
     (add-hook 'php-mode-hook #'lsp)
