@@ -8,6 +8,7 @@
 ;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
 (setq gc-cons-percentage 402653184
       gc-cons-percentage 0.6)
+(setq read-process-output-max (* 1024 1024))
 
 ;; see https://github.com/jschaf/esup/issues/54#issue-317095645
 (add-hook 'emacs-startup-hook
@@ -1204,11 +1205,11 @@
   :autoloads "lisp/php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
+    ;;; phpactor/language-server-extension
+    ;;; M-x lsp-phpactor-install-extension Phpstan
+    (setq lsp-phpactor-path "~/.emacs.d/bin/phpactor")
     (add-hook 'php-mode-hook #'lsp)
-    (add-hook 'php-mode-hook 'php-c-style)
-    (add-hook 'lsp-phpactor-after-open-hook
-              #'(lambda ()
-                  (flycheck-add-next-checker 'lsp 'phpstan))))
+    (add-hook 'php-mode-hook 'php-c-style))
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
