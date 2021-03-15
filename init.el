@@ -1250,7 +1250,10 @@
   (interactive)
   (require 'php-skeleton)
   (require 'php-skeleton-exceptions)
-  (require 'flycheck-phpstan)
+  ;; (require 'flycheck-phpstan)
+  ;; (require 'php-ui)
+  ;; (require 'php-ui-phpactor)
+  ;; (php-ui-mode 1)
   ;; (make-local-variable 'company-backends)
   ;; (push '(company-phpactor :with company-yasnippet) company-backends)
   ;; (make-local-variable 'eldoc-documentation-function)
@@ -1261,7 +1264,7 @@
   (electric-layout-mode t)
   ;; (setq-local electric-layout-rules '((?{ . around)))
   (electric-pair-local-mode t)
-  (flycheck-mode t)
+  ;; (flycheck-mode t)
   ;; (phpactor-smart-jump-register)
   ;; If you feel phumped and phpcs annoying, invalidate them.
   (when (boundp 'flycheck-disabled-checkers)
@@ -1479,7 +1482,7 @@
 (el-get-bundle auto-save-buffers-enhanced
   :type github
   :pkgname "kentaro/auto-save-buffers-enhanced")
-(setq auto-save-buffers-enhanced-interval 1.5)
+(setq auto-save-buffers-enhanced-interval 30)
 (setq auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
 (setq auto-save-buffers-enhanced-file-related-with-scratch-buffer
       (concat howm-directory "scratch.txt"))
