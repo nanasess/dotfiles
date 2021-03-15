@@ -1017,6 +1017,7 @@
   :type github
   :pkgname "emacs-lsp/lsp-java"
   :depends (markdown-mode dash f ht request))
+(add-to-list 'load-path (concat user-emacs-directory "el-get/lsp-mode/clients"))
 (el-get-bundle lsp-mode
   :type github
   :pkgname "emacs-lsp/lsp-mode"
@@ -1208,8 +1209,8 @@
     ;;; phpactor/language-server-extension
     ;;; M-x lsp-phpactor-install-extension Phpstan
     (setq lsp-phpactor-path "~/.emacs.d/bin/phpactor")
-    (add-hook 'php-mode-hook #'lsp)
-    (add-hook 'php-mode-hook 'php-c-style))
+    (add-hook 'php-mode-hook 'php-c-style)
+    (add-hook 'php-mode-hook #'lsp))
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
@@ -1250,6 +1251,7 @@
   (interactive)
   (require 'php-skeleton)
   (require 'php-skeleton-exceptions)
+  (require 'lsp-php)
   ;; (require 'flycheck-phpstan)
   ;; (require 'php-ui)
   ;; (require 'php-ui-phpactor)
