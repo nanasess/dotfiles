@@ -1072,6 +1072,8 @@
             (lsp-ui-doc-mode -1)
             (lsp-ui-doc--hide-frame))
         (lsp-ui-doc-mode 1))))
+  ;; (setq lsp-headerline-breadcrumb-enable nil)
+  ;; (setq lsp-enable-file-watchers nil)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
 (el-get-bundle eldoc-box
@@ -1082,6 +1084,7 @@
   (defface eldoc-box-body '((t . (:background "#FFFBEA"))) nil ; bg-alt
     :group 'font-lock-highlighting-faces))
 (setq eldoc-box-clear-with-C-g t)
+;; (setq lsp-print-performance t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1251,7 +1254,6 @@
   (interactive)
   (require 'php-skeleton)
   (require 'php-skeleton-exceptions)
-  (require 'lsp-php)
   ;; (require 'flycheck-phpstan)
   ;; (require 'php-ui)
   ;; (require 'php-ui-phpactor)
