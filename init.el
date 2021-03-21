@@ -1031,7 +1031,8 @@
     (setq lsp-completion-enable t)
     (setq lsp-completion-enable-additional-text-edit nil)
     (setq lsp-prefer-capf t))
-    (add-hook 'lsp-mode-hook 'lsp-enable-which-key-integration))
+  ;; (add-hook 'lsp-mode-hook 'lsp-enable-which-key-integration)
+  )
 (el-get-bundle lsp-treemacs
   :type github
   :pkgname "emacs-lsp/lsp-treemacs"
