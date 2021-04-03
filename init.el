@@ -8,6 +8,7 @@
 ;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
 (setq gc-cons-percentage 402653184
       gc-cons-percentage 0.6)
+(setq read-process-output-max (* 1024 1024))
 
 ;; see https://github.com/jschaf/esup/issues/54#issue-317095645
 (add-hook 'emacs-startup-hook
@@ -1023,6 +1024,7 @@
   :type github
   :pkgname "emacs-lsp/lsp-java"
   :depends (markdown-mode dash f ht request))
+(add-to-list 'load-path (concat user-emacs-directory "el-get/lsp-mode/clients"))
 (el-get-bundle lsp-mode
   :type github
   :pkgname "emacs-lsp/lsp-mode"
@@ -1034,8 +1036,10 @@
     (setq lsp-response-timeout 5)
     (setq lsp-diagnostics-provider :auto)
     (setq lsp-completion-enable t)
-    (setq lsp-completion-enable-additional-text-edit nil))
-    (add-hook 'lsp-mode-hook 'lsp-enable-which-key-integration))
+    (setq lsp-completion-enable-additional-text-edit nil)
+    (setq lsp-prefer-capf t))
+  ;; (add-hook 'lsp-mode-hook 'lsp-enable-which-key-integration)
+  )
 (el-get-bundle lsp-treemacs
   :type github
   :pkgname "emacs-lsp/lsp-treemacs"
@@ -1076,16 +1080,9 @@
             (lsp-ui-doc-mode -1)
             (lsp-ui-doc--hide-frame))
         (lsp-ui-doc-mode 1))))
+  ;; (setq lsp-headerline-breadcrumb-enable nil)
+  ;; (setq lsp-enable-file-watchers nil)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-
-(el-get-bundle company-lsp
-  :type github
-  :pkgname "tigersoldier/company-lsp"
-  (with-eval-after-load-feature 'company-lsp
-    (setq company-lsp-enable-snippet t)
-    (setq company-lsp-cache-candidates t) ;; always using cache
-    (setq company-lsp-async t)
-    (setq company-lsp-enable-recompletion nil)))
 
 (el-get-bundle eldoc-box
   :type github
@@ -1095,6 +1092,7 @@
   (defface eldoc-box-body '((t . (:background "#FFFBEA"))) nil ; bg-alt
     :group 'font-lock-highlighting-faces))
 (setq eldoc-box-clear-with-C-g t)
+;; (setq lsp-print-performance t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1216,11 +1214,14 @@
   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
   ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l")
   ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
-  :autoloads "php-mode-autoloads"
+  :autoloads "lisp/php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-    (add-hook 'php-mode-hook 'php-c-style))
-    ;; (add-hook 'php-mode-hook #'lsp)
+    ;;; phpactor/language-server-extension
+    ;;; M-x lsp-phpactor-install-extension Phpstan
+    (setq lsp-phpactor-path "~/.emacs.d/bin/phpactor")
+    (add-hook 'php-mode-hook 'php-c-style)
+    (add-hook 'php-mode-hook #'lsp))
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
@@ -1261,19 +1262,22 @@
   (interactive)
   (require 'php-skeleton)
   (require 'php-skeleton-exceptions)
-  (require 'flycheck-phpstan)
-  (make-local-variable 'company-backends)
-  (push '(company-phpactor :with company-yasnippet) company-backends)
-  (make-local-variable 'eldoc-documentation-function)
-  (setq eldoc-documentation-function 'phpactor-hover)
-  (eldoc-box-hover-mode 1)
+  ;; (require 'flycheck-phpstan)
+  ;; (require 'php-ui)
+  ;; (require 'php-ui-phpactor)
+  ;; (php-ui-mode 1)
+  ;; (make-local-variable 'company-backends)
+  ;; (push '(company-phpactor :with company-yasnippet) company-backends)
+  ;; (make-local-variable 'eldoc-documentation-function)
+  ;; (setq eldoc-documentation-function 'phpactor-hover)
+  ;; (eldoc-box-hover-mode 1)
   ;; (eldoc-box-hover-at-point-mode 1)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   ;; (setq-local electric-layout-rules '((?{ . around)))
   (electric-pair-local-mode t)
-  (flycheck-mode t)
-  (phpactor-smart-jump-register)
+  ;; (flycheck-mode t)
+  ;; (phpactor-smart-jump-register)
   ;; If you feel phumped and phpcs annoying, invalidate them.
   (when (boundp 'flycheck-disabled-checkers)
     (add-to-list 'flycheck-disabled-checkers 'php-phpmd)
@@ -1405,7 +1409,7 @@
   :depends (haskell-mode)
   (with-eval-after-load-feature 'lsp-haskell
     (setq lsp-haskell-process-path-hie "hie-wrapper")
-    (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
+    ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
     ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on)
     ))
 
@@ -1490,7 +1494,7 @@
 (el-get-bundle auto-save-buffers-enhanced
   :type github
   :pkgname "kentaro/auto-save-buffers-enhanced")
-(setq auto-save-buffers-enhanced-interval 1.5)
+(setq auto-save-buffers-enhanced-interval 30)
 (setq auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
 (setq auto-save-buffers-enhanced-file-related-with-scratch-buffer
       (concat howm-directory "scratch.txt"))
