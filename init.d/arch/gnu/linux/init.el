@@ -8,7 +8,7 @@
             (set-fontset-font "fontset-linux" '(#x0080 .  #x024F)
                               (font-spec :family "M+ 1m") nil 'prepend)
             (setq initial-frame-alist
-                  (append (list 
+                  (append (list
                            '(height . 40)
                            '(width  . 82)
                            '(font . "fontset-linux")
