@@ -20,9 +20,6 @@
 
 (setq ns-pop-up-frames nil)
 
-;; XXX Tiger ではバックスラッシュが円マークになってしまう...
-(keyboard-translate 165 92)
-
 ;; Window settings
 (if (boundp 'window-system)
     (setq initial-frame-alist
