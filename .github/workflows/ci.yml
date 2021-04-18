@@ -43,7 +43,7 @@ jobs:
       run: |
         export PATH="/usr/local/opt/texinfo/bin:$PATH"
         export PATH="/usr/local/opt/gnutls/bin:$PATH"
-        make install
+        sudo make install
 
     - run: ~/Applications/Emacs.app/Contents/MacOS/Emacs --version
     - name: bootstrap
