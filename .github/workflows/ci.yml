@@ -41,9 +41,11 @@ jobs:
     - name: build emacs
       working-directory: ./emacs-package
       run: |
+        sudo mkdir -p /usr/local/libexec
+        sudo chown -R runner /usr/local/libexec
         export PATH="/usr/local/opt/texinfo/bin:$PATH"
         export PATH="/usr/local/opt/gnutls/bin:$PATH"
-        sudo make install
+        make install
 
     - run: ~/Applications/Emacs.app/Contents/MacOS/Emacs --version
     - name: bootstrap
