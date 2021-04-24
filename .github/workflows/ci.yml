@@ -47,13 +47,12 @@ jobs:
         export PATH="/usr/local/opt/gnutls/bin:$PATH"
         make install
 
-    - run: ~/Applications/Emacs.app/Contents/MacOS/Emacs --version
+    - run: emacs-package/emacs/mac/Emacs.app/Contents/MacOS/Emacs --version
     - name: bootstrap
-      run: |
-        ~/Applications/Emacs.app/Contents/MacOS/Emacs -q -l init.el --batch
+      run: emacs-package/emacs/mac/Emacs.app/Contents/MacOS/Emacs -q -l init.el --batch
     - name: byte-compile
-      run: |
-        ~/Applications/Emacs.app/Contents/MacOS/Emacs -q -l init.el --batch -f batch-byte-compile init.el
+      working-directory: ./emacs-package
+      run: emacs-package/emacs/mac/Emacs.app/Contents/MacOS/Emacs -q -l init.el --batch -f batch-byte-compile init.el
   run-on-ubuntu:
     name: Run on Ubuntu
     runs-on: ${{ matrix.os }}
@@ -68,7 +67,7 @@ jobs:
       run: |
          sudo add-apt-repository ppa:kelleyk/emacs
          sudo apt-fast update
-         sudo apt-fast install -y texinfo emacs26
+         sudo apt-fast install -y texinfo emacs27
 
     - run: emacs --version
     - name: bootstrap
