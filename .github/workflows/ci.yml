@@ -51,7 +51,6 @@ jobs:
     - name: bootstrap
       run: emacs-package/emacs/mac/Emacs.app/Contents/MacOS/Emacs -q -l init.el --batch
     - name: byte-compile
-      working-directory: ./emacs-package
       run: emacs-package/emacs/mac/Emacs.app/Contents/MacOS/Emacs -q -l init.el --batch -f batch-byte-compile init.el
   run-on-ubuntu:
     name: Run on Ubuntu
