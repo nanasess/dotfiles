@@ -1450,6 +1450,15 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; XML settings
+;;;
+
+(with-eval-after-load-feature 'nxml-mode
+  (add-hook 'nxml-mode-hook #'company-backends-with-yas)
+  (add-hook 'nxml-mode-hook #'lsp))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; mew settings
 ;;;
 
