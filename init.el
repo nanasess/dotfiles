@@ -1083,6 +1083,12 @@
   ;; (setq lsp-headerline-breadcrumb-enable nil)
   ;; (setq lsp-enable-file-watchers nil)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+(el-get-bundle dap-mode
+  :type github
+  :pkgname "emacs-lsp/dap-mode"
+  :depends (tree-mode bui treemacs)
+  (dap-mode 1)
+  (dap-ui-mode 1))
 
 (el-get-bundle eldoc-box
   :type github
@@ -1262,6 +1268,9 @@
   (interactive)
   (require 'php-skeleton)
   (require 'php-skeleton-exceptions)
+  ;; (setq dap-php-debug-path "~/.vscode/extensions/felixfbecker.php-debug-1.14.12")
+  ;; (setq dap-php-debug-program `("node",(f-join dap-php-debug-path "out/phpDebug.js")))
+  ;; (require 'dap-php)
   ;; (require 'flycheck-phpstan)
   ;; (require 'php-ui-phpactor)
   ;; (require 'php-ui)
@@ -1298,12 +1307,6 @@
 (el-get-bundle bui
   :type github
   :pkgname "alezost/bui.el")
-;; (el-get-bundle dap-mode
-;;   :type github
-;;   :pkgname "yyoncho/dap-mode"
-;;   :depends (tree-mode bui treemacs)
-;;   (dap-mode 1)
-;;   (dap-ui-mode 1))
 
 (el-get-bundle groovy-mode
   :type github
