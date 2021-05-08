@@ -1031,6 +1031,7 @@
   :depends (dash f ht hydra spinner markdown-mode treemacs)
   (with-eval-after-load-feature 'lsp
     ;; general
+    (setq lsp-enable-file-watchers nil)
     (setq lsp-auto-guess-root t)
     (setq lsp-document-sync-method 'incremental) ;; always send incremental document
     (setq lsp-response-timeout 5)
