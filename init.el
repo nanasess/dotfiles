@@ -456,7 +456,7 @@
 ;;; easy-kill settings
 ;;;
 
-(el-get-bundle! easy-kill in leoliu/easy-kill)
+(el-get-bundle easy-kill in leoliu/easy-kill)
 (global-set-key [remap kill-ring-save] 'easy-kill)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1543,8 +1543,8 @@
 ;;; UI async settings
 ;;;
 
-(el-get-bundle! deferred)
-(el-get-bundle! inertial-scroll in kiwanami/emacs-inertial-scroll
+(el-get-bundle deferred)
+(el-get-bundle inertial-scroll in kiwanami/emacs-inertial-scroll
   (setq inertias-initial-velocity 50)
   (setq inertias-friction 120)
   (setq inertias-update-time 60)
