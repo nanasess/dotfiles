@@ -73,7 +73,7 @@
         (helm-ls-git :checksum "4da1a53f2f0a078ee2e896a914a1b19c0bf1d5ed")
         (helm :checksum "dbdec633c2816981d7127fe00bcd9778b2c31c51")
         (magit :checksum "b68a760c9e7694c687adedec7dffab0a5609ea93")
-        (with-editor :checksum "2848a90addae086b657605b84a7fbecf2c4c1c65")
+        (with-editor :checksum "5519b6a67ecd66865b4fdd5447425eee900c54f4")
         (transient :checksum "b47e9d7d769437e279628d801a95c173c4ff26b4")
         (smart-jump :checksum "947499023b7c31b99fc172e2a4c1a105ad9c8555")
         (dumb-jump :checksum "35a80403d9ed451f83417654a9dea823cc942d94")
