@@ -8,6 +8,7 @@
 ;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
 (setq gc-cons-percentage 402653184
       gc-cons-percentage 0.6)
+(setq read-process-output-max (* 1024 1024))
 
 ;; see https://github.com/jschaf/esup/issues/54#issue-317095645
 (add-hook 'emacs-startup-hook
@@ -445,10 +446,17 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;; undo-tree settings
+;;;
+(el-get-bundle elpa:undo-tree
+  (global-undo-tree-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;; easy-kill settings
 ;;;
 
-(el-get-bundle! easy-kill in leoliu/easy-kill)
+(el-get-bundle easy-kill in leoliu/easy-kill)
 (global-set-key [remap kill-ring-save] 'easy-kill)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1016,19 +1024,23 @@
   :type github
   :pkgname "emacs-lsp/lsp-java"
   :depends (markdown-mode dash f ht request))
+(add-to-list 'load-path (concat user-emacs-directory "el-get/lsp-mode/clients"))
 (el-get-bundle lsp-mode
   :type github
   :pkgname "emacs-lsp/lsp-mode"
   :depends (dash f ht hydra spinner markdown-mode treemacs)
   (with-eval-after-load-feature 'lsp
     ;; general
+    (setq lsp-enable-file-watchers nil)
     (setq lsp-auto-guess-root t)
     (setq lsp-document-sync-method 'incremental) ;; always send incremental document
     (setq lsp-response-timeout 5)
     (setq lsp-diagnostics-provider :auto)
     (setq lsp-completion-enable t)
-    (setq lsp-completion-enable-additional-text-edit nil))
-    (add-hook 'lsp-mode-hook 'lsp-enable-which-key-integration))
+    (setq lsp-completion-enable-additional-text-edit nil)
+    (setq lsp-prefer-capf t))
+  ;; (add-hook 'lsp-mode-hook 'lsp-enable-which-key-integration)
+  )
 (el-get-bundle lsp-treemacs
   :type github
   :pkgname "emacs-lsp/lsp-treemacs"
@@ -1043,24 +1055,24 @@
     (setq lsp-ui-doc-header t)
     (setq lsp-ui-doc-include-signature t)
     (setq lsp-ui-doc-position 'top) ;; top, bottom, or at-point
-    (setq lsp-ui-doc-max-width 150)
-    (setq lsp-ui-doc-max-height 30)
+    ;; (setq lsp-ui-doc-max-width 150)
+    ;; (setq lsp-ui-doc-max-height 30)
     (setq lsp-ui-doc-use-childframe t)
     (setq lsp-ui-doc-use-webkit t)
     ;; lsp-ui-sideline
-    (setq lsp-ui-sideline-enable nil)
+    (setq lsp-ui-sideline-enable t)
     (setq lsp-ui-sideline-ignore-duplicate t)
     (setq lsp-ui-sideline-show-symbol t)
     (setq lsp-ui-sideline-show-hover t)
-    (setq lsp-ui-sideline-show-diagnostics nil)
+    ;; (setq lsp-ui-sideline-show-diagnostics nil)
     (setq lsp-ui-sideline-show-code-actions nil)
     ;; lsp-ui-imenu
     (setq lsp-ui-imenu-enable nil)
     (setq lsp-ui-imenu-kind-position 'top)
     ;; lsp-ui-peek
     (setq lsp-ui-peek-enable t)
-    (setq lsp-ui-peek-peek-height 20)
-    (setq lsp-ui-peek-list-width 50)
+    ;; (setq lsp-ui-peek-peek-height 20)
+    ;; (setq lsp-ui-peek-list-width 50)
     (setq lsp-ui-peek-fontify 'on-demand) ;; never, on-demand, or always
     (defun ladicle/toggle-lsp-ui-doc ()
       (interactive)
@@ -1069,16 +1081,15 @@
             (lsp-ui-doc-mode -1)
             (lsp-ui-doc--hide-frame))
         (lsp-ui-doc-mode 1))))
+  ;; (setq lsp-headerline-breadcrumb-enable nil)
+  ;; (setq lsp-enable-file-watchers nil)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-
-(el-get-bundle company-lsp
+(el-get-bundle dap-mode
   :type github
-  :pkgname "tigersoldier/company-lsp"
-  (with-eval-after-load-feature 'company-lsp
-    (setq company-lsp-enable-snippet t)
-    (setq company-lsp-cache-candidates t) ;; always using cache
-    (setq company-lsp-async t)
-    (setq company-lsp-enable-recompletion nil)))
+  :pkgname "emacs-lsp/dap-mode"
+  :depends (tree-mode bui treemacs)
+  (dap-mode 1)
+  (dap-ui-mode 1))
 
 (el-get-bundle eldoc-box
   :type github
@@ -1088,6 +1099,7 @@
   (defface eldoc-box-body '((t . (:background "#FFFBEA"))) nil ; bg-alt
     :group 'font-lock-highlighting-faces))
 (setq eldoc-box-clear-with-C-g t)
+;; (setq lsp-print-performance t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1209,11 +1221,15 @@
   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
   ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l")
   ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
-  :autoloads "php-mode-autoloads"
+  :autoloads "lisp/php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-    (add-hook 'php-mode-hook 'php-c-style))
-    ;; (add-hook 'php-mode-hook #'lsp)
+    ;;; phpactor/language-server-extension
+    ;;; M-x lsp-phpactor-install-extension Phpstan
+    (setq lsp-phpactor-path "~/.emacs.d/bin/phpactor")
+    (add-hook 'php-mode-hook 'php-c-style)
+    (add-hook 'php-mode-hook #'lsp)
+    )
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
@@ -1254,19 +1270,25 @@
   (interactive)
   (require 'php-skeleton)
   (require 'php-skeleton-exceptions)
-  (require 'flycheck-phpstan)
-  (make-local-variable 'company-backends)
-  (push '(company-phpactor :with company-yasnippet) company-backends)
-  (make-local-variable 'eldoc-documentation-function)
-  (setq eldoc-documentation-function 'phpactor-hover)
-  (eldoc-box-hover-mode 1)
+  ;; (setq dap-php-debug-path "~/.vscode/extensions/felixfbecker.php-debug-1.14.12")
+  ;; (setq dap-php-debug-program `("node",(f-join dap-php-debug-path "out/phpDebug.js")))
+  ;; (require 'dap-php)
+  ;; (require 'flycheck-phpstan)
+  ;; (require 'php-ui-phpactor)
+  ;; (require 'php-ui)
+  ;; (php-ui-mode 1)
+  ;; (make-local-variable 'company-backends)
+  ;; (push '(company-phpactor :with company-yasnippet) company-backends)
+  ;; (make-local-variable 'eldoc-documentation-function)
+  ;; (setq eldoc-documentation-function 'phpactor-hover)
+  ;; (eldoc-box-hover-mode 1)
   ;; (eldoc-box-hover-at-point-mode 1)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   ;; (setq-local electric-layout-rules '((?{ . around)))
   (electric-pair-local-mode t)
-  (flycheck-mode t)
-  (phpactor-smart-jump-register)
+  ;; (flycheck-mode t)
+  ;; (phpactor-smart-jump-register)
   ;; If you feel phumped and phpcs annoying, invalidate them.
   (when (boundp 'flycheck-disabled-checkers)
     (add-to-list 'flycheck-disabled-checkers 'php-phpmd)
@@ -1287,12 +1309,6 @@
 (el-get-bundle bui
   :type github
   :pkgname "alezost/bui.el")
-;; (el-get-bundle dap-mode
-;;   :type github
-;;   :pkgname "yyoncho/dap-mode"
-;;   :depends (tree-mode bui treemacs)
-;;   (dap-mode 1)
-;;   (dap-ui-mode 1))
 
 (el-get-bundle groovy-mode
   :type github
@@ -1398,7 +1414,7 @@
   :depends (haskell-mode)
   (with-eval-after-load-feature 'lsp-haskell
     (setq lsp-haskell-process-path-hie "hie-wrapper")
-    (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
+    ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
     ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on)
     ))
 
@@ -1436,6 +1452,15 @@
 (with-eval-after-load-feature 'sh-script
   (add-hook 'sh-mode-hook #'company-backends-with-yas)
   (add-hook 'sh-mode-hook #'lsp))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; XML settings
+;;;
+
+(with-eval-after-load-feature 'nxml-mode
+  (add-hook 'nxml-mode-hook #'company-backends-with-yas)
+  (add-hook 'nxml-mode-hook #'lsp))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1483,7 +1508,7 @@
 (el-get-bundle auto-save-buffers-enhanced
   :type github
   :pkgname "kentaro/auto-save-buffers-enhanced")
-(setq auto-save-buffers-enhanced-interval 1.5)
+(setq auto-save-buffers-enhanced-interval 30)
 (setq auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
 (setq auto-save-buffers-enhanced-file-related-with-scratch-buffer
       (concat howm-directory "scratch.txt"))
@@ -1519,8 +1544,8 @@
 ;;; UI async settings
 ;;;
 
-(el-get-bundle! deferred)
-(el-get-bundle! inertial-scroll in kiwanami/emacs-inertial-scroll
+(el-get-bundle deferred)
+(el-get-bundle inertial-scroll in kiwanami/emacs-inertial-scroll
   (setq inertias-initial-velocity 50)
   (setq inertias-friction 120)
   (setq inertias-update-time 60)
