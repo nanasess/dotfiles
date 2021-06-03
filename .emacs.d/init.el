@@ -1228,8 +1228,7 @@
     ;;; M-x lsp-phpactor-install-extension Phpstan
     (setq lsp-phpactor-path "~/.emacs.d/bin/phpactor")
     (add-hook 'php-mode-hook 'php-c-style)
-    (add-hook 'php-mode-hook #'lsp)
-    )
+    (add-hook 'php-mode-hook #'lsp))
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
