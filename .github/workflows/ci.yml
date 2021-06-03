@@ -48,10 +48,10 @@ jobs:
     - run: ~/Applications/Emacs.app/Contents/MacOS/Emacs --version
     - name: bootstrap
       run: |
-        ~/Applications/Emacs.app/Contents/MacOS/Emacs -q -l init.el --batch
+        ~/Applications/Emacs.app/Contents/MacOS/Emacs -q -l .emacs.d/init.el --batch
     - name: byte-compile
       run: |
-        ~/Applications/Emacs.app/Contents/MacOS/Emacs -q -l init.el --batch -f batch-byte-compile init.el
+        ~/Applications/Emacs.app/Contents/MacOS/Emacs -q -l .emacs.d/init.el --batch -f batch-byte-compile .emacs.d/init.el
   run-on-ubuntu:
     name: Run on Ubuntu
     runs-on: ${{ matrix.os }}
@@ -71,7 +71,7 @@ jobs:
     - run: emacs --version
     - name: bootstrap
       run: |
-        emacs -q -l init.el --batch
+        emacs -q -l .emacs.d/init.el --batch
     - name: byte-compile
       run: |
-        emacs -q -l init.el --batch -f batch-byte-compile init.el
+        emacs -q -l .emacs.d/init.el --batch -f batch-byte-compile .emacs.d/init.el
