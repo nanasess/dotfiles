@@ -6,7 +6,8 @@
 ;;; Code:
 
 ;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
-(setq gc-cons-percentage 402653184
+(setq garbage-collection-messages t)
+(setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
 (setq read-process-output-max (* 1024 1024))
 
