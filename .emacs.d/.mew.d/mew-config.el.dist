@@ -1,0 +1,68 @@
+(setq mew-from-list
+      '("User <user@example.com>"
+        "User <user@example.jp>"
+        "User <user@example.net>"))
+
+(setq mew-config-alist
+      '((Exchange
+         (name             "User")
+         (user             "user")
+         (mail-domain      "example.com")
+         (smtp-server      "smtp.office365.com")
+         (smtp-auth         t)
+         (smtp-ssl          t)
+         (smtp-port        587)         ; use for TLS
+         (smtp-ssl-port    587)
+         (smtp-user        "user@example.com")
+         (imap-user        "user@example.com")
+         (imap-server      "outlook.office365.com")
+         (imap-trash-folder "%Deleted Items")
+         (imap-spam-folder "%Junk Email")
+         (imap-ssl         t)
+         (imap-ssl-port    993)
+         (imap-delete      nil)
+         (imap-size        0)
+         (imap-header-only t))
+        (Gmail
+         (name             "User")
+         (user             "user")
+         (mail-domain      "example.jp")
+         (smtp-server      "smtp.gmail.com")
+         (smtp-auth         t)
+         (smtp-ssl          t)
+         (smtp-ssl-port    465)
+         (smtp-user        "user@example.jp")
+         (imap-user        "user@example.net")
+         (imap-server      "imap.gmail.com")
+         (imap-trash-folder "%[Gmail]/ゴミ箱")
+         (imap-spam-folder "%[Gmail]/迷惑メール")
+         (imap-ssl         t)
+         (imap-ssl-port    993)
+         (imap-delete      nil)
+         (imap-size        0)
+         (imap-header-only t))
+        (default
+          (proto            "%")
+          (name             "User")
+          (user             "user")
+          (mail-domain      "example.net")
+          (smtp-server      "smtp.example.net")
+          (smtp-auth         t)
+          (smtp-ssl          nil)
+          (smtp-port        587)         ; use for TLS
+          (smtp-user        "user@example.net")
+          (imap-user        "user@example.net")
+          (imap-server      "imap.example.net")
+          ;; (imap-trash-folder "%Deleted Items")
+          ;; (imap-spam-folder "%Junk Email")
+          (imap-ssl         nil)
+          (imap-port        143)
+          ;; (imap-ssl-port         993)
+          (imap-delete      nil)
+          (imap-size        0)
+          (imap-header-only t))))
+
+;; Local Variables:
+;; mode: emacs-lisp
+;; coding: utf-8-unix
+;; End:

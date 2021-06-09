@@ -1466,11 +1466,12 @@
 ;;; mew settings
 ;;;
 
-(setq mew-rc-file "~/.mew.d/.mew.el")
-(setq mew-thread-indent-strings [" +" " +" " |" "  "])
-(el-get-bundle mew)
-;; mm-version
-(require 'mm-version)
+(add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
+(load "mew-config" t t)
+(setq mew-rc-file ".mew")
+(el-get-bundle mew
+  (with-eval-after-load-feature 'mew
+    (require 'mm-version)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
