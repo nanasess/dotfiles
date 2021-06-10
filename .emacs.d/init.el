@@ -6,7 +6,8 @@
 ;;; Code:
 
 ;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
-(setq gc-cons-percentage 402653184
+(setq garbage-collection-messages t)
+(setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
 (setq read-process-output-max (* 1024 1024))
 
@@ -1115,7 +1116,7 @@
 
 (el-get-bundle json-mode
   ;; npm i -g vscode-json-languageserver
-  (add-hook 'json-mode-hook #'lsp))
+  (add-hook 'json-mode-hook #'lsp-deferred))
 
 ;; for json format
 ;; see https://qiita.com/saku/items/d97e930ffc9ca39ac976
@@ -1207,7 +1208,7 @@
 
 (el-get-bundle yaml-mode
   ;; npm i -g yaml-language-server
-  (add-hook 'yaml-mode-hook #'lsp)
+  (add-hook 'yaml-mode-hook #'lsp-deferred)
   (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1228,7 +1229,7 @@
     ;;; M-x lsp-phpactor-install-extension Phpstan
     (setq lsp-phpactor-path "~/.emacs.d/bin/phpactor")
     (add-hook 'php-mode-hook 'php-c-style)
-    (add-hook 'php-mode-hook #'lsp))
+    (add-hook 'php-mode-hook #'lsp-deferred))
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
@@ -1303,7 +1304,7 @@
 
 (with-eval-after-load-feature 'cc-mode
   (add-hook 'java-mode-hook #'company-backends-with-yas)
-  (add-hook 'java-mode-hook #'lsp))
+  (add-hook 'java-mode-hook #'lsp-deferred))
 
 (el-get-bundle bui
   :type github
@@ -1405,7 +1406,7 @@
     (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
     (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
     (add-hook 'haskell-mode-hook #'company-backends-with-yas)
-    (add-hook 'haskell-mode-hook #'lsp)))
+    (add-hook 'haskell-mode-hook #'lsp-deferred)))
 
 (el-get-bundle lsp-haskell
   :type github
@@ -1425,7 +1426,7 @@
 ;;;
 (el-get-bundle dockerfile-mode
   (add-hook 'dockerfile-mode-hook #'company-backends-with-yas)
-  (add-hook 'dockerfile-mode-hook #'lsp))
+  (add-hook 'dockerfile-mode-hook #'lsp-deferred))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1436,11 +1437,11 @@
 
 (with-eval-after-load-feature 'css-mode
   (add-hook 'css-mode-hook #'company-backends-with-yas)
-  (add-hook 'css-mode-hook #'lsp))
+  (add-hook 'css-mode-hook #'lsp-deferred))
 
 (with-eval-after-load-feature 'scss-mode
   (add-hook 'scss-mode-hook #'company-backends-with-yas)
-  (add-hook 'scss-mode-hook #'lsp))
+  (add-hook 'scss-mode-hook #'lsp-deferred))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1450,7 +1451,7 @@
 ;;;
 (with-eval-after-load-feature 'sh-script
   (add-hook 'sh-mode-hook #'company-backends-with-yas)
-  (add-hook 'sh-mode-hook #'lsp))
+  (add-hook 'sh-mode-hook #'lsp-deferred))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1459,7 +1460,7 @@
 
 (with-eval-after-load-feature 'nxml-mode
   (add-hook 'nxml-mode-hook #'company-backends-with-yas)
-  (add-hook 'nxml-mode-hook #'lsp))
+  (add-hook 'nxml-mode-hook #'lsp-deferred))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
