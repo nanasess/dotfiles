@@ -29,3 +29,9 @@ server
 /.lsp-session-v1
 /lsp-cache
 /network-security.data
+/.cache/lsp/
+/.dap-breakpoints
+/.lsp-eslint-choices
+/eclipse.jdt.ls
+/request
+/workspace
