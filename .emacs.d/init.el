@@ -1030,9 +1030,9 @@
   :type github
   :pkgname "emacs-lsp/lsp-mode"
   :depends (dash f ht hydra spinner markdown-mode treemacs)
+  (setq lsp-enable-file-watchers nil)
   (with-eval-after-load-feature 'lsp
     ;; general
-    (setq lsp-enable-file-watchers nil)
     (setq lsp-auto-guess-root t)
     (setq lsp-document-sync-method 'incremental) ;; always send incremental document
     (setq lsp-response-timeout 5)
@@ -1229,7 +1229,7 @@
     ;;; M-x lsp-phpactor-install-extension Phpstan
     (setq lsp-phpactor-path "~/.emacs.d/bin/phpactor")
     (add-hook 'php-mode-hook 'php-c-style)
-    (add-hook 'php-mode-hook #'lsp-deferred))
+    (add-hook 'php-mode-hook #'lsp-deferred)
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
@@ -1328,62 +1328,8 @@
 ;;;
 ;;; csharp
 ;;;
-
-;; XXX omnisharp-utils.el で (require 'shut-up) しないと動かないかも
-(el-get-bundle shut-up in cask/shut-up)
-(el-get-bundle omnisharp-emacs
-  :type github
-  :pkgname "OmniSharp/omnisharp-emacs"
-  :depends (csharp-mode popup shut-up dash s f))
-;; git clone git@github.com:OmniSharp/omnisharp-roslyn.git
-;; cd omnisharp-roslyn
-;; ./build.sh
-;;
-;; XXX OmniSharp-Roslyn が自動起動してくれないので 以下のようにして手動で起動させる
-;; ~/git-repos/omnisharp-roslyn/artifacts/publish/OmniSharp/default/netcoreapp1.1/OmniSharp -s `pwd`
-;;
-;; さらに csharp-mode や omnisharp-mode がちゃんと起動しない場合は以下のように手動で起動させる
-;; M-x my-csharp-mode-hook
-;; M-x my-omnisharp-mode-hook
-(setq omnisharp-server-executable-path "~/bin/omnisharp-osx/run")
-
-(with-eval-after-load-feature 'csharp-mode
-  (defun my-csharp-mode-hook ()
-    (interactive)
-    (flycheck-mode 1)
-    ;; (auto-complete-mode 1)
-    (electric-pair-local-mode 1) ;; for Emacs25
-    (setq c-syntactic-indentation t)
-    (c-set-style "ellemtel")
-    (setq truncate-lines t)
-    (setq flycheck-idle-change-delay 2)
-    (omnisharp-mode 1))
-  (add-hook 'csharp-mode-hook 'my-csharp-mode-hook)
-  (add-hook 'csharp-mode-hook
-            #'(lambda ()
-                ;; (add-to-list 'ac-sources 'ac-source-omnisharp)
-                (add-to-list 'flycheck-checkers 'csharp-omnisharp-codecheck))))
-(with-eval-after-load-feature 'omnisharp
-  (defun my-omnisharp-mode-hook ()
-    (interactive)
-    (message "omnisharp-mode enabled")
-    (define-key omnisharp-mode-map (kbd "}") 'csharp-indent-function-on-closing-brace)
-    (define-key omnisharp-mode-map "\M-/"     'omnisharp-auto-complete)
-    (define-key omnisharp-mode-map "."        'omnisharp-add-dot-and-auto-complete)
-    (define-key omnisharp-mode-map "\C-c\C-c" 'omnisharp-code-format)
-    (define-key omnisharp-mode-map "\C-c\C-N" 'omnisharp-navigate-to-solution-member)
-    (define-key omnisharp-mode-map "\C-c\C-n" 'omnisharp-navigate-to-current-file-member)
-    (define-key omnisharp-mode-map "\C-c\C-f" 'omnisharp-navigate-to-solution-file)
-    (define-key omnisharp-mode-map "\M-."     'omnisharp-go-to-definition)
-    (define-key omnisharp-mode-map "\C-c\C-r" 'omnisharp-rename)
-    (define-key omnisharp-mode-map "\C-c\C-v" 'omnisharp-run-code-action-refactoring)
-    (define-key omnisharp-mode-map "\C-c\C-o" 'omnisharp-auto-complete-overrides)
-    (define-key omnisharp-mode-map "\C-c\C-u" 'omnisharp-fix-usings)
-
-    (add-to-list 'company-backends '(company-omnisharp :with company-yasnippet))
-    (eldoc-box-hover-mode 1))
-  (setq omnisharp-company-strip-trailing-brackets nil)
-  (add-hook 'omnisharp-mode-hook 'my-omnisharp-mode-hook))
+(el-get-bundle csharp-mode
+  (add-hook 'csharp-mode-hook #'lsp-deferred))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1406,14 +1352,15 @@
     (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
     (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
     (add-hook 'haskell-mode-hook #'company-backends-with-yas)
-    (add-hook 'haskell-mode-hook #'lsp-deferred)))
+    (add-hook 'haskell-mode-hook #'lsp-deferred)
+    (add-hook 'haskell-literate-mode-hook #'lsp)))
 
 (el-get-bundle lsp-haskell
   :type github
   :pkgname "emacs-lsp/lsp-haskell"
   :depends (haskell-mode)
   (with-eval-after-load-feature 'lsp-haskell
-    (setq lsp-haskell-process-path-hie "hie-wrapper")
+    ;; (setq lsp-haskell-process-path-hie "hie-wrapper")
     ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
     ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on)
     ))
