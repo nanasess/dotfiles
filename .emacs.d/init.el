@@ -7,9 +7,11 @@
 
 ;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
 (setq garbage-collection-messages t)
-(setq gc-cons-threshold 402653184
+(setq gc-cons-threshold 536870912
       gc-cons-percentage 0.6)
 (setq read-process-output-max (* 1024 1024))
+(eval-when-compile (require 'cl))
+(eval '(eval-when-compile (require 'cl)))
 
 ;; see https://github.com/jschaf/esup/issues/54#issue-317095645
 (add-hook 'emacs-startup-hook
@@ -52,14 +54,15 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
-(el-get-bundle! el-get-lock
+(el-get-bundle el-get-lock
   :type github
   :pkgname "tarao/el-get-lock")
 (el-get-lock)
+(el-get-lock-unlock 'el-get 'seq)
 
 (el-get-bundle with-eval-after-load-feature-el
   :type github
-  :features with-eval-after-load-feature
+  ;; :features with-eval-after-load-feature
   :pkgname "tarao/with-eval-after-load-feature-el")
 
 ;; (el-get-bundle esup)
@@ -70,7 +73,6 @@
 ;; (initchart-record-execution-time-of require feature)
 (el-get-bundle awasira/cp5022x.el
   :name cp5022x
-  :features cp5022x
   (with-eval-after-load-feature 'cp5022x
     (define-coding-system-alias 'iso-2022-jp 'cp50220)
     (define-coding-system-alias 'euc-jp 'cp51932)))
@@ -128,11 +130,10 @@
   :pkgname "skk-dev/ddskk"
   :info "doc/skk.info"
   :autoloads "skk-autoloads"
-  :features ("skk-setup")
   :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
            (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
-           ("cp" "skk-setup.el.in" "skk-setup.el")))
-(setq skk-preload nil)
+           ("cp" "skk-setup.el.in" "skk-setup.el"))
+  (setq skk-preload nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -315,9 +316,9 @@
   (setq tab-width 4)
   (setq indent-tabs-mode nil))
 
-(el-get-bundle editorconfig)
-(add-hook 'after-init-hook #'(lambda ()
-                               (editorconfig-mode 1)))
+;; (el-get-bundle editorconfig)
+;; (add-hook 'after-init-hook #'(lambda ()
+;;                                (editorconfig-mode 1)))
 
 (el-get-bundle prettier-js)
 
@@ -435,7 +436,7 @@
         migemo-use-frequent-pattern-alist t
         migemo-pattern-alist-length 10000
         migemo-coding-system 'utf-8-unix))
-(el-get-bundle! migemo)
+(el-get-bundle migemo)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -449,8 +450,8 @@
 ;;;
 ;;; undo-tree settings
 ;;;
-(el-get-bundle elpa:undo-tree
-  (global-undo-tree-mode))
+;; (el-get-bundle elpa:undo-tree
+;;   (global-undo-tree-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -717,7 +718,7 @@
     (helm-migemo-mode 1)
     (define-key helm-map (kbd "C-v") 'helm-next-source)
     (define-key helm-map (kbd "M-v") 'helm-previous-source)
-    (define-key helm-map (kbd "C-j") 'skk-kakutei)
+    (define-key helm-map (kbd "C-x C-j") 'skk-kakutei)
     (define-key helm-map (kbd "C-z") 'helm-execute-persistent-action)
 
     (defun helm-mac-spotlight ()
@@ -1015,12 +1016,11 @@
 (el-get-bundle spinner)
 (el-get-bundle f)
 (el-get-bundle ht)
-(el-get-bundle! flycheck)
+(el-get-bundle flycheck)
 (add-to-list 'load-path (concat user-emacs-directory "el-get/treemacs/src/elisp"))
 (el-get-bundle treemacs
   :type github
-  :pkgname "Alexander-Miller/treemacs"
-  :features ("treemacs"))
+  :pkgname "Alexander-Miller/treemacs")
 (el-get-bundle lsp-java
   :type github
   :pkgname "emacs-lsp/lsp-java"
@@ -1085,12 +1085,15 @@
   ;; (setq lsp-headerline-breadcrumb-enable nil)
   ;; (setq lsp-enable-file-watchers nil)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+(el-get-bundle emacswiki:tree-mode
+  :name "tree-mode")
 (el-get-bundle dap-mode
   :type github
   :pkgname "emacs-lsp/dap-mode"
   :depends (tree-mode bui treemacs)
-  (dap-mode 1)
-  (dap-ui-mode 1))
+  ;; (dap-mode 1)
+  ;; (dap-ui-mode 1)
+  )
 
 (el-get-bundle eldoc-box
   :type github
@@ -1228,8 +1231,7 @@
     ;;; phpactor/language-server-extension
     ;;; M-x lsp-phpactor-install-extension Phpstan
     (setq lsp-phpactor-path "~/.emacs.d/bin/phpactor")
-    (add-hook 'php-mode-hook 'php-c-style)
-    (add-hook 'php-mode-hook #'lsp-deferred))
+    )
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
@@ -1239,7 +1241,8 @@
               #'(lambda ()
                   (setq c-auto-newline 1)
                   (setq c-hungry-delete-key 1)))))
-
+(add-hook 'php-mode-hook 'php-c-style)
+(add-hook 'php-mode-hook #'lsp-deferred)
 (el-get-bundle php-runtime
   :type github
   :pkgname "emacs-php/php-runtime.el")
@@ -1497,9 +1500,9 @@
   (setq inertias-initial-velocity 50)
   (setq inertias-friction 120)
   (setq inertias-update-time 60)
-  (setq inertias-rest-coef 0.1)
-  (global-set-key (kbd "C-v") 'inertias-up)
-  (global-set-key (kbd "M-v") 'inertias-down))
+  (setq inertias-rest-coef 0.1))
+(global-set-key (kbd "C-v") 'inertias-up)
+(global-set-key (kbd "M-v") 'inertias-down)
 
 ;;; sqlite-dump
 ;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
@@ -1601,7 +1604,7 @@
 (setq recentf-max-saved-items 50000)
 
 (el-get 'sync)
-(define-key minibuffer-local-map (kbd "C-j") 'skk-kakutei)
+(define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
 
 (setq gc-cons-threshold 100000000
       gc-cons-percentage 0.1)
@@ -1617,4 +1620,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-)
+ '(package-selected-packages '(undo-tree))
+ '(session-use-package t nil (session)))
