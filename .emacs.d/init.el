@@ -7,7 +7,7 @@
 
 ;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
 (setq garbage-collection-messages t)
-(setq gc-cons-threshold 536870912
+(setq gc-cons-threshold (* 384 1024 1024)
       gc-cons-percentage 0.6)
 (setq read-process-output-max (* 1024 1024))
 (eval-when-compile (require 'cl))
@@ -25,7 +25,7 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
-(package-initialize)
+;; (package-initialize)
 
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
@@ -45,6 +45,12 @@
 ;;; el-get settings
 ;;;
 
+(setq el-get-git-shallow-clone t
+      el-get-bundle-byte-compile t
+      ;; el-get-is-lazy t
+      el-get-verbose nil
+      el-get-bundle-sync t
+      el-get-auto-update-cached-recipes nil)
 (add-to-list 'load-path (concat user-emacs-directory "el-get/ddskk"))
 (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
 (unless (require 'el-get nil 'noerror)
@@ -54,6 +60,10 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
+(add-hook 'after-init-hook
+          #'(lambda ()
+              (el-get 'sync)
+              (package-initialize)))
 (el-get-bundle el-get-lock
   :type github
   :pkgname "tarao/el-get-lock")
@@ -192,7 +202,10 @@
 (setq visible-bell t)
 ;; use solarized.
 (el-get-bundle doom-themes)
-(load-theme 'doom-solarized-light t)
+(add-hook 'after-init-hook
+          #'(lambda ()
+              (require 'doom-themes)
+              (load-theme 'doom-solarized-light t)))
 (set-face-attribute 'font-lock-comment-face nil :slant 'normal)
 (set-face-attribute 'font-lock-type-face nil :slant 'normal :weight 'bold)
 (set-face-attribute 'font-lock-builtin-face nil :slant 'normal :weight 'bold)
@@ -1211,14 +1224,16 @@
 
 (el-get-bundle yaml-mode
   ;; npm i -g yaml-language-server
-  (add-hook 'yaml-mode-hook #'lsp-deferred)
   (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
+(add-hook 'yaml-mode-hook #'lsp-deferred)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; PHP settings
 ;;;
-
+;;; phpactor/language-server-extension
+;;; M-x lsp-phpactor-install-extension Phpstan
+(defvar lsp-phpactor-path "~/.emacs.d/bin/phpactor")
 (el-get-bundle php-mode
   :type github
   :pkgname "emacs-php/php-mode"
@@ -1227,11 +1242,7 @@
   ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
   :autoloads "lisp/php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
-    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
-    ;;; phpactor/language-server-extension
-    ;;; M-x lsp-phpactor-install-extension Phpstan
-    (setq lsp-phpactor-path "~/.emacs.d/bin/phpactor")
-    )
+    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode)))
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
@@ -1325,7 +1336,6 @@
 ;;;
 
 (el-get-bundle csv-mode in emacsmirror/csv-mode)
-(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1558,28 +1568,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;  emacs-libvterm settings
-;;;
-;;; brew install cmake
-;;; M-x vterm-module-compile
-
-(setq vterm-always-compile-module t)
-(el-get-bundle emacs-libvterm
-  :type github
-  :pkgname "akermu/emacs-libvterm"
-  ;; :build `((,el-get-emacs "-q" "-l" "vterm.el" "-batch" "-f" "vterm-module-compile"))
-  (with-eval-after-load-feature 'vterm
-    (push (list "find-file-below"
-                (lambda (path)
-                  (if-let* ((buf (find-file-noselect path))
-                            (window (display-buffer-below-selected buf nil)))
-                      (select-window window)
-                    (message "Failed to open file: %s" path))))
-          vterm-eval-cmds)))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;; plantuml settings
 ;;;
 ;;; brew install plantuml
@@ -1603,7 +1591,6 @@
 (el-get-bundle recentf-ext)
 (setq recentf-max-saved-items 50000)
 
-(el-get 'sync)
 (define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
 
 (setq gc-cons-threshold 100000000
