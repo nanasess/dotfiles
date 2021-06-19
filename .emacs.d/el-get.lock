@@ -42,7 +42,7 @@
         (dap-mode :checksum "cc395e066755c7513d4862f5639f3d162b3bd30f")
         (tree-mode :checksum "56a765fe2023909b37d430ab1fc70963fb41c845")
         (lsp-treemacs :checksum "f360d54fa68a00baec228d9582bc67c1a327d757")
-        (lsp-mode :checksum "f749051fa32e9da3a81f5db4d7e45be4887b9549")
+        (lsp-mode :checksum "2e99164f74d1a5baf106ee3cb6e84968642570bb")
         (posframe :checksum "3257a52e3599bc1d5c9a4b646d36d7a49b0dd025")
         (bui :checksum "f3a137628e112a91910fd33c0cff0948fa58d470")
         (treemacs :checksum "c2b0beaeb0383c3e6cbc453d6c42cdbc87c6da5e")
