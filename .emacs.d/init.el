@@ -728,7 +728,6 @@
 
 (el-get-bundle helm
   (with-eval-after-load-feature 'helm
-    (helm-migemo-mode 1)
     (define-key helm-map (kbd "C-v") 'helm-next-source)
     (define-key helm-map (kbd "M-v") 'helm-previous-source)
     (define-key helm-map (kbd "C-x C-j") 'skk-kakutei)
