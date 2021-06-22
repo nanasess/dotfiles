@@ -1127,6 +1127,7 @@
 (el-get-bundle js2-mode
   (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
   (add-hook 'js-mode-hook 'js2-minor-mode)
+  (add-hook 'js-mode-hook 'editorconfig-apply)
   (with-eval-after-load-feature 'js2-mode
     (electric-indent-local-mode 0)
     (define-key js2-mode-map (kbd "RET") 'js2-line-break)))
@@ -1243,7 +1244,10 @@
   ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
   :autoloads "lisp/php-mode-autoloads"
   (with-eval-after-load-feature 'php-mode
-    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode)))
+    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
+    (add-hook 'php-mode-hook 'php-c-style)
+    (add-hook 'php-mode-hook #'lsp-deferred)
+    (add-hook 'php-mode-hook 'editorconfig-apply))
   (with-eval-after-load-feature 'php
     (setq php-manual-url "https://www.php.net/manual/ja/"
           php-mode-coding-style 'Symfony2
