@@ -241,7 +241,7 @@
 (setq global-hl-line-timer
       (run-with-idle-timer 0.1 t 'global-hl-line-timer-function))
 ;; (cancel-timer global-hl-line-timer)
-
+(el-get-bundle dash)
 (el-get-bundle shrink-path
   :type github
   :pkgname "zbelial/shrink-path.el"
@@ -738,7 +738,9 @@
       "Preconfigured `helm' for `mdfind'."
       (interactive)
       (let ((helm-ff-transformer-show-only-basename nil))
-        (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))))
+        (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))
+    (with-eval-after-load-feature 'migemo
+      (helm-migemo-mode 1))))
 
 (defconst helm-for-files-preferred-list
   '(helm-source-buffers-list
