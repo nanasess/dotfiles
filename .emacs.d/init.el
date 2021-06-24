@@ -526,6 +526,9 @@
   (add-hook 'nxml-mode-hook #'company-backends-with-yas)
   (add-hook 'nxml-mode-hook #'lsp-deferred))
 
+(add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
+(load "mew-config" t t)
+(setq mew-rc-file ".mew")
 (el-get-bundle mew)
 (el-get-bundle twittering-mode)
 (el-get-bundle popwin)
