@@ -1,3 +1,4 @@
 #!/bin/bash
 
 ln -s $PWD/.emacs.d $HOME/.emacs.d
+ln -s $PWD/.signature $HOME/.signature
