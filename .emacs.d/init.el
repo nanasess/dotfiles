@@ -487,7 +487,7 @@
   ;; :info "."
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
 )
-
+;; see https://github.com/haskell/haskell-language-server#emacs
 (el-get-bundle lsp-haskell
   :type github
   :pkgname "emacs-lsp/lsp-haskell"
