@@ -47,7 +47,7 @@
       el-get-bundle-byte-compile t
       el-get-auto-update-cached-recipes nil
       el-get-user-package-directory (locate-user-emacs-file "el-get-init.d"))
-(add-to-list 'load-path (concat user-emacs-directory "el-get/ddskk"))
+
 (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
@@ -106,6 +106,7 @@
   :type github
   :pkgname "skk-dev/ddskk"
   :info "doc/skk.info"
+  :load-path (".")
   :autoloads "skk-autoloads"
   :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
            (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
@@ -222,9 +223,6 @@
 
 ;;; Indent settings
 (setq-default indent-tabs-mode nil)
-(defun basic-indent ()
-  (setq tab-width 4)
-  (setq indent-tabs-mode nil))
 
 ;; (el-get-bundle editorconfig)
 ;; (add-hook 'after-init-hook #'(lambda ()
@@ -246,10 +244,9 @@
 (defun risky-local-variable-p (sym &optional _ignored) nil)
 (defun safe-local-variable-p (sym val) t)
 
-;;; SQL settings
-(setq sql-product 'postgres)
-(add-hook 'sql-mode-hook 'basic-indent)
-
+(add-hook 'sql-mode-hook #'(lambda ()
+                             (set (make-local-variable 'sql-product) 'postgres)
+                             (sql-indent-enable)))
 ;;; view-mode settings
 (add-hook 'view-mode-hook
           #'(lambda ()
@@ -351,30 +348,29 @@
   (define-key smerge-mode-map (kbd "M-n") 'smerge-next)
   (define-key smerge-mode-map (kbd "M-p") 'smerge-prev))
 
-;;; howm settings
-(defvar howm-menu-lang 'ja)
-;; (defvar howm-directory org-directory)
-(defvar howm-directory (concat external-directory "howm/"))
-(defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt")
-(defvar howm-history-file (concat howm-directory ".howm-history"))
-(defvar howm-keyword-file (concat howm-directory ".howm-keys"))
-(defvar howm-menu-schedule-days-before 30)
-(defvar howm-menu-schedule-days 30)
-(defvar howm-menu-expiry-hours 2)
-(defvar howm-menu-refresh-after-save nil)
-(defvar howm-refresh-after-save nil)
-(defvar howm-list-all-title t)
-(defvar howm-schedule-menu-types "[!@\+]")
-(defvar howm-view-title-header "Title:")
-(setq howm-view-use-grep t)
-;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
-(setq howm-process-coding-system 'utf-8-unix)
-(setq howm-todo-menu-types "[-+~!]")
-(defun parse-howm-title () nil)
 (el-get-bundle howm
   :type git
   :url "git://git.osdn.jp/gitroot/howm/howm.git"
-  :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make")))
+  :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
+  :prepare (progn
+             (defvar howm-menu-lang 'ja)
+             (defvar howm-directory (concat external-directory "howm/"))
+             (defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt")
+             (defvar howm-history-file (concat howm-directory ".howm-history"))
+             (defvar howm-keyword-file (concat howm-directory ".howm-keys"))
+             (defvar howm-menu-schedule-days-before 30)
+             (defvar howm-menu-schedule-days 30)
+             (defvar howm-menu-expiry-hours 2)
+             (defvar howm-menu-refresh-after-save nil)
+             (defvar howm-refresh-after-save nil)
+             (defvar howm-list-all-title t)
+             (defvar howm-schedule-menu-types "[!@\+]")
+             (defvar howm-view-title-header "Title:")
+             (setq howm-view-use-grep t)
+             ;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
+             (setq howm-process-coding-system 'utf-8-unix)
+             (setq howm-todo-menu-types "[-+~!]")
+             (defun parse-howm-title () nil)))
 
 (el-get-bundle helm)
 (el-get-bundle helm-ls-git)
@@ -396,17 +392,17 @@
 (el-get-bundle f)
 (el-get-bundle ht)
 (el-get-bundle flycheck)
-(add-to-list 'load-path (concat user-emacs-directory "el-get/treemacs/src/elisp"))
 (el-get-bundle treemacs
   :type github
-  :pkgname "Alexander-Miller/treemacs")
+  :pkgname "Alexander-Miller/treemacs"
+  :load-path ("src/elisp"))
 (el-get-bundle lsp-java
   :type github
   :pkgname "emacs-lsp/lsp-java"
   :depends (markdown-mode dash f ht request))
-(add-to-list 'load-path (concat user-emacs-directory "el-get/lsp-mode/clients"))
 (el-get-bundle lsp-mode
   :type github
+  :load-path ("." "./clients")
   :pkgname "emacs-lsp/lsp-mode"
   :depends (dash f ht hydra spinner markdown-mode treemacs))
 (el-get-bundle lsp-treemacs
@@ -491,7 +487,7 @@
   ;; :info "."
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
 )
-
+;; see https://github.com/haskell/haskell-language-server#emacs
 (el-get-bundle lsp-haskell
   :type github
   :pkgname "emacs-lsp/lsp-haskell"
