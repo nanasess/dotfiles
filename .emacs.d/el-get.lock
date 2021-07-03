@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((editorconfig :checksum "e10fa22b1304c5801b026c10cc5d65a97ccc0a48")
+      '((emacs-sql-indent :checksum "ea5aa87c9b8ce6020758d4b4e5d73fc2c50eacfa")
+        (editorconfig :checksum "e10fa22b1304c5801b026c10cc5d65a97ccc0a48")
         (recentf-ext :checksum "95f81dfac24d3f67002024f0a24e6b997bf6d647")
         (plantuml-mode :checksum "5889166b6cfe94a37532ea27fc8de13be2ebfd02")
         (po-mode :checksum "3c97f0d391751956fdcf9f4c858d45c60405dd35")
