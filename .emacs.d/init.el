@@ -244,9 +244,10 @@
 (defun risky-local-variable-p (sym &optional _ignored) nil)
 (defun safe-local-variable-p (sym val) t)
 
-(add-hook 'sql-mode-hook #'(lambda ()
-                             (set (make-local-variable 'sql-product) 'postgres)
-                             (sql-indent-enable)))
+(el-get-bundle emacs-sql-indent
+  :type github
+  :pkgname "alex-hhh/emacs-sql-indent")
+
 ;;; view-mode settings
 (add-hook 'view-mode-hook
           #'(lambda ()
