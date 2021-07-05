@@ -169,6 +169,8 @@
                     :foreground "#D6D6D6"
                     :background "#D6D6D6"
                     :underline nil)
+(setq whitespace-global-modes
+      '(not dired-mode tar-mode magit-log-mode mew-draft-mode))
 (global-whitespace-mode t)
 
 ;; see also http://rubikitch.com/2015/05/14/global-hl-line-mode-timer/
