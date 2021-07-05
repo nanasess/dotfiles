@@ -155,6 +155,7 @@
 (setq whitespace-display-mappings nil)
 (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
 (setq whitespace-space-regexp "\\(\u3000+\\)")
+
 (set-face-attribute 'whitespace-trailing nil
                     :foreground nil
                     :background "#FDF6E3"
@@ -436,6 +437,7 @@
 ;;     :group 'font-lock-highlighting-faces))
 ;; (setq eldoc-box-clear-with-C-g t)
 ;; (setq lsp-print-performance t)
+;; (setq lsp-log-io t)
 
 (el-get-bundle js2-mode)
 (el-get-bundle json-mode)
