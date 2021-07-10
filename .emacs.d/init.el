@@ -437,7 +437,6 @@
 ;;     :group 'font-lock-highlighting-faces))
 ;; (setq eldoc-box-clear-with-C-g t)
 ;; (setq lsp-print-performance t)
-;; (setq lsp-log-io t)
 
 (el-get-bundle js2-mode)
 (el-get-bundle json-mode)
