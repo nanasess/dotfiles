@@ -10,7 +10,9 @@
     (add-hook 'php-mode-hook
               #'(lambda ()
                   (setq c-auto-newline 1)
-                  (setq c-hungry-delete-key 1)))))
+                  (setq c-hungry-delete-key 1))))
+  (with-eval-after-load-feature 'lsp-mode
+    (setq lsp-php-composer-dir "~/.composer")))
 (with-eval-after-load-feature 'php
   (setq php-manual-url "https://www.php.net/manual/ja/"
         php-mode-coding-style 'Symfony2

@@ -155,6 +155,7 @@
 (setq whitespace-display-mappings nil)
 (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
 (setq whitespace-space-regexp "\\(\u3000+\\)")
+
 (set-face-attribute 'whitespace-trailing nil
                     :foreground nil
                     :background "#FDF6E3"

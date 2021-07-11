@@ -7,7 +7,7 @@
     (append (if (consp backend) backend (list backend))
             '(:with company-yasnippet))))
 (with-eval-after-load-feature 'company
-  (setq company-idle-delay 0.1
+  (setq company-idle-delay 0.5
         company-minimum-prefix-length 2
         company-tooltip-align-annotations t
         company-selection-wrap-around t)

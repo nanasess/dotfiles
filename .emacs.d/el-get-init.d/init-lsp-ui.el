@@ -8,6 +8,9 @@
   ;; (setq lsp-ui-doc-max-height 30)
   (setq lsp-ui-doc-use-childframe t)
   (setq lsp-ui-doc-use-webkit t)
+  (setq lsp-ui-doc-delay 1.0)
+  (setq lsp-ui-sideline-delay 1.0)
+  (setq lsp-ui-doc-post-delay 0.8)
   ;; lsp-ui-sideline
   (setq lsp-ui-sideline-enable t)
   (setq lsp-ui-sideline-ignore-duplicate t)
