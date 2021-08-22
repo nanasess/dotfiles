@@ -93,6 +93,7 @@
                    (expand-file-name "~/Applications/Emacs.app/Contents/Resources/bin")
                    (expand-file-name "~/bin")
                    (expand-file-name "~/.emacs.d/bin")
+                   (expand-file-name "~/.emacs.d/el-get/mew/bin")
                    (expand-file-name "~/.local/bin")
                    (expand-file-name "~/.composer/vendor/bin")))
 
