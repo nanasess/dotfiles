@@ -1,6 +1,6 @@
 ;;; phpactor/language-server-extension
 ;;; M-x lsp-phpactor-install-extension Phpstan
-(defvar lsp-phpactor-path "~/.emacs.d/bin/phpactor")
+;; (defvar lsp-phpactor-path "~/.emacs.d/bin/phpactor")
 (with-eval-after-load-feature 'php-mode
   (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
   (add-hook 'php-mode-hook 'php-c-style)
