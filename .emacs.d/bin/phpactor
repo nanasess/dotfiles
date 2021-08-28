@@ -1,3 +1,0 @@
-#!/bin/sh
-
-~/.emacs.d/bin/php ~/.composer/vendor/phpactor/phpactor/bin/phpactor "$@"
