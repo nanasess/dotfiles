@@ -316,6 +316,10 @@
 (global-set-key (kbd "C-z C-a") 'toggle-fullscreen)
 (global-set-key (kbd "C-z C-z") 'toggle-size-frame)
 
+(el-get-bundle terminal-here
+  :type github
+  :pkgname "davidshepherd7/terminal-here")
+
 (el-get-bundle migemo)
 (el-get-bundle visual-regexp)
 ;; (el-get-bundle elpa:undo-tree
