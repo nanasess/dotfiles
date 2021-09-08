@@ -228,7 +228,7 @@
 ;;; Indent settings
 (setq-default indent-tabs-mode nil)
 
-;; (el-get-bundle editorconfig)
+(el-get-bundle editorconfig)
 ;; (add-hook 'after-init-hook #'(lambda ()
 ;;                                (editorconfig-mode 1)))
 
@@ -528,6 +528,9 @@
   (add-hook 'nxml-mode-hook #'company-backends-with-yas)
   (add-hook 'nxml-mode-hook #'lsp-deferred))
 
+(with-eval-after-load-feature 'typescript-mode
+  (add-hook 'typescript-mode-hook #'editorconfig-mode-apply))
+
 (add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
 (load "mew-config" t t)
 (setq mew-rc-file ".mew")
@@ -587,3 +590,4 @@
  )
 ;; (profiler-report)
 ;; (profiler-stop)
+(put 'dired-find-alternate-file 'disabled nil)
