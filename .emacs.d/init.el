@@ -590,4 +590,4 @@
  )
 ;; (profiler-report)
 ;; (profiler-stop)
-(put 'dired-find-alternate-file 'disabled nil)
+
