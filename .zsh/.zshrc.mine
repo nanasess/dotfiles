@@ -1,0 +1,35 @@
+# -*- mode:shell-script -*-
+
+export EDITOR=$HOME/Applications/Emacs.app/Contents/Resources/bin/emacsclient
+
+export PATH=$HOME/bin:$HOME/.nodebrew/current/bin:$HOME/.cpan/CPAN/bin:$HOME/.cabal/bin:/Library/Frameworks/HaskellPlatform.framework/bin:/usr/local/texlive/2014/bin/x86_64-darwin:/opt/local/lib/postgresql91/bin:/usr/local/heroku/bin:/opt/local/bin:/usr/local/bin:$PATH
+export GISTY_ACCESS_TOKEN=0ed67465613675b60c7635f395b7d4da120c27dd
+
+export ORACLE_BASE=~/oracle
+export ORACLE_HOME=$ORACLE_BASE/product/11.2.0/client_1
+export DYLD_LIBRARY_PATH=$ORACLE_HOME/lib:$DYLD_LIBRARY_PATH
+export PATH=$ORACLE_HOME/bin:$PATH
+export NLS_LANG=japanese_japan.UTF8
+
+export PERL5LIB="$HOME/.cpan/CPAN/lib/perl5${PERL5LIB+:}$PERL5LIB";
+export PERL_LOCAL_LIB_ROOT="$HOME/.cpan/CPAN${PERL_LOCAL_LIB_ROOT+:}$PERL_LOCAL_LIB_ROOT";
+export PERL_MB_OPT="--install_base \"$HOME/.cpan/CPAN\"";
+export PERL_MM_OPT="INSTALL_BASE=$HOME/.cpan/CPAN";
+
+export ASPNETCORE_ENVIRONMENT=Development
+export BAT_THEME=ansi-light
+
+autoload bashcompinit && bashcompinit
+#source $HOME/lib/azure-cli/az.completion
+eval $(/usr/libexec/path_helper -s)
+
+source $HOME/.phpbrew/bashrc
+export PATH=$HOME/.rbenv/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.symfony/bin:$PATH
+export PATH=/usr/local/bin:$PATH
+export PATH=/usr/local/sbin:$PATH
+export PATH="$(brew --prefix openssl)/bin:$PATH"
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+if which stack > /dev/null; then eval "$(stack --bash-completion-script stack)"; fi
+# export PHPBREW_SET_PROMPT=1

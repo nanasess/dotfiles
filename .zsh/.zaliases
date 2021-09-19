@@ -1,0 +1,73 @@
+# -*- mode:shell-script -*-
+alias ls="exa --icons --color=always"
+alias less='less -X'
+alias emacsclient=$HOME/Applications/Emacs.app/Contents/Resources/bin/emacsclient
+alias grep="LANG=C ggrep"
+
+autoload -U add-zsh-hook
+add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
+
+eval "$(hub alias -s)"
+eval "$(anyenv init -)"
+
+## see. https://gist.github.com/1244467
+## Invoke the ``dired'' of current working directory in Emacs buffer.
+function dired () {
+  emacsclient -e "(dired \"${1:a}\")"
+}
+
+## Chdir to the ``default-directory'' of currently opened in Emacs buffer.
+function cde () {
+    EMACS_CWD=`emacsclient -e "
+     (expand-file-name
+      (with-current-buffer
+          (if (featurep 'elscreen)
+              (let* ((frame-confs (elscreen-get-frame-confs (selected-frame)))
+                     (num (nth 1 (assoc 'screen-history frame-confs)))
+                     (cur-window-conf (cadr (assoc num (assoc 'screen-property frame-confs))))
+                     (marker (nth 2 cur-window-conf)))
+                (marker-buffer marker))
+            (nth 1
+                 (assoc 'buffer-list
+                        (nth 1 (nth 1 (current-frame-configuration))))))
+        default-directory))" | sed 's/^"\(.*\)"$/\1/'`
+
+    echo "chdir to $EMACS_CWD"
+    cd "$EMACS_CWD"
+}
+
+vterm_printf(){
+    if [ -n "$TMUX" ]; then
+        # Tell tmux to pass the escape sequences through
+        # (Source: http://permalink.gmane.org/gmane.comp.terminal-emulators.tmux.user/1324)
+        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+    elif [ "${TERM%%-*}" = "screen" ]; then
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\eP\e]%s\007\e\\" "$1"
+    else
+        printf "\e]%s\e\\" "$1"
+    fi
+}
+
+vterm_prompt_end() {
+    vterm_printf "51;A$(whoami)@$(hostname):$(pwd)";
+}
+setopt PROMPT_SUBST
+PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
+
+vterm_cmd() {
+    local vterm_elisp
+    vterm_elisp=""
+    while [ $# -gt 0 ]; do
+        vterm_elisp="$vterm_elisp""$(printf '"%s" ' "$(printf "%s" "$1" | sed -e 's|\\|\\\\|g' -e 's|"|\\"|g')")"
+        shift
+    done
+    vterm_printf "51;E$vterm_elisp"
+}
+find_file() {
+    vterm_cmd find-file "$($HOME/.emacs.d/bin/realpath.sh "$@")"
+}
+
+say() {
+    vterm_cmd message "%s" "$*"
+}
