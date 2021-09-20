@@ -3,7 +3,6 @@
 export EDITOR=$HOME/Applications/Emacs.app/Contents/Resources/bin/emacsclient
 
 export PATH=$HOME/bin:$HOME/.nodebrew/current/bin:$HOME/.cpan/CPAN/bin:$HOME/.cabal/bin:/Library/Frameworks/HaskellPlatform.framework/bin:/usr/local/texlive/2014/bin/x86_64-darwin:/opt/local/lib/postgresql91/bin:/usr/local/heroku/bin:/opt/local/bin:/usr/local/bin:$PATH
-export GISTY_ACCESS_TOKEN=0ed67465613675b60c7635f395b7d4da120c27dd
 
 export ORACLE_BASE=~/oracle
 export ORACLE_HOME=$ORACLE_BASE/product/11.2.0/client_1
@@ -27,8 +26,10 @@ source $HOME/.phpbrew/bashrc
 export PATH=$HOME/.rbenv/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.symfony/bin:$PATH
+export PATH=$HOME/.composer/vendor/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
+# export PATH=$HOME/.emacs.d/bin:$PATH
 export PATH="$(brew --prefix openssl)/bin:$PATH"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 if which stack > /dev/null; then eval "$(stack --bash-completion-script stack)"; fi

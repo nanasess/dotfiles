@@ -1,3 +1,3 @@
 # -*- mode:shell-script -*-
 
-export ZDOTDIR=$HOME/.zsh
+export ZDOTDIR=$HOME/dotfiles/.zsh
