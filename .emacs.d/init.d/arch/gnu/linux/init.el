@@ -9,7 +9,7 @@
                               (font-spec :family "M+ 1m") nil 'prepend)
             (setq initial-frame-alist
                   (append (list
-                           '(height . 40)
+                           '(height . 32)
                            '(width  . 82)
                            '(font . "fontset-linux")
                            initial-frame-alist)))
