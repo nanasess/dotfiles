@@ -230,9 +230,6 @@
 (setq-default indent-tabs-mode nil)
 
 (el-get-bundle editorconfig)
-;; (add-hook 'after-init-hook #'(lambda ()
-;;                                (editorconfig-mode 1)))
-
 (el-get-bundle prettier-js)
 
 ;;; Misc settings
@@ -528,9 +525,6 @@
 (with-eval-after-load-feature 'nxml-mode
   (add-hook 'nxml-mode-hook #'company-backends-with-yas)
   (add-hook 'nxml-mode-hook #'lsp-deferred))
-
-(with-eval-after-load-feature 'typescript-mode
-  (add-hook 'typescript-mode-hook #'editorconfig-mode-apply))
 
 (with-eval-after-load-feature 'python
   (add-hook 'python-mode-hook #'(lambda ()
