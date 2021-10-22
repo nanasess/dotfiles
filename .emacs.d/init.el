@@ -431,16 +431,6 @@
   ;; (dap-ui-mode 1)
   )
 
-;; (el-get-bundle eldoc-box
-;;   :type github
-;;   :pkgname "casouri/eldoc-box"
-;;   (defface eldoc-box-border '((t (:background "#E1DBCD"))) nil ; base4
-;;     :group 'font-lock-highlighting-faces)
-;;   (defface eldoc-box-body '((t . (:background "#FFFBEA"))) nil ; bg-alt
-;;     :group 'font-lock-highlighting-faces))
-;; (setq eldoc-box-clear-with-C-g t)
-;; (setq lsp-print-performance t)
-
 (el-get-bundle js2-mode)
 (el-get-bundle json-mode)
 (el-get-bundle tide)
