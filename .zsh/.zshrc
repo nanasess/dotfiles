@@ -39,7 +39,6 @@ export LANG=ja_JP.UTF-8
 export PAGER=less
 export LESSCHARSET=utf-8
 export RSYNC_RSH=ssh
-export GISTY_DIR="$HOME/git-repos/gisty"
 
 if [ ! -n "${TERM}" ]; then
     TERM=xterm-color

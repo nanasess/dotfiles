@@ -120,4 +120,6 @@ fi
 
 export PATH="$HOME/.symfony/bin:$PATH"
 
-setxkbmap -layout us
+if [ -x /usr/bin/setxkbmap ]; then
+    setxkbmap -layout us
+fi
