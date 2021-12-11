@@ -445,8 +445,6 @@
   :type github
   :pkgname "emacs-php/php-mode"
   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-  ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l")
-  ;; (,el-get-emacs "-q" "-l" init.el --batch -f batch-byte-compile init.e)
   :autoloads "lisp/php-mode-autoloads")
 (el-get-bundle php-runtime
   :type github
@@ -473,7 +471,6 @@
 (el-get-bundle groovy-mode
   :type github
   :pkgname "Groovy-Emacs-Modes/groovy-emacs-modes")
-;; (add-hook 'java-mode-hook 'java-c-style)
 
 (el-get-bundle csv-mode in emacsmirror/csv-mode)
 (el-get-bundle csharp-mode)
