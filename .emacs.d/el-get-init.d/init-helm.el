@@ -53,7 +53,6 @@
 (global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-h b") 'helm-descbinds)
-(global-set-key (kbd "C-z l") 'helm-ls-git-ls)
 
 ;;;
 ;;; see http://www49.atwiki.jp/ntemacs/pages/32.html
