@@ -6,5 +6,8 @@ dotfiles
 ### Installation
 
 ```
-bash -c "$(curl -fsSL dotfiles.skirnir.dev)"
+cd $HOME
+git clone https://github.com/nanasess/dotfiles.git
+cd dotfiles
+sh ./install
 ```
