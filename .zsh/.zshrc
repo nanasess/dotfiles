@@ -39,6 +39,7 @@ export LANG=ja_JP.UTF-8
 export PAGER=less
 export LESSCHARSET=utf-8
 export RSYNC_RSH=ssh
+export JQ_COLORS="0;33:0;33:0;33:0;35:0;36:0;31:0;31"
 
 if [ ! -n "${TERM}" ]; then
     TERM=xterm-color
