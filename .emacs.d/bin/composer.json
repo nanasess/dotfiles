@@ -1,0 +1,16 @@
+{
+    "name": "nanasess/dotfiles",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kentaro Ohkouchi",
+            "email": "nanasess@fsm.ne.jp"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "phpstan/phpstan": "^0.12",
+        "psy/psysh": "@stable",
+        "phpactor/phpactor": "dev-master"
+    }
+}

@@ -35,3 +35,4 @@ server
 /eclipse.jdt.ls
 /request
 /workspace
+/bin/vendor
