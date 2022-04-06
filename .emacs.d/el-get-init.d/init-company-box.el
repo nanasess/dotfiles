@@ -1,6 +1,6 @@
 (add-hook 'company-mode-hook 'company-box-mode)
 (add-hook 'company-box-mode-hook #'(lambda () (require 'all-the-icons)))
-(with-eval-after-load-feature 'company-box
+(with-eval-after-load 'company-box
   (defun company-box--update-width (&optional no-update height)
     (unless no-update
       (redisplay))

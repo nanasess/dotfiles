@@ -1,4 +1,4 @@
-(with-eval-after-load-feature 'helm
+(with-eval-after-load 'helm
   (define-key helm-map (kbd "C-v") 'helm-next-source)
   (define-key helm-map (kbd "M-v") 'helm-previous-source)
   (define-key helm-map (kbd "C-x C-j") 'skk-kakutei)
@@ -9,7 +9,7 @@
     (interactive)
     (let ((helm-ff-transformer-show-only-basename nil))
       (helm-other-buffer 'helm-source-mac-spotlight "*helm mdfind*")))
-  (with-eval-after-load-feature 'migemo
+  (with-eval-after-load 'migemo
     (helm-migemo-mode 1)))
 
 (defconst helm-for-files-preferred-list
@@ -26,7 +26,7 @@
       helm-mode t
       helm-truncate-lines t)
 
-(with-eval-after-load-feature 'helm-grep
+(with-eval-after-load 'helm-grep
   ;; use ripgrep https://github.com/BurntSushi/ripgrep
   (when (executable-find "rg")
     (setq helm-grep-ag-command "rg --color=always -S --no-heading --line-number %s %s %s")))

@@ -6,7 +6,7 @@
       backend
     (append (if (consp backend) backend (list backend))
             '(:with company-yasnippet))))
-(with-eval-after-load-feature 'company
+(with-eval-after-load 'company
   (setq company-idle-delay 0.5
         company-minimum-prefix-length 2
         company-tooltip-align-annotations t
@@ -25,7 +25,7 @@
     (interactive)
     (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))))
 
-(with-eval-after-load-feature 'company-dabbrev
+(with-eval-after-load 'company-dabbrev
   (setq company-dabbrev-downcase nil))
 
 (add-hook 'emacs-lisp-mode-hook

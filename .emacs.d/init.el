@@ -90,13 +90,11 @@
 ;;; exec-path settings
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
                    "/opt/local/sbin" "/opt/local/bin" "/usr/gnu/bin"
-                   (expand-file-name "~/Applications/Emacs.app/Contents/Resources/bin")
+                   ;; (expand-file-name "~/Applications/Emacs.app/Contents/Resources/bin")
                    (expand-file-name "~/bin")
                    (expand-file-name "~/.emacs.d/bin")
                    (expand-file-name "~/.emacs.d/el-get/mew/bin")
-                   (expand-file-name "~/.local/bin")
-                   (expand-file-name "~/.composer/vendor/bin")
-                   (expand-file-name "~/.config/composer/vendor/bin")))
+                   (expand-file-name "~/.local/bin")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
@@ -344,7 +342,9 @@
   :type github
   :depends dumb-jump
   :pkgname "jojojames/smart-jump")
-
+(el-get-bundle tree-mode
+  :type github
+  :pkgname "emacsorphanage/tree-mode")
 (setenv "EDITOR" "emacsclient")
 (el-get-bundle emacs-async)
 (el-get-bundle transient)
@@ -420,16 +420,13 @@
   :type github
   :pkgname "emacs-lsp/lsp-ui"
   :depends (dash lsp-mode markdown-mode))
-
-(el-get-bundle emacswiki:tree-mode
-  :name "tree-mode")
-(el-get-bundle dap-mode
-  :type github
-  :pkgname "emacs-lsp/dap-mode"
-  :depends (tree-mode bui treemacs)
-  ;; (dap-mode 1)
-  ;; (dap-ui-mode 1)
-  )
+;; (el-get-bundle dap-mode
+;;   :type github
+;;   :pkgname "emacs-lsp/dap-mode"
+;;   :depends (tree-mode bui treemacs)
+;;   ;; (dap-mode 1)
+;;   ;; (dap-ui-mode 1)
+;;   )
 
 (el-get-bundle js2-mode)
 (el-get-bundle json-mode)
