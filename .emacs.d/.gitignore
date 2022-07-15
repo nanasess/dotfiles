@@ -36,3 +36,4 @@ server
 /request
 /workspace
 /bin/vendor
+/eln-cache
