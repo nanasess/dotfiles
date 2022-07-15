@@ -7,7 +7,7 @@
 ;; (require 'profiler)
 ;; (profiler-start 'cpu)
 ;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
-(setq garbage-collection-messages t)
+;; (setq garbage-collection-messages t)
 (setq gc-cons-threshold (* 784 1024 1024)
       gc-cons-percentage 0.6)
 (setq read-process-output-max (* 1024 1024))
@@ -412,6 +412,7 @@
   :load-path ("." "./clients")
   :pkgname "emacs-lsp/lsp-mode"
   :depends (dash f ht hydra spinner markdown-mode treemacs))
+;; (setq lsp-log-io t)
 (el-get-bundle lsp-treemacs
   :type github
   :pkgname "emacs-lsp/lsp-treemacs"
@@ -557,7 +558,7 @@
 (define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
 (el-get 'sync)
 
-(setq gc-cons-threshold 100000000
+(setq gc-cons-threshold 800000
       gc-cons-percentage 0.1)
 
 (custom-set-faces

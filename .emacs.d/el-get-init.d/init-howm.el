@@ -1,4 +1,4 @@
-(with-eval-after-load-feature 'howm
+(with-eval-after-load 'howm
   (setq howm-template
         (concat howm-view-title-header
                 (concat

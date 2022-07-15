@@ -40,9 +40,10 @@ export PAGER=less
 export LESSCHARSET=utf-8
 export RSYNC_RSH=ssh
 export JQ_COLORS="0;33:0;33:0;33:0;35:0;36:0;31:0;31"
+export GPG_TTY=$(tty)
 
 if [ ! -n "${TERM}" ]; then
-    TERM=xterm-color
+    TERM=xterm-256color
 fi
 
 PROMPT="%{[31m%}%~%%%{[m%} "
