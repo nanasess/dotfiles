@@ -11,7 +11,7 @@
               (orgtbl-mode 1)
               (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
 
-(with-eval-after-load-feature 'org-table
+(with-eval-after-load 'org-table
   (add-hook 'markdown-mode-hook
             #'(lambda()
                 (define-key orgtbl-mode-map

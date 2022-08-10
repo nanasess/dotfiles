@@ -1,6 +1,7 @@
-(with-eval-after-load-feature 'lsp-ui
+(with-eval-after-load 'lsp-ui
   ;; lsp-ui-doc
   (setq lsp-ui-doc-enable t)
+  (setq lsp-ui-doc-show-with-cursor t)
   (setq lsp-ui-doc-header t)
   (setq lsp-ui-doc-include-signature t)
   (setq lsp-ui-doc-position 'top) ;; top, bottom, or at-point

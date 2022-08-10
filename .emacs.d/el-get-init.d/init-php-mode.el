@@ -1,17 +1,17 @@
 ;;; phpactor/language-server-extension
 ;;; M-x lsp-phpactor-install-extension Phpstan
 ;; (defvar lsp-phpactor-path "~/.emacs.d/bin/phpactor")
-(with-eval-after-load-feature 'php-mode
+(with-eval-after-load 'php-mode
   (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
   (add-hook 'php-mode-hook 'php-c-style)
   (add-hook 'php-mode-hook #'lsp-deferred)
   (add-hook 'php-mode-hook 'editorconfig-apply)
-  (with-eval-after-load-feature 'cc-engine
+  (with-eval-after-load 'cc-engine
     (add-hook 'php-mode-hook
               #'(lambda ()
                   (setq c-auto-newline 1)
                   (setq c-hungry-delete-key 1)))))
-(with-eval-after-load-feature 'php
+(with-eval-after-load 'php
   (setq php-manual-url "https://www.php.net/manual/ja/"
         php-mode-coding-style 'Symfony2
         php-search-url "https://www.php.net/"))

@@ -7,7 +7,7 @@
 ;; (require 'profiler)
 ;; (profiler-start 'cpu)
 ;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
-(setq garbage-collection-messages t)
+;; (setq garbage-collection-messages t)
 (setq gc-cons-threshold (* 784 1024 1024)
       gc-cons-percentage 0.6)
 (setq read-process-output-max (* 1024 1024))
@@ -90,13 +90,11 @@
 ;;; exec-path settings
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
                    "/opt/local/sbin" "/opt/local/bin" "/usr/gnu/bin"
-                   (expand-file-name "~/Applications/Emacs.app/Contents/Resources/bin")
+                   ;; (expand-file-name "~/Applications/Emacs.app/Contents/Resources/bin")
                    (expand-file-name "~/bin")
                    (expand-file-name "~/.emacs.d/bin")
                    (expand-file-name "~/.emacs.d/el-get/mew/bin")
-                   (expand-file-name "~/.local/bin")
-                   (expand-file-name "~/.composer/vendor/bin")
-                   (expand-file-name "~/.config/composer/vendor/bin")))
+                   (expand-file-name "~/.local/bin")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
@@ -344,7 +342,9 @@
   :type github
   :depends dumb-jump
   :pkgname "jojojames/smart-jump")
-
+(el-get-bundle tree-mode
+  :type github
+  :pkgname "emacsorphanage/tree-mode")
 (setenv "EDITOR" "emacsclient")
 (el-get-bundle emacs-async)
 (el-get-bundle transient)
@@ -412,6 +412,7 @@
   :load-path ("." "./clients")
   :pkgname "emacs-lsp/lsp-mode"
   :depends (dash f ht hydra spinner markdown-mode treemacs))
+;; (setq lsp-log-io t)
 (el-get-bundle lsp-treemacs
   :type github
   :pkgname "emacs-lsp/lsp-treemacs"
@@ -420,16 +421,13 @@
   :type github
   :pkgname "emacs-lsp/lsp-ui"
   :depends (dash lsp-mode markdown-mode))
-
-(el-get-bundle emacswiki:tree-mode
-  :name "tree-mode")
-(el-get-bundle dap-mode
-  :type github
-  :pkgname "emacs-lsp/dap-mode"
-  :depends (tree-mode bui treemacs)
-  ;; (dap-mode 1)
-  ;; (dap-ui-mode 1)
-  )
+;; (el-get-bundle dap-mode
+;;   :type github
+;;   :pkgname "emacs-lsp/dap-mode"
+;;   :depends (tree-mode bui treemacs)
+;;   ;; (dap-mode 1)
+;;   ;; (dap-ui-mode 1)
+;;   )
 
 (el-get-bundle js2-mode)
 (el-get-bundle json-mode)
@@ -456,14 +454,14 @@
   :type github
   :pkgname "emacs-php/composer.el"
   :depends (request))
-(el-get-bundle phpactor
-  :type github
-  :pkgname "emacs-php/phpactor.el"
-  :branch "master"
-  :depends (f composer company-mode smart-jump))
-(el-get-bundle phpstan
-  :type github
-  :pkgname "emacs-php/phpstan.el")
+;; (el-get-bundle phpactor
+;;   :type github
+;;   :pkgname "emacs-php/phpactor.el"
+;;   :branch "master"
+;;   :depends (f composer company-mode smart-jump))
+;; (el-get-bundle phpstan
+;;   :type github
+;;   :pkgname "emacs-php/phpstan.el")
 
 (el-get-bundle bui
   :type github
@@ -560,7 +558,7 @@
 (define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
 (el-get 'sync)
 
-(setq gc-cons-threshold 100000000
+(setq gc-cons-threshold 800000
       gc-cons-percentage 0.1)
 
 (custom-set-faces

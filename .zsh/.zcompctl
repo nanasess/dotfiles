@@ -7,7 +7,9 @@ if type brew &>/dev/null; then
   autoload -Uz compinit
   compinit
 fi
-
+autoload -U compinit promptinit
+compinit
+promptinit; prompt gentoo
 zstyle ':completion:*:default' menu select=1
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 

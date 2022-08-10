@@ -1,4 +1,4 @@
-(with-eval-after-load-feature 'magit
+(with-eval-after-load 'magit
   ;; see https://stackoverflow.com/a/32914548/4956633
   (defun visit-gh-pull-request (repo)
     "Visit the current branch's PR on Github."

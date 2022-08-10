@@ -35,3 +35,5 @@ server
 /eclipse.jdt.ls
 /request
 /workspace
+/bin/vendor
+/eln-cache
