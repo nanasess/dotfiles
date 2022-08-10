@@ -1,14 +1,23 @@
 # -*- mode:shell-script -*-
-alias ls="exa --icons --color=always"
+alias ls="exa --color=always"
 alias less='less -X'
-alias emacsclient=$HOME/Applications/Emacs.app/Contents/Resources/bin/emacsclient
-alias grep="LANG=C ggrep"
+if [ -f $HOME/Applications/Emacs.app/Contents/Resources/bin/emacsclient ]
+then
+    alias emacsclient="$HOME/Applications/Emacs.app/Contents/Resources/bin/emacsclient"
+fi
+
+if which ggrep > /dev/null
+then
+    alias grep="LANG=C ggrep"
+else
+    alias grep="LANG=C grep"
+fi
 
 autoload -U add-zsh-hook
 add-zsh-hook -Uz chpwd (){ print -Pn "\e]2;%m:%2~\a" }
 
-eval "$(hub alias -s)"
-eval "$(anyenv init -)"
+#eval "$(hub alias -s)"
+#eval "$(anyenv init -)"
 
 ## see. https://gist.github.com/1244467
 ## Invoke the ``dired'' of current working directory in Emacs buffer.

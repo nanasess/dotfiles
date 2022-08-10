@@ -454,14 +454,14 @@
   :type github
   :pkgname "emacs-php/composer.el"
   :depends (request))
-(el-get-bundle phpactor
-  :type github
-  :pkgname "emacs-php/phpactor.el"
-  :branch "master"
-  :depends (f composer company-mode smart-jump))
-(el-get-bundle phpstan
-  :type github
-  :pkgname "emacs-php/phpstan.el")
+;; (el-get-bundle phpactor
+;;   :type github
+;;   :pkgname "emacs-php/phpactor.el"
+;;   :branch "master"
+;;   :depends (f composer company-mode smart-jump))
+;; (el-get-bundle phpstan
+;;   :type github
+;;   :pkgname "emacs-php/phpstan.el")
 
 (el-get-bundle bui
   :type github

@@ -1,6 +1,11 @@
 # -*- mode:shell-script -*-
 
-export EDITOR=$HOME/Applications/Emacs.app/Contents/Resources/bin/emacsclient
+if [ -f $HOME/Applications/Emacs.app/Contents/Resources/bin/emacsclient ]
+then
+    export EDITOR=$HOME/Applications/Emacs.app/Contents/Resources/bin/emacsclient
+else
+    if which emacsclient > /dev/null; then export EDITOR=emacsclient; fi
+fi
 
 export PATH=$HOME/bin:$HOME/.nodebrew/current/bin:$HOME/.cpan/CPAN/bin:$HOME/.cabal/bin:/Library/Frameworks/HaskellPlatform.framework/bin:/usr/local/texlive/2014/bin/x86_64-darwin:/opt/local/lib/postgresql91/bin:/usr/local/heroku/bin:/opt/local/bin:/usr/local/bin:$PATH
 

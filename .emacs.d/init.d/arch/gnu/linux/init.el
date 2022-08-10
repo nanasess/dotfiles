@@ -14,4 +14,7 @@
 ;;                            '(font . "fontset-linux")
 ;;                            initial-frame-alist)))
 ;;             (setq default-frame-alist initial-frame-alist)))
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 (provide 'linux-init)
