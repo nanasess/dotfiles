@@ -8,20 +8,9 @@
 ;; (profiler-start 'cpu)
 ;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
 ;; (setq garbage-collection-messages t)
-(setq gc-cons-threshold (* 784 1024 1024)
-      gc-cons-percentage 0.6)
-(setq read-process-output-max (* 1024 1024))
 (eval-when-compile (require 'cl))
 (eval '(eval-when-compile (require 'cl)))
 
-;; see https://github.com/jschaf/esup/issues/54#issue-317095645
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "Emacs ready in %s with %d garbage collections."
-                     (format "%.2f seconds"
-                             (float-time
-                              (time-subtract after-init-time before-init-time)))
-                     gcs-done)))
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -38,8 +27,6 @@
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
 (defvar company-backends nil)
-
-(setq load-prefer-newer t)
 
 (setq el-get-bundle-sync t
       el-get-is-lazy nil
@@ -203,12 +190,6 @@
 (el-get-bundle symbol-overlay
   :type github
   :pkgname "wolray/symbol-overlay")
-
-;;; window-system settings
-(add-hook 'after-init-hook
-          #'(lambda()
-              (cond (window-system (tool-bar-mode 0)))))
-
 
 ;;; uniquify settings
 (require 'uniquify)
@@ -561,12 +542,11 @@
   :type github
   :pkgname "kentaro/auto-save-buffers-enhanced")
 (el-get-bundle scratch-pop in zk-phi/scratch-pop)
-
+(el-get-bundle gcmh)
 (define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
 (el-get 'sync)
 
-(setq gc-cons-threshold 800000
-      gc-cons-percentage 0.1)
+(setq gc-cons-percentage 0.1)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -579,7 +559,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(compat)))
+ )
 ;; (profiler-report)
 ;; (profiler-stop)
 
