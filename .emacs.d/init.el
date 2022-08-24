@@ -350,6 +350,13 @@
 (el-get-bundle transient)
 (el-get-bundle with-editor)
 (el-get-bundle magit)
+(el-get-bundle ghub)
+(el-get-bundle forge)
+;; (ghub-request "GET" "/user" nil
+;;               :forge 'github
+;;               :host "api.github.com"
+;;               :username "nanasess"
+;;               :auth 'forge)
 
 (with-eval-after-load-feature 'smerge-mode
   (define-key smerge-mode-map (kbd "M-n") 'smerge-next)
@@ -572,7 +579,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages '(compat)))
 ;; (profiler-report)
 ;; (profiler-stop)
 
