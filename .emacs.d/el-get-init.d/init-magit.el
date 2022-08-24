@@ -1,4 +1,5 @@
 (with-eval-after-load 'magit
+  (require 'forge)
   ;; see https://stackoverflow.com/a/32914548/4956633
   (defun visit-gh-pull-request (repo)
     "Visit the current branch's PR on Github."
