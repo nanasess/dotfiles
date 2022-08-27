@@ -16,8 +16,6 @@
         php-mode-coding-style 'Symfony2
         php-search-url "https://www.php.net/"))
 
-(add-hook 'php-mode-hook 'php-c-style)
-(add-hook 'php-mode-hook #'lsp-deferred)
 (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
 (setq phpactor--debug nil)
 (setq company-phpactor-request-async t)

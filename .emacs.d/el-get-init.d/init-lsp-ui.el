@@ -17,10 +17,10 @@
   (setq lsp-ui-sideline-ignore-duplicate t)
   (setq lsp-ui-sideline-show-symbol t)
   (setq lsp-ui-sideline-show-hover t)
-  ;; (setq lsp-ui-sideline-show-diagnostics nil)
-  (setq lsp-ui-sideline-show-code-actions nil)
+  (setq lsp-ui-sideline-show-diagnostics t)
+  (setq lsp-ui-sideline-show-code-actions t)
   ;; lsp-ui-imenu
-  (setq lsp-ui-imenu-enable nil)
+  (setq lsp-ui-imenu-enable t)
   (setq lsp-ui-imenu-kind-position 'top)
   ;; lsp-ui-peek
   (setq lsp-ui-peek-enable t)
