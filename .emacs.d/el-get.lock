@@ -76,7 +76,7 @@
         (wgrep :checksum "f9687c28bbc2e84f87a479b6ce04407bb97cfb23")
         (helm-descbinds :checksum "b72515982396b6e336ad7beb6767e95a80fca192")
         (helm-ls-git :checksum "ae2202fbbbe11873ad4b393a6959da50ac250c1e")
-        (helm :checksum "a86bcc99dcd45cd898a497715b4333d118a3c6f2")
+        (helm :checksum "4e99cc8ef66aac2d824c456f58abe833be26c99d")
         (howm :checksum "bac98b873d07baf039fe252b9d67f71c235dca06")
         (magit :checksum "348d9b98614c824be3e2f05eef5ab91d67f6695e")
         (transient :checksum "45975c24e1ab08bb32e9bdc06f5c5efe7c256e16")
