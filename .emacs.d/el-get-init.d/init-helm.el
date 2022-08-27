@@ -16,8 +16,7 @@
   '(helm-source-buffers-list
     helm-source-recentf
     helm-source-file-cache
-    helm-source-files-in-current-dir
-    helm-source-mac-spotlight))
+    helm-source-files-in-current-dir))
 (setq helm-buffer-max-length 40
       helm-c-ack-thing-at-point 'symbol
       helm-ff-auto-update-initial-value nil
