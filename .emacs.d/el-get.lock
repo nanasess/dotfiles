@@ -53,7 +53,7 @@
         (lsp-java :checksum "b3f2081158284c77665a0dd5e9f815535ff080b3")
         (dap-mode :checksum "1cddcedf9ab57a2c14a5ec50b6907b866920f42e")
         (lsp-treemacs :checksum "9859326df6b8e8c954a3c227e53b6878e54aaae8")
-        (lsp-mode :checksum "9c47b6d44f6fd78410f13e496d83682dbd52da0e")
+        (lsp-mode :checksum "a0e1210f626cb7b5db16a9454d3bf61322d299df")
         (posframe :checksum "f97c4aff2c2c376ca62276d5597aa108546633a9")
         (bui :checksum "f3a137628e112a91910fd33c0cff0948fa58d470")
         (treemacs :checksum "935ee46b67e651b77569d5e94162a0eabb6ea300")

@@ -11,6 +11,6 @@
     "require": {
         "phpstan/phpstan": "^1.8",
         "psy/psysh": "@stable",
-        "phpactor/phpactor": "dev-master"
+        "phpactor/phpactor": "dev-master#51cccb54d0d5850fbfc70b5dfd95c30edf9ddbd5"
     }
 }
