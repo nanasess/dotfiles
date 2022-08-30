@@ -1,5 +1,11 @@
 (setq el-get-lock-package-versions
-      '((gcmh :checksum "0089f9c3a6d4e9a310d0791cf6fa8f35642ecfd9")
+      '((consult-ls-git :checksum "f2398b354994e583ad22af324a129cf94d06009e")
+        (embark :checksum "5d0459d27aa7cf738b5af36cf862723a62bef955")
+        (orderless :checksum "8b9af2796fa0eb87eea4140bc08d16880a493803")
+        (marginalia :checksum "69442c2d9472b665f698f67426cd255f6c0620a3")
+        (consult :checksum "90536f39db3bd9085971998308ee42176613d68f")
+        (vertico :checksum "ae6603c351eb075b7fca0cb31c029817a57b1973")
+        (gcmh :checksum "0089f9c3a6d4e9a310d0791cf6fa8f35642ecfd9")
         (with-eval-after-load-feature-el :checksum "0b38651a5f0dafdfe04bd0032eb5ff803e99460b")
         (forge :checksum "9556d3b4c20bf405390d0931d77c9f012f8e843f")
         (closql :checksum "87d2edae8bc3d390bcfc5e909e9c13ff9fce994a")

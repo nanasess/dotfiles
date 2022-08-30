@@ -367,11 +367,48 @@
              (setq howm-todo-menu-types "[-+~!]")
              (defun parse-howm-title () nil)))
 
-(el-get-bundle helm)
-(el-get-bundle helm-ls-git)
-(el-get-bundle helm-descbinds)
+;; deprecated
+;; (el-get-bundle helm)
+;; (el-get-bundle helm-ls-git)
+;; (el-get-bundle helm-descbinds)
+;; (el-get-bundle helm-swoop)
+
 (el-get-bundle wgrep)
-(el-get-bundle helm-swoop)
+(el-get-bundle consult
+  :type github
+  :pkgname "minad/consult")
+(el-get-bundle marginalia
+  :type github
+  :pkgname "minad/marginalia")
+(el-get-bundle orderless
+  :type github
+  :pkgname "oantolin/orderless")
+(el-get-bundle embark
+  :type github
+  :pkgname "oantolin/embark")
+(el-get-bundle vertico
+  :type github
+  :pkgname "minad/vertico"
+  :load-path ("." "extensions/")
+  :compile ("vertico.el" "extensions/")
+  :depends (consult marginalia orderless embark))
+(el-get-bundle consult-ls-git
+  :type github
+  :pkgname "rcj/consult-ls-git")
+;; Setting `init-consult.el` causes an error.
+(with-eval-after-load-feature 'consult
+  (consult-customize
+   consult-ripgrep
+   consult-grep
+   consult-git-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-recent-file
+   consult--source-project-recent-file
+   ;;  ;; my/command-wrapping-consult       ;; disable auto previews inside my command
+   ;;  ;; :preview-key '(:debounce 0.2 any) ;; Option 1: Delay preview
+   :preview-key (kbd "C-."))               ;; Option 2: Manual preview
+  )
+
 (el-get-bundle company-mode)
 (el-get-bundle frame-local
   :type github
@@ -559,7 +596,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages '(compat))
+ '(session-use-package t nil (session)))
 ;; (profiler-report)
 ;; (profiler-stop)
 
