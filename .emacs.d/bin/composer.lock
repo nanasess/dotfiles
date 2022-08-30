@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1045938b3aa573500260fd52f7a632e9",
+    "content-hash": "09f4f4b473e6e0cd5748e18fe68d2230",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1989,12 +1989,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpactor/phpactor.git",
-                "reference": "51cccb54d0d5850fbfc70b5dfd95c30edf9ddbd5"
+                "reference": "e4ac4b8ceb846b39234eab9474821aba4cc2f562"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpactor/phpactor/zipball/51cccb54d0d5850fbfc70b5dfd95c30edf9ddbd5",
-                "reference": "51cccb54d0d5850fbfc70b5dfd95c30edf9ddbd5",
+                "url": "https://api.github.com/repos/phpactor/phpactor/zipball/e4ac4b8ceb846b39234eab9474821aba4cc2f562",
+                "reference": "e4ac4b8ceb846b39234eab9474821aba4cc2f562",
                 "shasum": ""
             },
             "require": {
@@ -2108,12 +2108,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "57f327c35daddeb76b39f166c5792ca86ed3f472"
+                "reference": "f0c1f727c614127258d1e1e0ebfd461accbf3280"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/57f327c35daddeb76b39f166c5792ca86ed3f472",
-                "reference": "57f327c35daddeb76b39f166c5792ca86ed3f472",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/f0c1f727c614127258d1e1e0ebfd461accbf3280",
+                "reference": "f0c1f727c614127258d1e1e0ebfd461accbf3280",
                 "shasum": ""
             },
             "require": {
@@ -2138,6 +2138,10 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
+            "keywords": [
+                "dev",
+                "static analysis"
+            ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
                 "source": "https://github.com/phpstan/phpstan/tree/1.8.x"
@@ -2152,15 +2156,11 @@
                     "type": "github"
                 },
                 {
-                    "url": "https://www.patreon.com/phpstan",
-                    "type": "patreon"
-                },
-                {
                     "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-13T12:42:37+00:00"
+            "time": "2022-08-28T13:52:33+00:00"
         },
         {
             "name": "psr/container",
@@ -2315,16 +2315,16 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.11.7",
+            "version": "v0.11.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "77fc7270031fbc28f9a7bea31385da5c4855cb7a"
+                "reference": "f455acf3645262ae389b10e9beba0c358aa6994e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/77fc7270031fbc28f9a7bea31385da5c4855cb7a",
-                "reference": "77fc7270031fbc28f9a7bea31385da5c4855cb7a",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/f455acf3645262ae389b10e9beba0c358aa6994e",
+                "reference": "f455acf3645262ae389b10e9beba0c358aa6994e",
                 "shasum": ""
             },
             "require": {
@@ -2385,9 +2385,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bobthecow/psysh/issues",
-                "source": "https://github.com/bobthecow/psysh/tree/v0.11.7"
+                "source": "https://github.com/bobthecow/psysh/tree/v0.11.8"
             },
-            "time": "2022-07-07T13:49:11+00:00"
+            "time": "2022-07-28T14:25:11+00:00"
         },
         {
             "name": "ramsey/collection",
@@ -3754,12 +3754,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "a09f9fcad8b7b59e2f94dd91d105a8b4a3eab459"
+                "reference": "b8f306d7b8ef34fb3db3305be97ba8e088fb4861"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/a09f9fcad8b7b59e2f94dd91d105a8b4a3eab459",
-                "reference": "a09f9fcad8b7b59e2f94dd91d105a8b4a3eab459",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/b8f306d7b8ef34fb3db3305be97ba8e088fb4861",
+                "reference": "b8f306d7b8ef34fb3db3305be97ba8e088fb4861",
                 "shasum": ""
             },
             "require": {
@@ -3835,7 +3835,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-27T16:58:25+00:00"
+            "time": "2022-07-20T13:00:38+00:00"
         },
         {
             "name": "symfony/yaml",
