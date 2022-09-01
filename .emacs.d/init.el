@@ -395,6 +395,9 @@
 (el-get-bundle consult-ls-git
   :type github
   :pkgname "rcj/consult-ls-git")
+(el-get-bundle consult-flycheck
+  :type github
+  :pkgname "minad/consult-flycheck")
 ;; Setting `init-consult.el` causes an error.
 (with-eval-after-load-feature 'consult
   (consult-customize

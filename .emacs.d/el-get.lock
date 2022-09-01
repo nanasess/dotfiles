@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((sudo-edit :checksum "74eb1e6986461baed9a9269566ff838530b4379b")
+      '((consult-flycheck :checksum "9b40f136c017fadf6239d7602d16bf73b4ad5198")
+        (sudo-edit :checksum "74eb1e6986461baed9a9269566ff838530b4379b")
         (consult-ls-git :checksum "f2398b354994e583ad22af324a129cf94d06009e")
         (embark :checksum "5d0459d27aa7cf738b5af36cf862723a62bef955")
         (orderless :checksum "8b9af2796fa0eb87eea4140bc08d16880a493803")
