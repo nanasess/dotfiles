@@ -408,7 +408,9 @@
    ;;  ;; :preview-key '(:debounce 0.2 any) ;; Option 1: Delay preview
    :preview-key (kbd "C-."))               ;; Option 2: Manual preview
   )
-
+(el-get-bundle sudo-edit
+  :type github
+  :pkgname "nflath/sudo-edit")
 (el-get-bundle company-mode)
 (el-get-bundle frame-local
   :type github
