@@ -2,6 +2,7 @@
   (global-set-key (kbd "C-;") 'consult-buffer)
   (global-set-key [remap goto-line] 'consult-goto-line)
   (global-set-key (kbd "C-M-s") 'consult-line)
+  (global-set-key (kbd "C-x C-d") 'consult-dir)
   (defun consult-howm-do-ag ()
     (interactive)
     (consult-ripgrep howm-directory))

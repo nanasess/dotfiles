@@ -398,6 +398,10 @@
 (el-get-bundle consult-flycheck
   :type github
   :pkgname "minad/consult-flycheck")
+(el-get-bundle consult-dir
+  :type github
+  :pkgname "karthink/consult-dir")
+
 ;; Setting `init-consult.el` causes an error.
 (with-eval-after-load-feature 'consult
   (consult-customize
@@ -550,7 +554,7 @@
 (load "mew-config" t t)
 (setq mew-rc-file ".mew")
 (el-get-bundle mew)
-(el-get-bundle twittering-mode)
+;; (el-get-bundle twittering-mode)
 (el-get-bundle popwin)
 
 (el-get-bundle deferred)
@@ -587,7 +591,7 @@
 (el-get-bundle gcmh)
 (define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
 (el-get 'sync)
-
+(ffap-bindings)
 (setq gc-cons-percentage 0.1)
 
 (custom-set-faces
