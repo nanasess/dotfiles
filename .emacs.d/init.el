@@ -376,10 +376,12 @@
 (el-get-bundle wgrep)
 (el-get-bundle consult
   :type github
-  :pkgname "minad/consult")
+  :pkgname "minad/consult"
+  :branch "main")
 (el-get-bundle marginalia
   :type github
-  :pkgname "minad/marginalia")
+  :pkgname "minad/marginalia"
+  :branch "main")
 (el-get-bundle orderless
   :type github
   :pkgname "oantolin/orderless")
@@ -389,15 +391,18 @@
 (el-get-bundle vertico
   :type github
   :pkgname "minad/vertico"
+  :branch "main"
   :load-path ("." "extensions/")
   :compile ("vertico.el" "extensions/")
   :depends (consult marginalia orderless embark))
 (el-get-bundle consult-ls-git
   :type github
-  :pkgname "rcj/consult-ls-git")
+  :pkgname "rcj/consult-ls-git"
+  :branch "main")
 (el-get-bundle consult-flycheck
   :type github
-  :pkgname "minad/consult-flycheck")
+  :pkgname "minad/consult-flycheck"
+  :branch "main")
 (el-get-bundle consult-dir
   :type github
   :pkgname "karthink/consult-dir")
@@ -441,6 +446,9 @@
   :type github
   :pkgname "emacs-lsp/lsp-java"
   :depends (markdown-mode dash f ht request))
+(el-get-bundle lsp-docker
+  :type github
+  :pkgname "emacs-lsp/lsp-docker")
 (el-get-bundle lsp-mode
   :type github
   :load-path ("." "./clients")
