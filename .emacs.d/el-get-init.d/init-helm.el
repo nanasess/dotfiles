@@ -45,13 +45,13 @@
           #'(lambda ()
               (local-set-key (kbd "M-.") 'helm-gtags-find-tag)))
 
-(global-set-key (kbd "C-;") 'helm-for-files)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "C-z C-r") 'helm-resume)
-(global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-h b") 'helm-descbinds)
+;; (global-set-key (kbd "C-;") 'helm-for-files)
+;; (global-set-key (kbd "M-x") 'helm-M-x)
+;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+;; (global-set-key (kbd "C-z C-r") 'helm-resume)
+;; (global-set-key (kbd "C-z C-f") 'helm-mac-spotlight)
+;; (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+;; (global-set-key (kbd "C-h b") 'helm-descbinds)
 
 ;;;
 ;;; see http://www49.atwiki.jp/ntemacs/pages/32.html

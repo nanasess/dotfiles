@@ -367,11 +367,62 @@
              (setq howm-todo-menu-types "[-+~!]")
              (defun parse-howm-title () nil)))
 
-(el-get-bundle helm)
-(el-get-bundle helm-ls-git)
-(el-get-bundle helm-descbinds)
+;; deprecated
+;; (el-get-bundle helm)
+;; (el-get-bundle helm-ls-git)
+;; (el-get-bundle helm-descbinds)
+;; (el-get-bundle helm-swoop)
+
 (el-get-bundle wgrep)
-(el-get-bundle helm-swoop)
+(el-get-bundle consult
+  :type github
+  :pkgname "minad/consult"
+  :branch "main")
+(el-get-bundle marginalia
+  :type github
+  :pkgname "minad/marginalia"
+  :branch "main")
+(el-get-bundle orderless
+  :type github
+  :pkgname "oantolin/orderless")
+(el-get-bundle embark
+  :type github
+  :pkgname "oantolin/embark")
+(el-get-bundle vertico
+  :type github
+  :pkgname "minad/vertico"
+  :branch "main"
+  :load-path ("." "extensions/")
+  :compile ("vertico.el" "extensions/")
+  :depends (consult marginalia orderless embark))
+(el-get-bundle consult-ls-git
+  :type github
+  :pkgname "rcj/consult-ls-git"
+  :branch "main")
+(el-get-bundle consult-flycheck
+  :type github
+  :pkgname "minad/consult-flycheck"
+  :branch "main")
+(el-get-bundle consult-dir
+  :type github
+  :pkgname "karthink/consult-dir")
+
+;; Setting `init-consult.el` causes an error.
+(with-eval-after-load-feature 'consult
+  (consult-customize
+   consult-ripgrep
+   consult-grep
+   consult-git-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-recent-file
+   consult--source-project-recent-file
+   ;;  ;; my/command-wrapping-consult       ;; disable auto previews inside my command
+   ;;  ;; :preview-key '(:debounce 0.2 any) ;; Option 1: Delay preview
+   :preview-key (kbd "C-."))               ;; Option 2: Manual preview
+  )
+(el-get-bundle sudo-edit
+  :type github
+  :pkgname "nflath/sudo-edit")
 (el-get-bundle company-mode)
 (el-get-bundle frame-local
   :type github
@@ -395,6 +446,9 @@
   :type github
   :pkgname "emacs-lsp/lsp-java"
   :depends (markdown-mode dash f ht request))
+(el-get-bundle lsp-docker
+  :type github
+  :pkgname "emacs-lsp/lsp-docker")
 (el-get-bundle lsp-mode
   :type github
   :load-path ("." "./clients")
@@ -508,7 +562,7 @@
 (load "mew-config" t t)
 (setq mew-rc-file ".mew")
 (el-get-bundle mew)
-(el-get-bundle twittering-mode)
+;; (el-get-bundle twittering-mode)
 (el-get-bundle popwin)
 
 (el-get-bundle deferred)
@@ -545,7 +599,7 @@
 (el-get-bundle gcmh)
 (define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
 (el-get 'sync)
-
+(ffap-bindings)
 (setq gc-cons-percentage 0.1)
 
 (custom-set-faces
@@ -559,7 +613,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages '(compat))
+ '(session-use-package t nil (session)))
 ;; (profiler-report)
 ;; (profiler-stop)
 
