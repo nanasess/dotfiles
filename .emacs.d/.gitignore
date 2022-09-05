@@ -37,3 +37,5 @@ server
 /workspace
 /bin/vendor
 /eln-cache
+/forge-database.sqlite
+/history
