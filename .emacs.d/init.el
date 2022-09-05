@@ -561,7 +561,20 @@
 (add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
 (load "mew-config" t t)
 (setq mew-rc-file ".mew")
-(el-get-bundle mew)
+
+(el-get-bundle mew
+  :type github
+  :pkgname "kazu-yamamoto/Mew"
+  :prepare
+  (progn
+    (setq mew-prog-mewl        (concat default-directory "bin/mewl"))
+    (setq mew-prog-mime-encode (concat default-directory "bin/mewencode"))
+    (setq mew-prog-mime-decode (concat default-directory "bin/mewencode"))
+    (setq mew-prog-cmew        (concat default-directory "bin/cmew"))
+    (setq mew-prog-est-update  (concat default-directory "bin/mewest"))
+    (setq mew-prog-smew        (concat default-directory "bin/smew"))
+    (setq mew-mbox-command     (concat default-directory "bin/incm")))
+  :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make") ("make" "clean")))
 ;; (el-get-bundle twittering-mode)
 (el-get-bundle popwin)
 
