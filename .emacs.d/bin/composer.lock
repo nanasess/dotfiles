@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "09f4f4b473e6e0cd5748e18fe68d2230",
+    "content-hash": "659c9b1b24814bcb2963ae316bb58c0c",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2104,16 +2104,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.8.x-dev",
+            "version": "1.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "f0c1f727c614127258d1e1e0ebfd461accbf3280"
+                "reference": "eed4c9da531f6ebb4787235b6fb486e2c20f34e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/f0c1f727c614127258d1e1e0ebfd461accbf3280",
-                "reference": "f0c1f727c614127258d1e1e0ebfd461accbf3280",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/eed4c9da531f6ebb4787235b6fb486e2c20f34e5",
+                "reference": "eed4c9da531f6ebb4787235b6fb486e2c20f34e5",
                 "shasum": ""
             },
             "require": {
@@ -2122,7 +2122,6 @@
             "conflict": {
                 "phpstan/phpstan-shim": "*"
             },
-            "default-branch": true,
             "bin": [
                 "phpstan",
                 "phpstan.phar"
@@ -2144,7 +2143,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.8.x"
+                "source": "https://github.com/phpstan/phpstan/tree/1.8.4"
             },
             "funding": [
                 {
@@ -2160,7 +2159,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-08-28T13:52:33+00:00"
+            "time": "2022-09-03T13:08:04+00:00"
         },
         {
             "name": "psr/container",
@@ -4296,6 +4295,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "phpstan/phpstan": 0,
         "psy/psysh": 0,
         "phpactor/phpactor": 20
     },
