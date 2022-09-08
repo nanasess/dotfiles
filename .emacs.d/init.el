@@ -59,6 +59,7 @@
 ;;   :pkgname "yuttie/initchart")
 ;; (initchart-record-execution-time-of load file)
 ;; (initchart-record-execution-time-of require feature)
+(el-get-bundle elpa:compat)
 (el-get-bundle awasira/cp5022x.el
   :name cp5022x)
 
@@ -623,8 +624,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(compat))
- '(session-use-package t nil (session)))
+ )
 ;; (profiler-report)
 ;; (profiler-stop)
 

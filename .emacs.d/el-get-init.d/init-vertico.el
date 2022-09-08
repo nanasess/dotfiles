@@ -2,7 +2,12 @@
           #'(lambda ()
               (vertico-mode)
               (marginalia-mode)
-              (savehist-mode)))
+              (savehist-mode)
+              (add-to-list 'savehist-additional-variables 'kill-ring)
+              (add-to-list 'savehist-additional-variables 'log-edit-comment-ring)
+              (add-to-list 'savehist-additional-variables 'search-ring)
+              (add-to-list 'savehist-additional-variables 'regexp-search-ring)))
+
 (with-eval-after-load 'vertico
   (setq read-file-name-completion-ignore-case t
         read-buffer-completion-ignore-case t
