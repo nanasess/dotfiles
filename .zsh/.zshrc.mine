@@ -42,4 +42,7 @@ if which stack > /dev/null; then eval "$(stack --bash-completion-script stack)";
 # export PHPBREW_SET_PROMPT=1
 
 if which xrdb > /dev/null; then xrdb -merge ~/.Xresources; fi
-if which setxkbmap > /dev/null; then setxkbmap -layout us; fi
+if [ -z "$WAYLAND_DISPLAY" ]
+then
+    if which setxkbmap > /dev/null; then setxkbmap -layout us; fi
+fi
