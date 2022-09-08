@@ -311,9 +311,6 @@
 (setq org-startup-folded nil)
 (setq org-startup-truncated nil)
 
-(el-get-bundle session
-  :type github
-  :pkgname "nanasess/emacs-session")
 (el-get-bundle expand-region)
 (el-get-bundle multiple-cursors)
 (el-get-bundle dumb-jump

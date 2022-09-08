@@ -97,7 +97,6 @@
         (popup :checksum "34c2684a6fb9a98683951b4a68f542622d17952f")
         (multiple-cursors :checksum "1e4842d1297241a5277bfd5c7bfab9e8711da60a")
         (expand-region :checksum "c5c4362741deebb0985a8a29f9b8b0e25160764a")
-        (session :checksum "c1d2dce4bb67f6a6f07a3b27b5225c7f8cc3c4c7")
         (yasnippet-snippets :checksum "cd665c9cba4bab646f6d50ac098bee63573a4ca5")
         (yasnippet :checksum "5cbdbf0d2015540c59ed8ee0fcf4788effdf75b6")
         (easy-kill :checksum "de7d66c3c864a4722a973ee9bc228a14be49ba0c")
