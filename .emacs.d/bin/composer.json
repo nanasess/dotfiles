@@ -9,7 +9,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "phpstan/phpstan": "^1.8",
+        "phpstan/phpstan": "^1.8@stable",
         "psy/psysh": "@stable",
         "phpactor/phpactor": "dev-master"
     }
