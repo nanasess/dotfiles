@@ -532,6 +532,7 @@
   )
 
 (el-get-bundle dockerfile-mode)
+(el-get-bundle docker-tramp)
 
 ;;; see https://github.com/vscode-langservers/vscode-css-languageserver-bin
 (with-eval-after-load-feature 'css-mode
