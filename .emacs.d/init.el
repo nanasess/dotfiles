@@ -26,7 +26,6 @@
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
-(defvar company-backends nil)
 
 (setq el-get-bundle-sync t
       el-get-is-lazy nil
@@ -421,14 +420,22 @@
 (el-get-bundle sudo-edit
   :type github
   :pkgname "nflath/sudo-edit")
-(el-get-bundle company-mode)
+;; (el-get-bundle company-mode)
+(el-get-bundle corfu
+  :type github
+  :pkgname "minad/corfu")
+(global-corfu-mode)
+(setq corfu-auto t)
+(setq corfu-auto-prefix 1)
+(setq corfu-echo-documentation t)
+
 (el-get-bundle frame-local
   :type github
   :pkgname "sebastiencs/frame-local")
-(el-get-bundle company-box
-  :type github
-  :pkgname "sebastiencs/company-box"
-  :depends (frame-local))
+;; (el-get-bundle company-box
+;;   :type github
+;;   :pkgname "sebastiencs/company-box"
+;;   :depends (frame-local))
 (el-get-bundle markdown-mode)
 
 (el-get-bundle request)
@@ -472,7 +479,7 @@
 (el-get-bundle js2-mode)
 (el-get-bundle json-mode)
 (el-get-bundle tide)
-(el-get-bundle company-web)
+;; (el-get-bundle company-web)
 (el-get-bundle web-mode
   :type github
   :pkgname "nanasess/web-mode"
