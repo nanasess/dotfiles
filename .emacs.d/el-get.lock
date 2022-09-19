@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((lsp-docker :checksum "a0d7cbf80652429c0be4dc7d39e1887ba4691ec7")
+      '((docker-tramp :checksum "930d7b46c180d8a13240a028c1b40af84f2a3219")
+        (lsp-docker :checksum "a0d7cbf80652429c0be4dc7d39e1887ba4691ec7")
         (initchart :checksum "2df1fbc965c5ef82906a0fa76b3517c5831d3581")
         (esup :checksum "4b49c8d599d4cc0fbf994e9e54a9c78e5ab62a5f")
         (consult-dir :checksum "8abf62df088de87175e98adf8f6f5fb93515004c")
