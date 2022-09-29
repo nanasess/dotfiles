@@ -8,6 +8,7 @@
   (setq web-mode-enable-block-face t)
                                         ;    (setq web-mode-enable-current-element-highlight nil)
   (setq web-mode-enable-current-column-highlight nil)
+  (setq web-mode-enable-auto-indentation nil)
   (add-hook 'web-mode-hook
             #'(lambda ()
                 (setq web-mode-enable-auto-indentation nil)))
@@ -28,9 +29,5 @@
             #'(lambda ()
                 (when (string-equal "tpl" (file-name-extension buffer-file-name))
                   (web-mode-set-engine "eccube"))))
-  (add-hook 'web-mode-hook
-            #'(lambda ()
-                (make-local-variable 'company-backends)
-                (push '(company-web-html :with company-yasnippet) company-backends)))
   (add-hook 'editorconfig-custom-hooks
             (lambda (hash) (setq web-mode-block-padding 0))))
