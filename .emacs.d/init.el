@@ -26,7 +26,6 @@
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
-(defvar company-backends nil)
 
 (setq el-get-bundle-sync t
       el-get-is-lazy nil
@@ -117,6 +116,7 @@
 (global-set-key (kbd "C-M-h") 'backward-char)
 (global-set-key (kbd "C-M-l") 'forward-char)
 (setq dired-bind-jump nil)
+(setq dired-dwim-target t)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 (setq enable-recursive-minibuffers t)
 (setq cua-enable-cua-keys nil)
@@ -393,6 +393,7 @@
   :load-path ("." "extensions/")
   :compile ("vertico.el" "extensions/")
   :depends (consult marginalia orderless embark))
+
 (el-get-bundle consult-ls-git
   :type github
   :pkgname "rcj/consult-ls-git"
@@ -404,6 +405,9 @@
 (el-get-bundle consult-dir
   :type github
   :pkgname "karthink/consult-dir")
+(el-get-bundle consult-tramp
+  :type github
+  :pkgname "Ladicle/consult-tramp")
 
 ;; Setting `init-consult.el` causes an error.
 (with-eval-after-load-feature 'consult
@@ -421,14 +425,18 @@
 (el-get-bundle sudo-edit
   :type github
   :pkgname "nflath/sudo-edit")
-(el-get-bundle company-mode)
+(el-get-bundle corfu
+  :type github
+  :pkgname "minad/corfu")
+
+(el-get-bundle corfu-doc
+  :type github
+  :pkgname "galeo/corfu-doc")
+
 (el-get-bundle frame-local
   :type github
   :pkgname "sebastiencs/frame-local")
-(el-get-bundle company-box
-  :type github
-  :pkgname "sebastiencs/company-box"
-  :depends (frame-local))
+
 (el-get-bundle markdown-mode)
 
 (el-get-bundle request)
@@ -472,7 +480,7 @@
 (el-get-bundle js2-mode)
 (el-get-bundle json-mode)
 (el-get-bundle tide)
-(el-get-bundle company-web)
+
 (el-get-bundle web-mode
   :type github
   :pkgname "nanasess/web-mode"
@@ -494,14 +502,6 @@
   :type github
   :pkgname "emacs-php/composer.el"
   :depends (request))
-;; (el-get-bundle phpactor
-;;   :type github
-;;   :pkgname "emacs-php/phpactor.el"
-;;   :branch "master"
-;;   :depends (f composer company-mode smart-jump))
-;; (el-get-bundle phpstan
-;;   :type github
-;;   :pkgname "emacs-php/phpstan.el")
 
 (el-get-bundle bui
   :type github
@@ -536,20 +536,16 @@
 
 ;;; see https://github.com/vscode-langservers/vscode-css-languageserver-bin
 (with-eval-after-load-feature 'css-mode
-  (add-hook 'css-mode-hook #'company-backends-with-yas)
   (add-hook 'css-mode-hook #'lsp-deferred))
 
 (with-eval-after-load-feature 'scss-mode
-  (add-hook 'scss-mode-hook #'company-backends-with-yas)
   (add-hook 'scss-mode-hook #'lsp-deferred))
 
 ;;; see https://github.com/bash-lsp/bash-language-server
 (with-eval-after-load-feature 'sh-script
-  (add-hook 'sh-mode-hook #'company-backends-with-yas)
   (add-hook 'sh-mode-hook #'lsp-deferred))
 
 (with-eval-after-load-feature 'nxml-mode
-  (add-hook 'nxml-mode-hook #'company-backends-with-yas)
   (add-hook 'nxml-mode-hook #'lsp-deferred))
 
 (with-eval-after-load-feature 'python

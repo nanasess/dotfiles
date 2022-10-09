@@ -18,7 +18,6 @@
 
 (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
 (setq phpactor--debug nil)
-(setq company-phpactor-request-async t)
 (defun php-c-style ()
   (interactive)
   (require 'php-skeleton)
@@ -30,8 +29,6 @@
   ;; (require 'php-ui-phpactor)
   ;; (require 'php-ui)
   ;; (php-ui-mode 1)
-  ;; (make-local-variable 'company-backends)
-  ;; (push '(company-phpactor :with company-yasnippet) company-backends)
   ;; (make-local-variable 'eldoc-documentation-function)
   ;; (setq eldoc-documentation-function 'phpactor-hover)
   ;; (eldoc-box-hover-mode 1)
