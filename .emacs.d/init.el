@@ -393,6 +393,7 @@
   :load-path ("." "extensions/")
   :compile ("vertico.el" "extensions/")
   :depends (consult marginalia orderless embark))
+
 (el-get-bundle consult-ls-git
   :type github
   :pkgname "rcj/consult-ls-git"
@@ -404,6 +405,9 @@
 (el-get-bundle consult-dir
   :type github
   :pkgname "karthink/consult-dir")
+(el-get-bundle consult-tramp
+  :type github
+  :pkgname "Ladicle/consult-tramp")
 
 ;; Setting `init-consult.el` causes an error.
 (with-eval-after-load-feature 'consult
