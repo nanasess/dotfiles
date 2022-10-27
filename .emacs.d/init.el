@@ -444,31 +444,31 @@
 (el-get-bundle f)
 (el-get-bundle ht)
 (el-get-bundle flycheck)
-(el-get-bundle treemacs
-  :type github
-  :pkgname "Alexander-Miller/treemacs"
-  :load-path ("src/elisp"))
-(el-get-bundle lsp-java
-  :type github
-  :pkgname "emacs-lsp/lsp-java"
-  :depends (markdown-mode dash f ht request))
-(el-get-bundle lsp-docker
-  :type github
-  :pkgname "emacs-lsp/lsp-docker")
-(el-get-bundle lsp-mode
-  :type github
-  :load-path ("." "./clients")
-  :pkgname "emacs-lsp/lsp-mode"
-  :depends (dash f ht hydra spinner markdown-mode treemacs))
-;; (setq lsp-log-io t)
-(el-get-bundle lsp-treemacs
-  :type github
-  :pkgname "emacs-lsp/lsp-treemacs"
-  :depends (treemacs))
-(el-get-bundle lsp-ui
-  :type github
-  :pkgname "emacs-lsp/lsp-ui"
-  :depends (dash lsp-mode markdown-mode))
+;; (el-get-bundle treemacs
+;;   :type github
+;;   :pkgname "Alexander-Miller/treemacs"
+;;   :load-path ("src/elisp"))
+;; (el-get-bundle lsp-java
+;;   :type github
+;;   :pkgname "emacs-lsp/lsp-java"
+;;   :depends (markdown-mode dash f ht request))
+;; (el-get-bundle lsp-docker
+;;   :type github
+;;   :pkgname "emacs-lsp/lsp-docker")
+;; (el-get-bundle lsp-mode
+;;   :type github
+;;   :load-path ("." "./clients")
+;;   :pkgname "emacs-lsp/lsp-mode"
+;;   :depends (dash f ht hydra spinner markdown-mode treemacs))
+;; ;; (setq lsp-log-io t)
+;; (el-get-bundle lsp-treemacs
+;;   :type github
+;;   :pkgname "emacs-lsp/lsp-treemacs"
+;;   :depends (treemacs))
+;; (el-get-bundle lsp-ui
+;;   :type github
+;;   :pkgname "emacs-lsp/lsp-ui"
+;;   :depends (dash lsp-mode markdown-mode))
 ;; (el-get-bundle dap-mode
 ;;   :type github
 ;;   :pkgname "emacs-lsp/dap-mode"
@@ -476,6 +476,16 @@
 ;;   ;; (dap-mode 1)
 ;;   ;; (dap-ui-mode 1)
 ;;   )
+(el-get-bundle eglot)
+(el-get-bundle eldoc-box
+  :type github
+  :pkgname "casouri/eldoc-box")
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(php-mode . ("phpactor" "language-server")))
+  (with-eval-after-load 'eldoc-box
+    (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t)
+    (eldoc-box-hover-at-point-mode 1)))
 
 (el-get-bundle js2-mode)
 (el-get-bundle json-mode)
@@ -520,16 +530,16 @@
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
 )
 ;; see https://github.com/haskell/haskell-language-server#emacs
-(el-get-bundle lsp-haskell
-  :type github
-  :pkgname "emacs-lsp/lsp-haskell"
-  :depends (haskell-mode)
-  ;; (with-eval-after-load-feature 'lsp-haskell
-  ;;   ;; (setq lsp-haskell-process-path-hie "hie-wrapper")
-  ;;   ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
-  ;;   ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on)
-  ;;   )
-  )
+;; (el-get-bundle lsp-haskell
+;;   :type github
+;;   :pkgname "emacs-lsp/lsp-haskell"
+;;   :depends (haskell-mode)
+;;   ;; (with-eval-after-load-feature 'lsp-haskell
+;;   ;;   ;; (setq lsp-haskell-process-path-hie "hie-wrapper")
+;;   ;;   ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
+;;   ;;   ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on)
+;;   ;;   )
+;;   )
 
 (el-get-bundle dockerfile-mode)
 (el-get-bundle docker-tramp)
@@ -605,6 +615,7 @@
   :pkgname "kentaro/auto-save-buffers-enhanced")
 (el-get-bundle scratch-pop in zk-phi/scratch-pop)
 (el-get-bundle gcmh)
+
 (define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
 (el-get 'sync)
 (ffap-bindings)
