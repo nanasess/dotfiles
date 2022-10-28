@@ -1,1 +1,1 @@
-(add-hook 'csharp-mode-hook #'lsp-deferred)
+(add-hook 'csharp-mode-hook #'eglot-ensure)

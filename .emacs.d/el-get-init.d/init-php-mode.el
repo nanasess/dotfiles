@@ -4,7 +4,7 @@
 (with-eval-after-load 'php-mode
   (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
   (add-hook 'php-mode-hook 'php-c-style)
-  (add-hook 'php-mode-hook #'lsp-deferred)
+  (add-hook 'php-mode-hook #'eglot-ensure)
   (add-hook 'php-mode-hook 'editorconfig-apply)
   (with-eval-after-load 'cc-engine
     (add-hook 'php-mode-hook

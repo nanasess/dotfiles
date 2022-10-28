@@ -546,22 +546,22 @@
 
 ;;; see https://github.com/vscode-langservers/vscode-css-languageserver-bin
 (with-eval-after-load-feature 'css-mode
-  (add-hook 'css-mode-hook #'lsp-deferred))
+  (add-hook 'css-mode-hook #'eglot-ensure))
 
 (with-eval-after-load-feature 'scss-mode
-  (add-hook 'scss-mode-hook #'lsp-deferred))
+  (add-hook 'scss-mode-hook #'eglot-ensure))
 
 ;;; see https://github.com/bash-lsp/bash-language-server
 (with-eval-after-load-feature 'sh-script
-  (add-hook 'sh-mode-hook #'lsp-deferred))
+  (add-hook 'sh-mode-hook #'eglot-ensure))
 
 (with-eval-after-load-feature 'nxml-mode
-  (add-hook 'nxml-mode-hook #'lsp-deferred))
+  (add-hook 'nxml-mode-hook #'eglot-ensure))
 
 (with-eval-after-load-feature 'python
   (add-hook 'python-mode-hook #'(lambda ()
                                   (setq python-indent-offset 4)))
-  (add-hook 'python-mode-hook #'lsp-deferred))
+  (add-hook 'python-mode-hook #'eglot-ensure))
 
 (add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
 (load "mew-config" t t)

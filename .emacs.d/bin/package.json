@@ -4,9 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "bash-language-server": "^3.1.0",
     "dockerfile-language-server-nodejs": "^0.9.0",
     "typescript": "^4.8.4",
     "typescript-language-server": "^2.1.0",
+    "vscode-langservers-extracted": "^4.5.0",
     "yaml-language-server": "^1.10.0"
   }
 }
