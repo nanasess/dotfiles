@@ -61,7 +61,7 @@ fi
 
 if which onedrive > /dev/null
 then
-    onedrive --synchronize --single-directory 'emacs' > /dev/null &
+    # onedrive --synchronize --single-directory 'emacs' > /dev/null &
 fi
 # if [[ ! -n $TMUX ]]; then
 #     tmux new-session
