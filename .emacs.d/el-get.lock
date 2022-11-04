@@ -1,5 +1,8 @@
 (setq el-get-lock-package-versions
-      '((consult-tramp :checksum "befa62baca768caa457b167e773b91f1bc7d661f")
+      '((copilot :checksum "3b78e9b6fd7b7e78180a795affdfbbe89af2ccec")
+        (eldoc-box :checksum "5b893437c8594028653d676015bb580574d9f0e1")
+        (eglot :checksum "e501275e06952889056268dabe08ccd0dbaf23e5")
+        (consult-tramp :checksum "befa62baca768caa457b167e773b91f1bc7d661f")
         (corfu :checksum "42f777680ee50fa1328326c7be0c045e9c3ccb69")
         (corfu-doc :checksum "da931367802d01e87e1e496ba5b51aa9126a705d")
         (docker-tramp :checksum "930d7b46c180d8a13240a028c1b40af84f2a3219")
