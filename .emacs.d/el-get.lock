@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((copilot :checksum "3b78e9b6fd7b7e78180a795affdfbbe89af2ccec")
+      '((lsp-bridge :checksum "b675db1da81ed91ec3d4a0397e4ce3f93a8c37e8")
+        (copilot :checksum "3b78e9b6fd7b7e78180a795affdfbbe89af2ccec")
         (eldoc-box :checksum "5b893437c8594028653d676015bb580574d9f0e1")
         (eglot :checksum "e501275e06952889056268dabe08ccd0dbaf23e5")
         (consult-tramp :checksum "befa62baca768caa457b167e773b91f1bc7d661f")
@@ -57,7 +58,7 @@
         (composer :checksum "7c7f89df226cac69664d7eca5e913b544dc475c5")
         (php-skeleton :checksum "208202c772be1320857d7b1ade9be28a8ddb35e5")
         (php-runtime :checksum "017e0e70f07d6b25e37d5c5f4d271a914b677631")
-        (php-mode :checksum "29bbf49cd54b9528e8645809029558903fba601c")
+        (php-mode :checksum "f5c4016bb6f8eab75133a6b306e1c57c7d8bd0af")
         (yaml-mode :checksum "535273d5a1eb76999d20afbcf4d9f056d8ffd2da")
         (web-mode :checksum "9fdbfa0eeee40e4a3bcf990c81203dce7e028c67")
         (web-completion-data :checksum "c272c94e8a71b779c29653a532f619acad433a4f")

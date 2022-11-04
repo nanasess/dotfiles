@@ -484,6 +484,9 @@
 (setq lsp-bridge-enable-log t)
 ;; (setq lsp-bridge-enable-debug t)
 (global-lsp-bridge-mode)
+(el-get-bundle eldoc-box
+  :type github
+  :pkgname "casouri/eldoc-box")
 
 (el-get-bundle js2-mode)
 (el-get-bundle json-mode)
@@ -510,6 +513,9 @@
   :type github
   :pkgname "emacs-php/composer.el"
   :depends (request))
+(el-get-bundle phpstan
+  :type github
+  :pkgname "emacs-php/phpstan.el")
 
 (el-get-bundle bui
   :type github
