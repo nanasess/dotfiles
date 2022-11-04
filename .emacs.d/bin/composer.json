@@ -7,10 +7,12 @@
             "email": "nanasess@fsm.ne.jp"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "phpstan/phpstan": "^1.8@stable",
         "psy/psysh": "@stable",
-        "phpactor/phpactor": "dev-master"
+        "phpactor/class-to-file": "*@dev",
+        "jetbrains/phpstorm-stubs": "*@dev",
+        "microsoft/tolerant-php-parser": "*@dev",
+        "phpactor/phpactor": "^2022.10"
     }
 }
