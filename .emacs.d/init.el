@@ -553,6 +553,10 @@
                                   (setq python-indent-offset 4)))
   (add-hook 'python-mode-hook #'lsp-deferred))
 
+(el-get-bundle copilot
+  :type github
+  :pkgname "zerolfx/copilot.el")
+
 (add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
 (load "mew-config" t t)
 (setq mew-rc-file ".mew")
