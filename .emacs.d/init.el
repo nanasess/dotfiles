@@ -561,19 +561,9 @@
 ;;                                   (setq python-indent-offset 4)))
 ;;   (add-hook 'python-mode-hook #'lsp-deferred))
 
-(el-get-bundle copilot.el
+(el-get-bundle copilot
   :type github
   :pkgname "zerolfx/copilot.el")
-(add-hook 'prog-mode-hook 'copilot-mode)
-(defun copilot-tab ()
-  (interactive)
-  (or (copilot-accept-completion)
-      (indent-for-tab-command)))
-(with-eval-after-load 'copilot
-  (define-key copilot-mode-map (kbd "TAB") #'copilot-tab)
-  (define-key copilot-mode-map (kbd "<tab>") #'copilot-tab)
-  (define-key copilot-mode-map (kbd "M-n") #'copilot-next-completion)
-  (define-key copilot-mode-map (kbd "M-p") #'copilot-previous-completion))
 
 (add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
 (load "mew-config" t t)
