@@ -12,7 +12,13 @@
         "psy/psysh": "@stable",
         "phpactor/class-to-file": "*@dev",
         "jetbrains/phpstorm-stubs": "*@dev",
-        "microsoft/tolerant-php-parser": "*@dev",
-        "phpactor/phpactor": "^2022.10"
-    }
+        "microsoft/tolerant-php-parser": "dev-encapsed-as-string-literal@dev",
+        "phpactor/phpactor": "^2022.11"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/dantleech/tolerant-php-parser"
+        }
+    ]
 }
