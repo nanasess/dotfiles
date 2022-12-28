@@ -13,7 +13,7 @@
         "phpactor/class-to-file": "*@dev",
         "jetbrains/phpstorm-stubs": "*@dev",
         "microsoft/tolerant-php-parser": "dev-encapsed-as-string-literal@dev",
-        "phpactor/phpactor": "^2022.11"
+        "phpactor/phpactor": "^2022.12"
     },
     "repositories": [
         {
