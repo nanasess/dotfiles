@@ -33,6 +33,7 @@ autoload bashcompinit && bashcompinit
 export PATH=$HOME/.rbenv/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.symfony/bin:$PATH
+export PATH=$HOME/.symfony5/bin:$PATH
 export PATH=$HOME/.composer/vendor/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
