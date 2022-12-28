@@ -36,6 +36,7 @@ server
 /request
 /workspace
 /bin/vendor
+/bin/node_modules
 /eln-cache
 /forge-database.sqlite
 /history
