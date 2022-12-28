@@ -4,10 +4,8 @@
 (with-eval-after-load 'php-mode
   (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-mode))
   (add-hook 'php-mode-hook 'php-c-style)
-  (add-hook 'hack-local-variables-hook #'php-ide-mode t t)
   ;; (add-hook 'php-mode-hook #'lsp-deferred)
   (add-hook 'php-mode-hook 'editorconfig-apply)
-
   (with-eval-after-load 'cc-engine
     (add-hook 'php-mode-hook
               #'(lambda ()
@@ -17,15 +15,17 @@
   (setq php-manual-url "https://www.php.net/manual/ja/"
         php-mode-coding-style 'Symfony2
         php-search-url "https://www.php.net/"))
-(with-eval-after-load 'php-ide
-  (custom-set-variables
-   '(php-ide-features . 'lsp-bridge)))
+;; (with-eval-after-load 'php-ide
+;;   (setq php-ide-features 'lsp-bridge))
+
 (setq phpactor-install-directory (concat user-emacs-directory "el-get/phpactor"))
 (setq phpactor--debug nil)
 (defun php-c-style ()
   (interactive)
   (require 'php-skeleton)
   (require 'php-skeleton-exceptions)
+  ;; (acm-mode 1)
+  ;; (php-ide-mode 1)
   ;; (setq dap-php-debug-path "~/.vscode/extensions/felixfbecker.php-debug-1.14.12")
   ;; (setq dap-php-debug-program `("node",(f-join dap-php-debug-path "out/phpDebug.js")))
   ;; (require 'dap-php)
@@ -47,8 +47,10 @@
   (when (boundp 'flycheck-disabled-checkers)
     (add-to-list 'flycheck-disabled-checkers 'php-phpmd)
     (add-to-list 'flycheck-disabled-checkers 'php-phpcs))
-  (require 'flycheck-phpstan)
-  (flycheck-mode t)
+  ;; (require 'flymake-phpstan)
+  ;; (flymake-mode t)
+  ;; (require 'flycheck-phpstan)
+  ;; (flycheck-mode t)
   (set (make-local-variable 'comment-start) "// ")
   (set (make-local-variable 'comment-start-skip) "// *")
   (set (make-local-variable 'comment-end) ""))
