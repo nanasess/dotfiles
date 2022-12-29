@@ -58,7 +58,10 @@
 ;;   :pkgname "yuttie/initchart")
 ;; (initchart-record-execution-time-of load file)
 ;; (initchart-record-execution-time-of require feature)
-(el-get-bundle elpa:compat)
+(el-get-bundle compat
+  :type github
+  :pkgname "phikal/compat.el"
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
 (el-get-bundle awasira/cp5022x.el
   :name cp5022x)
 
@@ -425,13 +428,6 @@
 (el-get-bundle sudo-edit
   :type github
   :pkgname "nflath/sudo-edit")
-(el-get-bundle corfu
-  :type github
-  :pkgname "minad/corfu")
-
-(el-get-bundle corfu-doc
-  :type github
-  :pkgname "galeo/corfu-doc")
 
 (el-get-bundle frame-local
   :type github
@@ -448,34 +444,19 @@
   :type github
   :pkgname "Alexander-Miller/treemacs"
   :load-path ("src/elisp"))
-(el-get-bundle lsp-java
+
+(el-get-bundle copilot
   :type github
-  :pkgname "emacs-lsp/lsp-java"
-  :depends (markdown-mode dash f ht request))
-(el-get-bundle lsp-docker
+  :pkgname "zerolfx/copilot.el")
+
+(el-get-bundle lsp-bridge
   :type github
-  :pkgname "emacs-lsp/lsp-docker")
-(el-get-bundle lsp-mode
+  :pkgname "manateelazycat/lsp-bridge"
+  :depends (posframe markdown-mode yasnippet orderless))
+
+(el-get-bundle eldoc-box
   :type github
-  :load-path ("." "./clients")
-  :pkgname "emacs-lsp/lsp-mode"
-  :depends (dash f ht hydra spinner markdown-mode treemacs))
-;; (setq lsp-log-io t)
-(el-get-bundle lsp-treemacs
-  :type github
-  :pkgname "emacs-lsp/lsp-treemacs"
-  :depends (treemacs))
-(el-get-bundle lsp-ui
-  :type github
-  :pkgname "emacs-lsp/lsp-ui"
-  :depends (dash lsp-mode markdown-mode))
-;; (el-get-bundle dap-mode
-;;   :type github
-;;   :pkgname "emacs-lsp/dap-mode"
-;;   :depends (tree-mode bui treemacs)
-;;   ;; (dap-mode 1)
-;;   ;; (dap-ui-mode 1)
-;;   )
+  :pkgname "casouri/eldoc-box")
 
 (el-get-bundle js2-mode)
 (el-get-bundle json-mode)
@@ -502,6 +483,9 @@
   :type github
   :pkgname "emacs-php/composer.el"
   :depends (request))
+(el-get-bundle phpstan
+  :type github
+  :pkgname "emacs-php/phpstan.el")
 
 (el-get-bundle bui
   :type github
@@ -519,43 +503,9 @@
   ;; :info "."
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
 )
-;; see https://github.com/haskell/haskell-language-server#emacs
-(el-get-bundle lsp-haskell
-  :type github
-  :pkgname "emacs-lsp/lsp-haskell"
-  :depends (haskell-mode)
-  ;; (with-eval-after-load-feature 'lsp-haskell
-  ;;   ;; (setq lsp-haskell-process-path-hie "hie-wrapper")
-  ;;   ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-hlint-on)
-  ;;   ;; (add-hook 'lsp-mode-hook 'lsp-haskell-set-completion-snippets-on)
-  ;;   )
-  )
 
 (el-get-bundle dockerfile-mode)
 (el-get-bundle docker-tramp)
-
-;;; see https://github.com/vscode-langservers/vscode-css-languageserver-bin
-(with-eval-after-load-feature 'css-mode
-  (add-hook 'css-mode-hook #'lsp-deferred))
-
-(with-eval-after-load-feature 'scss-mode
-  (add-hook 'scss-mode-hook #'lsp-deferred))
-
-;;; see https://github.com/bash-lsp/bash-language-server
-(with-eval-after-load-feature 'sh-script
-  (add-hook 'sh-mode-hook #'lsp-deferred))
-
-(with-eval-after-load-feature 'nxml-mode
-  (add-hook 'nxml-mode-hook #'lsp-deferred))
-
-(with-eval-after-load-feature 'python
-  (add-hook 'python-mode-hook #'(lambda ()
-                                  (setq python-indent-offset 4)))
-  (add-hook 'python-mode-hook #'lsp-deferred))
-
-(el-get-bundle copilot
-  :type github
-  :pkgname "zerolfx/copilot.el")
 
 (add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
 (load "mew-config" t t)
@@ -601,6 +551,9 @@
 (el-get-bundle plantuml-mode
   :type github
   :pkgname "skuro/plantuml-mode")
+(el-get-bundle mermaid-mode
+  :type github
+  :pkgname "abrochard/mermaid-mode")
 
 (el-get-bundle recentf-ext)
 

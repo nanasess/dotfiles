@@ -9,6 +9,8 @@ fi
 
 export PATH=$HOME/bin:$HOME/.nodebrew/current/bin:$HOME/.cpan/CPAN/bin:$HOME/.cabal/bin:/Library/Frameworks/HaskellPlatform.framework/bin:/usr/local/texlive/2014/bin/x86_64-darwin:/opt/local/lib/postgresql91/bin:/usr/local/heroku/bin:/opt/local/bin:/usr/local/bin:$PATH
 
+export UID=${UID} GID=${GID}
+
 export ORACLE_BASE=~/oracle
 export ORACLE_HOME=$ORACLE_BASE/product/11.2.0/client_1
 export DYLD_LIBRARY_PATH=$ORACLE_HOME/lib:$DYLD_LIBRARY_PATH
@@ -31,6 +33,7 @@ autoload bashcompinit && bashcompinit
 export PATH=$HOME/.rbenv/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.symfony/bin:$PATH
+export PATH=$HOME/.symfony5/bin:$PATH
 export PATH=$HOME/.composer/vendor/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
@@ -40,7 +43,12 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 if which stack > /dev/null; then eval "$(stack --bash-completion-script stack)"; fi
 [[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 # export PHPBREW_SET_PROMPT=1
+export WEBKIT_FORCE_SANDBOX=0
 
+# if [ ! -L /tmp/.X11-unix ]
+# then
+#     sudo ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix
+# fi
 if which xrdb > /dev/null; then xrdb -merge ~/.Xresources; fi
 if [ -z "$WAYLAND_DISPLAY" ]
 then
