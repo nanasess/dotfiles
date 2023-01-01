@@ -27,30 +27,34 @@
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
 
-(setq el-get-bundle-sync t
-      el-get-is-lazy nil
-      el-get-verbose nil
-      el-get-bundle-byte-compile t
-      el-get-auto-update-cached-recipes nil
-      el-get-user-package-directory (locate-user-emacs-file "el-get-init.d"))
+(eval-when-compile
+  (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
+  (unless (require 'el-get nil 'noerror)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
 
-(add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
-(unless (require 'el-get nil 'noerror)
-  (with-current-buffer
-      (url-retrieve-synchronously
-       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
-    (goto-char (point-max))
-    (eval-print-last-sexp)))
+  (setq el-get-bundle-sync t
+        el-get-is-lazy nil
+        el-get-verbose nil
+        el-get-bundle-byte-compile t
+        el-get-auto-update-cached-recipes nil
+        el-get-git-shallow-clone t
+        el-get-user-package-directory (locate-user-emacs-file "el-get-init.d")))
 
-(el-get-bundle el-get-lock
-  :type github
-  :pkgname "tarao/el-get-lock")
-(el-get-lock)
-(el-get-lock-unlock 'el-get 'seq)
+(eval-when-compile
+  (el-get-bundle el-get-lock
+    :type github
+    :pkgname "tarao/el-get-lock")
+  (el-get-lock)
+  (el-get-lock-unlock 'el-get 'seq))
 
-(el-get-bundle with-eval-after-load-feature-el
-  :type github
-  :pkgname "tarao/with-eval-after-load-feature-el")
+(eval-when-compile
+  (el-get-bundle with-eval-after-load-feature-el
+    :type github
+    :pkgname "tarao/with-eval-after-load-feature-el"))
 
 ;; (el-get-bundle esup)
 ;; (el-get-bundle! initchart
@@ -58,12 +62,14 @@
 ;;   :pkgname "yuttie/initchart")
 ;; (initchart-record-execution-time-of load file)
 ;; (initchart-record-execution-time-of require feature)
-(el-get-bundle compat
-  :type github
-  :pkgname "phikal/compat.el"
-  :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
-(el-get-bundle awasira/cp5022x.el
-  :name cp5022x)
+(eval-when-compile
+  (el-get-bundle compat
+    :type github
+    :pkgname "phikal/compat.el"
+    :build `(("make" ,(format "EMACS=%s" el-get-emacs)))))
+(eval-when-compile
+  (el-get-bundle awasira/cp5022x.el
+    :name cp5022x))
 
 ;;; initial load files
 (dolist (sys-type (list (symbol-name system-type)
@@ -92,15 +98,16 @@
 
 (require 'japanese-init)
 
-(el-get-bundle ddskk
-  :type github
-  :pkgname "skk-dev/ddskk"
-  :info "doc/skk.info"
-  :load-path (".")
-  :autoloads "skk-autoloads"
-  :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
-           (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
-           ("cp" "skk-setup.el.in" "skk-setup.el")))
+(eval-when-compile
+  (el-get-bundle ddskk
+    :type github
+    :pkgname "skk-dev/ddskk"
+    :info "doc/skk.info"
+    :load-path (".")
+    :autoloads "skk-autoloads"
+    :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
+             (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
+             ("cp" "skk-setup.el.in" "skk-setup.el"))))
 
 ;;; global key-bindings
 (global-unset-key (kbd "C-M-t"))
@@ -138,7 +145,8 @@
 
 ;;; face settings
 (setq visible-bell t)
-(el-get-bundle doom-themes)
+(eval-when-compile
+  (el-get-bundle doom-themes))
 
 (require 'whitespace)
 (setq whitespace-style
@@ -175,32 +183,39 @@
       (run-with-idle-timer 0.1 t 'global-hl-line-timer-function))
 ;; (cancel-timer global-hl-line-timer)
 
-(el-get-bundle dash)
-(el-get-bundle shrink-path
-  :type github
-  :pkgname "zbelial/shrink-path.el"
-  :depends (dash f s))
-(el-get-bundle memoize)
-(el-get-bundle all-the-icons)
+(eval-when-compile
+  (el-get-bundle dash))
+(eval-when-compile
+  (el-get-bundle shrink-path
+    :type github
+    :pkgname "zbelial/shrink-path.el"
+    :depends (dash f s)))
+(eval-when-compile
+  (el-get-bundle memoize))
+(eval-when-compile
+  (el-get-bundle all-the-icons))
 
-(el-get-bundle doom-modeline
-  :type github
-  :depends (all-the-icons dash eldoc-eval shrink-path)
-  :pkgname "seagle0128/doom-modeline")
+(eval-when-compile
+  (el-get-bundle doom-modeline
+    :type github
+    :depends (all-the-icons dash eldoc-eval shrink-path)
+    :pkgname "seagle0128/doom-modeline"))
 (line-number-mode 1)
 (column-number-mode 1)
 (size-indication-mode 1)
 
-(el-get-bundle symbol-overlay
-  :type github
-  :pkgname "wolray/symbol-overlay")
+(eval-when-compile
+  (el-get-bundle symbol-overlay
+    :type github
+    :pkgname "wolray/symbol-overlay"))
 
 ;;; uniquify settings
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 (setq uniquify-ignore-buffers-re "*[^*]+*")
 
-(el-get-bundle emacs-async)
+(eval-when-compile
+  (el-get-bundle emacs-async))
 (add-hook 'dired-mode-hook
           #'(lambda ()
               (local-set-key (kbd "C-t") 'other-window)
@@ -212,8 +227,10 @@
 ;;; Indent settings
 (setq-default indent-tabs-mode nil)
 
-(el-get-bundle editorconfig)
-(el-get-bundle prettier-js)
+(eval-when-compile
+  (el-get-bundle editorconfig))
+(eval-when-compile
+  (el-get-bundle prettier-js))
 
 ;;; Misc settings
 (setq indicate-empty-lines t)
@@ -229,9 +246,10 @@
 (defun risky-local-variable-p (sym &optional _ignored) nil)
 (defun safe-local-variable-p (sym val) t)
 
-(el-get-bundle emacs-sql-indent
-  :type github
-  :pkgname "alex-hhh/emacs-sql-indent")
+(eval-when-compile
+  (el-get-bundle emacs-sql-indent
+    :type github
+    :pkgname "alex-hhh/emacs-sql-indent"))
 
 ;;; view-mode settings
 (add-hook 'view-mode-hook
@@ -297,17 +315,22 @@
 (global-set-key (kbd "C-z C-a") 'toggle-fullscreen)
 (global-set-key (kbd "C-z C-z") 'toggle-size-frame)
 
-(el-get-bundle terminal-here
-  :type github
-  :pkgname "davidshepherd7/terminal-here")
+(eval-when-compile
+  (el-get-bundle terminal-here
+    :type github
+    :pkgname "davidshepherd7/terminal-here"))
 
-(el-get-bundle migemo)
-(el-get-bundle visual-regexp)
+(eval-when-compile
+  (el-get-bundle migemo))
+(eval-when-compile
+  (el-get-bundle visual-regexp))
 ;; (el-get-bundle elpa:undo-tree
 ;;   (global-undo-tree-mode))
-(el-get-bundle easy-kill in leoliu/easy-kill)
-(el-get-bundle yasnippet)
-(el-get-bundle yasnippet-snippets)
+(eval-when-compile
+  (el-get-bundle easy-kill in leoliu/easy-kill))
+(eval-when-compile
+  (el-get-bundle yasnippet)
+  (el-get-bundle yasnippet-snippets))
 
 ;;; org-mode settings
 (setq org-directory (concat external-directory "howm/"))
@@ -315,25 +338,36 @@
 (setq org-startup-folded nil)
 (setq org-startup-truncated nil)
 
-(el-get-bundle expand-region)
-(el-get-bundle multiple-cursors)
-(el-get-bundle dumb-jump
-  :type github
-  :pkgname "jacktasia/dumb-jump")
-(el-get-bundle smart-jump
-  :type github
-  :depends dumb-jump
-  :pkgname "jojojames/smart-jump")
-(el-get-bundle tree-mode
-  :type github
-  :pkgname "emacsorphanage/tree-mode")
+(eval-when-compile
+  (el-get-bundle expand-region))
+(eval-when-compile
+  (el-get-bundle multiple-cursors))
+(eval-when-compile
+  (el-get-bundle dumb-jump
+    :type github
+    :pkgname "jacktasia/dumb-jump"))
+(eval-when-compile
+  (el-get-bundle smart-jump
+    :type github
+    :depends dumb-jump
+    :pkgname "jojojames/smart-jump"))
+(eval-when-compile
+  (el-get-bundle tree-mode
+    :type github
+    :pkgname "emacsorphanage/tree-mode"))
 (setenv "EDITOR" "emacsclient")
-(el-get-bundle emacs-async)
-(el-get-bundle transient)
-(el-get-bundle with-editor)
-(el-get-bundle magit)
-(el-get-bundle ghub)
-(el-get-bundle forge)
+(eval-when-compile
+  (el-get-bundle emacs-async))
+(eval-when-compile
+  (el-get-bundle transient))
+(eval-when-compile
+  (el-get-bundle with-editor))
+(eval-when-compile
+  (el-get-bundle magit))
+(eval-when-compile
+  (el-get-bundle ghub))
+(eval-when-compile
+  (el-get-bundle forge))
 ;; (ghub-request "GET" "/user" nil
 ;;               :forge 'github
 ;;               :host "api.github.com"
@@ -344,29 +378,30 @@
   (define-key smerge-mode-map (kbd "M-n") 'smerge-next)
   (define-key smerge-mode-map (kbd "M-p") 'smerge-prev))
 
-(el-get-bundle howm
-  :type git
-  :url "git://git.osdn.jp/gitroot/howm/howm.git"
-  :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
-  :prepare (progn
-             (defvar howm-menu-lang 'ja)
-             (defvar howm-directory (concat external-directory "howm/"))
-             (defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt")
-             (defvar howm-history-file (concat howm-directory ".howm-history"))
-             (defvar howm-keyword-file (concat howm-directory ".howm-keys"))
-             (defvar howm-menu-schedule-days-before 30)
-             (defvar howm-menu-schedule-days 30)
-             (defvar howm-menu-expiry-hours 2)
-             (defvar howm-menu-refresh-after-save nil)
-             (defvar howm-refresh-after-save nil)
-             (defvar howm-list-all-title t)
-             (defvar howm-schedule-menu-types "[!@\+]")
-             (defvar howm-view-title-header "Title:")
-             (setq howm-view-use-grep t)
-             ;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
-             (setq howm-process-coding-system 'utf-8-unix)
-             (setq howm-todo-menu-types "[-+~!]")
-             (defun parse-howm-title () nil)))
+(eval-when-compile
+  (el-get-bundle howm
+    :type git
+    :url "git://git.osdn.jp/gitroot/howm/howm.git"
+    :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
+    :prepare (progn
+               (defvar howm-menu-lang 'ja)
+               (defvar howm-directory (concat external-directory "howm/"))
+               (defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt")
+               (defvar howm-history-file (concat howm-directory ".howm-history"))
+               (defvar howm-keyword-file (concat howm-directory ".howm-keys"))
+               (defvar howm-menu-schedule-days-before 30)
+               (defvar howm-menu-schedule-days 30)
+               (defvar howm-menu-expiry-hours 2)
+               (defvar howm-menu-refresh-after-save nil)
+               (defvar howm-refresh-after-save nil)
+               (defvar howm-list-all-title t)
+               (defvar howm-schedule-menu-types "[!@\+]")
+               (defvar howm-view-title-header "Title:")
+               (setq howm-view-use-grep t)
+               ;; see http://blechmusik.hatenablog.jp/entry/2013/07/09/015124
+               (setq howm-process-coding-system 'utf-8-unix)
+               (setq howm-todo-menu-types "[-+~!]")
+               (defun parse-howm-title () nil))))
 
 ;; deprecated
 ;; (el-get-bundle helm)
@@ -374,43 +409,52 @@
 ;; (el-get-bundle helm-descbinds)
 ;; (el-get-bundle helm-swoop)
 
-(el-get-bundle wgrep)
-(el-get-bundle consult
-  :type github
-  :pkgname "minad/consult"
-  :branch "main")
-(el-get-bundle marginalia
-  :type github
-  :pkgname "minad/marginalia"
-  :branch "main")
-(el-get-bundle orderless
-  :type github
-  :pkgname "oantolin/orderless")
-(el-get-bundle embark
-  :type github
-  :pkgname "oantolin/embark")
-(el-get-bundle vertico
-  :type github
-  :pkgname "minad/vertico"
-  :branch "main"
-  :load-path ("." "extensions/")
-  :compile ("vertico.el" "extensions/")
-  :depends (consult marginalia orderless embark))
-
-(el-get-bundle consult-ls-git
-  :type github
-  :pkgname "rcj/consult-ls-git"
-  :branch "main")
-(el-get-bundle consult-flycheck
-  :type github
-  :pkgname "minad/consult-flycheck"
-  :branch "main")
-(el-get-bundle consult-dir
-  :type github
-  :pkgname "karthink/consult-dir")
-(el-get-bundle consult-tramp
-  :type github
-  :pkgname "Ladicle/consult-tramp")
+(eval-when-compile
+  (el-get-bundle wgrep))
+(eval-when-compile
+  (el-get-bundle consult
+    :type github
+    :pkgname "minad/consult"
+    :branch "main"))
+(eval-when-compile
+  (el-get-bundle marginalia
+    :type github
+    :pkgname "minad/marginalia"
+    :branch "main"))
+(eval-when-compile
+  (el-get-bundle orderless
+    :type github
+    :pkgname "oantolin/orderless"))
+(eval-when-compile
+  (el-get-bundle embark
+    :type github
+    :pkgname "oantolin/embark"))
+(eval-when-compile
+  (el-get-bundle vertico
+    :type github
+    :pkgname "minad/vertico"
+    :branch "main"
+    :load-path ("." "extensions/")
+    :compile ("vertico.el" "extensions/")
+    :depends (consult marginalia orderless embark)))
+(eval-when-compile
+  (el-get-bundle consult-ls-git
+    :type github
+    :pkgname "rcj/consult-ls-git"
+    :branch "main"))
+(eval-when-compile
+  (el-get-bundle consult-flycheck
+    :type github
+    :pkgname "minad/consult-flycheck"
+    :branch "main"))
+(eval-when-compile
+  (el-get-bundle consult-dir
+    :type github
+    :pkgname "karthink/consult-dir"))
+(eval-when-compile
+  (el-get-bundle consult-tramp
+    :type github
+    :pkgname "Ladicle/consult-tramp"))
 
 ;; Setting `init-consult.el` causes an error.
 (with-eval-after-load-feature 'consult
@@ -425,143 +469,205 @@
    ;;  ;; :preview-key '(:debounce 0.2 any) ;; Option 1: Delay preview
    :preview-key (kbd "C-."))               ;; Option 2: Manual preview
   )
-(el-get-bundle sudo-edit
-  :type github
-  :pkgname "nflath/sudo-edit")
+(eval-when-compile
+  (el-get-bundle sudo-edit
+    :type github
+    :pkgname "nflath/sudo-edit"))
+(eval-when-compile
+  (el-get-bundle frame-local
+    :type github
+    :pkgname "sebastiencs/frame-local"))
 
-(el-get-bundle frame-local
-  :type github
-  :pkgname "sebastiencs/frame-local")
+(eval-when-compile
+  (el-get-bundle markdown-mode))
 
-(el-get-bundle markdown-mode)
+(eval-when-compile
+  (el-get-bundle request))
+(eval-when-compile
+  (el-get-bundle spinner))
+(eval-when-compile
+  (el-get-bundle f))
+(eval-when-compile
+  (el-get-bundle ht))
+(eval-when-compile
+  (el-get-bundle flycheck))
+(eval-when-compile
+  (el-get-bundle treemacs
+    :type github
+    :pkgname "Alexander-Miller/treemacs"
+    :load-path ("src/elisp")))
 
-(el-get-bundle request)
-(el-get-bundle spinner)
-(el-get-bundle f)
-(el-get-bundle ht)
-(el-get-bundle flycheck)
-(el-get-bundle treemacs
-  :type github
-  :pkgname "Alexander-Miller/treemacs"
-  :load-path ("src/elisp"))
+;;(eval-when-compile
+;; (el-get-bundle copilot
+;;   :type github
+;;   :pkgname "zerolfx/copilot.el"))
+(eval-when-compile
+  (el-get-bundle lsp-bridge
+    :type github
+    :pkgname "manateelazycat/lsp-bridge"
+    :depends (posframe markdown-mode yasnippet orderless)))
 
-(el-get-bundle copilot
-  :type github
-  :pkgname "zerolfx/copilot.el")
+(eval-when-compile
+  (el-get-bundle eldoc-box
+    :type github
+    :pkgname "casouri/eldoc-box"))
+(eval-when-compile
+  (el-get-bundle js2-mode))
+(eval-when-compile
+  (el-get-bundle json-mode))
+(eval-when-compile
+  (el-get-bundle tide))
 
-(el-get-bundle lsp-bridge
-  :type github
-  :pkgname "manateelazycat/lsp-bridge"
-  :depends (posframe markdown-mode yasnippet orderless))
+(eval-when-compile
+  (el-get-bundle web-mode
+    :type github
+    :pkgname "nanasess/web-mode"
+    :branch "eccube-engine"))
+(eval-when-compile
+  (el-get-bundle yaml-mode))
 
-(el-get-bundle eldoc-box
-  :type github
-  :pkgname "casouri/eldoc-box")
+(eval-when-compile
+  (el-get-bundle php-mode
+    :type github
+    :pkgname "emacs-php/php-mode"
+    :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
+    :autoloads "lisp/php-mode-autoloads"))
+(eval-when-compile
+  (el-get-bundle php-runtime
+    :type github
+    :pkgname "emacs-php/php-runtime.el"))
+(eval-when-compile
+  (el-get-bundle php-skeleton
+    :type github
+    :pkgname "emacs-php/php-skeleton"))
+(eval-when-compile
+  (el-get-bundle composer
+    :type github
+    :pkgname "emacs-php/composer.el"
+    :depends (request)))
+(eval-when-compile
+  (el-get-bundle phpstan
+    :type github
+    :pkgname "emacs-php/phpstan.el"))
 
-(el-get-bundle js2-mode)
-(el-get-bundle json-mode)
-(el-get-bundle tide)
+(eval-when-compile
+  (el-get-bundle bui
+    :type github
+    :pkgname "alezost/bui.el"))
+(eval-when-compile
+  (el-get-bundle groovy-mode
+    :type github
+    :pkgname "Groovy-Emacs-Modes/groovy-emacs-modes"))
+(eval-when-compile
+  (el-get-bundle csv-mode in emacsmirror/csv-mode))
+(eval-when-compile
+  (el-get-bundle csharp-mode))
 
-(el-get-bundle web-mode
-  :type github
-  :pkgname "nanasess/web-mode"
-  :branch "eccube-engine")
-(el-get-bundle yaml-mode)
+(eval-when-compile
+  (el-get-bundle haskell-mode
+    :type github
+    :pkgname "haskell/haskell-mode"
+    ;; :info "."
+    ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
+    ))
+(eval-when-compile
+  (el-get-bundle dockerfile-mode))
+(eval-when-compile
+  (el-get-bundle docker-tramp))
 
-(el-get-bundle php-mode
-  :type github
-  :pkgname "emacs-php/php-mode"
-  :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-  :autoloads "lisp/php-mode-autoloads")
-(el-get-bundle php-runtime
-  :type github
-  :pkgname "emacs-php/php-runtime.el")
-(el-get-bundle php-skeleton
-  :type github
-  :pkgname "emacs-php/php-skeleton")
-(el-get-bundle composer
-  :type github
-  :pkgname "emacs-php/composer.el"
-  :depends (request))
-(el-get-bundle phpstan
-  :type github
-  :pkgname "emacs-php/phpstan.el")
+(eval-when-compile
 
-(el-get-bundle bui
-  :type github
-  :pkgname "alezost/bui.el")
-(el-get-bundle groovy-mode
-  :type github
-  :pkgname "Groovy-Emacs-Modes/groovy-emacs-modes")
+  (add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
+  (load "mew-config" t t)
+  (setq mew-rc-file ".mew")
 
-(el-get-bundle csv-mode in emacsmirror/csv-mode)
-(el-get-bundle csharp-mode)
-
-(el-get-bundle haskell-mode
-  :type github
-  :pkgname "haskell/haskell-mode"
-  ;; :info "."
-  ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
-)
-
-(el-get-bundle dockerfile-mode)
-(el-get-bundle docker-tramp)
-
-(add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
-(load "mew-config" t t)
-(setq mew-rc-file ".mew")
-
-(el-get-bundle mew
-  :type github
-  :pkgname "kazu-yamamoto/Mew"
-  :prepare
-  (progn
-    (setq mew-prog-mewl        (concat default-directory "bin/mewl"))
-    (setq mew-prog-mime-encode (concat default-directory "bin/mewencode"))
-    (setq mew-prog-mime-decode (concat default-directory "bin/mewencode"))
-    (setq mew-prog-cmew        (concat default-directory "bin/cmew"))
-    (setq mew-prog-est-update  (concat default-directory "bin/mewest"))
-    (setq mew-prog-smew        (concat default-directory "bin/smew"))
-    (setq mew-mbox-command     (concat default-directory "bin/incm")))
-  :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make") ("make" "clean")))
+  (el-get-bundle mew
+    :type github
+    :pkgname "kazu-yamamoto/Mew"
+    :prepare
+    (progn
+      (setq mew-prog-mewl        (concat default-directory "bin/mewl"))
+      (setq mew-prog-mime-encode (concat default-directory "bin/mewencode"))
+      (setq mew-prog-mime-decode (concat default-directory "bin/mewencode"))
+      (setq mew-prog-cmew        (concat default-directory "bin/cmew"))
+      (setq mew-prog-est-update  (concat default-directory "bin/mewest"))
+      (setq mew-prog-smew        (concat default-directory "bin/smew"))
+      (setq mew-mbox-command     (concat default-directory "bin/incm")))
+    :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make") ("make" "clean"))))
 ;; (el-get-bundle twittering-mode)
-(el-get-bundle popwin)
-
-(el-get-bundle deferred)
-(el-get-bundle inertial-scroll in kiwanami/emacs-inertial-scroll)
+(eval-when-compile
+  (el-get-bundle popwin))
+(eval-when-compile
+  (el-get-bundle deferred))
+(eval-when-compile
+  (el-get-bundle inertial-scroll in kiwanami/emacs-inertial-scroll))
 
 ;;; sqlite-dump
 ;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
-(el-get-bundle sqlite-dump
-  :type github
-  :pkgname "nanasess/sqlite-dump")
+(eval-when-compile
+  (el-get-bundle sqlite-dump
+    :type github
+    :pkgname "nanasess/sqlite-dump"))
 
-(defvar mkpasswd-command
-  "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
-(autoload 'mkpasswd "mkpasswd" nil t)
-(el-get-bundle emacs-id-manager
-  :type github
-  :autoloads "id-manager"
-  :pkgname "nanasess/emacs-id-manager")
+(eval-when-compile
+  (defvar mkpasswd-command
+    "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
+  (autoload 'mkpasswd "mkpasswd" nil t)
+  (el-get-bundle emacs-id-manager
+    :type github
+    :autoloads "id-manager"
+    :pkgname "nanasess/emacs-id-manager"))
+(eval-when-compile
+  (add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
+  (load "mew-config" t t)
+  (setq mew-rc-file ".mew")
 
-(el-get-bundle nginx-mode)
-(el-get-bundle po-mode)
+  (el-get-bundle mew
+    :type github
+    :pkgname "kazu-yamamoto/Mew"
+    :prepare
+    (progn
+      (setq mew-prog-mewl        (concat default-directory "bin/mewl"))
+      (setq mew-prog-mime-encode (concat default-directory "bin/mewencode"))
+      (setq mew-prog-mime-decode (concat default-directory "bin/mewencode"))
+      (setq mew-prog-cmew        (concat default-directory "bin/cmew"))
+      (setq mew-prog-est-update  (concat default-directory "bin/mewest"))
+      (setq mew-prog-smew        (concat default-directory "bin/smew"))
+      (setq mew-mbox-command     (concat default-directory "bin/incm")))
+    :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make") ("make" "clean"))))
+;; (el-get-bundle twittering-mode)
+(eval-when-compile
+  (el-get-bundle popwin))
+(eval-when-compile
+  (el-get-bundle deferred))
+(eval-when-compile
+  (el-get-bundle inertial-scroll in kiwanami/emacs-inertial-scroll))
+(eval-when-compile
+  (el-get-bundle nginx-mode))
+(eval-when-compile
+  (el-get-bundle po-mode))
 
+(eval-when-compile
 ;;; brew install plantuml
-(el-get-bundle plantuml-mode
-  :type github
-  :pkgname "skuro/plantuml-mode")
-(el-get-bundle mermaid-mode
-  :type github
-  :pkgname "abrochard/mermaid-mode")
+  (el-get-bundle plantuml-mode
+    :type github
+    :pkgname "skuro/plantuml-mode"))
+(eval-when-compile
+  (el-get-bundle mermaid-mode
+    :type github
+    :pkgname "abrochard/mermaid-mode"))
+(eval-when-compile
+  (el-get-bundle recentf-ext))
 
-(el-get-bundle recentf-ext)
+(eval-when-compile
+  (el-get-bundle auto-save-buffers-enhanced
+    :type github
+    :pkgname "kentaro/auto-save-buffers-enhanced"))
 
-(el-get-bundle auto-save-buffers-enhanced
-  :type github
-  :pkgname "kentaro/auto-save-buffers-enhanced")
-(el-get-bundle scratch-pop in zk-phi/scratch-pop)
-(el-get-bundle gcmh)
+(eval-when-compile
+  (el-get-bundle scratch-pop in zk-phi/scratch-pop))
+(eval-when-compile
+  (el-get-bundle gcmh))
 (define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
 (el-get 'sync)
 (ffap-bindings)
