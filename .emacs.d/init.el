@@ -27,8 +27,8 @@
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
 
+(add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
 (eval-when-compile
-  (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
   (unless (require 'el-get nil 'noerror)
     (with-current-buffer
         (url-retrieve-synchronously
@@ -497,10 +497,10 @@
     :pkgname "Alexander-Miller/treemacs"
     :load-path ("src/elisp")))
 
-;;(eval-when-compile
-;; (el-get-bundle copilot
-;;   :type github
-;;   :pkgname "zerolfx/copilot.el"))
+(eval-when-compile
+  (el-get-bundle copilot
+    :type github
+    :pkgname "zerolfx/copilot.el"))
 (eval-when-compile
   (el-get-bundle lsp-bridge
     :type github

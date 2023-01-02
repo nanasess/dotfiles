@@ -17,4 +17,17 @@
 (setq load-prefer-newer t)
 (push '(tool-bar-lines . 0) default-frame-alist)
 
+(with-eval-after-load 'comp
+  (setq native-comp-async-jobs-number 16)
+  (setq native-comp-speed 3))
+
+;; see https://zenn.dev/takeokunn/articles/56010618502ccc#el-get%E3%81%AEpackage%E3%82%82nativecomp%E3%81%99%E3%82%8B
+(defun my/native-comp-packages ()
+  (interactive)
+  (native-compile-async "~/.emacs.d/init.el")
+  (native-compile-async "~/.emacs.d/early-init.el")
+  (native-compile-async "~/.emacs.d/el-get" 'recursively)
+  (native-compile-async "~/.emacs.d/elpa" 'recursively))
+;; (my/native-comp-packages)
+
 (provide 'early-init)
