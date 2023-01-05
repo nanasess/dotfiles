@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((compat :checksum "1573aa2e6d478c30cc7f394b72cbaa4db77ef811")
+      '((wakatime-mode :checksum "ef923829912c3854d230834f81083814b7c9d992")
+        (compat :checksum "1573aa2e6d478c30cc7f394b72cbaa4db77ef811")
         (lsp-bridge :checksum "d9457d33a089699c8c5ba750b65afcb926bd3b9a")
         (copilot :checksum "3b78e9b6fd7b7e78180a795affdfbbe89af2ccec")
         (eldoc-box :checksum "5b893437c8594028653d676015bb580574d9f0e1")

@@ -554,6 +554,7 @@
 (el-get-bundle mermaid-mode
   :type github
   :pkgname "abrochard/mermaid-mode")
+(el-get-bundle wakatime-mode)
 
 (el-get-bundle recentf-ext)
 
