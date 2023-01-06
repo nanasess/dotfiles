@@ -19,32 +19,40 @@
 
 (when load-file-name
   (setq user-emacs-directory (file-name-directory load-file-name)))
-
-(defvar user-initial-directory (locate-user-emacs-file "init.d/"))
-(defvar user-site-lisp-directory (locate-user-emacs-file "site-lisp/"))
-(defvar user-misc-directory (locate-user-emacs-file "etc/"))
-(defvar user-bin-directory (locate-user-emacs-file "bin/"))
-(defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
+(eval-and-compile
+  (defvar user-initial-directory (locate-user-emacs-file "init.d/"))
+  (defvar user-site-lisp-directory (locate-user-emacs-file "site-lisp/"))
+  (defvar user-misc-directory (locate-user-emacs-file "etc/"))
+  (defvar user-bin-directory (locate-user-emacs-file "bin/"))
+  (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/")))
 (defvar openweathermap-api-key nil)
 
-(setq el-get-bundle-sync t
-      el-get-is-lazy nil
-      el-get-verbose nil
-      el-get-bundle-byte-compile t
-      el-get-auto-update-cached-recipes nil
-      el-get-user-package-directory (locate-user-emacs-file "el-get-init.d"))
-
-(add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
-(unless (require 'el-get nil 'noerror)
+(eval-and-compile
+  (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get")))
+(eval-when-compile
   (with-current-buffer
       (url-retrieve-synchronously
        "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
     (goto-char (point-max))
     (eval-print-last-sexp)))
+(eval-and-compile
+  (setq el-get-bundle-sync t
+        el-get-is-lazy nil
+        el-get-verbose nil
+        el-get-bundle-byte-compile t
+        el-get-auto-update-cached-recipes nil
+        el-get-user-package-directory (locate-user-emacs-file "el-get-init.d")))
+(autoload 'el-get "el-get" t t)
+(autoload 'el-get-bundle "el-get" t t)
+(autoload 'el-get-bundle-el-get "el-get" t t)
 
-(el-get-bundle el-get-lock
-  :type github
-  :pkgname "tarao/el-get-lock")
+(eval-and-compile
+  (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get-lock")))
+(eval-when-compile
+  (el-get-bundle el-get-lock
+    :type github
+    :pkgname "tarao/el-get-lock"))
+(autoload 'el-get-lock "el-get-lock" t t)
 (el-get-lock)
 (el-get-lock-unlock 'el-get 'seq)
 
@@ -73,9 +81,10 @@
                (expand-file-name
                 (concat user-initial-directory "arch/" sys-type)))
   (load "init" t))
-(add-to-list 'load-path (expand-file-name user-initial-directory))
-(add-to-list 'load-path (expand-file-name user-site-lisp-directory))
-(add-to-list 'load-path (expand-file-name (locate-user-emacs-file "secret.d/")))
+(eval-and-compile
+  (add-to-list 'load-path (expand-file-name user-initial-directory))
+  (add-to-list 'load-path (expand-file-name user-site-lisp-directory))
+  (add-to-list 'load-path (expand-file-name (locate-user-emacs-file "secret.d/"))))
 
 ;;; exec-path settings
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
@@ -138,7 +147,23 @@
 
 ;;; face settings
 (setq visible-bell t)
-(el-get-bundle doom-themes)
+(eval-when-compile
+  (el-get-bundle doom-themes))
+(eval-and-compile
+  (add-to-list 'load-path (concat user-emacs-directory "el-get/doom-themes"))
+  (add-hook
+ 'after-init-hook
+ #'(lambda ()
+     (require 'doom-themes)
+     ;; use solarized.
+     (load-theme 'doom-solarized-light t)
+     (with-eval-after-load 'vertico
+       (custom-set-faces
+        `(vertico-group-title ((t (:foreground ,(doom-color 'base7)))))))
+     (with-eval-after-load 'corfu
+       (custom-set-faces
+        `(corfu-annotations ((t (:foreground ,(doom-color 'green))))))))))
+
 
 (require 'whitespace)
 (setq whitespace-style
@@ -239,7 +264,7 @@
               (setq view-read-only t)
               (auto-revert-mode 1)
               (setq line-move-visual nil)))
-(with-eval-after-load-feature 'view
+(with-eval-after-load 'view
   (define-key view-mode-map (kbd "h") 'backward-word)
   (define-key view-mode-map (kbd "l") 'forward-word)
   (define-key view-mode-map (kbd "j") 'next-line)
@@ -340,10 +365,11 @@
 ;;               :username "nanasess"
 ;;               :auth 'forge)
 
-(with-eval-after-load-feature 'smerge-mode
+(with-eval-after-load 'smerge-mode
   (define-key smerge-mode-map (kbd "M-n") 'smerge-next)
   (define-key smerge-mode-map (kbd "M-p") 'smerge-prev))
-
+(eval-and-compile
+  (defvar howm-directory (concat external-directory "howm/")))
 (el-get-bundle howm
   :type git
   :url "git://git.osdn.jp/gitroot/howm/howm.git"
@@ -413,18 +439,18 @@
   :pkgname "Ladicle/consult-tramp")
 
 ;; Setting `init-consult.el` causes an error.
-(with-eval-after-load-feature 'consult
-  (consult-customize
-   consult-ripgrep
-   consult-grep
-   consult-git-grep
-   consult-bookmark consult-recent-file consult-xref
-   consult--source-bookmark consult--source-recent-file
-   consult--source-project-recent-file
-   ;;  ;; my/command-wrapping-consult       ;; disable auto previews inside my command
-   ;;  ;; :preview-key '(:debounce 0.2 any) ;; Option 1: Delay preview
-   :preview-key (kbd "C-."))               ;; Option 2: Manual preview
-  )
+;; (with-eval-after-load 'consult
+;;   (consult-customize
+;;    consult-ripgrep
+;;    consult-grep
+;;    consult-git-grep
+;;    consult-bookmark consult-recent-file consult-xref
+;;    consult--source-bookmark consult--source-recent-file
+;;    consult--source-project-recent-file
+;;    ;;  ;; my/command-wrapping-consult       ;; disable auto previews inside my command
+;;    ;;  ;; :preview-key '(:debounce 0.2 any) ;; Option 1: Delay preview
+;;    :preview-key (kbd "C-."))               ;; Option 2: Manual preview
+;;   )
 (el-get-bundle sudo-edit
   :type github
   :pkgname "nflath/sudo-edit")
@@ -502,7 +528,7 @@
   :pkgname "haskell/haskell-mode"
   ;; :info "."
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
-)
+  )
 
 (el-get-bundle dockerfile-mode)
 (el-get-bundle docker-tramp)
@@ -558,13 +584,20 @@
 
 (el-get-bundle recentf-ext)
 
+(eval-when-compile
 (el-get-bundle auto-save-buffers-enhanced
   :type github
-  :pkgname "kentaro/auto-save-buffers-enhanced")
+  :pkgname "kentaro/auto-save-buffers-enhanced"))
+(eval-and-compile
+  (add-to-list 'load-path (concat user-emacs-directory "el-get/auto-save-buffers-enhanced"))
+  (autoload 'auto-save-buffers-enhanced "auto-save-buffers-enhanced" t t))
+(eval-and-compile
+  (message "load-path: %s" load-path))
 (el-get-bundle scratch-pop in zk-phi/scratch-pop)
 (el-get-bundle gcmh)
 (define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
-(el-get 'sync)
+;; (eval-when-compile
+;;   (el-get 'sync))
 (ffap-bindings)
 (setq gc-cons-percentage 0.1)
 
