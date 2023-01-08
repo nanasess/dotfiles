@@ -410,7 +410,8 @@
   :pkgname "karthink/consult-dir")
 (el-get-bundle consult-tramp
   :type github
-  :pkgname "Ladicle/consult-tramp")
+  :pkgname "Ladicle/consult-tramp"
+  :branch "main")
 
 ;; Setting `init-consult.el` causes an error.
 (with-eval-after-load-feature 'consult
@@ -447,7 +448,8 @@
 
 (el-get-bundle copilot
   :type github
-  :pkgname "zerolfx/copilot.el")
+  :pkgname "zerolfx/copilot.el"
+  :branch "main")
 
 (el-get-bundle lsp-bridge
   :type github
