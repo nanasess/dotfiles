@@ -8,8 +8,9 @@
 (add-hook 'markdown-mode-hook
           #'(lambda()
               (require 'org)
-              (orgtbl-mode 1)
-              (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)))
+              ;; (orgtbl-mode 1)
+              ;; (add-hook 'after-save-hook 'cleanup-org-tables  nil 'make-it-local)
+              ))
 
 (with-eval-after-load 'org-table
   (add-hook 'markdown-mode-hook
