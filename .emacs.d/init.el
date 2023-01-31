@@ -556,6 +556,14 @@
 (el-get-bundle mermaid-mode
   :type github
   :pkgname "abrochard/mermaid-mode")
+(el-get-bundle fosi
+  :type github
+  :pkgname "hotoku/fosi"
+  :branch "main"
+  :load-path ("elisp/")
+  :compile ("elisp/fosi.el"))
+(autoload 'fosi "fosi" nil t)
+
 (el-get-bundle wakatime-mode)
 
 (el-get-bundle recentf-ext)
