@@ -328,7 +328,6 @@
   :type github
   :pkgname "emacsorphanage/tree-mode")
 (setenv "EDITOR" "emacsclient")
-(el-get-bundle emacs-async)
 (el-get-bundle transient)
 (el-get-bundle with-editor)
 (el-get-bundle magit)
@@ -367,12 +366,6 @@
              (setq howm-process-coding-system 'utf-8-unix)
              (setq howm-todo-menu-types "[-+~!]")
              (defun parse-howm-title () nil)))
-
-;; deprecated
-;; (el-get-bundle helm)
-;; (el-get-bundle helm-ls-git)
-;; (el-get-bundle helm-descbinds)
-;; (el-get-bundle helm-swoop)
 
 (el-get-bundle wgrep)
 (el-get-bundle consult
