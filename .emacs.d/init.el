@@ -118,6 +118,10 @@
 (global-set-key (kbd "C-M-k") 'previous-line)
 (global-set-key (kbd "C-M-h") 'backward-char)
 (global-set-key (kbd "C-M-l") 'forward-char)
+;; XXX PowerToys hack
+(global-set-key (kbd "C-x <right>") 'find-file)
+(global-set-key (kbd "C-x <end>") 'eval-last-sexp)
+
 (setq dired-bind-jump nil)
 (setq dired-dwim-target t)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
