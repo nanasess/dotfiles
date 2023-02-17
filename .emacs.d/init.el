@@ -522,7 +522,8 @@
     (setq mew-prog-est-update  (concat default-directory "bin/mewest"))
     (setq mew-prog-smew        (concat default-directory "bin/smew"))
     (setq mew-mbox-command     (concat default-directory "bin/incm")))
-  :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make") ("make" "clean")))
+  :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make") ("make" "clean"))
+  :load-path ("elisp/"))
 ;; (el-get-bundle twittering-mode)
 (el-get-bundle popwin)
 
