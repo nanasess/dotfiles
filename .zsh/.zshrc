@@ -8,6 +8,9 @@
 # Emacs style key binding
 bindkey -e
 
+bindkey  "^[[H"   beginning-of-line
+bindkey  "^[[F"   end-of-line
+
 # colors enabled
 autoload -U colors
 colors
