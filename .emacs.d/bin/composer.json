@@ -12,8 +12,9 @@
         "psy/psysh": "@stable",
         "phpactor/class-to-file": "*@dev",
         "jetbrains/phpstorm-stubs": "*@dev",
-        "microsoft/tolerant-php-parser": "dev-encapsed-as-string-literal@dev",
-        "phpactor/phpactor": "^2022.12"
+        "phpactor/tolerant-php-parser": "dev-main@dev",
+        "phpactor/phpactor": "^2023.01",
+        "friendsofphp/php-cs-fixer": "^3.14"
     },
     "repositories": [
         {
