@@ -4,7 +4,7 @@ if [ -x "/usr/local/bin/php" ]
 then
     PHP=/usr/local/bin/php
 fi
-PHP=$HOME/.phpbrew/php/php-8.2.0/bin/php
+PHP=$HOME/.phpbrew/php/php-8.1.6/bin/php
 ARGS="-d apc.enable_cli=1 \
     -d error_log=/tmp/php_error.log \
     -d opcache.enable_cli=1 \
