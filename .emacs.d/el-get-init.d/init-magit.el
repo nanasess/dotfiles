@@ -36,6 +36,7 @@
         (visit-bb-pull-request repo))))
 
   (setq magit-diff-refine-hunk t)
+  (add-to-list 'magit-process-password-prompt-regexps "^パスフレーズを入力: ?$")
   ;; visit PR for github or bitbucket repositories with "v"
   (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
   (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
