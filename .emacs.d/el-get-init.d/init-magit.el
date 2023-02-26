@@ -1,5 +1,5 @@
 (with-eval-after-load 'magit
-  (require 'forge)
+  ;; (require 'forge)
   ;; see https://stackoverflow.com/a/32914548/4956633
   (defun visit-gh-pull-request (repo)
     "Visit the current branch's PR on Github."
@@ -36,6 +36,7 @@
         (visit-bb-pull-request repo))))
 
   (setq magit-diff-refine-hunk t)
+  (add-to-list 'magit-process-password-prompt-regexps "^パスフレーズを入力: ?$")
   ;; visit PR for github or bitbucket repositories with "v"
   (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
   (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)

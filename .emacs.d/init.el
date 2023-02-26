@@ -336,7 +336,7 @@
 (el-get-bundle with-editor)
 (el-get-bundle magit)
 (el-get-bundle ghub)
-(el-get-bundle forge)
+;; (el-get-bundle forge)
 ;; (ghub-request "GET" "/user" nil
 ;;               :forge 'github
 ;;               :host "api.github.com"
