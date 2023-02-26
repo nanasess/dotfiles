@@ -59,10 +59,10 @@ if which docker > /dev/null; then
     export ONEDRIVE_DATA_DIR="$HOME/OneDrive - Skirnir Inc"
     export ONEDRIVE_GID=$(id -g)
     export ONEDRIVE_UID=$(id -u)
-    echo -n "running docker... "
-    docker run -d --rm -it --name onedrive -v $HOME/.config/onedrive:/onedrive/conf \
-    -v "${ONEDRIVE_DATA_DIR}:/onedrive/data" \
-    -e "ONEDRIVE_UID=${ONEDRIVE_UID}" \
-    -e "ONEDRIVE_GID=${ONEDRIVE_GID}" \
-    -e "ONEDRIVE_RESYNC=1" driveone/onedrive:latest
+    [ ! "$(docker ps -a | grep onedrive)" ] &&
+        docker run -d --rm -it --name onedrive -v $HOME/.config/onedrive:/onedrive/conf \
+               -v "${ONEDRIVE_DATA_DIR}:/onedrive/data" \
+               -e "ONEDRIVE_UID=${ONEDRIVE_UID}" \
+               -e "ONEDRIVE_GID=${ONEDRIVE_GID}" \
+               -e "ONEDRIVE_RESYNC=1" driveone/onedrive:latest > /dev/null
 fi
