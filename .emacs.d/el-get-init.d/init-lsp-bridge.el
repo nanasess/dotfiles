@@ -1,7 +1,17 @@
 (add-hook 'after-init-hook
           #'(lambda ()
+              ;; (setq lsp-bridge-enable-mode-line nil)
               (global-lsp-bridge-mode)))
 (with-eval-after-load 'lsp-bridge
+  (defun lsp-bridge--mode-line-format ()
+    "Compose the LSP-bridge's mode-line."
+    (setq-local mode-face
+                (if (lsp-bridge-epc-live-p lsp-bridge-epc-process)
+                    'lsp-bridge-alive-mode-line
+                  'lsp-bridge-kill-mode-line))
+
+    (when lsp-bridge-server
+      (propertize "橋"'face mode-face)))
   (setq lsp-bridge-php-lsp-server "phpactor")
   (setq lsp-bridge-python-lsp-server "pyright")
   (setq acm-candidate-match-function 'orderless-flex)

@@ -574,6 +574,7 @@
 (define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
 (el-get 'sync)
 (ffap-bindings)
+;; (setq epa-pinentry-mode 'loopback)
 (setq gc-cons-percentage 0.1)
 
 (custom-set-faces
