@@ -96,11 +96,11 @@
 (el-get-bundle ddskk
   :type github
   :pkgname "skk-dev/ddskk"
-  :info "doc/skk.info"
+  ;; :info "doc/skk.info"
   :load-path (".")
   :autoloads "skk-autoloads"
   :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
-           (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
+           ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
            ("cp" "skk-setup.el.in" "skk-setup.el")))
 
 ;;; global key-bindings
@@ -122,6 +122,31 @@
 ;; XXX PowerToys hack
 (global-set-key (kbd "C-x <right>") 'find-file)
 (global-set-key (kbd "C-x <end>") 'eval-last-sexp)
+
+;; https://www.reddit.com/r/emacs/comments/wx7ytn/comment/ilue3ka/
+(if (fboundp 'pixel-scroll-precision-mode)
+    (progn
+      (pixel-scroll-precision-mode 1)
+      (setq pixel-scroll-precision-use-momentum t)
+      (setq scroll-step 1)
+      (setq pixel-scroll-precision-large-scroll-height nil)
+      (setq pixel-scroll-precision-interpolation-factor 4.0)
+
+      (defun smooth-scroll-half-page-down ()
+        "Smooth scroll down"
+        (interactive)
+        (let ((half-height (/ (window-height) 2)))
+          (pixel-scroll-precision-interpolate (* 5 (- half-height)))))
+
+      (defun smooth-scroll-half-page-up ()
+        "Smooth scroll down"
+        (interactive)
+        (let ((half-height (/ (window-height) 2)))
+          (pixel-scroll-precision-interpolate (* 5 half-height))))
+
+      ;; scroll-up-command
+      (global-set-key (kbd "C-v") #'smooth-scroll-half-page-down)
+      (global-set-key (kbd "M-v") #'smooth-scroll-half-page-up)))
 
 (setq dired-bind-jump nil)
 (setq dired-dwim-target t)
@@ -301,6 +326,9 @@
 
 (global-set-key (kbd "C-z C-a") 'toggle-fullscreen)
 (global-set-key (kbd "C-z C-z") 'toggle-size-frame)
+;; (el-get-bundle elisp-tree-sitter)
+;; (global-tree-sitter-mode)
+;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
 (el-get-bundle terminal-here
   :type github
@@ -448,19 +476,19 @@
   :type github
   :pkgname "zerolfx/copilot.el"
   :branch "main")
-
+(setq x-gtk-resize-child-frames 'resize-mode)
 (el-get-bundle lsp-bridge
   :type github
   :pkgname "manateelazycat/lsp-bridge"
   :depends (posframe markdown-mode yasnippet orderless))
 
-(el-get-bundle eldoc-box
-  :type github
-  :pkgname "casouri/eldoc-box")
+;; (el-get-bundle eldoc-box
+;;   :type github
+;;   :pkgname "casouri/eldoc-box")
 
-(el-get-bundle js2-mode)
-(el-get-bundle json-mode)
-(el-get-bundle tide)
+;; (el-get-bundle js2-mode)
+;; (el-get-bundle json-mode)
+;; (el-get-bundle tide)
 
 (el-get-bundle web-mode
   :type github
@@ -528,8 +556,8 @@
 ;; (el-get-bundle twittering-mode)
 (el-get-bundle popwin)
 
-(el-get-bundle deferred)
-(el-get-bundle inertial-scroll in kiwanami/emacs-inertial-scroll)
+;; (el-get-bundle deferred)
+;; (el-get-bundle inertial-scroll in kiwanami/emacs-inertial-scroll)
 
 ;;; sqlite-dump
 ;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
