@@ -61,7 +61,8 @@
 (el-get-bundle compat
   :type github
   :pkgname "phikal/compat.el"
-  :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
+  :branch "main")
 (el-get-bundle awasira/cp5022x.el
   :name cp5022x)
 
@@ -421,7 +422,7 @@
    consult--source-project-recent-file
    ;;  ;; my/command-wrapping-consult       ;; disable auto previews inside my command
    ;;  ;; :preview-key '(:debounce 0.2 any) ;; Option 1: Delay preview
-   :preview-key (kbd "C-."))               ;; Option 2: Manual preview
+   :preview-key "C-.")               ;; Option 2: Manual preview
   )
 (el-get-bundle sudo-edit
   :type github
