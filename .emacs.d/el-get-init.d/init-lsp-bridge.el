@@ -14,6 +14,7 @@
       (propertize "橋"'face mode-face)))
   (setq lsp-bridge-php-lsp-server "phpactor")
   (setq lsp-bridge-python-lsp-server "pyright")
+  (setq lsp-bridge-csharp-lsp-server "omnisharp-dotnet")
   (setq acm-candidate-match-function 'orderless-flex)
   (setq lsp-bridge-enable-hover-diagnostic t)
   (setq acm-enable-doc-markdown-render t)
