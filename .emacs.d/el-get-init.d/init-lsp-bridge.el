@@ -1,4 +1,4 @@
-(add-hook 'after-init-hook
+(add-hook 'emacs-startup-hook
           #'(lambda ()
               ;; (setq lsp-bridge-enable-mode-line nil)
               (global-lsp-bridge-mode)))
