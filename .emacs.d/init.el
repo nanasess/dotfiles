@@ -504,7 +504,7 @@
   :type github
   :pkgname "emacs-php/php-mode"
   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-  :autoloads "lisp/php-mode-autoloads")
+  :load-path ("lisp"))
 (el-get-bundle php-runtime
   :type github
   :pkgname "emacs-php/php-runtime.el")
