@@ -361,10 +361,14 @@
   :type github
   :pkgname "emacsorphanage/tree-mode")
 (setenv "EDITOR" "emacsclient")
-(el-get-bundle transient)
-(el-get-bundle with-editor)
-(el-get-bundle magit)
-(el-get-bundle ghub)
+(el-get-bundle transient
+  :branch "main")
+(el-get-bundle with-editor
+  :branch "main")
+(el-get-bundle magit
+  :branch "main")
+(el-get-bundle ghub
+  :branch "main")
 ;; (el-get-bundle forge)
 ;; (ghub-request "GET" "/user" nil
 ;;               :forge 'github
