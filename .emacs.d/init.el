@@ -126,11 +126,12 @@
 ;; https://www.reddit.com/r/emacs/comments/wx7ytn/comment/ilue3ka/
 (if (fboundp 'pixel-scroll-precision-mode)
     (progn
+      (pixel-scroll-mode 1)
       (pixel-scroll-precision-mode 1)
       (setq pixel-scroll-precision-use-momentum t)
       (setq scroll-step 1)
       (setq pixel-scroll-precision-large-scroll-height nil)
-      (setq pixel-scroll-precision-interpolation-factor 4.0)
+      (setq pixel-scroll-precision-interpolation-factor 2.0)
 
       (defun smooth-scroll-half-page-down ()
         "Smooth scroll down"
