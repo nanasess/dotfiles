@@ -137,13 +137,13 @@
         "Smooth scroll down"
         (interactive)
         (let ((half-height (/ (window-height) 2)))
-          (pixel-scroll-precision-interpolate (* 5 (- half-height)))))
+          (pixel-scroll-precision-interpolate (* 8 (- half-height)))))
 
       (defun smooth-scroll-half-page-up ()
         "Smooth scroll down"
         (interactive)
         (let ((half-height (/ (window-height) 2)))
-          (pixel-scroll-precision-interpolate (* 5 half-height))))
+          (pixel-scroll-precision-interpolate (* 8 half-height))))
 
       ;; scroll-up-command
       (global-set-key (kbd "C-v") #'smooth-scroll-half-page-down)
