@@ -327,9 +327,12 @@
 
 (global-set-key (kbd "C-z C-a") 'toggle-fullscreen)
 (global-set-key (kbd "C-z C-z") 'toggle-size-frame)
-;; (el-get-bundle elisp-tree-sitter)
-;; (global-tree-sitter-mode)
-;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+
+(unless (featurep 'treesit)
+  (progn
+    (el-get-bundle elisp-tree-sitter)
+    (global-tree-sitter-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)))
 
 (el-get-bundle terminal-here
   :type github
@@ -561,8 +564,10 @@
 ;; (el-get-bundle twittering-mode)
 (el-get-bundle popwin)
 
-;; (el-get-bundle deferred)
-;; (el-get-bundle inertial-scroll in kiwanami/emacs-inertial-scroll)
+(unless (fboundp 'pixel-scroll-precision-mode)
+  (progn
+    (el-get-bundle deferred)
+    (el-get-bundle inertial-scroll in kiwanami/emacs-inertial-scroll)))
 
 ;;; sqlite-dump
 ;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
