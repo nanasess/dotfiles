@@ -328,7 +328,7 @@
 (global-set-key (kbd "C-z C-a") 'toggle-fullscreen)
 (global-set-key (kbd "C-z C-z") 'toggle-size-frame)
 
-(unless (featurep 'treesit)
+(unless (fboundp 'treesit-install-language-grammar)
   (progn
     (el-get-bundle elisp-tree-sitter)
     (global-tree-sitter-mode)
