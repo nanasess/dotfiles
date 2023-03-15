@@ -25,8 +25,10 @@
 (defun my/native-comp-packages ()
   (interactive)
   (native-compile-async "~/.emacs.d/init.el")
+  (native-compile-async "~/.emacs.d/init.d" 'recursively)
   (native-compile-async "~/.emacs.d/early-init.el")
   (native-compile-async "~/.emacs.d/el-get" 'recursively)
+  (native-compile-async "~/.emacs.d/el-get-init.d" 'recursively)
   (native-compile-async "~/.emacs.d/elpa" 'recursively))
 
 (provide 'early-init)
