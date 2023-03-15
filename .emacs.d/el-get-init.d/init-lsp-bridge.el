@@ -28,4 +28,5 @@
   (global-set-key (kbd "M-,") #'lsp-bridge-find-def-return)
   (global-set-key (kbd "M-n") #'lsp-bridge-diagnostic-jump-next)
   (global-set-key (kbd "M-p") #'lsp-bridge-diagnostic-jump-prev)
-  (global-set-key (kbd "C-z i") #'lsp-bridge-diagnostic-list))
+  (global-set-key (kbd "C-z i") #'lsp-bridge-diagnostic-list)
+  (define-key acm-mode-map (kbd "<tab>") nil))
