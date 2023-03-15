@@ -48,9 +48,9 @@
 (el-get-lock)
 (el-get-lock-unlock 'el-get 'seq)
 
-(el-get-bundle with-eval-after-load-feature-el
-  :type github
-  :pkgname "tarao/with-eval-after-load-feature-el")
+;; (el-get-bundle with-eval-after-load-feature-el
+;;   :type github
+;;   :pkgname "tarao/with-eval-after-load-feature-el")
 
 ;; (el-get-bundle esup)
 ;; (el-get-bundle! initchart
@@ -270,7 +270,7 @@
               (setq view-read-only t)
               (auto-revert-mode 1)
               (setq line-move-visual nil)))
-(with-eval-after-load-feature 'view
+(with-eval-after-load 'view
   (define-key view-mode-map (kbd "h") 'backward-word)
   (define-key view-mode-map (kbd "l") 'forward-word)
   (define-key view-mode-map (kbd "j") 'next-line)
@@ -380,7 +380,7 @@
 ;;               :username "nanasess"
 ;;               :auth 'forge)
 
-(with-eval-after-load-feature 'smerge-mode
+(with-eval-after-load 'smerge-mode
   (define-key smerge-mode-map (kbd "M-n") 'smerge-next)
   (define-key smerge-mode-map (kbd "M-p") 'smerge-prev))
 
@@ -448,7 +448,7 @@
   :branch "main")
 
 ;; Setting `init-consult.el` causes an error.
-(with-eval-after-load-feature 'consult
+(with-eval-after-load 'consult
   (consult-customize
    consult-ripgrep
    consult-grep
