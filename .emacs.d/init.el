@@ -231,7 +231,7 @@
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 (setq uniquify-ignore-buffers-re "*[^*]+*")
 
-(el-get-bundle emacs-async)
+;; (el-get-bundle emacs-async)
 (add-hook 'dired-mode-hook
           #'(lambda ()
               (local-set-key (kbd "C-t") 'other-window)
@@ -475,10 +475,10 @@
 (el-get-bundle f)
 (el-get-bundle ht)
 (el-get-bundle flycheck)
-(el-get-bundle treemacs
-  :type github
-  :pkgname "Alexander-Miller/treemacs"
-  :load-path ("src/elisp"))
+;; (el-get-bundle treemacs
+;;   :type github
+;;   :pkgname "Alexander-Miller/treemacs"
+;;   :load-path ("src/elisp"))
 
 (el-get-bundle copilot
   :type github

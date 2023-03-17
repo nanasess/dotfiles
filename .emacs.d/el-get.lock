@@ -3,7 +3,7 @@
         (fosi :checksum "f5f61d91545e18ebe879a53f1c679da6d3aa9c4e")
         (wakatime-mode :checksum "ef923829912c3854d230834f81083814b7c9d992")
         (compat :checksum "32e737b145fef05105e2bad4ca34ca41072e9569")
-        (lsp-bridge :checksum "54ca630a82ca48a1c7adb267fcd572c153d5f0fb")
+        (lsp-bridge :checksum "f101ba52961f572e879dd82f22b24ccc9a6e9a88")
         (copilot :checksum "bc91709ff2402b4e4c370b262af67ea199c297f3")
         (eldoc-box :checksum "5c067f5c195198ffd16df2f455da95e46cc8ce02")
         (eglot :checksum "e501275e06952889056268dabe08ccd0dbaf23e5")

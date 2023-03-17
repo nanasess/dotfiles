@@ -28,6 +28,7 @@
   (native-compile-async "~/.emacs.d/init.d" 'recursively)
   (native-compile-async "~/.emacs.d/early-init.el")
   (native-compile-async "~/.emacs.d/el-get" 'recursively)
+  (native-compile-async "~/.emacs.d/el-get/.loaddefs.el")
   (native-compile-async "~/.emacs.d/el-get-init.d" 'recursively)
   (native-compile-async "~/.emacs.d/elpa" 'recursively))
 
