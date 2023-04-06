@@ -130,8 +130,8 @@
       (pixel-scroll-precision-mode 1)
       (setq pixel-scroll-precision-use-momentum t)
       (setq scroll-step 1)
-      (setq pixel-scroll-precision-large-scroll-height nil)
-      (setq pixel-scroll-precision-interpolation-factor 2.0)
+      (setq pixel-scroll-precision-large-scroll-height 40.0)
+      (setq pixel-scroll-precision-interpolation-factor 1.0)
 
       (defun smooth-scroll-half-page-down ()
         "Smooth scroll down"
@@ -371,8 +371,8 @@
   :branch "main")
 (el-get-bundle magit
   :branch "main")
-(el-get-bundle ghub
-  :branch "main")
+;; (el-get-bundle ghub
+;;   :branch "main")
 ;; (el-get-bundle forge)
 ;; (ghub-request "GET" "/user" nil
 ;;               :forge 'github
@@ -497,6 +497,8 @@
 ;; (el-get-bundle js2-mode)
 ;; (el-get-bundle json-mode)
 ;; (el-get-bundle tide)
+(add-to-list 'auto-mode-alist '("\\.ts$" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-ts-mode))
 
 (el-get-bundle web-mode
   :type github
