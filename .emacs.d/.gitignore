@@ -29,7 +29,7 @@ server
 /.lsp-session-v1
 /lsp-cache
 /network-security.data
-/.cache/lsp/
+/.cache/*
 /.dap-breakpoints
 /.lsp-eslint-choices
 /eclipse.jdt.ls
@@ -40,3 +40,4 @@ server
 /eln-cache
 /forge-database.sqlite
 /history
+/tree-sitter

@@ -1,4 +1,7 @@
 (with-eval-after-load 'consult
+  (setq consult-narrow-key ">")
+  (setq consult-widen-key "<")
+  (setq consult-preview-key "M-.")
   (global-set-key (kbd "C-;") 'consult-buffer)
   (global-set-key [remap goto-line] 'consult-goto-line)
   (global-set-key (kbd "C-M-s") 'consult-line)

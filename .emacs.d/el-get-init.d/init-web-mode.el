@@ -4,7 +4,7 @@
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-(with-eval-after-load-feature 'web-mode
+(with-eval-after-load 'web-mode
   (setq web-mode-enable-block-face t)
                                         ;    (setq web-mode-enable-current-element-highlight nil)
   (setq web-mode-enable-current-column-highlight nil)

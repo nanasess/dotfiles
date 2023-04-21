@@ -1,4 +1,4 @@
-(add-hook 'after-init-hook
+(add-hook 'emacs-startup-hook
           #'(lambda ()
               ;; (setq lsp-bridge-enable-mode-line nil)
               (global-lsp-bridge-mode)))
@@ -14,6 +14,7 @@
       (propertize "橋"'face mode-face)))
   (setq lsp-bridge-php-lsp-server "phpactor")
   (setq lsp-bridge-python-lsp-server "pyright")
+  (setq lsp-bridge-csharp-lsp-server "omnisharp-dotnet")
   (setq acm-candidate-match-function 'orderless-flex)
   (setq lsp-bridge-enable-hover-diagnostic t)
   (setq acm-enable-doc-markdown-render t)
@@ -27,4 +28,5 @@
   (global-set-key (kbd "M-,") #'lsp-bridge-find-def-return)
   (global-set-key (kbd "M-n") #'lsp-bridge-diagnostic-jump-next)
   (global-set-key (kbd "M-p") #'lsp-bridge-diagnostic-jump-prev)
-  (global-set-key (kbd "C-z i") #'lsp-bridge-diagnostic-list))
+  (global-set-key (kbd "C-z i") #'lsp-bridge-diagnostic-list)
+  (define-key acm-mode-map (kbd "<tab>") nil))

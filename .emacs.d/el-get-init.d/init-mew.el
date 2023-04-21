@@ -1,2 +1,2 @@
-(with-eval-after-load-feature 'mew
+(with-eval-after-load 'mew
   (require 'mm-version))

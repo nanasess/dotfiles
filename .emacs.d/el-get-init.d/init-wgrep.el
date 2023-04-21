@@ -1,2 +1,2 @@
-(with-eval-after-load-feature 'wgrep
+(with-eval-after-load 'wgrep
   (setq wgrep-enable-key "r"))

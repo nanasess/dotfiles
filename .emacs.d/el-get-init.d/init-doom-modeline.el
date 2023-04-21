@@ -1,5 +1,5 @@
-(with-eval-after-load-feature 'doom-modeline-core
-  (with-eval-after-load-feature 'all-the-icons
+(with-eval-after-load 'doom-modeline-core
+  (with-eval-after-load 'all-the-icons
     (add-hook 'doom-modeline-mode-hook
               #'(lambda ()
                   (setf (alist-get "\\.php$" all-the-icons-icon-alist nil nil #'equal)
@@ -15,4 +15,4 @@
                     '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker bar)))))
   (setq doom-modeline-vcs-max-length 999)
   (setq doom-modeline-buffer-file-name-style 'buffer-name))
-(add-hook 'after-init-hook 'doom-modeline-mode)
+(add-hook 'emacs-startup-hook 'doom-modeline-mode)

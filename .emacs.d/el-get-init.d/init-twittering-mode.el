@@ -1,4 +1,4 @@
-(with-eval-after-load-feature 'twittering-mode
+(with-eval-after-load 'twittering-mode
   (setq twittering-status-format "%RT{%FACE[bold]{RT}}%i %s,  %@: %FACE[error]{%FIELD-IF-NONZERO[❤ %d]{favorite_count}}  %FACE[warning]{%FIELD-IF-NONZERO[↺ %d]{retweet_count}}\n%FOLD[  ]{%T // from %f%L%r%R%QT{\n+----\n%FOLD[|]{%i %s,  %@:\n%FOLD[  ]{%T // from %f%L%r%R}}\n+----}}\n ")
   (define-key twittering-mode-map
     (kbd "s") 'twittering-current-timeline)

@@ -1,5 +1,5 @@
 (add-hook
- 'after-init-hook
+ 'emacs-startup-hook
  #'(lambda ()
      (require 'doom-themes)
      ;; use solarized.

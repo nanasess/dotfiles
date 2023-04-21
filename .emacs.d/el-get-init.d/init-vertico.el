@@ -1,4 +1,4 @@
-(add-hook 'after-init-hook
+(add-hook 'emacs-startup-hook
           #'(lambda ()
               (vertico-mode)
               (marginalia-mode)

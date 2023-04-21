@@ -48,9 +48,9 @@
 (el-get-lock)
 (el-get-lock-unlock 'el-get 'seq)
 
-(el-get-bundle with-eval-after-load-feature-el
-  :type github
-  :pkgname "tarao/with-eval-after-load-feature-el")
+;; (el-get-bundle with-eval-after-load-feature-el
+;;   :type github
+;;   :pkgname "tarao/with-eval-after-load-feature-el")
 
 ;; (el-get-bundle esup)
 ;; (el-get-bundle! initchart
@@ -61,7 +61,8 @@
 (el-get-bundle compat
   :type github
   :pkgname "phikal/compat.el"
-  :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
+  :branch "main")
 (el-get-bundle awasira/cp5022x.el
   :name cp5022x)
 
@@ -95,11 +96,11 @@
 (el-get-bundle ddskk
   :type github
   :pkgname "skk-dev/ddskk"
-  :info "doc/skk.info"
+  ;; :info "doc/skk.info"
   :load-path (".")
   :autoloads "skk-autoloads"
   :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
-           (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
+           ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
            ("cp" "skk-setup.el.in" "skk-setup.el")))
 
 ;;; global key-bindings
@@ -121,6 +122,32 @@
 ;; XXX PowerToys hack
 (global-set-key (kbd "C-x <right>") 'find-file)
 (global-set-key (kbd "C-x <end>") 'eval-last-sexp)
+
+;; https://www.reddit.com/r/emacs/comments/wx7ytn/comment/ilue3ka/
+(if (fboundp 'pixel-scroll-precision-mode)
+    (progn
+      (pixel-scroll-mode 1)
+      (pixel-scroll-precision-mode 1)
+      (setq pixel-scroll-precision-use-momentum t)
+      (setq scroll-step 1)
+      (setq pixel-scroll-precision-large-scroll-height 40.0)
+      (setq pixel-scroll-precision-interpolation-factor 1.0)
+
+      (defun smooth-scroll-half-page-down ()
+        "Smooth scroll down"
+        (interactive)
+        (let ((half-height (/ (window-height) 2)))
+          (pixel-scroll-precision-interpolate (* 8 (- half-height)))))
+
+      (defun smooth-scroll-half-page-up ()
+        "Smooth scroll down"
+        (interactive)
+        (let ((half-height (/ (window-height) 2)))
+          (pixel-scroll-precision-interpolate (* 8 half-height))))
+
+      ;; scroll-up-command
+      (global-set-key (kbd "C-v") #'smooth-scroll-half-page-down)
+      (global-set-key (kbd "M-v") #'smooth-scroll-half-page-up)))
 
 (setq dired-bind-jump nil)
 (setq dired-dwim-target t)
@@ -204,7 +231,7 @@
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 (setq uniquify-ignore-buffers-re "*[^*]+*")
 
-(el-get-bundle emacs-async)
+;; (el-get-bundle emacs-async)
 (add-hook 'dired-mode-hook
           #'(lambda ()
               (local-set-key (kbd "C-t") 'other-window)
@@ -243,7 +270,7 @@
               (setq view-read-only t)
               (auto-revert-mode 1)
               (setq line-move-visual nil)))
-(with-eval-after-load-feature 'view
+(with-eval-after-load 'view
   (define-key view-mode-map (kbd "h") 'backward-word)
   (define-key view-mode-map (kbd "l") 'forward-word)
   (define-key view-mode-map (kbd "j") 'next-line)
@@ -301,6 +328,12 @@
 (global-set-key (kbd "C-z C-a") 'toggle-fullscreen)
 (global-set-key (kbd "C-z C-z") 'toggle-size-frame)
 
+(unless (fboundp 'treesit-install-language-grammar)
+  (progn
+    (el-get-bundle elisp-tree-sitter)
+    (global-tree-sitter-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)))
+
 (el-get-bundle terminal-here
   :type github
   :pkgname "davidshepherd7/terminal-here")
@@ -332,10 +365,14 @@
   :type github
   :pkgname "emacsorphanage/tree-mode")
 (setenv "EDITOR" "emacsclient")
-(el-get-bundle transient)
-(el-get-bundle with-editor)
-(el-get-bundle magit)
-(el-get-bundle ghub)
+(el-get-bundle transient
+  :branch "main")
+(el-get-bundle with-editor
+  :branch "main")
+(el-get-bundle magit
+  :branch "main")
+;; (el-get-bundle ghub
+;;   :branch "main")
 ;; (el-get-bundle forge)
 ;; (ghub-request "GET" "/user" nil
 ;;               :forge 'github
@@ -343,7 +380,7 @@
 ;;               :username "nanasess"
 ;;               :auth 'forge)
 
-(with-eval-after-load-feature 'smerge-mode
+(with-eval-after-load 'smerge-mode
   (define-key smerge-mode-map (kbd "M-n") 'smerge-next)
   (define-key smerge-mode-map (kbd "M-p") 'smerge-prev))
 
@@ -411,7 +448,7 @@
   :branch "main")
 
 ;; Setting `init-consult.el` causes an error.
-(with-eval-after-load-feature 'consult
+(with-eval-after-load 'consult
   (consult-customize
    consult-ripgrep
    consult-grep
@@ -421,7 +458,7 @@
    consult--source-project-recent-file
    ;;  ;; my/command-wrapping-consult       ;; disable auto previews inside my command
    ;;  ;; :preview-key '(:debounce 0.2 any) ;; Option 1: Delay preview
-   :preview-key (kbd "C-."))               ;; Option 2: Manual preview
+   :preview-key "C-.")               ;; Option 2: Manual preview
   )
 (el-get-bundle sudo-edit
   :type github
@@ -438,28 +475,30 @@
 (el-get-bundle f)
 (el-get-bundle ht)
 (el-get-bundle flycheck)
-(el-get-bundle treemacs
-  :type github
-  :pkgname "Alexander-Miller/treemacs"
-  :load-path ("src/elisp"))
+;; (el-get-bundle treemacs
+;;   :type github
+;;   :pkgname "Alexander-Miller/treemacs"
+;;   :load-path ("src/elisp"))
 
 (el-get-bundle copilot
   :type github
   :pkgname "zerolfx/copilot.el"
   :branch "main")
-
+(setq x-gtk-resize-child-frames 'resize-mode)
 (el-get-bundle lsp-bridge
   :type github
   :pkgname "manateelazycat/lsp-bridge"
   :depends (posframe markdown-mode yasnippet orderless))
 
-(el-get-bundle eldoc-box
-  :type github
-  :pkgname "casouri/eldoc-box")
+;; (el-get-bundle eldoc-box
+;;   :type github
+;;   :pkgname "casouri/eldoc-box")
 
-(el-get-bundle js2-mode)
-(el-get-bundle json-mode)
-(el-get-bundle tide)
+;; (el-get-bundle js2-mode)
+;; (el-get-bundle json-mode)
+;; (el-get-bundle tide)
+(add-to-list 'auto-mode-alist '("\\.ts$" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-ts-mode))
 
 (el-get-bundle web-mode
   :type github
@@ -471,7 +510,7 @@
   :type github
   :pkgname "emacs-php/php-mode"
   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-  :autoloads "lisp/php-mode-autoloads")
+  :load-path ("lisp"))
 (el-get-bundle php-runtime
   :type github
   :pkgname "emacs-php/php-runtime.el")
@@ -527,8 +566,10 @@
 ;; (el-get-bundle twittering-mode)
 (el-get-bundle popwin)
 
-(el-get-bundle deferred)
-(el-get-bundle inertial-scroll in kiwanami/emacs-inertial-scroll)
+(unless (fboundp 'pixel-scroll-precision-mode)
+  (progn
+    (el-get-bundle deferred)
+    (el-get-bundle inertial-scroll in kiwanami/emacs-inertial-scroll)))
 
 ;;; sqlite-dump
 ;;; original code was http://download.tuxfamily.org/user42/sqlite-dump.el
