@@ -603,6 +603,8 @@
   :compile ("elisp/fosi.el"))
 (autoload 'fosi "fosi" nil t)
 
+(el-get-bundle terraform-mode)
+
 (el-get-bundle wakatime-mode)
 
 (el-get-bundle recentf-ext)

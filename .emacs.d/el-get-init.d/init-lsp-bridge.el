@@ -3,6 +3,13 @@
               ;; (setq lsp-bridge-enable-mode-line nil)
               (global-lsp-bridge-mode)))
 (with-eval-after-load 'lsp-bridge
+  (defun sm-try-smerge ()
+    "Searches for merge conflict markers and disables lsp-bridge-mode if found."
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward "^<<<<<<< " nil t)
+  	(lsp-bridge-mode -1))))
+  (add-hook 'lsp-bridge-mode-hook 'sm-try-smerge t)
   (defun lsp-bridge--mode-line-format ()
     "Compose the LSP-bridge's mode-line."
     (setq-local mode-face
