@@ -490,15 +490,11 @@
   :pkgname "manateelazycat/lsp-bridge"
   :depends (posframe markdown-mode yasnippet orderless))
 
-;; (el-get-bundle eldoc-box
-;;   :type github
-;;   :pkgname "casouri/eldoc-box")
-
-;; (el-get-bundle js2-mode)
-;; (el-get-bundle json-mode)
-;; (el-get-bundle tide)
 (add-to-list 'auto-mode-alist '("\\.ts$" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-ts-mode))
+(el-get-bundle jq-mode
+  :type github
+  :pkgname "ljos/jq-mode")
 
 (el-get-bundle web-mode
   :type github
