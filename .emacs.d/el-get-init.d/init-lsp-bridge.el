@@ -3,6 +3,8 @@
               ;; (setq lsp-bridge-enable-mode-line nil)
               (global-lsp-bridge-mode)))
 (with-eval-after-load 'lsp-bridge
+  (push '(terraform-mode . "terraform-lsp") lsp-bridge-single-lang-server-mode-list)
+  (push 'terraform-mode lsp-bridge-default-mode-hooks)
   (defun sm-try-smerge ()
     "Searches for merge conflict markers and disables lsp-bridge-mode if found."
     (save-excursion
@@ -25,6 +27,7 @@
   (setq acm-candidate-match-function 'orderless-flex)
   (setq lsp-bridge-enable-hover-diagnostic t)
   (setq acm-enable-doc-markdown-render t)
+
   ;; (setq lsp-bridge-enable-log t)
   ;; (setq lsp-bridge-enable-debug t)
   ;; (setq lsp-bridge-signature-show-function 'lsp-bridge-signature-posframe)
