@@ -27,6 +27,8 @@
   (setq acm-candidate-match-function 'orderless-flex)
   (setq lsp-bridge-enable-hover-diagnostic t)
   (setq acm-enable-doc-markdown-render t)
+  (setq acm-enable-copilot t)
+  (setq acm-backend-copilot-node-path "/usr/local/bin/node")
 
   ;; (setq lsp-bridge-enable-log t)
   ;; (setq lsp-bridge-enable-debug t)
