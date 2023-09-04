@@ -23,9 +23,9 @@ jobs:
         os: [ macos-latest ]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Checkout Emacs
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: nanasess/emacs-package
         ref: for-carbon-emacs
@@ -61,7 +61,7 @@ jobs:
         os: [ ubuntu-latest ]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: build emacs
       run: |
          sudo add-apt-repository ppa:kelleyk/emacs
