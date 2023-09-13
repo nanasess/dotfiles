@@ -63,6 +63,8 @@
 (setq mew-use-cached-passwd t)
 (setq mew-passwd-lifetime 30)
 
+(setq mew-charset-m17n "utf-8")
+
 ;; dnd
 (define-key mew-draft-mode-map [ns-drag-file]
   (lambda ()
