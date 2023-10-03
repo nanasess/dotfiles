@@ -202,10 +202,10 @@ commander@^10.0.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-10.0.0.tgz#71797971162cd3cf65f0b9d24eb28f8d303acdf1"
   integrity sha512-zS5PnTI22FIRM6ylNW8G4Ap0IEOyk62fhLSD0+uHRT9McRCLGpkVNvao4bjimpK/GShynyQkFFxHhwMcETmduA==
 
-copilot-node-server@^1.10.2:
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/copilot-node-server/-/copilot-node-server-1.10.2.tgz#431f4b28c517e10130f28d818b1b181152748e09"
-  integrity sha512-3u9x/EN8+18O9iq5qofOVMwsscnIG+XCC6aan0cPXZD79LYp22UCp7rM15o3Qz+VIgZV9BgRikX9PHWpndbhuw==
+copilot-node-server@^1.10.3:
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/copilot-node-server/-/copilot-node-server-1.10.3.tgz#a686dd3f5552928ed1c1254340c8e43a3fe55433"
+  integrity sha512-ON9hDmGD60Mx2GIDlgiciVlKJFZW80cBrSvqJox91vQjnOnL3Oz/azEba3jI/qkUNQrm2f/e5I9ty2RvUwDahg==
 
 core-js@^3.20.1:
   version "3.26.0"
