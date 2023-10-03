@@ -5,7 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "@mermaid-js/mermaid-cli": "^10",
-    "bash-language-server": "^3.1.0",
+    "bash-language-server": "^5.0.0",
     "copilot-node-server": "^1.10.2",
     "dockerfile-language-server-nodejs": "^0.9.0",
     "typescript": "^4.8.4",
