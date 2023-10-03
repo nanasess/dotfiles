@@ -17,3 +17,17 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    allow:
+      - dependency-type: "all"
+
+  - package-ecosystem: "npm"
+    directory: "/.emacs.d/bin"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pip"
+    directory: "/.emacs.d/bin"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: "all"
