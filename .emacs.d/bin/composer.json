@@ -12,7 +12,7 @@
         "psy/psysh": "@stable",
         "phpactor/class-to-file": "*@dev",
         "jetbrains/phpstorm-stubs": "*@dev",
-        "phpactor/tolerant-php-parser": "dev-main@dev",
+        "phpactor/tolerant-php-parser": "*@dev",
         "phpactor/phpactor": "2023.09.24",
         "friendsofphp/php-cs-fixer": "^3.14"
     },
