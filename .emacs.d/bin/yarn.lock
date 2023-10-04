@@ -24,9 +24,9 @@
     js-tokens "^4.0.0"
 
 "@mermaid-js/mermaid-cli@^10":
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/@mermaid-js/mermaid-cli/-/mermaid-cli-10.0.2.tgz#7f71c4a0b1177a96ecb459da51cb663523624232"
-  integrity sha512-dz5ye9wWJjL3jtWtL6pYeKwo74CeCbn8SpvxKEH4Wuc0esDvSpxC+J/Wlsbd6BKvMzLN2J+5voy03kto0J7mOg==
+  version "10.4.0"
+  resolved "https://registry.yarnpkg.com/@mermaid-js/mermaid-cli/-/mermaid-cli-10.4.0.tgz#84cebe965427bdd778dd68b8e6ccbae1fbabc44b"
+  integrity sha512-sXohfGD6xgR8VEKvLdvSCndFaFNVTlyXjgZlJ3x8U3/J0V2VTfLIZO94Gt8KUPUccFWci8dRYDGG0fQerB+aIA==
   dependencies:
     chalk "^5.0.1"
     commander "^10.0.0"
