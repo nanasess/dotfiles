@@ -41,5 +41,6 @@ server
 /forge-database.sqlite
 /history
 /tree-sitter
+!/tree-sitter/README.md
 /lib
 /lib64
