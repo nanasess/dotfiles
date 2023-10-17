@@ -763,10 +763,15 @@ typescript-language-server@^3.3.2:
   resolved "https://registry.yarnpkg.com/typescript-language-server/-/typescript-language-server-3.3.2.tgz#4547a6098b5708c1e3bd2c5c17ad698e3d6a97a4"
   integrity sha512-jzun53CIkTbpAki0nP+hk5baGW+86SNNlVhyIj2ZUy45zUkCnmoetWuAtfRRQYrlIr8x4QB3ymGJPuwDQSd/ew==
 
-typescript@^4.0.5, typescript@^4.8.4:
+typescript@^4.0.5:
   version "4.8.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.4.tgz#c464abca159669597be5f96b8943500b238e60e6"
   integrity sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==
+
+typescript@^5.2.2:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.2.2.tgz#5ebb5e5a5b75f085f22bc3f8460fba308310fa78"
+  integrity sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==
 
 unbzip2-stream@1.4.3:
   version "1.4.3"
