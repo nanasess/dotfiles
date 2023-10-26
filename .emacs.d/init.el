@@ -138,8 +138,28 @@
       (setq pixel-scroll-precision-interpolation-total-time 0.25)
       (pixel-scroll-precision-mode t)
 
-      (global-set-key (kbd "C-v") 'pixel-scroll-interpolate-down)
-      (global-set-key (kbd "M-v") 'pixel-scroll-interpolate-up)))
+      (defun +pixel-scroll-interpolate-down ()
+        "Interpolate a scroll downwards by one page."
+        (interactive)
+        (if pixel-scroll-precision-interpolate-page
+            (pixel-scroll-precision-interpolate (- (/ (window-text-height nil t) 2))
+                                                ;; Don't use an
+                                                ;; interpolation factor,
+                                                ;; since we want exactly 1
+                                                ;; page to be scrolled.
+                                                nil 1)
+          (cua-scroll-up)))
+
+      (defun +pixel-scroll-interpolate-up ()
+        "Interpolate a scroll upwards by one page."
+        (interactive)
+        (if pixel-scroll-precision-interpolate-page
+            (pixel-scroll-precision-interpolate (/ (window-text-height nil t) 2)
+                                                nil 1)
+          (cua-scroll-down)))
+
+      (global-set-key (kbd "C-v") '+pixel-scroll-interpolate-down)
+      (global-set-key (kbd "M-v") '+pixel-scroll-interpolate-up)))
 
 (setq dired-bind-jump nil)
 (setq dired-dwim-target t)
@@ -568,10 +588,10 @@
 (defvar mkpasswd-command
   "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
 (autoload 'mkpasswd "mkpasswd" nil t)
-(el-get-bundle emacs-id-manager
-  :type github
-  :autoloads "id-manager"
-  :pkgname "nanasess/emacs-id-manager")
+;; (el-get-bundle emacs-id-manager
+;;   :type github
+;;   :autoloads "id-manager"
+;;   :pkgname "nanasess/emacs-id-manager")
 
 (el-get-bundle nginx-mode)
 (el-get-bundle po-mode)
