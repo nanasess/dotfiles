@@ -758,10 +758,10 @@ turndown@7.1.2:
   dependencies:
     domino "^2.1.6"
 
-typescript-language-server@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/typescript-language-server/-/typescript-language-server-4.0.0.tgz#93c753f3caddbe312cc3c0b3c52f19410420a857"
-  integrity sha512-u6GLfWtHzOfGNpn0XuUYFg8Jv3oXWKzY6o5/Lt6LbWE6Ux965z2lP+vM0AN8Z2EobnlrDzzdcKusUx46j2eP3A==
+typescript-language-server@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/typescript-language-server/-/typescript-language-server-4.1.0.tgz#0c243adeeb816705ca72a67941c3af1592d0d9f8"
+  integrity sha512-VbEw1U0jKKQ7pIYRtfQzBl7BroRBWSuS8x483jY0n4sQc0A8P7PgeSb3OycRbaj1rkfsTXZhsxKmsRYmoXAbdw==
 
 typescript@^4.0.5:
   version "4.8.4"
