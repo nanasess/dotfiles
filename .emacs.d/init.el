@@ -539,7 +539,6 @@
 )
 
 (el-get-bundle dockerfile-mode)
-(el-get-bundle docker-tramp)
 
 (add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
 (load "mew-config" t t)
@@ -576,10 +575,6 @@
 (defvar mkpasswd-command
   "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
 (autoload 'mkpasswd "mkpasswd" nil t)
-(el-get-bundle emacs-id-manager
-  :type github
-  :autoloads "id-manager"
-  :pkgname "nanasess/emacs-id-manager")
 
 (el-get-bundle nginx-mode)
 (el-get-bundle po-mode)
