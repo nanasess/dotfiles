@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@emacs-eask/cli": "^0.8.6",
     "@mermaid-js/mermaid-cli": "^10",
     "bash-language-server": "^5.0.0",
     "copilot-node-server": "^1.11.4",
