@@ -28,8 +28,8 @@
     yargs "^17.0.0"
 
 "@mermaid-js/mermaid-cli@^10":
-  version "10.0.2"
-  resolved "https://registry.npmjs.org/@mermaid-js/mermaid-cli/-/mermaid-cli-10.0.2.tgz"
+  version "10.6.1"
+  resolved "https://registry.yarnpkg.com/@mermaid-js/mermaid-cli/-/mermaid-cli-10.6.1.tgz#4b3a6e7aa4069e7da0da2d21129696c44931df2a"
   dependencies:
     chalk "^5.0.1"
     commander "^10.0.0"
