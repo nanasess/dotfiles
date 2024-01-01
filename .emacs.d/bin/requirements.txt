@@ -1,6 +1,6 @@
 epc==0.0.5
 orjson==3.9.7
 paramiko==3.3.1
-rapidfuzz==3.3.1
+rapidfuzz==3.6.1
 sexpdata==1.0.1
 six==1.16.0
