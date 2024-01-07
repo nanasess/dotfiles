@@ -13,7 +13,7 @@
         "phpactor/class-to-file": "*@dev",
         "jetbrains/phpstorm-stubs": "*@dev",
         "phpactor/tolerant-php-parser": "*@dev",
-        "phpactor/phpactor": "2023.09.24",
+        "phpactor/phpactor": "^2023.12",
         "friendsofphp/php-cs-fixer": "^3.14"
     },
     "repositories": [
