@@ -514,11 +514,16 @@
   :branch "eccube-engine")
 (el-get-bundle yaml-mode)
 
-(el-get-bundle php-mode
+;; (el-get-bundle php-mode
+;;   :type github
+;;   :pkgname "emacs-php/php-mode"
+;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
+;;   :load-path ("lisp"))
+(el-get-bundle php-ts-mode
   :type github
-  :pkgname "emacs-php/php-mode"
-  :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-  :load-path ("lisp"))
+  :pkgname "emacs-php/php-ts-mode"
+  :branch "master"
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
 (el-get-bundle php-runtime
   :type github
   :pkgname "emacs-php/php-runtime.el")
