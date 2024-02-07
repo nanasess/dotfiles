@@ -44,3 +44,6 @@ server
 !/tree-sitter/README.md
 /lib
 /lib64
+/bin/bundle/
+/node_modules/
+/yarn.lock
