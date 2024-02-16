@@ -58,7 +58,7 @@
         (mew :checksum "97e21004fedf303b74f42aacd7f33a1820ea9ad7")
         (dockerfile-mode :checksum "52c6c00da1d31c0b6c29c74335b3af63ed6bf06c")
         (lsp-haskell :checksum "485c1148ce4d27030bb95b21c7289809294e7d31")
-        (haskell-mode :checksum "20d4e2300302a9af673e82d0185d3f489bfb0f59")
+        (haskell-mode :checksum "43b4036bf02b02de75643a1a2a31e28efac1c50b")
         (csharp-mode :checksum "02c61c219b2c22491eff9b7315fed661fab423d4")
         (csv-mode :checksum "db8a3e3aef31d35ce5bd1fd09127a3bbfdd0c340")
         (groovy-mode :checksum "c612ac1e9f742856914ad6e8eb9e9dc169f489ab")
