@@ -1,3 +1,0 @@
-#!/bin/sh
-## see https://github.com/haskell/haskell-language-server#visual-studio-code
-~/Library/Application\ Support/Code/User/globalStorage/haskell.haskell/haskell-language-server-1.2.0-darwin-8.10.4 "$@"
