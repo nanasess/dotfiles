@@ -49,7 +49,7 @@ export WEBKIT_FORCE_SANDBOX=0
 # then
 #     sudo ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix
 # fi
-if which xrdb > /dev/null; then xrdb -merge ~/.Xresources; fi
+# if which xrdb > /dev/null; then xrdb -merge ~/.Xresources; fi
 if [ -z "$WAYLAND_DISPLAY" ]
 then
     if which setxkbmap > /dev/null; then setxkbmap -layout us; fi

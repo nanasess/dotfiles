@@ -82,6 +82,8 @@
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
                    "/opt/local/sbin" "/opt/local/bin" "/usr/gnu/bin"
                    ;; (expand-file-name "~/Applications/Emacs.app/Contents/Resources/bin")
+                   (expand-file-name "~/.ghcup/bin")
+                   (expand-file-name "~/.cabal/bin")
                    (expand-file-name "~/bin")
                    (expand-file-name "~/.emacs.d/bin")
                    (expand-file-name "~/.emacs.d/el-get/mew/bin")
@@ -514,11 +516,16 @@
   :branch "eccube-engine")
 (el-get-bundle yaml-mode)
 
-(el-get-bundle php-mode
+;; (el-get-bundle php-mode
+;;   :type github
+;;   :pkgname "emacs-php/php-mode"
+;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
+;;   :load-path ("lisp"))
+(el-get-bundle php-ts-mode
   :type github
-  :pkgname "emacs-php/php-mode"
-  :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-  :load-path ("lisp"))
+  :pkgname "emacs-php/php-ts-mode"
+  :branch "master"
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
 (el-get-bundle php-runtime
   :type github
   :pkgname "emacs-php/php-runtime.el")

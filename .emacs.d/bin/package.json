@@ -4,14 +4,14 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@emacs-eask/cli": "^0.9.1",
+    "@emacs-eask/cli": "^0.9.5",
     "@mermaid-js/mermaid-cli": "^10",
-    "bash-language-server": "^5.0.0",
+    "bash-language-server": "^5.1.2",
     "copilot-node-server": "^1.13.0",
     "dockerfile-language-server-nodejs": "^0.11.0",
     "typescript": "^5.3.3",
-    "typescript-language-server": "^4.2.0",
-    "vscode-langservers-extracted": "^4.5.0",
+    "typescript-language-server": "^4.3.3",
+    "vscode-langservers-extracted": "^4.8.0",
     "yaml-language-server": "^1.14.0"
   }
 }
