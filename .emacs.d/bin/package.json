@@ -10,7 +10,7 @@
     "copilot-node-server": "^1.13.0",
     "dockerfile-language-server-nodejs": "^0.11.0",
     "typescript": "^5.2.2",
-    "typescript-language-server": "^4.2.0",
+    "typescript-language-server": "^4.3.3",
     "vscode-langservers-extracted": "^4.8.0",
     "yaml-language-server": "^1.14.0"
   }
