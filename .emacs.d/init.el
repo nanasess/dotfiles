@@ -82,6 +82,8 @@
 (dolist (dir (list "/sbin" "/usr/sbin" "/bin" "/usr/bin" "/usr/local/bin"
                    "/opt/local/sbin" "/opt/local/bin" "/usr/gnu/bin"
                    ;; (expand-file-name "~/Applications/Emacs.app/Contents/Resources/bin")
+                   (expand-file-name "~/.ghcup/bin")
+                   (expand-file-name "~/.cabal/bin")
                    (expand-file-name "~/bin")
                    (expand-file-name "~/.emacs.d/bin")
                    (expand-file-name "~/.emacs.d/el-get/mew/bin")
@@ -123,31 +125,43 @@
 (global-set-key (kbd "C-x <right>") 'find-file)
 (global-set-key (kbd "C-x <end>") 'eval-last-sexp)
 
-;; https://www.reddit.com/r/emacs/comments/wx7ytn/comment/ilue3ka/
+;; https://www.reddit.com/r/emacs/comments/13accue/emacs_29_pixelscrollprecisionmode_seems_to_break/
 (if (fboundp 'pixel-scroll-precision-mode)
     (progn
-      (pixel-scroll-mode 1)
-      (pixel-scroll-precision-mode 1)
-      (setq pixel-scroll-precision-use-momentum t)
       (setq scroll-step 1)
-      (setq pixel-scroll-precision-large-scroll-height 40.0)
+      (setq-default scroll-conservatively 10000)
+      (setq-default scroll-margin 5)
+
+      (setq pixel-scroll-precision-use-momentum t)
+      (setq pixel-scroll-precision-interpolate-mice t)
+      (setq pixel-scroll-precision-large-scroll-height 10.0)
       (setq pixel-scroll-precision-interpolation-factor 1.0)
+      (setq pixel-scroll-precision-interpolate-page t)
+      (setq pixel-scroll-precision-interpolation-total-time 0.25)
+      (pixel-scroll-precision-mode t)
 
-      (defun smooth-scroll-half-page-down ()
-        "Smooth scroll down"
+      (defun +pixel-scroll-interpolate-down ()
+        "Interpolate a scroll downwards by one page."
         (interactive)
-        (let ((half-height (/ (window-height) 2)))
-          (pixel-scroll-precision-interpolate (* 8 (- half-height)))))
+        (if pixel-scroll-precision-interpolate-page
+            (pixel-scroll-precision-interpolate (- (/ (window-text-height nil t) 2))
+                                                ;; Don't use an
+                                                ;; interpolation factor,
+                                                ;; since we want exactly 1
+                                                ;; page to be scrolled.
+                                                nil 1)
+          (cua-scroll-up)))
 
-      (defun smooth-scroll-half-page-up ()
-        "Smooth scroll down"
+      (defun +pixel-scroll-interpolate-up ()
+        "Interpolate a scroll upwards by one page."
         (interactive)
-        (let ((half-height (/ (window-height) 2)))
-          (pixel-scroll-precision-interpolate (* 8 half-height))))
+        (if pixel-scroll-precision-interpolate-page
+            (pixel-scroll-precision-interpolate (/ (window-text-height nil t) 2)
+                                                nil 1)
+          (cua-scroll-down)))
 
-      ;; scroll-up-command
-      (global-set-key (kbd "C-v") #'smooth-scroll-half-page-down)
-      (global-set-key (kbd "M-v") #'smooth-scroll-half-page-up)))
+      (global-set-key (kbd "C-v") '+pixel-scroll-interpolate-down)
+      (global-set-key (kbd "M-v") '+pixel-scroll-interpolate-up)))
 
 (setq dired-bind-jump nil)
 (setq dired-dwim-target t)
@@ -502,11 +516,16 @@
   :branch "eccube-engine")
 (el-get-bundle yaml-mode)
 
-(el-get-bundle php-mode
+;; (el-get-bundle php-mode
+;;   :type github
+;;   :pkgname "emacs-php/php-mode"
+;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
+;;   :load-path ("lisp"))
+(el-get-bundle php-ts-mode
   :type github
-  :pkgname "emacs-php/php-mode"
-  :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-  :load-path ("lisp"))
+  :pkgname "emacs-php/php-ts-mode"
+  :branch "master"
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
 (el-get-bundle php-runtime
   :type github
   :pkgname "emacs-php/php-runtime.el")
@@ -539,7 +558,6 @@
 )
 
 (el-get-bundle dockerfile-mode)
-(el-get-bundle docker-tramp)
 
 (add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
 (load "mew-config" t t)
@@ -576,10 +594,6 @@
 (defvar mkpasswd-command
   "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
 (autoload 'mkpasswd "mkpasswd" nil t)
-(el-get-bundle emacs-id-manager
-  :type github
-  :autoloads "id-manager"
-  :pkgname "nanasess/emacs-id-manager")
 
 (el-get-bundle nginx-mode)
 (el-get-bundle po-mode)
