@@ -69,3 +69,5 @@ fi
 # if [[ ! -n $TMUX ]]; then
 #     tmux new-session
 # fi
+
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env

@@ -20,9 +20,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@emacs-eask/cli@^0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@emacs-eask/cli/-/cli-0.9.1.tgz#f54fe551448bb736b42f9e86367ef85117f59d73"
+"@emacs-eask/cli@^0.9.5":
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/@emacs-eask/cli/-/cli-0.9.5.tgz#60742bd79c7850ef1d9edb8ac11dfed3b25ea967"
+  integrity sha512-QJEdZYUYx0yCrQ1U3gB0IfVF0Qm5hGnK+nxZYsV/HGvo4qE3hxomfau6E7Ilin0fB/m9sy4qY481XSB30Wt/1g==
   dependencies:
     which "^4.0.0"
     yargs "^17.0.0"
@@ -116,18 +117,19 @@ base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz"
 
-bash-language-server@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.npmjs.org/bash-language-server/-/bash-language-server-5.0.0.tgz"
+bash-language-server@^5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/bash-language-server/-/bash-language-server-5.1.2.tgz#f1831511ce27366d138f5ed9676c27b1881abcdc"
+  integrity sha512-hXgN71VWVV2nQVE1ej7scAHVGvRAxoYhs2KwzvJq+lSqp4VQ60M0Cff1QzJKJM/cTyLWNjabb98bDGZgDMMh2g==
   dependencies:
-    fast-glob "3.3.0"
+    fast-glob "3.3.2"
     fuzzy-search "3.2.1"
-    node-fetch "2.6.12"
+    node-fetch "2.7.0"
     turndown "7.1.2"
     vscode-languageserver "8.0.2"
-    vscode-languageserver-textdocument "1.0.8"
+    vscode-languageserver-textdocument "1.0.11"
     web-tree-sitter "0.20.8"
-    zod "3.21.4"
+    zod "3.22.4"
 
 bl@^4.0.3:
   version "4.1.0"
@@ -343,6 +345,15 @@ emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz"
 
+domutils@^3.0.1:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/domutils/-/domutils-3.1.0.tgz#c47f551278d3dc4b0b1ab8cbb42d751a6f0d824e"
+  integrity sha512-H78uMmQtI2AhgDJjWeQmHwJJ2bLPD3GMmO7Zja/ZZh84wkm+4ut+IUnUdRa8uCGX88DiVx1j6FRe1XfxEgjEZA==
+  dependencies:
+    dom-serializer "^2.0.0"
+    domelementtype "^2.3.0"
+    domhandler "^5.0.3"
+
 end-of-stream@^1.1.0, end-of-stream@^1.4.1:
   version "1.4.4"
   resolved "https://registry.npmjs.org/end-of-stream/-/end-of-stream-1.4.4.tgz"
@@ -382,9 +393,10 @@ fast-deep-equal@^3.1.1:
   version "3.1.3"
   resolved "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz"
 
-fast-glob@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.0.tgz"
+fast-glob@3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.3.2.tgz#a904501e57cfdd2ffcded45e99a54fef55e46129"
+  integrity sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==
   dependencies:
     "@nodelib/fs.stat" "^2.0.2"
     "@nodelib/fs.walk" "^1.2.3"
@@ -450,6 +462,11 @@ glob@^9.2.0:
 has-flag@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/has-flag/-/has-flag-3.0.0.tgz"
+
+he@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
+  integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
 he@1.2.0:
   version "1.2.0"
@@ -571,15 +588,16 @@ ms@2.1.2:
   version "2.1.2"
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz"
 
-node-fetch@2.6.12:
-  version "2.6.12"
-  resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.12.tgz"
-  dependencies:
-    whatwg-url "^5.0.0"
-
 node-fetch@2.6.7:
   version "2.6.7"
   resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.7.tgz"
+  dependencies:
+    whatwg-url "^5.0.0"
+
+node-fetch@2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
+  integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
   dependencies:
     whatwg-url "^5.0.0"
 
@@ -716,6 +734,11 @@ require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/require-directory/-/require-directory-2.1.1.tgz"
 
+request-light@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/request-light/-/request-light-0.7.0.tgz#885628bb2f8040c26401ebf258ec51c4ae98ac2a"
+  integrity sha512-lMbBMrDoxgsyO+yB3sDcrDuX85yYt7sS8BfQd11jtbW/z5ZWgLZRcEGLsLoYw7I0WSUGQBs8CC8ScIxkTX1+6Q==
+
 require-from-string@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npmjs.org/require-from-string/-/require-from-string-2.0.2.tgz"
@@ -809,17 +832,18 @@ turndown@7.1.2:
   dependencies:
     domino "^2.1.6"
 
-typescript-language-server@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/typescript-language-server/-/typescript-language-server-4.2.0.tgz#b61b755c4b45a4868dfebf4ac57b8b6af9e7f2ca"
+typescript-language-server@^4.3.3:
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/typescript-language-server/-/typescript-language-server-4.3.3.tgz#b52836fa0ec7a9c05007af44d5a49605f5fe72e0"
+  integrity sha512-3QLj57Ru9S6zv10sa4z1pA3TIR1Rdkd04Ke0EszbO4fx5PLdlYhlC/PMxwlyxls9wrZs7wPCME1Ru0s1Gabz4Q==
 
 typescript@^4.0.5:
   version "4.8.4"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.8.4.tgz"
 
-typescript@^5.2.2:
-  version "5.2.2"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-5.2.2.tgz"
+typescript@^5.3.3:
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.3.tgz#b3ce6ba258e72e6305ba66f5c9b452aaee3ffe37"
 
 unbzip2-stream@1.4.3:
   version "1.4.3"
@@ -935,13 +959,13 @@ vscode-languageserver-protocol@3.17.5:
     vscode-jsonrpc "8.2.0"
     vscode-languageserver-types "3.17.5"
 
+vscode-languageserver-textdocument@1.0.11, vscode-languageserver-textdocument@^1.0.1, vscode-languageserver-textdocument@^1.0.11, vscode-languageserver-textdocument@^1.0.8, vscode-languageserver-textdocument@~1.0.8:
+  version "1.0.11"
+  resolved "https://registry.npmjs.org/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.11.tgz"
+
 vscode-languageserver-textdocument@1.0.8:
   version "1.0.8"
   resolved "https://registry.npmjs.org/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.8.tgz"
-
-vscode-languageserver-textdocument@^1.0.1, vscode-languageserver-textdocument@^1.0.11, vscode-languageserver-textdocument@^1.0.8, vscode-languageserver-textdocument@~1.0.8:
-  version "1.0.11"
-  resolved "https://registry.npmjs.org/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.11.tgz"
 
 vscode-languageserver-types@3.16.0:
   version "3.16.0"
@@ -994,11 +1018,7 @@ vscode-nls@^5.0.0, vscode-nls@^5.2.0:
   version "5.2.0"
   resolved "https://registry.npmjs.org/vscode-nls/-/vscode-nls-5.2.0.tgz"
 
-vscode-uri@^3.0.2:
-  version "3.0.6"
-  resolved "https://registry.npmjs.org/vscode-uri/-/vscode-uri-3.0.6.tgz"
-
-vscode-uri@^3.0.7, vscode-uri@^3.0.8:
+vscode-uri@^3.0.2, vscode-uri@^3.0.7, vscode-uri@^3.0.8:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/vscode-uri/-/vscode-uri-3.0.8.tgz#1770938d3e72588659a172d0fd4642780083ff9f"
   integrity sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==
@@ -1088,6 +1108,7 @@ yauzl@^2.10.0:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
 
-zod@3.21.4:
-  version "3.21.4"
-  resolved "https://registry.npmjs.org/zod/-/zod-3.21.4.tgz"
+zod@3.22.4:
+  version "3.22.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.4.tgz#f31c3a9386f61b1f228af56faa9255e845cf3fff"
+  integrity sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==
