@@ -2,5 +2,5 @@ epc==0.0.5
 orjson==3.9.7
 paramiko==3.4.0
 rapidfuzz==3.6.1
-sexpdata==1.0.1
+sexpdata==1.0.2
 six==1.16.0
