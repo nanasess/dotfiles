@@ -3,8 +3,9 @@
               ;; (setq lsp-bridge-enable-mode-line nil)
               (global-lsp-bridge-mode)))
 (with-eval-after-load 'lsp-bridge
-  (push '(terraform-mode . "terraform-lsp") lsp-bridge-single-lang-server-mode-list)
-  (push 'terraform-mode lsp-bridge-default-mode-hooks)
+  ;; curl -O https://releases.hashicorp.com/terraform-ls/0.32.4/terraform-ls_0.32.4_linux_amd64.zip && unzip terraform-ls_0.32.4_linux_amd64.zip
+  ;; (push '(terraform-mode . "terraform-ls") lsp-bridge-single-lang-server-mode-list)
+  ;; (push 'terraform-mode-hook lsp-bridge-default-mode-hooks)
   (defun sm-try-smerge ()
     "Searches for merge conflict markers and disables lsp-bridge-mode if found."
     (save-excursion
@@ -29,6 +30,8 @@
   (setq acm-enable-doc-markdown-render t)
   (setq acm-enable-copilot t)
   (setq acm-backend-copilot-node-path "/usr/local/bin/node")
+  (autoload 'lsp-bridge--with-file-buffer "lsp-bridge")
+  (setq lsp-bridge-enable-with-tramp nil)
 
   ;; (setq lsp-bridge-enable-log t)
   ;; (setq lsp-bridge-enable-debug t)
