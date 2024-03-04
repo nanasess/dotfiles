@@ -225,9 +225,10 @@ commander@^10.0.0:
   version "10.0.0"
   resolved "https://registry.npmjs.org/commander/-/commander-10.0.0.tgz"
 
-copilot-node-server@^1.13.0:
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/copilot-node-server/-/copilot-node-server-1.13.0.tgz#d725752e37512ec2d5d02ee17a31b467a62d6211"
+copilot-node-server@^1.24.0:
+  version "1.24.0"
+  resolved "https://registry.yarnpkg.com/copilot-node-server/-/copilot-node-server-1.24.0.tgz#57f3ffdfec46abf9c93779697039f1325e139238"
+  integrity sha512-RH4tqfRt5Go656rz8i3Oeh4ywFQKjc4I2ETu/KAZW3h+ElU/s9FvMBreBzBu/0KEPBC5PPu6dsGMJvVYYx7WfQ==
 
 core-js@^3.20.1:
   version "3.26.0"
@@ -345,15 +346,6 @@ emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz"
 
-domutils@^3.0.1:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/domutils/-/domutils-3.1.0.tgz#c47f551278d3dc4b0b1ab8cbb42d751a6f0d824e"
-  integrity sha512-H78uMmQtI2AhgDJjWeQmHwJJ2bLPD3GMmO7Zja/ZZh84wkm+4ut+IUnUdRa8uCGX88DiVx1j6FRe1XfxEgjEZA==
-  dependencies:
-    dom-serializer "^2.0.0"
-    domelementtype "^2.3.0"
-    domhandler "^5.0.3"
-
 end-of-stream@^1.1.0, end-of-stream@^1.4.1:
   version "1.4.4"
   resolved "https://registry.npmjs.org/end-of-stream/-/end-of-stream-1.4.4.tgz"
@@ -462,11 +454,6 @@ glob@^9.2.0:
 has-flag@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/has-flag/-/has-flag-3.0.0.tgz"
-
-he@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
-  integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
 he@1.2.0:
   version "1.2.0"
@@ -733,11 +720,6 @@ request-light@^0.7.0:
 require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/require-directory/-/require-directory-2.1.1.tgz"
-
-request-light@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/request-light/-/request-light-0.7.0.tgz#885628bb2f8040c26401ebf258ec51c4ae98ac2a"
-  integrity sha512-lMbBMrDoxgsyO+yB3sDcrDuX85yYt7sS8BfQd11jtbW/z5ZWgLZRcEGLsLoYw7I0WSUGQBs8CC8ScIxkTX1+6Q==
 
 require-from-string@^2.0.2:
   version "2.0.2"
