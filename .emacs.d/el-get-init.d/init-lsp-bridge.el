@@ -32,11 +32,11 @@
   (setq acm-backend-copilot-node-path "/usr/local/bin/node")
   (autoload 'lsp-bridge--with-file-buffer "lsp-bridge")
   (setq lsp-bridge-enable-with-tramp nil)
-
+  (setq lsp-bridge-diagnostic-max-number 300)
   ;; (setq lsp-bridge-enable-log t)
   ;; (setq lsp-bridge-enable-debug t)
   ;; (setq lsp-bridge-signature-show-function 'lsp-bridge-signature-posframe)
-  ;; (setq acm-enable-tabnine t)
+  (setq acm-enable-tabnine nil)
   (global-set-key [remap xref-find-definitions] #'lsp-bridge-find-def)
   (global-set-key [remap xref-pop-marker-stack] #'lsp-bridge-find-def-return)
   (global-set-key (kbd "M-.") #'lsp-bridge-find-def)
