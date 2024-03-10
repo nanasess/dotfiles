@@ -29,7 +29,7 @@
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
 
-(setq el-get-bundle-sync t
+(setopt el-get-bundle-sync t
       el-get-is-lazy nil
       el-get-verbose nil
       el-get-bundle-byte-compile t
@@ -69,6 +69,9 @@
   :branch "main")
 (el-get-bundle awasira/cp5022x.el
   :name cp5022x)
+(with-eval-after-load 'cp5022x
+    (define-coding-system-alias 'iso-2022-jp 'cp50220)
+    (define-coding-system-alias 'euc-jp 'cp51932))
 
 ;;; initial load files
 (dolist (sys-type (list (symbol-name system-type)
@@ -108,7 +111,10 @@
   :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
            ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
            ("cp" "skk-setup.el.in" "skk-setup.el")))
-
+(setopt skk-user-directory (concat external-directory "ddskk")
+      skk-init-file (concat user-initial-directory "skk-init.el")
+      skk-isearch-start-mode 'latin)
+(setopt skk-preload nil)
 ;;; global key-bindings
 (global-unset-key (kbd "C-M-t"))
 (global-unset-key (kbd "C-z"))
@@ -188,6 +194,18 @@
 ;;; face settings
 (setq visible-bell t)
 (el-get-bundle doom-themes)
+(add-hook
+ 'emacs-startup-hook
+ #'(lambda ()
+     (require 'doom-themes)
+     ;; use solarized.
+     (load-theme 'doom-solarized-light t)
+     (with-eval-after-load 'vertico
+       (custom-set-faces
+        `(vertico-group-title ((t (:foreground ,(doom-color 'base7)))))))
+     (with-eval-after-load 'corfu
+       (custom-set-faces
+        `(corfu-annotations ((t (:foreground ,(doom-color 'green)))))))))
 
 (require 'whitespace)
 (setq whitespace-style
@@ -231,11 +249,29 @@
   :depends (dash f s))
 (el-get-bundle memoize)
 (el-get-bundle all-the-icons)
-
 (el-get-bundle doom-modeline
   :type github
   :depends (all-the-icons dash eldoc-eval shrink-path)
   :pkgname "seagle0128/doom-modeline")
+(with-eval-after-load 'doom-modeline-core
+  (with-eval-after-load 'all-the-icons
+    (add-hook 'doom-modeline-mode-hook
+              #'(lambda ()
+                  (setf (alist-get "\\.php$" all-the-icons-icon-alist nil nil #'equal)
+                        '(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
+                  (setf (alist-get "\\.csx?$" all-the-icons-icon-alist nil nil #'equal)
+                        '(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
+                  (setf (alist-get 'php-mode all-the-icons-mode-icon-alist nil nil #'equal)
+                        '(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
+                  (setf (alist-get 'csharp-mode all-the-icons-mode-icon-alist nil nil #'equal)
+                        '(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
+                  (doom-modeline-def-modeline 'main
+                    '(workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
+                    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker bar)))))
+  (setq doom-modeline-vcs-max-length 999)
+  (setq doom-modeline-buffer-file-name-style 'buffer-name))
+(add-hook 'emacs-startup-hook 'doom-modeline-mode)
+
 (line-number-mode 1)
 (column-number-mode 1)
 (size-indication-mode 1)
@@ -243,6 +279,10 @@
 (el-get-bundle symbol-overlay
   :type github
   :pkgname "wolray/symbol-overlay")
+(with-eval-after-load 'symbol-overlay
+  (global-set-key (kbd "M-i") 'symbol-overlay-put)
+  (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
+  (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all))
 
 ;;; uniquify settings
 (require 'uniquify)
@@ -281,6 +321,10 @@
 (el-get-bundle emacs-sql-indent
   :type github
   :pkgname "alex-hhh/emacs-sql-indent")
+(add-hook 'sql-mode-hook #'(lambda ()
+                             (set (make-local-variable 'sql-product) 'sqlite)
+                             (sql-indent-enable)
+                             (setq sqlind-basic-offset 4)))
 
 ;;; view-mode settings
 (add-hook 'view-mode-hook
@@ -355,24 +399,65 @@
 (el-get-bundle terminal-here
   :type github
   :pkgname "davidshepherd7/terminal-here")
+(setopt terminal-here-mac-terminal-command 'iterm2)
 
 (el-get-bundle migemo)
+(defvar migemo-dictionary
+  (concat external-directory "migemo/dict/utf-8/migemo-dict"))
+(when (file-exists-p migemo-dictionary)
+  (setopt migemo-command "cmigemo"
+        migemo-options '("-q" "--emacs" "-i" "\a")
+        migemo-user-dictionary nil
+        migemo-regex-dictionary nil
+        migemo-use-pattern-alist t
+        migemo-use-frequent-pattern-alist t
+        migemo-pattern-alist-length 10000
+        migemo-coding-system 'utf-8-unix))
+(add-hook 'isearch-mode-hook #'(lambda ()
+                                 (unless (featurep 'migemo)
+                                   (require 'migemo))
+                                 (migemo-init)))
+
 (el-get-bundle visual-regexp)
+(define-key global-map (kbd "M-%") 'vr/query-replace)
+
 (el-get-bundle undo-tree
   :type github
   :pkgname "emacsmirror/undo-tree")
+(add-hook 'emacs-startup-hook
+          #'(lambda ()
+              (global-undo-tree-mode)))
+(setopt undo-tree-visualizer-timestamps t)
+(setopt undo-tree-visualizer-diff t)
+(setopt undo-tree-auto-save-history t)
+(setopt undo-tree-enable-undo-in-region t)
+(setopt undo-tree-history-directory-alist `(("." . ,(expand-file-name "undo-tree" user-emacs-directory))))
+
 (el-get-bundle easy-kill in leoliu/easy-kill)
+(with-eval-after-load 'easy-kill
+  (global-set-key [remap kill-ring-save] 'easy-kill))
+
 (el-get-bundle yasnippet)
+(add-hook 'emacs-startup-hook 'yas-global-mode)
+(with-eval-after-load 'yasnippet
+  (define-key yas-minor-mode-map [(tab)] nil)
+  (define-key yas-minor-mode-map (kbd "TAB") nil))
 (el-get-bundle yasnippet-snippets)
 
 ;;; org-mode settings
-(setq org-directory (concat external-directory "howm/"))
-(setq org-return-follows-link t)
-(setq org-startup-folded nil)
-(setq org-startup-truncated nil)
+(setopt org-directory (concat external-directory "howm/"))
+(setopt org-return-follows-link t)
+(setopt org-startup-folded nil)
+(setopt org-startup-truncated nil)
 
 (el-get-bundle expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+;; see https://github.com/magnars/expand-region.el/issues/220
+(setq shift-select-mode nil)
+
 (el-get-bundle multiple-cursors)
+(global-set-key (kbd "<C-M-return>") 'mc/edit-lines)
+
 (el-get-bundle dumb-jump
   :type github
   :pkgname "jacktasia/dumb-jump")
@@ -390,6 +475,52 @@
   :branch "main")
 (el-get-bundle magit
   :branch "main")
+(with-eval-after-load 'magit
+  ;; (require 'forge)
+  ;; see https://stackoverflow.com/a/32914548/4956633
+  (defun visit-gh-pull-request (repo)
+    "Visit the current branch's PR on Github."
+    (interactive)
+    (message repo)
+    (browse-url
+     (format "https://github.com/%s/pull/new/%s"
+             (replace-regexp-in-string
+              "\\.git$" ""
+              (replace-regexp-in-string
+               "\\`.+github\\.com.\\(.+\\)\\(\\.git\\)?\\'" "\\1"
+               repo))
+             (magit-get-current-branch))))
+
+  ;; Bitbucket pull requests are kinda funky, it seems to try to just do the
+  ;; right thing, so there's no branches to include.
+  ;; https://bitbucket.org/<username>/<project>/pull-request/new
+  (defun visit-bb-pull-request (repo)
+    (message repo)
+    (browse-url
+     (format "https://bitbucket.org/%s/pull-request/new?source=%s&t=1"
+             (replace-regexp-in-string
+              "\\`.+bitbucket\\.org.\\(.+\\)\\.git\\'" "\\1"
+              repo)
+             (magit-get-current-branch))))
+  (defun endless/visit-pull-request-url ()
+    "Visit the current branch's PR on Github."
+    (interactive)
+    (let ((repo (magit-get "remote" (magit-get-remote) "url")))
+      (if (not repo)
+          (setq repo (magit-get "remote" (magit-get-push-remote) "url")))
+      (if (string-match "github\\.com" repo)
+          (visit-gh-pull-request repo)
+        (visit-bb-pull-request repo))))
+
+  (setq magit-diff-refine-hunk t)
+  (add-to-list 'magit-process-password-prompt-regexps "^パスフレーズを入力: ?$")
+  ;; visit PR for github or bitbucket repositories with "v"
+  (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
+  (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
+  (define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
+  (remove-hook 'server-switch-hook 'magit-commit-diff))
+(global-set-key (kbd "C-z m") 'magit-status)
+
 ;; (el-get-bundle ghub
 ;;   :branch "main")
 ;; (el-get-bundle forge)
@@ -426,12 +557,129 @@
              (setq howm-process-coding-system 'utf-8-unix)
              (setq howm-todo-menu-types "[-+~!]")
              (defun parse-howm-title () nil)))
+(with-eval-after-load 'howm
+  (setq howm-template
+        (concat howm-view-title-header
+                (concat
+                 " %title%cursor\n"
+                 "Date: %date\n\n"
+                 "%file\n\n")
+                (concat
+                 "<!--\n"
+                 "  Local Variables:\n"
+                 "  mode: gfm\n"
+                 "  coding: utf-8-unix\n"
+                 "  End:\n"
+                 "-->\n")))
+  (defun howm-save-and-kill-buffer ()
+    "kill screen when exiting from howm-mode"
+    (interactive)
+    (let* ((file-name (buffer-file-name)))
+      (when (and file-name (string-match "\\.txt" file-name))
+        (if (save-excursion
+              (goto-char (point-min))
+              (re-search-forward "[^ \t\r\n]" nil t))
+            (howm-save-buffer)
+          (set-buffer-modified-p nil)
+          (when (file-exists-p file-name)
+            (delete-file file-name)
+            (message "(Deleted %s)" (file-name-nondirectory file-name))))
+        (kill-buffer nil))))
+  (add-hook 'howm-mode-hook
+            #'(lambda ()
+                (define-key howm-mode-map (kbd "C-c C-q") 'howm-save-and-kill-buffer)))
+  (when (executable-find "rg")
+    (setq howm-view-use-grep t)
+    (setq howm-view-grep-command "rg")
+    (setq howm-view-grep-option "-nH --no-heading --color never")
+    (setq howm-view-grep-extended-option nil)
+    (setq howm-view-grep-fixed-option "-F")
+    (setq howm-view-grep-expr-option nil)
+    (setq howm-view-grep-file-stdin-option nil))
+
+  (defun parse-howm-title ()
+    (let* ((file-name (buffer-file-name)))
+      (when (and file-name (string-match "\\.txt" file-name))
+        (if (save-excursion
+              (goto-char (point-min))
+              (re-search-forward "^Title: \\(.*\\)$" nil t))
+            (match-string 1)))))
+
+  ;; see https://stackoverflow.com/a/384346
+  (defun rename-file-howm-title ()
+    (interactive)
+    (let ((name (buffer-name))
+          (filename (buffer-file-name))
+          (new-name (parse-howm-title))
+          (new-filename (format "%s.txt" (parse-howm-title))))
+      (if (not (string-empty-p new-name))
+          (if (not (string= new-filename "nil.txt"))
+              (if (not filename)
+                  (message "Buffer '%s' is not visiting a file!" name)
+                (if (get-buffer new-filename)
+                    (message "A buffer named '%s' already exists!" new-name)
+                  (progn
+                    (rename-file filename new-filename 1)
+                    (rename-buffer new-filename)
+                    (set-visited-file-name new-filename)
+                    (set-buffer-modified-p nil))))))))
+  (add-hook 'howm-mode-hook
+            #'(lambda ()
+                (add-hook 'before-save-hook 'rename-file-howm-title nil 'local))))
+
+(autoload 'howm-mode "howm" "Hitori Otegaru Wiki Modoki" t)
+(autoload 'howm-create "howm" "Hitori Otegaru Wiki Modoki" t)
+
+;;; Add howm-directory/.dir-locals
+;;
+;; ((nil
+;;   (eval
+;;    (lambda ()
+;;      (when (string-match "\\.txt" (file-name-nondirectory buffer-file-name))
+;;        (howm-mode)
+;;        (gfm-mode))))))
+
+;; see https://stackoverflow.com/a/384346
+(defun rename-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file filename new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))
+
+(global-set-key (kbd "C-z c") 'howm-create)
+(global-set-key (kbd "C-c ,c") 'howm-create)
 
 (el-get-bundle wgrep)
+(with-eval-after-load 'wgrep
+  (setq wgrep-enable-key "r"))
+
 (el-get-bundle consult
   :type github
   :pkgname "minad/consult"
   :branch "main")
+(with-eval-after-load 'consult
+  (setq consult-narrow-key ">")
+  (setq consult-widen-key "<")
+  (setq consult-preview-key "M-.")
+  (global-set-key (kbd "C-;") 'consult-buffer)
+  (global-set-key [remap goto-line] 'consult-goto-line)
+  (global-set-key (kbd "C-M-s") 'consult-line)
+  (global-set-key (kbd "C-x C-d") 'consult-dir)
+  (defun consult-howm-do-ag ()
+    (interactive)
+    (consult-ripgrep howm-directory))
+  (global-set-key (kbd "C-z s") 'consult-howm-do-ag)
+  (global-set-key (kbd "C-z l") 'consult-ls-git))
+
 (el-get-bundle marginalia
   :type github
   :pkgname "minad/marginalia"
@@ -439,9 +687,21 @@
 (el-get-bundle orderless
   :type github
   :pkgname "oantolin/orderless")
+(with-eval-after-load 'orderless
+  ;; see https://github.com/minad/corfu/wiki#basic-example-configuration-with-orderless
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides nil))
+
 (el-get-bundle embark
   :type github
   :pkgname "oantolin/embark")
+(global-set-key (kbd "C-,") 'embark-act)
+(with-eval-after-load 'consult
+  (with-eval-after-load 'embark
+    (require 'embark-consult)
+    (define-key embark-file-map "s" #'sudo-edit)))
+
 (el-get-bundle vertico
   :type github
   :pkgname "minad/vertico"
@@ -449,6 +709,32 @@
   :load-path ("." "extensions/")
   :compile ("vertico.el" "extensions/")
   :depends (consult marginalia orderless embark))
+(add-hook 'emacs-startup-hook
+          #'(lambda ()
+              (vertico-mode)
+              (marginalia-mode)
+              (savehist-mode)
+              (add-to-list 'savehist-additional-variables 'kill-ring)
+              (add-to-list 'savehist-additional-variables 'log-edit-comment-ring)
+              (add-to-list 'savehist-additional-variables 'search-ring)
+              (add-to-list 'savehist-additional-variables 'regexp-search-ring)))
+
+(with-eval-after-load 'vertico
+  (setq read-file-name-completion-ignore-case t
+        read-buffer-completion-ignore-case t
+        completion-ignore-case t)
+  (setq vertico-count 20)
+  (require 'consult)
+  (require 'orderless)
+  (require 'marginalia)
+  (require 'savehist)
+
+  (global-set-key (kbd "C-z C-r") #'vertico-repeat)
+  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+  (define-key vertico-map (kbd "C-l") #'vertico-directory-up)
+  (define-key vertico-map (kbd "C-j") #'vertico-directory-enter)
+  (define-key vertico-map (kbd "M-v") #'vertico-next-group)
+  (define-key vertico-map (kbd "C-v") #'vertico-previous-group))
 
 (el-get-bundle consult-ls-git
   :type github
@@ -465,6 +751,8 @@
   :type github
   :pkgname "Ladicle/consult-tramp"
   :branch "main")
+(with-eval-after-load 'consult-tramp
+  (setq consult-tramp-method "sshx"))
 
 ;; Setting `init-consult.el` causes an error.
 (with-eval-after-load 'consult
@@ -488,6 +776,12 @@
   :pkgname "sebastiencs/frame-local")
 
 (el-get-bundle markdown-mode)
+(with-eval-after-load 'markdown-mode
+  (add-to-list 'auto-mode-alist '("\\.\\(markdown\\|md\\)\\'" . gfm-mode))
+  (setq markdown-fontify-code-blocks-natively t)
+  (setq markdown-header-scaling t)
+  (setq markdown-indent-on-enter 'indent-and-new-item)
+  (define-key markdown-mode-map (kbd "<S-tab>") #'markdown-shifttab))
 
 (el-get-bundle request)
 (el-get-bundle spinner)
@@ -503,11 +797,67 @@
   :type github
   :pkgname "zerolfx/copilot.el"
   :branch "main")
+(add-hook 'prog-mode-hook 'copilot-mode)
+(defun copilot-tab ()
+  (interactive)
+  (or (copilot-accept-completion)
+      (indent-for-tab-command)))
+(with-eval-after-load 'copilot
+  (define-key copilot-mode-map (kbd "TAB") #'copilot-tab)
+  (define-key copilot-mode-map [(tab)] #'copilot-tab))
+
 (setq x-gtk-resize-child-frames 'resize-mode)
 (el-get-bundle lsp-bridge
   :type github
   :pkgname "manateelazycat/lsp-bridge"
   :depends (posframe markdown-mode yasnippet orderless))
+(add-hook 'emacs-startup-hook
+          #'(lambda ()
+              ;; (setq lsp-bridge-enable-mode-line nil)
+              (global-lsp-bridge-mode)))
+(with-eval-after-load 'lsp-bridge
+  ;; curl -O https://releases.hashicorp.com/terraform-ls/0.32.4/terraform-ls_0.32.4_linux_amd64.zip && unzip terraform-ls_0.32.4_linux_amd64.zip
+  ;; (push '(terraform-mode . "terraform-ls") lsp-bridge-single-lang-server-mode-list)
+  ;; (push 'terraform-mode-hook lsp-bridge-default-mode-hooks)
+  (defun sm-try-smerge ()
+    "Searches for merge conflict markers and disables lsp-bridge-mode if found."
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward "^<<<<<<< " nil t)
+  	(lsp-bridge-mode -1))))
+  (add-hook 'lsp-bridge-mode-hook 'sm-try-smerge t)
+  (defun lsp-bridge--mode-line-format ()
+    "Compose the LSP-bridge's mode-line."
+    (setq-local mode-face
+                (if (lsp-bridge-epc-live-p lsp-bridge-epc-process)
+                    'lsp-bridge-alive-mode-line
+                  'lsp-bridge-kill-mode-line))
+
+    (when lsp-bridge-server
+      (propertize "橋"'face mode-face)))
+  (setq lsp-bridge-php-lsp-server "phpactor")
+  (setq lsp-bridge-python-lsp-server "pyright")
+  (setq lsp-bridge-csharp-lsp-server "omnisharp-dotnet")
+  (setq acm-candidate-match-function 'orderless-flex)
+  (setq lsp-bridge-enable-hover-diagnostic t)
+  (setq acm-enable-doc-markdown-render t)
+  (setq acm-enable-copilot t)
+  (setq acm-backend-copilot-node-path "/usr/local/bin/node")
+  (autoload 'lsp-bridge--with-file-buffer "lsp-bridge")
+  (setq lsp-bridge-enable-with-tramp nil)
+  (setq lsp-bridge-diagnostic-max-number 300)
+  ;; (setq lsp-bridge-enable-log t)
+  ;; (setq lsp-bridge-enable-debug t)
+  ;; (setq lsp-bridge-signature-show-function 'lsp-bridge-signature-posframe)
+  (setq acm-enable-tabnine nil)
+  (global-set-key [remap xref-find-definitions] #'lsp-bridge-find-def)
+  (global-set-key [remap xref-pop-marker-stack] #'lsp-bridge-find-def-return)
+  (global-set-key (kbd "M-.") #'lsp-bridge-find-def)
+  (global-set-key (kbd "M-,") #'lsp-bridge-find-def-return)
+  (global-set-key (kbd "M-n") #'lsp-bridge-diagnostic-jump-next)
+  (global-set-key (kbd "M-p") #'lsp-bridge-diagnostic-jump-prev)
+  (global-set-key (kbd "C-z i") #'lsp-bridge-diagnostic-list)
+  (define-key acm-mode-map (kbd "<tab>") nil))
 
 (add-to-list 'auto-mode-alist '("\\.ts$" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-ts-mode))
@@ -519,7 +869,33 @@
   :type github
   :pkgname "nanasess/web-mode"
   :branch "eccube-engine")
+(add-to-list 'auto-mode-alist '("\\.tpl\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(with-eval-after-load 'web-mode
+  (setq web-mode-enable-block-face t)
+                                        ;    (setq web-mode-enable-current-element-highlight nil)
+  (setq web-mode-enable-current-column-highlight nil)
+  (setq web-mode-enable-auto-indentation nil)
+  (add-hook 'web-mode-hook
+            #'(lambda ()
+                (setq web-mode-enable-auto-indentation nil)))
+  (add-hook 'web-mode-hook 'prettier-js-mode)
+  (add-hook 'web-mode-hook
+            #'(lambda ()
+                (when (string-equal "vue" (file-name-extension buffer-file-name))
+                  (setup-tide-mode))))
+  (add-hook 'web-mode-hook
+            #'(lambda ()
+                (when (string-equal "tpl" (file-name-extension buffer-file-name))
+                  (web-mode-set-engine "eccube"))))
+  (add-hook 'editorconfig-custom-hooks
+            (lambda (hash) (setq web-mode-block-padding 0))))
+
 (el-get-bundle yaml-mode)
+;; npm i -g yaml-language-server
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
 ;; (el-get-bundle php-mode
 ;;   :type github
@@ -531,6 +907,18 @@
   :pkgname "emacs-php/php-ts-mode"
   :branch "master"
   :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
+(add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-ts-mode))
+(with-eval-after-load 'php-ts-mode
+  (with-eval-after-load 'lsp-bridge
+    (add-hook 'php-ts-mode-hook #'(lambda ()
+                                    (push '(php-ts-mode . lsp-bridge-php-lsp-server) lsp-bridge-single-lang-server-mode-list)
+                                    (lsp-bridge-mode 1))))
+  (add-hook 'php-mode-hook 'editorconfig-apply)
+  (electric-indent-local-mode t)
+  (electric-layout-mode t)
+  ;; (setq-local electric-layout-rules '((?{ . around)))
+  (electric-pair-local-mode t))
+
 (el-get-bundle php-runtime
   :type github
   :pkgname "emacs-php/php-runtime.el")
@@ -561,6 +949,10 @@
   ;; :info "."
   ;; :build `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
 )
+(with-eval-after-load 'haskell-mode
+  (setq haskell-stylish-on-save t)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
 
 (el-get-bundle dockerfile-mode)
 
@@ -582,6 +974,8 @@
     (setq mew-mbox-command     (concat default-directory "bin/incm")))
   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
   :load-path ("elisp/"))
+(with-eval-after-load 'mew
+  (require 'mm-version))
 ;; (el-get-bundle twittering-mode)
 (el-get-bundle popwin)
 
@@ -595,6 +989,8 @@
 (el-get-bundle sqlite-dump
   :type github
   :pkgname "nanasess/sqlite-dump")
+(modify-coding-system-alist 'file "\\.\\(db\\|sqlite\\)\\'" 'raw-text-unix)
+(add-to-list 'auto-mode-alist '("\\.\\(db\\|sqlite\\)\\'" . sqlite-dump))
 
 (defvar mkpasswd-command
   "head -c 10 < /dev/random | uuencode -m - | tail -n 2 |head -n 1 | head -c10")
@@ -602,14 +998,33 @@
 
 (el-get-bundle nginx-mode)
 (el-get-bundle po-mode)
+(setq auto-mode-alist (cons '("\\.po\\'\\|\\.po\\." . po-mode)
+                            auto-mode-alist))
+
+(autoload 'po-find-file-coding-system "po-compat")
+(modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
+                            'po-find-file-coding-system)
+
 
 ;;; brew install plantuml
 (el-get-bundle plantuml-mode
   :type github
   :pkgname "skuro/plantuml-mode")
+(add-to-list 'auto-mode-alist '("\\.puml$" . plantuml-mode))
+(with-eval-after-load 'plantuml-mode
+  (setq plantuml-indent-level 2)
+  (setq plantuml-executable-path "plantuml")
+  (setq plantuml-default-exec-mode 'executable)
+  (setq plantuml-output-type "png"))
+
 (el-get-bundle mermaid-mode
   :type github
   :pkgname "abrochard/mermaid-mode")
+(with-eval-after-load 'mermaid-mode
+  (setq mermaid-output-format ".pdf")
+  (define-key mermaid-mode-map (kbd "TAB") 'mermaid-indent-line)
+  (define-key mermaid-mode-map (kbd "<tab>") 'mermaid-indent-line))
+
 (el-get-bundle fosi
   :type github
   :pkgname "hotoku/fosi"
@@ -619,17 +1034,63 @@
 (autoload 'fosi "fosi" nil t)
 
 (el-get-bundle terraform-mode)
+(with-eval-after-load 'terraform-mode
+  (setq terraform-format-on-save t))
 
 (el-get-bundle wakatime-mode)
+(add-to-list 'load-path (concat user-emacs-directory ".wakatime.d"))
+(load "wakatime-config" t t)
+(add-hook 'emacs-startup-hook 'global-wakatime-mode)
 
 (el-get-bundle recentf-ext)
+(setopt recentf-max-saved-items 50000)
 
 (el-get-bundle auto-save-buffers-enhanced
   :type github
   :pkgname "kentaro/auto-save-buffers-enhanced")
+(setq auto-save-buffers-enhanced-interval 30)
+(setq auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
+(setq auto-save-buffers-enhanced-file-related-with-scratch-buffer
+      (concat howm-directory "scratch.txt"))
+(auto-save-buffers-enhanced t)
+(global-set-key "\C-xas" 'auto-save-buffers-enhanced-toggle-activity)
+
 (el-get-bundle scratch-pop in zk-phi/scratch-pop)
+(global-set-key (kbd "C-c c") 'scratch-pop)
+(makunbound 'scratch-ext-minor-mode-map)
+(define-minor-mode scratch-ext-minor-mode
+  "Minor mode for *scratch* buffer."
+  nil ""
+  '(("\C-c\C-c" . scratch-pop-kill-ring-save-exit)
+    ("\C-c\C-e" . erase-buffer)))
+
+(with-current-buffer (get-buffer-create "*scratch*")
+  (erase-buffer)
+  (ignore-errors
+    (insert-file-contents auto-save-buffers-enhanced-file-related-with-scratch-buffer))
+  (setq header-line-format "scratch!!")
+  (scratch-ext-minor-mode 1))
+(defun scratch-pop-kill-ring-save-exit ()
+  "Save after close the contents of buffer to killring."
+  (interactive)
+  (kill-new (buffer-string))
+  (erase-buffer)
+  (funcall (if (fboundp 'popwin:close-popup-window)
+               'popwin:close-popup-window
+             'quit-window)))
+
 (el-get-bundle gcmh)
+(gcmh-mode 1)
+(with-eval-after-load 'gcmh
+  (setq gcmh-verbose t))
 (define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
+;; npm i -g vscode-json-languageserver
+;; for json format
+;; see https://qiita.com/saku/items/d97e930ffc9ca39ac976
+(defun jq-format (beg end)
+  (interactive "r")
+  (shell-command-on-region beg end "jq ." nil t))
+
 (el-get 'sync)
 (ffap-bindings)
 ;; (setq epa-pinentry-mode 'loopback)
