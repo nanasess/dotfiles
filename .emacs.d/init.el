@@ -10,6 +10,38 @@
 ;; (setq garbage-collection-messages t)
 (defconst my/saved-file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
+;; see https://zenn.dev/zk_phi/books/cba129aacd4c1418ade4/viewer/4d0a9dde1043c6eaffad
+;; (defvar setup-tracker--level 0)
+;; (defvar setup-tracker--parents nil)
+;; (defvar setup-tracker--times nil)
+
+;; (when load-file-name
+;;   (push load-file-name setup-tracker--parents)
+;;   (push (current-time) setup-tracker--times)
+;;   (setq setup-tracker--level (1+ setup-tracker--level)))
+
+;; (add-variable-watcher
+;;  'load-file-name
+;;  (lambda (_ v &rest __)
+;;    (cond ((equal v (car setup-tracker--parents))
+;;           nil)
+;;          ((equal v (cadr setup-tracker--parents))
+;;           (setq setup-tracker--level (1- setup-tracker--level))
+;;           (let* ((now (current-time))
+;;                  (start (pop setup-tracker--times))
+;;                  (elapsed (+ (* (- (nth 1 now) (nth 1 start)) 1000)
+;;                              (/ (- (nth 2 now) (nth 2 start)) 1000))))
+;;             (with-current-buffer (get-buffer-create "*setup-tracker*")
+;;               (save-excursion
+;;                 (goto-char (point-min))
+;;                 (dotimes (_ setup-tracker--level) (insert "> "))
+;;                 (insert
+;;                  (file-name-nondirectory (pop setup-tracker--parents))
+;;                  " (" (number-to-string elapsed) " msec)\n")))))
+;;          (t
+;;           (push v setup-tracker--parents)
+;;           (push (current-time) setup-tracker--times)
+;;           (setq setup-tracker--level (1+ setup-tracker--level))))))
 (eval-when-compile (require 'cl))
 (eval '(eval-when-compile (require 'cl)))
 
@@ -33,8 +65,7 @@
       el-get-is-lazy nil
       el-get-verbose nil
       el-get-bundle-byte-compile t
-      el-get-auto-update-cached-recipes nil
-      el-get-user-package-directory (locate-user-emacs-file "el-get-init.d"))
+      el-get-auto-update-cached-recipes nil)
 
 (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
 (unless (require 'el-get nil 'noerror)
@@ -114,7 +145,7 @@
 (setopt skk-user-directory (concat external-directory "ddskk")
       skk-init-file (concat user-initial-directory "skk-init.el")
       skk-isearch-start-mode 'latin)
-(setopt skk-preload nil)
+(setq skk-preload nil)
 ;;; global key-bindings
 (global-unset-key (kbd "C-M-t"))
 (global-unset-key (kbd "C-z"))
