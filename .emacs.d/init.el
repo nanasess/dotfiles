@@ -8,6 +8,8 @@
 ;; (profiler-start 'cpu)
 ;; see https://github.com/syl20bnr/spacemacs/commit/72c89df995ee1e4eb32ab982deb0911093048f20
 ;; (setq garbage-collection-messages t)
+(defconst my/saved-file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
 (eval-when-compile (require 'cl))
 (eval '(eval-when-compile (require 'cl)))
 
@@ -40,7 +42,9 @@
       (url-retrieve-synchronously
        "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
     (goto-char (point-max))
-    (eval-print-last-sexp)))
+    (eval-print-last-sexp))
+  (with-eval-after-load 'el-get-git
+    (setopt el-get-git-shallow-clone t)))
 
 (el-get-bundle el-get-lock
   :type github
@@ -354,8 +358,9 @@
 
 (el-get-bundle migemo)
 (el-get-bundle visual-regexp)
-;; (el-get-bundle elpa:undo-tree
-;;   (global-undo-tree-mode))
+(el-get-bundle undo-tree
+  :type github
+  :pkgname "emacsmirror/undo-tree")
 (el-get-bundle easy-kill in leoliu/easy-kill)
 (el-get-bundle yasnippet)
 (el-get-bundle yasnippet-snippets)
@@ -635,13 +640,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(vertico-group-title ((t (:foreground "#788484")))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages '(queue)))
 ;; (profiler-report)
 ;; (profiler-stop)
-
+(setq file-name-handler-alist my/saved-file-name-handler-alist)
