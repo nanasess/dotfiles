@@ -47,3 +47,5 @@ server
 /bin/bundle/
 /node_modules/
 /yarn.lock
+/undo-tree
+!/undo-tree/.gitkeep

@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((tree-sitter-php-mode :checksum "2f791d9d83c35b11e9a14daf9a58dd7e23566041")
+      '((undo-tree :checksum "7eb78fa1fcb076621235c46fc730f485d3225dbb")
+        (tree-sitter-php-mode :checksum "2f791d9d83c35b11e9a14daf9a58dd7e23566041")
         (php-ts-mode :checksum "b398a871ce7dda880997196666083e850d153388")
         (jq-mode :checksum "071c1c29bac30351ad338136f2b625e5601365cd")
         (terraform-mode :checksum "25a22a66f81e35c75f2fdaaab89aad7f9940fe06")
@@ -96,7 +97,7 @@
         (spinner :checksum "d4647ae87fb0cd24bc9081a3d287c860ff061c21")
         (request :checksum "01e338c335c07e4407239619e57361944a82cb8a")
         (deferred :checksum "2239671d94b38d92e9b28d4e12fd79814cfb9c16")
-        (markdown-mode :checksum "141f9a05d121f60fe5e411c0ad114e3d3216c9ad")
+        (markdown-mode :checksum "e096bb97a91fcd4dc2b46d8b6e093194b03b7364")
         (frame-local :checksum "7ee1106c3bcd4022f48421f8cb1ef4f995da816e")
         (helm-swoop :checksum "1b3285791f1dc1fde548fe67aec07214d698fd57")
         (wgrep :checksum "edf768732a56840db6879706b64c5773c316d619")
