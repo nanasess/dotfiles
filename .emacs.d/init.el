@@ -62,7 +62,7 @@
 (defvar openweathermap-api-key nil)
 
 (setopt el-get-bundle-sync t
-      el-get-is-lazy nil
+      el-get-is-lazy t
       el-get-verbose nil
       el-get-bundle-byte-compile t
       el-get-auto-update-cached-recipes nil)
@@ -131,7 +131,13 @@
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
     (setq exec-path (append (list dir) exec-path))))
 
-(require 'japanese-init)
+(unless (require 'japanese-init nil 'noerror)
+  (set-language-environment "Japanese")
+  (set-default-coding-systems 'utf-8-unix)
+  (set-keyboard-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (setq default-process-coding-system '(utf-8 . utf-8))
+  (setenv "LANG" "ja_JP.UTF-8"))
 
 (el-get-bundle ddskk
   :type github
@@ -310,10 +316,7 @@
 (el-get-bundle symbol-overlay
   :type github
   :pkgname "wolray/symbol-overlay")
-(with-eval-after-load 'symbol-overlay
-  (global-set-key (kbd "M-i") 'symbol-overlay-put)
-  (global-set-key (kbd "<f7>") 'symbol-overlay-mode)
-  (global-set-key (kbd "<f8>") 'symbol-overlay-remove-all))
+(global-set-key (kbd "M-i") 'symbol-overlay-put)
 
 ;;; uniquify settings
 (require 'uniquify)
@@ -1074,7 +1077,10 @@
 (add-hook 'emacs-startup-hook 'global-wakatime-mode)
 
 (el-get-bundle recentf-ext)
-(setopt recentf-max-saved-items 50000)
+(add-hook 'emacs-startup-hook
+          #'(lambda ()
+              (setopt recentf-max-saved-items 50000)
+              (recentf-mode 1)))
 
 (el-get-bundle auto-save-buffers-enhanced
   :type github
