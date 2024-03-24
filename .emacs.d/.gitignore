@@ -9,6 +9,7 @@ url
 tramp
 .edbi-ds-history
 el-get/*
+!el-get/.gitkeep
 .session
 elpa
 tutorial
