@@ -1138,13 +1138,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(vertico-group-title ((t (:foreground "#788484")))))
+ )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(queue)))
+ )
 ;; (profiler-report)
 ;; (profiler-stop)
 (setq file-name-handler-alist my/saved-file-name-handler-alist)
