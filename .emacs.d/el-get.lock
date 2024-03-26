@@ -7,7 +7,7 @@
         (hcl-mode :checksum "ec27736c4c16fbf7f1ecab0210ec3c71ac2406fa")
         (elisp-tree-sitter :checksum "fa5a072128da1235e237da827daf53f71a2cd562")
         (fosi :checksum "f5f61d91545e18ebe879a53f1c679da6d3aa9c4e")
-        (wakatime-mode :checksum "ef923829912c3854d230834f81083814b7c9d992")
+        (wakatime-mode :checksum "25fb775178d16decb818b75f32fd23301c0f5da0")
         (compat :checksum "32e737b145fef05105e2bad4ca34ca41072e9569")
         (lsp-bridge :checksum "f582b8b2e32fe9bfb759fe1331791874e31e982b")
         (copilot :checksum "421703f5dd5218ec2a3aa23ddf09d5f13e5014c2")
