@@ -286,9 +286,12 @@
   :depends (dash f s))
 (el-get-bundle memoize)
 (el-get-bundle all-the-icons)
+(el-get-bundle nard-icons.el
+  :type github
+  :pkgname "rainstormstudio/nerd-icons.el")
 (el-get-bundle doom-modeline
   :type github
-  :depends (all-the-icons dash eldoc-eval shrink-path)
+  :depends (all-the-icons dash eldoc-eval shrink-path nard-icons.el)
   :pkgname "seagle0128/doom-modeline")
 (with-eval-after-load 'doom-modeline-core
   (with-eval-after-load 'all-the-icons
@@ -568,13 +571,13 @@
   (define-key smerge-mode-map (kbd "M-n") 'smerge-next)
   (define-key smerge-mode-map (kbd "M-p") 'smerge-prev))
 
+(setopt howm-directory (concat external-directory "howm/"))
 (el-get-bundle howm
   :type git
   :url "git://git.osdn.jp/gitroot/howm/howm.git"
   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
   :prepare (progn
              (defvar howm-menu-lang 'ja)
-             (defvar howm-directory (concat external-directory "howm/"))
              (defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt")
              (defvar howm-history-file (concat howm-directory ".howm-history"))
              (defvar howm-keyword-file (concat howm-directory ".howm-keys"))
@@ -1138,13 +1141,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(vertico-group-title ((t (:foreground "#788484")))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages '(queue)))
 ;; (profiler-report)
 ;; (profiler-stop)
 (setq file-name-handler-alist my/saved-file-name-handler-alist)

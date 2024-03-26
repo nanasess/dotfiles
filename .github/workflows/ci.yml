@@ -14,64 +14,26 @@ on:
       - '!*.md'
 
 jobs:
-  run-on-mac:
-    name: Run on Mac
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest ]
+        os: [ubuntu-latest, macos-latest]
+        emacs-version:
+          - "29.2"
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Checkout Emacs
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+    - uses: purcell/setup-emacs@master
       with:
-        repository: nanasess/emacs-package
-        ref: for-carbon-emacs
-        path: ./emacs-package
-        submodules: true
-    - name: prepare
+        version: ${{ matrix.emacs-version }}
+    - uses: emacs-eask/setup-eask@master
+      with:
+        version: 'snapshot'
+    - run: mv .emacs.d/el-get/.gitkeep .emacs.d/el-get/.status.el
+    - run: emacs -Q -l .emacs.d/early-init.el -l .emacs.d/init.el  --batch
+    - name: Eask
       run: |
-        git config --global user.name "Kentaro Ohkouchi"
-        git config --global user.email nanasess@example.com
-        brew install texinfo pkg-config
-        cd ./emacs-package/emacs && ./autogen.sh
+        eask clean all
+        eask compile
 
-    - name: build emacs
-      working-directory: ./emacs-package
-      run: |
-        sudo mkdir -p /usr/local/libexec
-        sudo chown -R runner /usr/local/libexec
-        export PATH="/usr/local/opt/texinfo/bin:$PATH"
-        export PATH="/usr/local/opt/gnutls/bin:$PATH"
-        make install
-
-    - run: emacs-package/emacs/mac/Emacs.app/Contents/MacOS/Emacs --version
-    - name: bootstrap
-      run: emacs-package/emacs/mac/Emacs.app/Contents/MacOS/Emacs -q -l .emacs.d/init.el --batch
-    - name: byte-compile
-      run: emacs-package/emacs/mac/Emacs.app/Contents/MacOS/Emacs -q -l .emacs.d/init.el --batch -f batch-byte-compile .emacs.d/init.el
-  run-on-ubuntu:
-    name: Run on Ubuntu
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest ]
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: build emacs
-      run: |
-         sudo add-apt-repository ppa:kelleyk/emacs
-         sudo apt-fast update
-         sudo apt-fast install -y texinfo emacs28
-
-    - run: emacs --version
-    - name: bootstrap
-      run: |
-        emacs -q -l .emacs.d/init.el --batch
-    - name: byte-compile
-      run: |
-        emacs -q -l .emacs.d/init.el --batch -f batch-byte-compile .emacs.d/init.el
