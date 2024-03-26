@@ -36,7 +36,10 @@ jobs:
       working-directory: .emacs.d/bin
     - run: yarn install --frozen-lockfile
       working-directory: .emacs.d/bin
-    - run: bin/pip3 install -r bin/requirements.txt
+    - run: |
+        /usr/bin/python3 -m venv .
+        source bin/activate
+        bin/pip3 install -r bin/requirements.txt
       working-directory: .emacs.d
     - name: Eask
       run: |
