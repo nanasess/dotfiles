@@ -21,7 +21,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         emacs-version:
-          - "29.2"
+          - "29.3"
     steps:
     - uses: actions/checkout@v4
     - uses: purcell/setup-emacs@master
