@@ -32,6 +32,12 @@ jobs:
         version: 'snapshot'
     - run: mv .emacs.d/el-get/.gitkeep .emacs.d/el-get/.status.el
     - run: emacs -Q -l .emacs.d/early-init.el -l .emacs.d/init.el  --batch
+    - run: composer install
+      working-directory: .emacs.d/bin
+    - run: yarn install --frozen-lockfile
+      working-directory: .emacs.d/bin
+    - run: bin/pip3 install -r bin/requirements.txt
+      working-directory: .emacs.d
     - name: Eask
       run: |
         eask clean all
