@@ -568,13 +568,13 @@
   (define-key smerge-mode-map (kbd "M-n") 'smerge-next)
   (define-key smerge-mode-map (kbd "M-p") 'smerge-prev))
 
+(setopt howm-directory (concat external-directory "howm/"))
 (el-get-bundle howm
   :type git
   :url "git://git.osdn.jp/gitroot/howm/howm.git"
   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
   :prepare (progn
              (defvar howm-menu-lang 'ja)
-             (defvar howm-directory (concat external-directory "howm/"))
              (defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt")
              (defvar howm-history-file (concat howm-directory ".howm-history"))
              (defvar howm-keyword-file (concat howm-directory ".howm-keys"))
