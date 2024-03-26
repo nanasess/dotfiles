@@ -24,6 +24,9 @@ jobs:
           - "29.3"
     steps:
     - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
     - uses: purcell/setup-emacs@master
       with:
         version: ${{ matrix.emacs-version }}
@@ -31,16 +34,13 @@ jobs:
       with:
         version: 'snapshot'
     - run: mv .emacs.d/el-get/.gitkeep .emacs.d/el-get/.status.el
-    - run: emacs -Q -l .emacs.d/early-init.el -l .emacs.d/init.el  --batch
     - run: composer install
       working-directory: .emacs.d/bin
     - run: yarn install --frozen-lockfile
       working-directory: .emacs.d/bin
-    - run: |
-        /usr/bin/python3 -m venv .
-        source bin/activate
-        bin/pip3 install -r bin/requirements.txt
+    - run: pip3 install -r bin/requirements.txt
       working-directory: .emacs.d
+    - run: emacs -Q -l .emacs.d/early-init.el -l .emacs.d/init.el  --batch
     - name: Eask
       run: |
         eask clean all
