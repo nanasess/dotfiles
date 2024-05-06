@@ -225,10 +225,10 @@ commander@^10.0.0:
   version "10.0.0"
   resolved "https://registry.npmjs.org/commander/-/commander-10.0.0.tgz"
 
-copilot-node-server@^1.26.0:
-  version "1.26.0"
-  resolved "https://registry.yarnpkg.com/copilot-node-server/-/copilot-node-server-1.26.0.tgz#27739d52f220418165e27f71726fc37d5d1a01eb"
-  integrity sha512-2Ily2dC9mKHu6gg7vbwBo6fxMzvEAxCxvVTpMPXtzvK0nCkuJDpf2sewJOaUntRbupEGqF3uMutxzdgoFP/6xg==
+copilot-node-server@^1.30.0:
+  version "1.30.0"
+  resolved "https://registry.yarnpkg.com/copilot-node-server/-/copilot-node-server-1.30.0.tgz#c8d084818e27d2706f9e59e7aced2d0a3ab5635d"
+  integrity sha512-5X/WEplF5jx7do2RanA3leZssGYm0yaW/BvSB2mSq1f60rUGnsblOpaYba0DkB3083d5dbl0Svs5m8JVshSeIQ==
 
 core-js@^3.20.1:
   version "3.26.0"
