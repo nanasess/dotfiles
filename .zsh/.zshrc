@@ -2,6 +2,7 @@
 #
 # dot.zshrc
 #
+[ -f $HOME/.cargo/bin/sheldon ] && eval "$($HOME/.cargo/bin/sheldon --config-dir $ZDOTDIR/../sheldon source)"
 [ -f $ZDOTDIR/.zaliases ] && source $ZDOTDIR/.zaliases
 [ -f $ZDOTDIR/.zcompctl ] && source $ZDOTDIR/.zcompctl
 
