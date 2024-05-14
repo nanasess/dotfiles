@@ -4,6 +4,7 @@
 #
 [ -f $ZDOTDIR/.zaliases ] && source $ZDOTDIR/.zaliases
 [ -f $ZDOTDIR/.zcompctl ] && source $ZDOTDIR/.zcompctl
+[ -f $HOME/.cargo/bin/sheldon ] && eval "$($HOME/.cargo/bin/sheldon --config-dir $ZDOTDIR/../sheldon source)"
 
 # Emacs style key binding
 bindkey -e
@@ -60,7 +61,7 @@ fi
 [ -f $ZDOTDIR/.zshrc.mine ] && source $ZDOTDIR/.zshrc.mine
 [ -f $ZDOTDIR/eterm.zsh ] && source $ZDOTDIR/eterm.zsh
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+eval "$(fzf --zsh)"
 
 if which onedrive > /dev/null
 then

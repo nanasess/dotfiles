@@ -7,7 +7,7 @@ else
     if which emacsclient > /dev/null; then export EDITOR=emacsclient; fi
 fi
 
-export PATH=$HOME/bin:$HOME/.nodebrew/current/bin:$HOME/go/bin:$HOME/.cpan/CPAN/bin:$HOME/.cabal/bin:/Library/Frameworks/HaskellPlatform.framework/bin:/usr/local/texlive/2014/bin/x86_64-darwin:/opt/local/lib/postgresql91/bin:/usr/local/heroku/bin:/opt/local/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:$HOME/.nodebrew/current/bin:$HOME/go/bin:$HOME/.cpan/CPAN/bin:$HOME/.cabal/bin:/Library/Frameworks/HaskellPlatform.framework/bin:/usr/local/texlive/2014/bin/x86_64-darwin:/opt/local/lib/postgresql91/bin:/usr/local/heroku/bin:$HOME/bin/jdk-11.0.23+9/bin:$HOME/.dotnet/tools:$HOME/.cargo/bin:/opt/local/bin:/usr/local/bin:$PATH
 
 export UID=${UID} GID=${GID}
 
