@@ -210,6 +210,30 @@
       (global-set-key (kbd "C-v") '+pixel-scroll-interpolate-down)
       (global-set-key (kbd "M-v") '+pixel-scroll-interpolate-up)))
 
+;; see http://cha.la.coocan.jp/wp/2024/05/05/post-1300/
+;; you need to install "wl-clipboard" first.
+(if (featurep 'pgtk)
+    (if (and (zerop (call-process "which" nil nil nil "wl-copy"))
+             (zerop (call-process "which" nil nil nil "wl-paste")))
+        ;; credit: yorickvP on Github
+        ;; see https://gist.github.com/yorickvP/6132f237fbc289a45c808d8d75e0e1fb
+        (progn
+          (setq wl-copy-process nil)
+          (defun wl-copy (text)
+            (setq wl-copy-process (make-process :name "wl-copy"
+                                                :buffe*r nil
+                                                :command '("wl-copy" "-f" "-n")
+                                                :connection-type 'pipe
+                                                :noquery t))
+            (process-send-string wl-copy-process text)
+            (process-send-eof wl-copy-process))
+          (defun wl-paste ()
+            (if (and wl-copy-process (process-live-p wl-copy-process))
+                nil ; should return nil if we're the current paste owner
+              (shell-command-to-string "wl-paste -n | tr -d \r")))
+          (setq interprogram-cut-function 'wl-copy)
+          (setq interprogram-paste-function 'wl-paste))))
+
 (setq dired-bind-jump nil)
 (setq dired-dwim-target t)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
