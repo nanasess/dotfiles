@@ -20,10 +20,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@emacs-eask/cli@^0.9.5":
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/@emacs-eask/cli/-/cli-0.9.5.tgz#60742bd79c7850ef1d9edb8ac11dfed3b25ea967"
-  integrity sha512-QJEdZYUYx0yCrQ1U3gB0IfVF0Qm5hGnK+nxZYsV/HGvo4qE3hxomfau6E7Ilin0fB/m9sy4qY481XSB30Wt/1g==
+"@emacs-eask/cli@^0.9.7":
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/@emacs-eask/cli/-/cli-0.9.7.tgz#21007c3dd38d4dc08fa2372a918a77e9ed814f78"
+  integrity sha512-A3dmbyIW7xNSeVGm8BTtM2F5j45Rgnch250Ii4eN26qxiEH0m2hbd3Jf8IouwlObLyUgYsDUhm6xgijyy21zug==
   dependencies:
     which "^4.0.0"
     yargs "^17.0.0"
