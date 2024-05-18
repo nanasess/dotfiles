@@ -310,30 +310,25 @@
   :depends (dash f s))
 (el-get-bundle memoize)
 (el-get-bundle all-the-icons)
-(el-get-bundle nard-icons.el
+(el-get-bundle nerd-icons.el
   :type github
   :pkgname "rainstormstudio/nerd-icons.el")
+(with-eval-after-load 'nerd-icons
+  (setf (alist-get "php" nerd-icons-extension-icon-alist)
+        '(nerd-icons-sucicon "nf-seti-php" :face nerd-icons-lpurple))
+  (push '("tpl" nerd-icons-sucicon "nf-seti-smarty" :face nerd-icons-yellow)
+        nerd-icons-extension-icon-alist)
+  (push '("twig" nerd-icons-sucicon "nf-seti-twig" :face nerd-icons-lgreen)
+        nerd-icons-extension-icon-alist))
+
 (el-get-bundle doom-modeline
   :type github
-  :depends (all-the-icons dash eldoc-eval shrink-path nard-icons.el)
+  :depends (all-the-icons dash eldoc-eval shrink-path nerd-icons.el)
   :pkgname "seagle0128/doom-modeline")
 (with-eval-after-load 'doom-modeline-core
-  (with-eval-after-load 'all-the-icons
-    (add-hook 'doom-modeline-mode-hook
-              #'(lambda ()
-                  (setf (alist-get "\\.php$" all-the-icons-icon-alist nil nil #'equal)
-                        '(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
-                  (setf (alist-get "\\.csx?$" all-the-icons-icon-alist nil nil #'equal)
-                        '(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
-                  (setf (alist-get 'php-mode all-the-icons-mode-icon-alist nil nil #'equal)
-                        '(all-the-icons-fileicon "php" :face all-the-icons-lpurple))
-                  (setf (alist-get 'csharp-mode all-the-icons-mode-icon-alist nil nil #'equal)
-                        '(all-the-icons-alltheicon "csharp-line" :face all-the-icons-dpurple))
-                  (doom-modeline-def-modeline 'main
-                    '(workspace-name window-number modals matches buffer-info remote-host buffer-position parrot selection-info)
-                    '(objed-state misc-info persp-name grip github debug lsp minor-modes indent-info buffer-encoding major-mode process vcs checker bar)))))
-  (setq doom-modeline-vcs-max-length 999)
-  (setq doom-modeline-buffer-file-name-style 'buffer-name))
+  (setopt doom-modeline-vcs-max-length 999)
+  (setopt doom-modeline-buffer-file-name-style 'buffer-name))
+
 (add-hook 'emacs-startup-hook 'doom-modeline-mode)
 
 (line-number-mode 1)
