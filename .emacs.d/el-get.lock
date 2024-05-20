@@ -5,7 +5,7 @@
         (nard-icons.el :checksum "8095215a503d8048739de8b4ea4066598edb8cbb")
         (undo-tree :checksum "7eb78fa1fcb076621235c46fc730f485d3225dbb")
         (tree-sitter-php-mode :checksum "2f791d9d83c35b11e9a14daf9a58dd7e23566041")
-        (php-ts-mode :checksum "b398a871ce7dda880997196666083e850d153388")
+        (php-ts-mode :checksum "92c4d8a92ed8a819e2b61cc02480b8062d5885ba")
         (jq-mode :checksum "d533567a680bc87060c56a50f83d80e58646d2f2")
         (terraform-mode :checksum "a645c32a8f0f0d04034262ae5fea330d5c7a33c6")
         (hcl-mode :checksum "ec27736c4c16fbf7f1ecab0210ec3c71ac2406fa")
