@@ -117,10 +117,10 @@ base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz"
 
-bash-language-server@^5.3.1:
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/bash-language-server/-/bash-language-server-5.3.1.tgz#dc1656dc0ce9c54b222a112cae22a80d4efa2d8a"
-  integrity sha512-tMNPZv40Ro3Vv260Ptef4TATsFl0BgcZMBzNWzqRR8oCZKGFTXrOLmHP7hX8X4aTgeE83fREXvSY9OYUWeIeaw==
+bash-language-server@^5.3.3:
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/bash-language-server/-/bash-language-server-5.3.3.tgz#c45e85a8b2208e2c78c154505257b171b690b082"
+  integrity sha512-GKqUdue8N1rUvBHN5XwmTSVECQuRU4FVlhRFd0Q37e4ppEcJAKV9jJoi8TQc+2ra5jc020aM8CMluXBCwIn2Pw==
   dependencies:
     fast-glob "3.3.2"
     fuzzy-search "3.2.1"
@@ -225,10 +225,10 @@ commander@^10.0.0:
   version "10.0.0"
   resolved "https://registry.npmjs.org/commander/-/commander-10.0.0.tgz"
 
-copilot-node-server@^1.31.0:
-  version "1.31.0"
-  resolved "https://registry.yarnpkg.com/copilot-node-server/-/copilot-node-server-1.31.0.tgz#d8cd6c0406c79d441ec71e737ca8e30ce13a2408"
-  integrity sha512-K8mB1ctIvSyq5goz4oj12hOwlRYVcuCiy2/1Azkr9bU1ojEE7/h0Rs/Ab8lzeUnAj+DKH7/yp7j2ZDJVMR8mWA==
+copilot-node-server@^1.32.0:
+  version "1.32.0"
+  resolved "https://registry.yarnpkg.com/copilot-node-server/-/copilot-node-server-1.32.0.tgz#f86c03b0d9d4d22cfb8fb216877a58c08bc5ecd5"
+  integrity sha512-7XjyNLIMeMBSNboYV85/yMXr+KS3grmld1jCJagKECFyvNknsjOrwQWnSGoz8LHlt4Sn5M4JqC4sZuZ8+YkRVg==
 
 core-js@^3.20.1:
   version "3.26.0"
