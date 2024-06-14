@@ -1,5 +1,5 @@
 # -*- mode:shell-script -*-
-alias ls="eza --color=always"
+alias ls="eza --color=always --all"
 alias less='less -X'
 if [ -f $HOME/Applications/Emacs.app/Contents/Resources/bin/emacsclient ]
 then

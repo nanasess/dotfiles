@@ -230,7 +230,8 @@
           (defun wl-paste ()
             (if (and wl-copy-process (process-live-p wl-copy-process))
                 nil ; should return nil if we're the current paste owner
-              (shell-command-to-string "wl-paste -n | tr -d \r")))
+              (when (executable-find "wl-paste")
+                (shell-command-to-string "type -a wl-paste > /dev/null 2>&1 && wl-paste -n | tr -d \r"))))
           (setq interprogram-cut-function 'wl-copy)
           (setq interprogram-paste-function 'wl-paste))))
 
@@ -965,6 +966,8 @@
   :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
 (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-ts-mode))
 (with-eval-after-load 'php-ts-mode
+  (add-to-list 'treesit-language-source-alist
+               '(php "https://github.com/tree-sitter/tree-sitter-php" "v0.21.1" "php/src"))
   (with-eval-after-load 'lsp-bridge
     (add-hook 'php-ts-mode-hook #'(lambda ()
                                     (push '(php-ts-mode . lsp-bridge-php-lsp-server) lsp-bridge-single-lang-server-mode-list)
@@ -1092,6 +1095,11 @@
 (el-get-bundle terraform-mode)
 (with-eval-after-load 'terraform-mode
   (setq terraform-format-on-save t))
+
+(el-get-bundle ebuild-mode
+  :type git
+  :url "https://anongit.gentoo.org/git/proj/ebuild-mode.git"
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
 
 (el-get-bundle wakatime-mode)
 (add-to-list 'load-path (concat user-emacs-directory ".wakatime.d"))
