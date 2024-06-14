@@ -1096,6 +1096,11 @@
 (with-eval-after-load 'terraform-mode
   (setq terraform-format-on-save t))
 
+(el-get-bundle ebuild-mode
+  :type git
+  :url "https://anongit.gentoo.org/git/proj/ebuild-mode.git"
+  :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
+
 (el-get-bundle wakatime-mode)
 (add-to-list 'load-path (concat user-emacs-directory ".wakatime.d"))
 (load "wakatime-config" t t)
