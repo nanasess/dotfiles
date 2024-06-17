@@ -1,4 +1,4 @@
-#!/home/nanasess/dotfiles/.emacs.d/bin/python
+#!/home/nanasess/.config/dotfiles/.emacs.d/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
