@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((ebuild-mode :checksum "529191d3b6691401f9612e761e1c5448f9359857")
+      '((ddskk :checksum "8c47f46e38a29a0f3eabcd524268d20573102467")
+        (ebuild-mode :checksum "529191d3b6691401f9612e761e1c5448f9359857")
         (eglot :checksum "db91d58374627a195b731a61bead9b4f84a7e4bc")
         (oauth2 :checksum "cc2dd7f3e2aae621365a8297b61198c1694bdb5e")
         (nerd-icons.el :checksum "66658b89287c3599c7b9b6babea7bcb3dff9a9e4")
@@ -132,7 +133,6 @@
         (s :checksum "dda84d38fffdaf0c9b12837b504b402af910d01d")
         (dash :checksum "5df7605da5a080df769d4f260034fb0e5e86a7a4")
         (cp5022x :checksum "ea7327dd75e54539576916f592ae1be98179ae35")
-        (ddskk :checksum "8c47f46e38a29a0f3eabcd524268d20573102467")
         (doom-themes :checksum "3b2422b208d28e8734b300cd3cc6a7f4af5eba55")
         (all-the-icons :checksum "ee414384938ccf2ce93c77d717b85dc5538a257d")
         (memoize :checksum "51b075935ca7070f62fae1d69fe0ff7d8fa56fdd")

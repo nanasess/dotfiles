@@ -143,9 +143,12 @@
   :type github
   :pkgname "skk-dev/ddskk"
   ;; :info "doc/skk.info"
-  :load-path (".")
-  :autoloads "skk-autoloads"
-  :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
+  ;; :load-path (".")
+  ;; :autoloads "skk-autoloads"
+  :features ("skk-setup")
+  :build `(("sh" "-c" "echo \"(setq SKK_SET_JISYO t)\" > SKK-CFG")
+           (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
+           (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
            ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
            ("cp" "skk-setup.el.in" "skk-setup.el")))
 (setopt skk-user-directory (concat external-directory "ddskk")
@@ -593,8 +596,8 @@
 
 (setopt howm-directory (concat external-directory "howm/"))
 (el-get-bundle howm
-  :type git
-  :url "git://git.osdn.jp/gitroot/howm/howm.git"
+  :type github
+  :pkgname "kaorahi/howm"
   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
   :prepare (progn
              (defvar howm-menu-lang 'ja)
@@ -906,7 +909,7 @@
   ;; (setq lsp-bridge-enable-log t)
   ;; (setq lsp-bridge-enable-debug t)
   ;; (setq lsp-bridge-signature-show-function 'lsp-bridge-signature-posframe)
-  (setq acm-enable-tabnine nil)
+  (setopt acm-enable-tabnine nil)
   (global-set-key [remap xref-find-definitions] #'lsp-bridge-find-def)
   (global-set-key [remap xref-pop-marker-stack] #'lsp-bridge-find-def-return)
   (global-set-key (kbd "M-.") #'lsp-bridge-find-def)
@@ -1105,6 +1108,8 @@
 (add-to-list 'load-path (concat user-emacs-directory ".wakatime.d"))
 (load "wakatime-config" t t)
 (add-hook 'emacs-startup-hook 'global-wakatime-mode)
+(with-eval-after-load 'wakatime-mode
+  (setopt wakatime-cli-path "/usr/bin/wakatime"))
 
 (el-get-bundle recentf-ext)
 (add-hook 'emacs-startup-hook
