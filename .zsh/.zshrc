@@ -11,7 +11,10 @@ fi
 #
 [ -f $ZDOTDIR/.zaliases ] && source $ZDOTDIR/.zaliases
 [ -f $ZDOTDIR/.zcompctl ] && source $ZDOTDIR/.zcompctl
-[ -f $HOME/.cargo/bin/sheldon ] && eval "$($HOME/.cargo/bin/sheldon --config-dir $ZDOTDIR/../sheldon source)"
+if which sheldon > /dev/null
+then
+    eval "$(sheldon --config-dir $ZDOTDIR/../sheldon source)"
+fi
 
 # Emacs style key binding
 bindkey -e
@@ -81,4 +84,4 @@ fi
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
 
 # To customize prompt, run `p10k configure` or edit ~/dotfiles/.zsh/.p10k.zsh.
-[[ ! -f ~/dotfiles/.zsh/.p10k.zsh ]] || source ~/dotfiles/.zsh/.p10k.zsh
+[[ ! -f ${XDG_CONFIG_HOME}/dotfiles/.zsh/.p10k.zsh ]] || source ${XDG_CONFIG_HOME}/dotfiles/.zsh/.p10k.zsh

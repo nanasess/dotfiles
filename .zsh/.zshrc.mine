@@ -46,10 +46,17 @@ if which stack > /dev/null; then eval "$(stack --bash-completion-script stack)";
 # export PHPBREW_SET_PROMPT=1
 export WEBKIT_FORCE_SANDBOX=0
 
-# if [ ! -L /tmp/.X11-unix ]
-# then
-#     sudo ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix
-# fi
+if [ ! -L /tmp/.X11-unix ]
+then
+    rm -rf /tmp/.X11-unix
+    ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix
+fi
+if [ ! -L "${XDG_RUNTIME_DIR}/wayland-0" ]
+then
+    rm -rf "${XDG_RUNTIME_DIR}/wayland-0*"
+    ln -s /mnt/wslg/runtime-dir/wayland-0* "$XDG_RUNTIME_DIR"
+fi
+
 # if which xrdb > /dev/null; then xrdb -merge ~/.Xresources; fi
 if [ -z "$WAYLAND_DISPLAY" ]
 then
