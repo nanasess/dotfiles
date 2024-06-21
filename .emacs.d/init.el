@@ -450,6 +450,7 @@
 (global-set-key (kbd "C-z C-a") 'toggle-fullscreen)
 (global-set-key (kbd "C-z C-z") 'toggle-size-frame)
 
+(setopt treesit-font-lock-level 4)
 (unless (fboundp 'treesit-install-language-grammar)
   (progn
     (el-get-bundle elisp-tree-sitter)
