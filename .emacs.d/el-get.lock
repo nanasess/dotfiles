@@ -16,7 +16,7 @@
         (fosi :checksum "c1d5ed6bc4c6c1e5d8c14c21ff0d6234e65bc83a")
         (wakatime-mode :checksum "25fb775178d16decb818b75f32fd23301c0f5da0")
         (compat :checksum "8d4e8a366681def88751f5e9975738ecd3180deb")
-        (lsp-bridge :checksum "408eacf3b953c303e26693be11c40d97e5d41441")
+        (lsp-bridge :checksum "d4599bcf25ad7d9be67bb422ff0a8deeccaf00b0")
         (copilot :checksum "733bff26450255e092c10873580e9abfed8a81b8")
         (eldoc-box :checksum "5c067f5c195198ffd16df2f455da95e46cc8ce02")
         (consult-tramp :checksum "befa62baca768caa457b167e773b91f1bc7d661f")
