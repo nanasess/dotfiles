@@ -143,9 +143,12 @@
   :type github
   :pkgname "skk-dev/ddskk"
   ;; :info "doc/skk.info"
-  :load-path (".")
-  :autoloads "skk-autoloads"
-  :build `((,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
+  ;; :load-path (".")
+  ;; :autoloads "skk-autoloads"
+  :features ("skk-setup")
+  :build `(("sh" "-c" "echo \"(setq SKK_SET_JISYO t)\" > SKK-CFG")
+           (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
+           (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
            ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
            ("cp" "skk-setup.el.in" "skk-setup.el")))
 (setopt skk-user-directory (concat external-directory "ddskk")
@@ -447,6 +450,7 @@
 (global-set-key (kbd "C-z C-a") 'toggle-fullscreen)
 (global-set-key (kbd "C-z C-z") 'toggle-size-frame)
 
+(setopt treesit-font-lock-level 4)
 (unless (fboundp 'treesit-install-language-grammar)
   (progn
     (el-get-bundle elisp-tree-sitter)
@@ -593,8 +597,8 @@
 
 (setopt howm-directory (concat external-directory "howm/"))
 (el-get-bundle howm
-  :type git
-  :url "git://git.osdn.jp/gitroot/howm/howm.git"
+  :type github
+  :pkgname "kaorahi/howm"
   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
   :prepare (progn
              (defvar howm-menu-lang 'ja)
@@ -894,19 +898,20 @@
       (propertize "橋"'face mode-face)))
   (setq lsp-bridge-php-lsp-server "phpactor")
   (setq lsp-bridge-python-lsp-server "pyright")
-  (setq lsp-bridge-csharp-lsp-server "omnisharp-dotnet")
+  ;; dotnet tool install --global csharp-ls
+  (setq lsp-bridge-csharp-lsp-server "csharp-ls")
   (setq acm-candidate-match-function 'orderless-flex)
   (setq lsp-bridge-enable-hover-diagnostic t)
   (setq acm-enable-doc-markdown-render t)
   (setq acm-enable-copilot t)
-  (setq acm-backend-copilot-node-path "/usr/local/bin/node")
+  (setq acm-backend-copilot-node-path "/usr/bin/node")
   (autoload 'lsp-bridge--with-file-buffer "lsp-bridge")
   (setq lsp-bridge-enable-with-tramp nil)
   (setq lsp-bridge-diagnostic-max-number 300)
   ;; (setq lsp-bridge-enable-log t)
   ;; (setq lsp-bridge-enable-debug t)
   ;; (setq lsp-bridge-signature-show-function 'lsp-bridge-signature-posframe)
-  (setq acm-enable-tabnine nil)
+  (setopt acm-enable-tabnine nil)
   (global-set-key [remap xref-find-definitions] #'lsp-bridge-find-def)
   (global-set-key [remap xref-pop-marker-stack] #'lsp-bridge-find-def-return)
   (global-set-key (kbd "M-.") #'lsp-bridge-find-def)
@@ -1001,6 +1006,11 @@
 
 (el-get-bundle csv-mode in emacsmirror/csv-mode)
 (el-get-bundle csharp-mode)
+(el-get-bundle fsharp-mode
+  :type github
+  :pkgname "fsharp/emacs-fsharp-mode"
+  :depends (jsonrpc)
+  :load-path ("."))
 
 (el-get-bundle haskell-mode
   :type github
@@ -1105,6 +1115,8 @@
 (add-to-list 'load-path (concat user-emacs-directory ".wakatime.d"))
 (load "wakatime-config" t t)
 (add-hook 'emacs-startup-hook 'global-wakatime-mode)
+(with-eval-after-load 'wakatime-mode
+  (setopt wakatime-cli-path "/usr/bin/wakatime"))
 
 (el-get-bundle recentf-ext)
 (add-hook 'emacs-startup-hook

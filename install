@@ -4,3 +4,4 @@ ln -s $PWD/.emacs.d $HOME/.emacs.d
 ln -s $PWD/.signature $HOME/.signature
 ln -s $PWD/.zsh $HOME/.zsh
 ln -s $PWD/.zsh/.zshenv $HOME/.zshenv
+ln -s $PWD/phpactor $HOME/.config/phpactor
