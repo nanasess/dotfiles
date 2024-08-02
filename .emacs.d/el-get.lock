@@ -76,7 +76,7 @@
         (php-runtime :checksum "b01e840ecf23690595ea109e04889fafdb526619")
         (php-mode :checksum "4a29636243ba7f4afba476348587713531d994bc")
         (yaml-mode :checksum "7b5ce294fb15c2c8926fa476d7218aa415550a2a")
-        (web-mode :checksum "9fdbfa0eeee40e4a3bcf990c81203dce7e028c67")
+        (web-mode :checksum "b9c351e75ae9fc19a026b4386f15c46264bc4520")
         (web-completion-data :checksum "c272c94e8a71b779c29653a532f619acad433a4f")
         (tide :checksum "4cf6a0d89da7f946565a425a632ee2410a40c7da")
         (typescript-mode :checksum "d79551c67ff5f2bd5f651eb411cdc66ceeb787e3")
