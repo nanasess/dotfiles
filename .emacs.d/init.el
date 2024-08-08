@@ -258,19 +258,30 @@
 
 ;;; face settings
 (setq visible-bell t)
+(el-get-bundle modus-themes
+  :type github
+  :pkgname "protesilaos/modus-themes")
+(add-to-list 'load-path "~/.emacs.d/el-get/modus-themes")
+(require 'modus-themes)
+(setopt modus-themes-common-palette-overrides
+        modus-themes-preset-overrides-warmer)
+(setopt modus-themes-italic-constructs t
+        modus-themes-bold-constructs nil)
+(load-theme 'modus-operandi-tinted t)
+
 (el-get-bundle doom-themes)
-(add-hook
- 'emacs-startup-hook
- #'(lambda ()
-     (require 'doom-themes)
-     ;; use solarized.
-     (load-theme 'doom-solarized-light t)
-     (with-eval-after-load 'vertico
-       (custom-set-faces
-        `(vertico-group-title ((t (:foreground ,(doom-color 'base7)))))))
-     (with-eval-after-load 'corfu
-       (custom-set-faces
-        `(corfu-annotations ((t (:foreground ,(doom-color 'green)))))))))
+;; (add-hook
+;;  'emacs-startup-hook
+;;  #'(lambda ()
+;;      (require 'doom-themes)
+;;      ;; use solarized.
+;;      (load-theme 'doom-solarized-light t)
+;;      (with-eval-after-load 'vertico
+;;        (custom-set-faces
+;;         `(vertico-group-title ((t (:foreground ,(doom-color 'base7)))))))
+;;      (with-eval-after-load 'corfu
+;;        (custom-set-faces
+;;         `(corfu-annotations ((t (:foreground ,(doom-color 'green)))))))))
 
 (require 'whitespace)
 (setq whitespace-style
