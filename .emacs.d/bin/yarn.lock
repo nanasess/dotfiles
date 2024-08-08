@@ -1800,7 +1800,7 @@ vscode-jsonrpc@9.0.0-next.5:
   resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-9.0.0-next.5.tgz#74c15aa00ddf9c8d6adacd3f3dcbc25f0587da3c"
   integrity sha512-Sl/8RAJtfF/2x/TPBVRuhzRAcqYR/QDjEjNqMcoKFfqsxfVUPzikupRDQYB77Gkbt1RrW43sSuZ5uLtNAcikQQ==
 
-vscode-langservers-extracted@^4.8.0:
+vscode-langservers-extracted@^4.10.0:
   version "4.10.0"
   resolved "https://registry.yarnpkg.com/vscode-langservers-extracted/-/vscode-langservers-extracted-4.10.0.tgz#420d63a4e8064ec0027436a21f315f1199b566c1"
   integrity sha512-EFf9uQI4dAKbzMQFjDvVm1xJq1DXAQvBEuEfPGrK/xzfsL5xWTfIuRr90NgfmqwO+IEt6vLZm9EOj6R66xIifg==
