@@ -957,7 +957,7 @@
 
 (el-get-bundle yaml-mode)
 ;; npm i -g yaml-language-server
-(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
 
 ;; (el-get-bundle php-mode
 ;;   :type github
@@ -977,7 +977,7 @@
     (add-hook 'php-ts-mode-hook #'(lambda ()
                                     (push '(php-ts-mode . lsp-bridge-php-lsp-server) lsp-bridge-single-lang-server-mode-list)
                                     (lsp-bridge-mode 1))))
-  (add-hook 'php-mode-hook 'editorconfig-apply)
+  (add-hook 'php-ts-mode-hook 'editorconfig-apply)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   ;; (setq-local electric-layout-rules '((?{ . around)))
