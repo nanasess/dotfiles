@@ -19,14 +19,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-24.04, macos-latest]
         emacs-version:
-          - "29.3"
+          - "29.4"
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     - uses: purcell/setup-emacs@master
       with:
         version: ${{ matrix.emacs-version }}
