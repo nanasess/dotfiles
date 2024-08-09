@@ -9,22 +9,22 @@ importers:
   .:
     dependencies:
       '@emacs-eask/cli':
-        specifier: ^0.9.5
-        version: 0.9.9
+        specifier: ^0.10.0
+        version: 0.10.0
       '@mermaid-js/mermaid-cli':
-        specifier: ^10
+        specifier: ^10.9.1
         version: 10.9.1(typescript@5.5.4)
       bash-language-server:
-        specifier: ^5.3.3
+        specifier: ^5.4.0
         version: 5.4.0
       copilot-node-server:
-        specifier: ^1.32.0
+        specifier: ^1.38.0
         version: 1.38.0
       dockerfile-language-server-nodejs:
-        specifier: ^0.11.0
-        version: 0.11.0
+        specifier: ^0.13.0
+        version: 0.13.0
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.5.4
         version: 5.5.4
       typescript-language-server:
         specifier: ^4.3.3
@@ -33,7 +33,7 @@ importers:
         specifier: ^4.10.0
         version: 4.10.0
       yaml-language-server:
-        specifier: ^1.14.0
+        specifier: ^1.15.0
         version: 1.15.0
 
 packages:
@@ -53,8 +53,8 @@ packages:
   '@braintree/sanitize-url@6.0.4':
     resolution: {integrity: sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==}
 
-  '@emacs-eask/cli@0.9.9':
-    resolution: {integrity: sha512-tPqQ23626xRHE1uap1d/KVVqfQeyBpimOEVo35dRWavaxT5KIxDI1xfnNxIgoICW9EKoexQK4XyWdf1tSsD/hQ==}
+  '@emacs-eask/cli@0.10.0':
+    resolution: {integrity: sha512-c3Z2a6qzJxfADIKJ5BWnKjdkp3gfws2nqrMs9MPYBt0SFjqhKn0+0EJDfb/S5HlBpW9sZEy0FBq5hO6YFyicvQ==}
     hasBin: true
 
   '@mermaid-js/mermaid-cli@10.9.1':
@@ -443,15 +443,15 @@ packages:
   dockerfile-ast@0.6.1:
     resolution: {integrity: sha512-m3rH2qHHU2pSTCppXgJT+1KLxhvkdROOxVPof5Yz4IPGSw6K+x0B0/RFdYgXN5zsIUTlbOSRyfDCv3/uVhnNmg==}
 
-  dockerfile-language-server-nodejs@0.11.0:
-    resolution: {integrity: sha512-kv97EVYcKXh4SiteaVX8LDSwpcdAOIJM/3Wm6rWxTH4gLbozocDekoU5YpX1X2kKOI4L5gvzFIhzgxqPhFnRzg==}
+  dockerfile-language-server-nodejs@0.13.0:
+    resolution: {integrity: sha512-r8GwQGVBHuRj83nFYoA7ulGfp6tgUH8gxlPRap0ewuroEb/XgP4KtLsIUIN9CvkTZge/IkX7cbFTVO0lq9gZ3A==}
     hasBin: true
 
-  dockerfile-language-service@0.11.0:
-    resolution: {integrity: sha512-Y0TtqZNnI3EC5g/zCZitNV191oZoYCva2r6lt0T1k+W5VX1kjz0vwKbkgBIpk2Rzh4fQlYFJALALtvd/kw5ixA==}
+  dockerfile-language-service@0.14.0:
+    resolution: {integrity: sha512-G3FDjCpuWQNrTuarSFtlOUNwwJl9ECJqsQdqGQN79nCmA1av0bbNSD++ipvfBqb/1fFeP2XxFy/N7WRIF12aBg==}
 
-  dockerfile-utils@0.15.0:
-    resolution: {integrity: sha512-hV2OExB797C3/GlOloywmMZzu3MPmzMziGuCaPWh/m9qHgTyfN4+EI3b6xhHDXy78PU0GqwvHnZVX7wfpqOCkg==}
+  dockerfile-utils@0.16.1:
+    resolution: {integrity: sha512-kYj772IlJi8aVYB8fS/1ByJH3skQ/Nroa8NkSHrnHE51savvIXKV/9vpRrjnokL/qGWtSDeIWOVHev2S7zZpcA==}
     hasBin: true
 
   dom-serializer@2.0.0:
@@ -1129,7 +1129,7 @@ snapshots:
 
   '@braintree/sanitize-url@6.0.4': {}
 
-  '@emacs-eask/cli@0.9.9':
+  '@emacs-eask/cli@0.10.0':
     dependencies:
       which: 4.0.0
       yargs: 17.7.2
@@ -1560,21 +1560,21 @@ snapshots:
       vscode-languageserver-textdocument: 1.0.12
       vscode-languageserver-types: 3.17.5
 
-  dockerfile-language-server-nodejs@0.11.0:
+  dockerfile-language-server-nodejs@0.13.0:
     dependencies:
-      dockerfile-language-service: 0.11.0
-      dockerfile-utils: 0.15.0
+      dockerfile-language-service: 0.14.0
+      dockerfile-utils: 0.16.1
       vscode-languageserver: 8.0.2
       vscode-languageserver-textdocument: 1.0.12
 
-  dockerfile-language-service@0.11.0:
+  dockerfile-language-service@0.14.0:
     dependencies:
       dockerfile-ast: 0.6.1
-      dockerfile-utils: 0.15.0
+      dockerfile-utils: 0.16.1
       vscode-languageserver-textdocument: 1.0.8
       vscode-languageserver-types: 3.17.3
 
-  dockerfile-utils@0.15.0:
+  dockerfile-utils@0.16.1:
     dependencies:
       dockerfile-ast: 0.6.1
       vscode-languageserver-textdocument: 1.0.12
@@ -1629,7 +1629,7 @@ snapshots:
 
   extract-zip@2.0.1:
     dependencies:
-      debug: 4.3.6
+      debug: 4.3.4
       get-stream: 5.2.0
       yauzl: 2.10.0
     optionalDependencies:
