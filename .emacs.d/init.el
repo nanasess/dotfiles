@@ -535,6 +535,13 @@
 (el-get-bundle with-editor
   :branch "main")
 (el-get-bundle magit
+  :type github
+  :pkgname "magit/magit"
+  :depends (dash transient with-editor compat)
+  :load-path "lisp/"
+  :compile "lisp/"
+  :build `(("make" ,(format "EMACSBIN=%s" el-get-emacs) "lisp")
+           ("touch" "lisp/magit-autoloads.el"))
   :branch "main")
 (with-eval-after-load 'magit
   ;; (require 'forge)
