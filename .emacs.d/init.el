@@ -882,7 +882,7 @@
   :type github
   :pkgname "manateelazycat/lsp-bridge"
   :depends (posframe markdown-mode yasnippet orderless))
-(add-hook 'emacs-startup-hook
+(add-hook 'prog-mode-hook
           #'(lambda ()
               ;; (setq lsp-bridge-enable-mode-line nil)
               (global-lsp-bridge-mode)))
