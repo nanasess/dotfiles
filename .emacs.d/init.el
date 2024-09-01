@@ -953,6 +953,7 @@
   (add-hook 'web-mode-hook
             #'(lambda ()
                 (setq web-mode-enable-auto-indentation nil)))
+  (add-hook 'web-mode-hook 'editorconfig-apply)
   (add-hook 'web-mode-hook 'prettier-js-mode)
   (add-hook 'web-mode-hook
             #'(lambda ()
