@@ -52,6 +52,8 @@ iconv -f euc-jisx0213 -t utf8 zipcode/SKK-JISYO.office.zipcode | sed -e 's/codin
 curl -O https://raw.githubusercontent.com/uasi/skk-emoji-jisyo/master/SKK-JISYO.emoji.utf8
 cp -rp SKK-JISYO.emoji.utf8 "${ONEDRIVE_DIR}/SKK-JISYO.emoji.utf8"
 
+# see https://github.com/eidera/skktools/blob/master/scripts/run.bash
+
 skkdic-expr2 \
     SKK-JISYO.L + \
     SKK-JISYO.assoc + \
