@@ -58,6 +58,9 @@ iconv -f euc-jisx0213 -t utf8 zipcode/SKK-JISYO.office.zipcode \
 curl -O https://raw.githubusercontent.com/uasi/skk-emoji-jisyo/master/SKK-JISYO.emoji.utf8
 cp -rp SKK-JISYO.emoji.utf8 "${ONEDRIVE_DIR}/SKK-JISYO.emoji.utf8"
 
+curl -sS https://raw.githubusercontent.com/ymrl/SKK-JISYO.emoji-ja/master/SKK-JISYO.emoji-ja.utf8 | skkdic-sort > SKK-JISYO.emoji-ja.utf8
+cp -rp SKK-JISYO.emoji-ja.utf8 "${ONEDRIVE_DIR}/SKK-JISYO.emoji-ja.utf8"
+
 # see https://github.com/eidera/skktools/blob/master/scripts/run.bash
 
 skkdic-expr2 \
@@ -79,6 +82,7 @@ skkdic-expr2 \
 
 cat <(iconv -f euc-jisx0213 -t utf8 SKK-JISYO.all.euc-jisx0213) \
     <(cat SKK-JISYO.emoji.utf8) \
+    <(cat SKK-JISYO.emoji-ja.utf8) \
     | skkdic-sort > SKK-JISYO.all.utf8
 
 cd $CURRENT_DIR
