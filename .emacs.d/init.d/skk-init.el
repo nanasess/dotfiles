@@ -3,15 +3,14 @@
 ;;
 
 (setq skk-cdb-large-jisyo nil)
-(setq skk-large-jisyo (concat external-directory "ddskk/SKK-JISYO.L"))
-(setq skk-jisyo-code 'euc-jis-2004-unix)
-
+(setq skk-large-jisyo (concat external-directory "ddskk/SKK-JISYO.L.utf8"))
+(setq skk-jisyo-code 'utf-8)
 (dolist (JISYO
-	 (list "assoc" "edict" "fullname" "geo" "itaiji" "jinmei"
-	       "law" "lisp" "mazegaki" "okinawa" "propernoun" "pubdic+" "station"
-	       "zipcode" "office.zipcode" "JIS3_4" "JIS2004"))
+         (list "emoji" "JIS2004" "JIS3_4" "JIS2" "office.zipcode" "zipcode" "station"
+               "pubdic+" "propernoun" "propernoun" "law" "jinmei" "itaiji" "geo"
+               "fullname" "edict" "assoc"))
   (add-to-list 'skk-extra-jisyo-file-list
-	       (concat external-directory "ddskk/SKK-JISYO." JISYO)))
+	       (concat external-directory "ddskk/SKK-JISYO." JISYO ".utf8")))
 
 (setq-default skk-kutouten-type 'en)
 (setq-default skk-kuten-touten-alist

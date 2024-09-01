@@ -151,7 +151,10 @@
            (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
            ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
            ("cp" "skk-setup.el.in" "skk-setup.el")))
-(setopt skk-user-directory (concat external-directory "ddskk")
+(setopt
+      skk-server-host nil
+      skk-server-portnum nil
+      skk-user-directory (concat external-directory "ddskk")
       skk-init-file (concat user-initial-directory "skk-init.el")
       skk-isearch-start-mode 'latin)
 (setq skk-preload nil)
@@ -879,7 +882,7 @@
   :type github
   :pkgname "manateelazycat/lsp-bridge"
   :depends (posframe markdown-mode yasnippet orderless))
-(add-hook 'emacs-startup-hook
+(add-hook 'prog-mode-hook
           #'(lambda ()
               ;; (setq lsp-bridge-enable-mode-line nil)
               (global-lsp-bridge-mode)))
@@ -950,6 +953,7 @@
   (add-hook 'web-mode-hook
             #'(lambda ()
                 (setq web-mode-enable-auto-indentation nil)))
+  (add-hook 'web-mode-hook 'editorconfig-apply)
   (add-hook 'web-mode-hook 'prettier-js-mode)
   (add-hook 'web-mode-hook
             #'(lambda ()
