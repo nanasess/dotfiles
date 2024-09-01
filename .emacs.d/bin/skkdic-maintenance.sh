@@ -45,9 +45,15 @@ zipcode.tar.gz
 EOF
 )
 
-iconv -f euc-jisx0213 -t utf8 SKK-JISYO.edict  | sed -e 's/coding: euc-jp/coding: utf-8/g' > "${ONEDRIVE_DIR}/SKK-JISYO.edict.utf8"
-iconv -f euc-jisx0213 -t utf8 zipcode/SKK-JISYO.zipcode | sed -e 's/coding: euc-jis-2004/coding: utf-8/g' > "${ONEDRIVE_DIR}/SKK-JISYO.zipcode.utf8"
-iconv -f euc-jisx0213 -t utf8 zipcode/SKK-JISYO.office.zipcode | sed -e 's/coding: euc-jis-2004/coding: utf-8/g' > "${ONEDRIVE_DIR}/SKK-JISYO.office.zipcode.utf8"
+iconv -f euc-jisx0213 -t utf8 SKK-JISYO.edict \
+    | sed -e 's/coding: euc-jp/coding: utf-8/g' \
+          > "${ONEDRIVE_DIR}/SKK-JISYO.edict.utf8"
+iconv -f euc-jisx0213 -t utf8 zipcode/SKK-JISYO.zipcode \
+    | sed -e 's/coding: euc-jis-2004/coding: utf-8/g' \
+          > "${ONEDRIVE_DIR}/SKK-JISYO.zipcode.utf8"
+iconv -f euc-jisx0213 -t utf8 zipcode/SKK-JISYO.office.zipcode \
+    | sed -e 's/coding: euc-jis-2004/coding: utf-8/g' \
+          > "${ONEDRIVE_DIR}/SKK-JISYO.office.zipcode.utf8"
 
 curl -O https://raw.githubusercontent.com/uasi/skk-emoji-jisyo/master/SKK-JISYO.emoji.utf8
 cp -rp SKK-JISYO.emoji.utf8 "${ONEDRIVE_DIR}/SKK-JISYO.emoji.utf8"
@@ -71,7 +77,9 @@ skkdic-expr2 \
     SKK-JISYO.JIS3_4 \
     > SKK-JISYO.all.euc-jisx0213
 
-cat <(iconv -f euc-jisx0213 -t utf8 SKK-JISYO.all.euc-jisx0213) <(cat SKK-JISYO.emoji.utf8) > SKK-JISYO.all.utf8
+cat <(iconv -f euc-jisx0213 -t utf8 SKK-JISYO.all.euc-jisx0213) \
+    <(cat SKK-JISYO.emoji.utf8) \
+    | skkdic-sort > SKK-JISYO.all.utf8
 
 cd $CURRENT_DIR
 cp -rp skk-jisyo/SKK-JISYO.all.utf8 "${ONEDRIVE_DIR}/SKK-JISYO.all.utf8"
