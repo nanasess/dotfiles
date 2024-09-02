@@ -5,10 +5,6 @@
 (setq skk-cdb-large-jisyo nil)
 (setq skk-large-jisyo (concat external-directory "ddskk/SKK-JISYO.all.utf8"))
 (setq skk-jisyo-code 'utf-8)
-(add-to-list 'skk-extra-jisyo-file-list
-	     (concat external-directory "ddskk/SKK-JISYO.emoji.utf8"))
-(add-to-list 'skk-extra-jisyo-file-list
-	     (concat external-directory "ddskk/SKK-JISYO.emoji-ja.utf8"))
 
 (setq-default skk-kutouten-type 'en)
 (setq-default skk-kuten-touten-alist
