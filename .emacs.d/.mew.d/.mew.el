@@ -12,7 +12,7 @@
  (setq mew-addrbook-for-summary 'name)
 
  ;; マスターパスワード
- (setq mew-use-master-passwd t)
+ (setq mew-use-master-passwd nil)
 
  ;; draft mode は auto-save しない
  (setq mew-draft-mode-auto-save -1)
