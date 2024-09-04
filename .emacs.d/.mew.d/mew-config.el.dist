@@ -2,7 +2,17 @@
       '("User <user@example.com>"
         "User <user@example.jp>"
         "User <user@example.net>"))
-
+(setopt mew-oauth2-client-id "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com")
+(setopt mew-oauth2-client-secret "xxxxxxxxxxxxxxxxxxxxxxxx")
+(setopt mew-oauth2-redirect-url "http://localhost:8080")
+(setopt mew-oauth2-redirect-port 8080)
+(setopt mew-auth-oauth2-client-id mew-oauth2-client-id)
+(setopt mew-auth-oauth2-client-secret mew-oauth2-client-secret)
+(setopt mew-auth-oauth2-redirect-url mew-oauth2-redirect-url)
+(setopt mew-auth-oauth2-redirect-port mew-oauth2-redirect-port)
+(setq plstore-cache-passphrase-for-symmetric-encryption t)
+(setq epa-file-cache-passphrase-for-symmetric-encryption t)
+(setq epa-pinentry-mode 'loopback)
 (setq mew-config-alist
       '((Exchange
          (name             "User")
@@ -24,13 +34,22 @@
          (imap-size        0)
          (imap-header-only t))
         (Gmail
+         ("oauth2-client-id"  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com")
+         ("oauth2-client-secret"  "xxxxxxxxxxxxxxxxxxxxxxxx")
+         ("oauth2-auth-url"  "https://accounts.google.com/o/oauth2/auth")
+         ("oauth2-token-url"  "https://accounts.google.com/o/oauth2/token")
+         ("oauth2-resource-url"  "https://mail.google.com/")
+         ("oauth2-redirect-url"  "http://localhost:8080")
+         ("oauth2-redirect-port"  8080)
+         ("imap-auth-list"  ("XOAUTH2"))
+         ("smtp-auth-list"  ("XOAUTH2"))
          (name             "User")
          (user             "user")
          (mail-domain      "example.jp")
          (smtp-server      "smtp.gmail.com")
          (smtp-auth         t)
          (smtp-ssl          t)
-         (smtp-ssl-port    465)
+         (smtp-ssl-port    587)
          (smtp-user        "user@example.jp")
          (imap-user        "user@example.net")
          (imap-server      "imap.gmail.com")

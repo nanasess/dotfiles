@@ -1035,11 +1035,12 @@
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
 
 (el-get-bundle dockerfile-mode)
-
+(el-get-bundle oauth2
+  :type github
+  :pkgname "emacsmirror/oauth2")
 (add-to-list 'load-path (concat user-emacs-directory ".mew.d"))
 (load "mew-config" t t)
 (setq mew-rc-file ".mew")
-
 (el-get-bundle mew
   :type github
   :pkgname "kazu-yamamoto/Mew"

@@ -65,7 +65,7 @@
         (auto-save-buffers-enhanced :checksum "461e8c816c1b7c650be5f209078b381fe55da8c6")
         (popwin :checksum "f4bf2e4cbda328359b06d89e233c951cba30363e")
         (twittering-mode :checksum "114891e8fdb4f06b1326a6cf795e49c205cf9e29")
-        (mew :checksum "f46b06dba0c7f0aa371be30d704b6d9ba30a8321")
+        (mew :checksum "70b57878d5f7f9f81ff125b7ce52785ccbe8b46b")
         (dockerfile-mode :checksum "39a012a27fcf6fb629c447d13b6974baf906714c")
         (lsp-haskell :checksum "485c1148ce4d27030bb95b21c7289809294e7d31")
         (haskell-mode :checksum "d23ec34788286405f377ce485d2a17e302d94a4f")
