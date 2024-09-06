@@ -9,6 +9,7 @@ url
 tramp
 .edbi-ds-history
 el-get/*
+!el-get/.gitkeep
 .session
 elpa
 tutorial
@@ -47,3 +48,5 @@ server
 /bin/bundle/
 /node_modules/
 /yarn.lock
+/undo-tree
+!/undo-tree/.gitkeep
