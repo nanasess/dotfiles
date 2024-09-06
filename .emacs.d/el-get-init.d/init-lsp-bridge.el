@@ -36,7 +36,7 @@
   ;; (setq lsp-bridge-enable-log t)
   ;; (setq lsp-bridge-enable-debug t)
   ;; (setq lsp-bridge-signature-show-function 'lsp-bridge-signature-posframe)
-  ;; (setq acm-enable-tabnine t)
+  (setq acm-enable-tabnine nil)
   (global-set-key [remap xref-find-definitions] #'lsp-bridge-find-def)
   (global-set-key [remap xref-pop-marker-stack] #'lsp-bridge-find-def-return)
   (global-set-key (kbd "M-.") #'lsp-bridge-find-def)
