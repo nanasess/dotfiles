@@ -158,6 +158,9 @@
       skk-init-file (concat user-initial-directory "skk-init.el")
       skk-isearch-start-mode 'latin)
 (setq skk-preload nil)
+(add-hook 'skk-load-hook
+          (lambda ()
+            (require 'context-skk)))
 ;;; global key-bindings
 (global-unset-key (kbd "C-M-t"))
 (global-unset-key (kbd "C-z"))
@@ -182,8 +185,8 @@
 (if (fboundp 'pixel-scroll-precision-mode)
     (progn
       (setq scroll-step 1)
-      (setq-default scroll-conservatively 10000)
-      (setq-default scroll-margin 5)
+      (setq-default scroll-conservatively 0)
+      (setq-default scroll-margin 0)
 
       (setq pixel-scroll-precision-use-momentum t)
       (setq pixel-scroll-precision-interpolate-mice t)
@@ -227,7 +230,7 @@
           (setq wl-copy-process nil)
           (defun wl-copy (text)
             (setq wl-copy-process (make-process :name "wl-copy"
-                                                :buffe*r nil
+                                                :buffer nil
                                                 :command '("wl-copy" "-f" "-n")
                                                 :connection-type 'pipe
                                                 :noquery t))
@@ -258,6 +261,14 @@
 
 ;;; show-paren settings
 (show-paren-mode 1)
+;; (el-get-bundle puni
+;;   :type github
+;;   :pkgname "AmaiKinono/puni")
+;; (add-hook
+;;  'emacs-startup-hook
+;;  #'(lambda ()
+;;      (puni-global-mode)
+;;      (add-hook 'term-mode-hook #'puni-disable-puni-mode)))
 
 ;;; face settings
 (setq visible-bell t)
@@ -338,9 +349,10 @@
 
 (add-hook 'emacs-startup-hook 'doom-modeline-mode)
 
-(line-number-mode 1)
+(line-number-mode -1)
 (column-number-mode 1)
 (size-indication-mode 1)
+(global-display-line-numbers-mode t)
 
 (el-get-bundle symbol-overlay
   :type github
@@ -975,11 +987,11 @@
 ;;   :pkgname "emacs-php/php-mode"
 ;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
 ;;   :load-path ("lisp"))
-(el-get-bundle php-ts-mode
-  :type github
-  :pkgname "emacs-php/php-ts-mode"
-  :branch "master"
-  :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
+;; (el-get-bundle php-ts-mode
+;;   :type github
+;;   :pkgname "emacs-php/php-ts-mode"
+;;   :branch "master"
+;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
 (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-ts-mode))
 (with-eval-after-load 'php-ts-mode
   (add-to-list 'treesit-language-source-alist
@@ -992,7 +1004,9 @@
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   ;; (setq-local electric-layout-rules '((?{ . around)))
-  (electric-pair-local-mode t))
+  (electric-pair-local-mode t)
+  (with-eval-after-load 'skk
+    (add-to-list 'context-skk-programming-mode 'php-ts-mode)))
 
 (el-get-bundle php-runtime
   :type github
@@ -1145,30 +1159,6 @@
       (concat howm-directory "scratch.txt"))
 (auto-save-buffers-enhanced t)
 (global-set-key "\C-xas" 'auto-save-buffers-enhanced-toggle-activity)
-
-(el-get-bundle scratch-pop in zk-phi/scratch-pop)
-(global-set-key (kbd "C-c c") 'scratch-pop)
-(makunbound 'scratch-ext-minor-mode-map)
-(define-minor-mode scratch-ext-minor-mode
-  "Minor mode for *scratch* buffer."
-  nil ""
-  '(("\C-c\C-c" . scratch-pop-kill-ring-save-exit)
-    ("\C-c\C-e" . erase-buffer)))
-
-(with-current-buffer (get-buffer-create "*scratch*")
-  (erase-buffer)
-  (ignore-errors
-    (insert-file-contents auto-save-buffers-enhanced-file-related-with-scratch-buffer))
-  (setq header-line-format "scratch!!")
-  (scratch-ext-minor-mode 1))
-(defun scratch-pop-kill-ring-save-exit ()
-  "Save after close the contents of buffer to killring."
-  (interactive)
-  (kill-new (buffer-string))
-  (erase-buffer)
-  (funcall (if (fboundp 'popwin:close-popup-window)
-               'popwin:close-popup-window
-             'quit-window)))
 
 (el-get-bundle gcmh)
 (gcmh-mode 1)
