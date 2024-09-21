@@ -60,6 +60,7 @@
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
+(setq debug-on-error t)
 
 (setopt el-get-bundle-sync t
       el-get-is-lazy t
@@ -292,21 +293,6 @@
 (setq whitespace-display-mappings nil)
 (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
 (setq whitespace-space-regexp "\\(\u3000+\\)")
-
-(set-face-attribute 'whitespace-trailing nil
-                    :foreground nil
-                    :background "#FDF6E3"
-                    :underline t)
-(set-face-attribute 'whitespace-tab nil
-                    ;; base4
-                    :foreground "#E1DBCD"
-                    :background "#E1DBCD"
-                    :underline nil)
-(set-face-attribute 'whitespace-space nil
-                    ;; base5
-                    :foreground "#D6D6D6"
-                    :background "#D6D6D6"
-                    :underline nil)
 (setq whitespace-global-modes
       '(not dired-mode tar-mode magit-log-mode magit-diff-mode mew-draft-mode))
 (global-whitespace-mode t)
