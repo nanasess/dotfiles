@@ -51,9 +51,8 @@
 ;;       '("Text/Html" "Text/Plain" ".*"))
 
 ;; 起動時に自動取得しない
-;(setq mew-auto-get nil)
+(setq mew-auto-get nil)
 
-(setq mew-thread-indent-strings [" +" " +" " |" "  "])
 (setq mew-mailbox-type 'mbox)
 (setq mew-mbox-command "incm")
 (setq mew-mbox-command-arg "-u -d $HOME/Maildir")
@@ -75,10 +74,3 @@
       (dnd-handle-one-url (get-buffer-window)
 			  'copy
 			  (concat "file://" f)))))
-
-;; See Also.
-;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=9610#31
-(add-hook 'mew-summary-mode-hook
-	  '(lambda ()
-	     (setq bidi-paragraph-direction 'left-to-right)))
-;; http://www.mew.org/pipermail/mew-dist/2012-June/029210.html
