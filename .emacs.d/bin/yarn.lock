@@ -204,10 +204,10 @@ base64-js@^1.3.1:
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
-bash-language-server@^5.4.0:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/bash-language-server/-/bash-language-server-5.4.0.tgz#81e0b4883397b756479aa9577df0566b33bf40de"
-  integrity sha512-YLCIBjnwdxvlwlurTA4Be7UfPXDzaWCJKzJwzO8rVjJH0QlbhPvo3FXkYOBXPLg81G4hb0ZbhSAi4+yrs7j5cQ==
+bash-language-server@^5.4.2:
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/bash-language-server/-/bash-language-server-5.4.2.tgz#b1214f20bf2050f926d4f969efd002a2c385ff96"
+  integrity sha512-3N2INRlio63A5CwvDz2sZEWFp46H3sm7OD2IU/kr8MSYKAIRt/xD23arT7daJfYKLC+I6ijWsvaFs9tP6Bo00Q==
   dependencies:
     editorconfig "2.0.0"
     fast-glob "3.3.2"
@@ -215,8 +215,8 @@ bash-language-server@^5.4.0:
     node-fetch "2.7.0"
     turndown "7.1.3"
     vscode-languageserver "8.0.2"
-    vscode-languageserver-textdocument "1.0.11"
-    web-tree-sitter "0.22.5"
+    vscode-languageserver-textdocument "1.0.12"
+    web-tree-sitter "0.23.0"
     zod "3.22.4"
 
 bl@^4.0.3:
@@ -1854,20 +1854,15 @@ vscode-languageserver-protocol@^3.17.1:
     vscode-jsonrpc "8.2.0"
     vscode-languageserver-types "3.17.5"
 
-vscode-languageserver-textdocument@1.0.11:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.11.tgz#0822a000e7d4dc083312580d7575fe9e3ba2e2bf"
-  integrity sha512-X+8T3GoiwTVlJbicx/sIAF+yuJAqz8VvwJyoMVhwEMoEKE/fkDmrqUgDMyBECcM2A2frVZIUj5HI/ErRXCfOeA==
+vscode-languageserver-textdocument@1.0.12, vscode-languageserver-textdocument@^1.0.1, vscode-languageserver-textdocument@^1.0.11, vscode-languageserver-textdocument@^1.0.8, vscode-languageserver-textdocument@~1.0.8:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.12.tgz#457ee04271ab38998a093c68c2342f53f6e4a631"
+  integrity sha512-cxWNPesCnQCcMPeenjKKsOCKQZ/L6Tv19DTRIGuLWe32lyzWhihGVJ/rcckZXJxfdKCFvRLS3fpBIsV/ZGX4zA==
 
 vscode-languageserver-textdocument@1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.8.tgz#9eae94509cbd945ea44bca8dcfe4bb0c15bb3ac0"
   integrity sha512-1bonkGqQs5/fxGT5UchTgjGVnfysL0O8v1AYMBjqTbWQTFn721zaPGDYFkOKtfDgFiSgXM3KwaG3FMGfW4Ed9Q==
-
-vscode-languageserver-textdocument@^1.0.1, vscode-languageserver-textdocument@^1.0.11, vscode-languageserver-textdocument@^1.0.8, vscode-languageserver-textdocument@~1.0.8:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.12.tgz#457ee04271ab38998a093c68c2342f53f6e4a631"
-  integrity sha512-cxWNPesCnQCcMPeenjKKsOCKQZ/L6Tv19DTRIGuLWe32lyzWhihGVJ/rcckZXJxfdKCFvRLS3fpBIsV/ZGX4zA==
 
 vscode-languageserver-types@3.16.0:
   version "3.16.0"
@@ -1937,10 +1932,10 @@ vscode-uri@^3.0.2, vscode-uri@^3.0.7, vscode-uri@^3.0.8:
   resolved "https://registry.yarnpkg.com/vscode-uri/-/vscode-uri-3.0.8.tgz#1770938d3e72588659a172d0fd4642780083ff9f"
   integrity sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==
 
-web-tree-sitter@0.22.5:
-  version "0.22.5"
-  resolved "https://registry.yarnpkg.com/web-tree-sitter/-/web-tree-sitter-0.22.5.tgz#12c7ce61cccbe2430f995a868c3ef696c3642437"
-  integrity sha512-rGX2jRXjcGOhf35zWyO0i/+Wjz4/KVUYN9Oh3AhDsZ0fGOgTIkw/bMhqwvc8L7HgMK8rqDq9RcROWc7lnsnhWg==
+web-tree-sitter@0.23.0:
+  version "0.23.0"
+  resolved "https://registry.yarnpkg.com/web-tree-sitter/-/web-tree-sitter-0.23.0.tgz#adaddeeda1e0f09eb378e5b9f2134e3c07128186"
+  integrity sha512-p1T+ju2H30fpVX2q5yr+Wv/NfdMMWMjQp9Q+4eEPrHAJpPFh9DPfI2Yr9L1f5SA5KPE+g1cNUqPbpihxUDzmVw==
 
 web-worker@^1.2.0:
   version "1.3.0"
