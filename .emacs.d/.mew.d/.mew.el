@@ -1,7 +1,7 @@
 ;; Mew Setting
 
  ;; format-flowed
- (setq mew-use-format-flowed t)
+ (setq mew-use-format-flowed nil)
 
  ;; 未読マーク
  (setq mew-use-unread-mark t)
@@ -57,7 +57,7 @@
 (setq mew-mbox-command "incm")
 (setq mew-mbox-command-arg "-u -d $HOME/Maildir")
 
-(setq mew-use-biff t)
+(setq mew-use-biff nil)
 (setq mew-pop-biff-interval 1)
 (setq mew-use-cached-passwd t)
 (setq mew-passwd-lifetime 30)
