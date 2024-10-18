@@ -952,7 +952,7 @@
             #'(lambda ()
                 (setq web-mode-enable-auto-indentation nil)))
   (add-hook 'web-mode-hook 'editorconfig-apply)
-  (add-hook 'web-mode-hook 'prettier-js-mode)
+  ;; (add-hook 'web-mode-hook 'prettier-js-mode)
   (add-hook 'web-mode-hook
             #'(lambda ()
                 (when (string-equal "vue" (file-name-extension buffer-file-name))
