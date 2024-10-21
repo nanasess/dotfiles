@@ -2,7 +2,7 @@ bcrypt==4.2.0
 cffi==1.17.1
 cryptography==43.0.0
 epc==0.0.5
-orjson==3.10.7
+orjson==3.10.9
 paramiko==3.5.0
 pycparser==2.22
 PyNaCl==1.5.0
