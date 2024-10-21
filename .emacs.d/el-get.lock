@@ -34,7 +34,7 @@
                        "25fb775178d16decb818b75f32fd23301c0f5da0")
         (compat :checksum "8d4e8a366681def88751f5e9975738ecd3180deb")
         (lsp-bridge :checksum
-                    "fe7a0729f9f46a0713b7049d20b25bb78d93f68f")
+                    "c4deceaca79888a30c1195f1a1bc8c80b95d50c8")
         (copilot :checksum "f831b2b8375950eb1cc282d15ccc78ed90f30a1a")
         (eldoc-box :checksum
                    "5c067f5c195198ffd16df2f455da95e46cc8ce02")
@@ -81,7 +81,7 @@
         (tree-mode :checksum
                    "b06078826d5875d74b0e7b7ac47b0d0917610534")
         (with-editor :checksum
-          "5db5f0eb2202f52d44f529fe00654c866bb64eb1")
+                     "5db5f0eb2202f52d44f529fe00654c866bb64eb1")
         (terminal-here :checksum
                        "c996304c1e873e561108a509129b9e4358d354d5")
         (emacs-sql-indent :checksum
