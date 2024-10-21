@@ -12,9 +12,9 @@
 ;; )
 ;;;
 ;;; see https://github.com/4U6U57/wsl-open
-(when (executable-find "wsl-open")
-  (setq browse-url-generic-program "wsl-open")
-  (setq browse-url-browser-function 'browse-url-generic))
+;; (when (executable-find "wsl-open")
+;;   (setq browse-url-generic-program "wsl-open")
+;;   (setq browse-url-browser-function 'browse-url-generic))
 
 (require 'server)
 (unless (server-running-p)
