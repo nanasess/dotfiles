@@ -10,4 +10,4 @@ rapidfuzz==3.10.0
 setuptools==72.1.0
 sexpdata==1.0.2
 six==1.16.0
-watchdog==5.0.3
+watchdog==6.0.0
