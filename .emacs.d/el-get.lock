@@ -34,7 +34,7 @@
                        "25fb775178d16decb818b75f32fd23301c0f5da0")
         (compat :checksum "8d4e8a366681def88751f5e9975738ecd3180deb")
         (lsp-bridge :checksum
-                    "c4deceaca79888a30c1195f1a1bc8c80b95d50c8")
+                    "7241afe14527b3e4312e457423ebceac3cfc6952")
         (copilot :checksum "f831b2b8375950eb1cc282d15ccc78ed90f30a1a")
         (eldoc-box :checksum
                    "5c067f5c195198ffd16df2f455da95e46cc8ce02")
