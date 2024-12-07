@@ -1,7 +1,7 @@
 ;; Mew Setting
 
  ;; format-flowed
- (setq mew-use-format-flowed t)
+ (setq mew-use-format-flowed nil)
 
  ;; 未読マーク
  (setq mew-use-unread-mark t)
@@ -51,14 +51,13 @@
 ;;       '("Text/Html" "Text/Plain" ".*"))
 
 ;; 起動時に自動取得しない
-;(setq mew-auto-get nil)
+(setq mew-auto-get nil)
 
-(setq mew-thread-indent-strings [" +" " +" " |" "  "])
 (setq mew-mailbox-type 'mbox)
 (setq mew-mbox-command "incm")
 (setq mew-mbox-command-arg "-u -d $HOME/Maildir")
 
-(setq mew-use-biff t)
+(setq mew-use-biff nil)
 (setq mew-pop-biff-interval 1)
 (setq mew-use-cached-passwd t)
 (setq mew-passwd-lifetime 30)
@@ -75,10 +74,3 @@
       (dnd-handle-one-url (get-buffer-window)
 			  'copy
 			  (concat "file://" f)))))
-
-;; See Also.
-;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=9610#31
-(add-hook 'mew-summary-mode-hook
-	  '(lambda ()
-	     (setq bidi-paragraph-direction 'left-to-right)))
-;; http://www.mew.org/pipermail/mew-dist/2012-June/029210.html
