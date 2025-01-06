@@ -7,7 +7,7 @@
   "dependencies": {
     "@emacs-eask/cli": "^0.10.0",
     "@mermaid-js/mermaid-cli": "^10.9.1",
-    "bash-language-server": "^5.4.0",
+    "bash-language-server": "^5.4.3",
     "copilot-node-server": "^1.41.0",
     "dockerfile-language-server-nodejs": "^0.13.0",
     "typescript": "^5.5.4",
