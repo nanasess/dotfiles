@@ -30,10 +30,10 @@
   resolved "https://registry.yarnpkg.com/@braintree/sanitize-url/-/sanitize-url-6.0.4.tgz#923ca57e173c6b232bbbb07347b1be982f03e783"
   integrity sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==
 
-"@emacs-eask/cli@^0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@emacs-eask/cli/-/cli-0.10.0.tgz#4e1dac6850fb8a5ea802d6320e0719fea0bb1966"
-  integrity sha512-c3Z2a6qzJxfADIKJ5BWnKjdkp3gfws2nqrMs9MPYBt0SFjqhKn0+0EJDfb/S5HlBpW9sZEy0FBq5hO6YFyicvQ==
+"@emacs-eask/cli@^0.10.3":
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/@emacs-eask/cli/-/cli-0.10.3.tgz#f6aebb13d2110c14f9b1b24f41f6097bcffb7212"
+  integrity sha512-4FjTp1WMHo8p2PoAoOVSa68UoOEMTy9cyC7+pCt87fY3R3MEDjKegvvtnefYtiI91AFAJXsfFsofWobm3fjdaQ==
   dependencies:
     which "^4.0.0"
     yargs "^17.0.0"
