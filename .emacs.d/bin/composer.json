@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "phpstan/phpstan": "^1.8@stable",
+        "phpstan/phpstan": "^2.1",
         "psy/psysh": "@stable",
         "phpactor/class-to-file": "*@dev",
         "jetbrains/phpstorm-stubs": "*@dev",
