@@ -163,6 +163,7 @@
           (lambda ()
             (require 'context-skk)))
 ;;; global key-bindings
+(which-key-mode 1)
 (global-unset-key (kbd "C-M-t"))
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-\\"))
