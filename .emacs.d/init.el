@@ -163,7 +163,10 @@
           (lambda ()
             (require 'context-skk)))
 ;;; global key-bindings
-(which-key-mode 1)
+(add-hook
+ 'emacs-startup-hook
+ #'(lambda ()
+     (which-key-mode 1)))
 (global-unset-key (kbd "C-M-t"))
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-\\"))
@@ -183,43 +186,44 @@
 (global-set-key (kbd "C-x <right>") 'find-file)
 (global-set-key (kbd "C-x <end>") 'eval-last-sexp)
 
-;; https://www.reddit.com/r/emacs/comments/13accue/emacs_29_pixelscrollprecisionmode_seems_to_break/
-(if (fboundp 'pixel-scroll-precision-mode)
-    (progn
-      (setq scroll-step 1)
-      (setq-default scroll-conservatively 0)
-      (setq-default scroll-margin 0)
+(el-get-bundle ultra-scroll
+  :type github
+  :pkgname "jdtsmith/ultra-scroll"
+  :branch "main")
+(add-hook 'emacs-startup-hook
+          #'(lambda ()
+              (pixel-scroll-precision-mode t)
+              (setq scroll-conservatively 101 ; important!
+                    scroll-margin 0
+                    scroll-step 1
+                    pixel-scroll-precision-use-momentum t
+                    pixel-scroll-precision-interpolate-mice t
+                    pixel-scroll-precision-large-scroll-height 10.0
+                    pixel-scroll-precision-interpolation-factor 1.0
+                    pixel-scroll-precision-interpolate-page t
+                    pixel-scroll-precision-interpolation-total-time 0.25)
 
-      (setq pixel-scroll-precision-use-momentum t)
-      (setq pixel-scroll-precision-interpolate-mice t)
-      (setq pixel-scroll-precision-large-scroll-height 10.0)
-      (setq pixel-scroll-precision-interpolation-factor 1.0)
-      (setq pixel-scroll-precision-interpolate-page t)
-      (setq pixel-scroll-precision-interpolation-total-time 0.25)
-      (pixel-scroll-precision-mode t)
+              (ultra-scroll-mode 1)
+              ;; https://www.reddit.com/r/emacs/comments/13accue/emacs_29_pixelscrollprecisionmode_seems_to_break/
+              (defun +pixel-scroll-interpolate-down ()
+                "Interpolate a scroll downwards by one page."
+                (interactive)
+                (if pixel-scroll-precision-interpolate-page
+                    (pixel-scroll-precision-interpolate
+                     ;; Don't use an interpolation factor,
+                     ;; since we want exactly 1 page to be scrolled.
+                     (- (/ (window-text-height nil t) 2)) nil 1)
+                  (cua-scroll-up)))
 
-      (defun +pixel-scroll-interpolate-down ()
-        "Interpolate a scroll downwards by one page."
-        (interactive)
-        (if pixel-scroll-precision-interpolate-page
-            (pixel-scroll-precision-interpolate (- (/ (window-text-height nil t) 2))
-                                                ;; Don't use an
-                                                ;; interpolation factor,
-                                                ;; since we want exactly 1
-                                                ;; page to be scrolled.
-                                                nil 1)
-          (cua-scroll-up)))
-
-      (defun +pixel-scroll-interpolate-up ()
-        "Interpolate a scroll upwards by one page."
-        (interactive)
-        (if pixel-scroll-precision-interpolate-page
-            (pixel-scroll-precision-interpolate (/ (window-text-height nil t) 2)
-                                                nil 1)
-          (cua-scroll-down)))
-
-      (global-set-key (kbd "C-v") '+pixel-scroll-interpolate-down)
-      (global-set-key (kbd "M-v") '+pixel-scroll-interpolate-up)))
+              (defun +pixel-scroll-interpolate-up ()
+                "Interpolate a scroll upwards by one page."
+                (interactive)
+                (if pixel-scroll-precision-interpolate-page
+                    (pixel-scroll-precision-interpolate
+                     (/ (window-text-height nil t) 2) nil 1)
+                  (cua-scroll-down)))
+              (global-set-key (kbd "C-v") '+pixel-scroll-interpolate-down)
+              (global-set-key (kbd "M-v") '+pixel-scroll-interpolate-up)))
 
 ;; see http://cha.la.coocan.jp/wp/2024/05/05/post-1300/
 ;; you need to install "wl-clipboard" first.
@@ -539,7 +543,7 @@
 (el-get-bundle magit
   :type github
   :pkgname "magit/magit"
-  :depends (dash transient with-editor compat)
+  :depends (transient with-editor compat)
   :load-path "lisp/"
   :compile "lisp/"
   :build `(("make" ,(format "EMACSBIN=%s" el-get-emacs) "lisp")
@@ -1161,10 +1165,10 @@
   (shell-command-on-region beg end "jq ." nil t))
 (setq treesit-language-source-alist
       '((csharp . ("https://github.com/tree-sitter/tree-sitter-c-sharp.git"))))
-(add-hook 'emacs-startup-hook
-          #'(lambda ()
-              (add-to-list 'major-mode-remap-alist
-                           '(csharp-mode . csharp-ts-mode))))
+;; (add-hook 'emacs-startup-hook
+;;           #'(lambda ()
+;;               (add-to-list 'major-mode-remap-alist
+;;                            '(csharp-mode . csharp-ts-mode))))
 (el-get 'sync)
 (ffap-bindings)
 ;; (setq epa-pinentry-mode 'loopback)
