@@ -544,6 +544,8 @@
   :type github
   :pkgname "chep/copilot-chat.el"
   :depends (shell-maker))
+(setopt copilot-chat-frontend 'markdown)
+
 (el-get-bundle transient
   :branch "main")
 (el-get-bundle with-editor
@@ -881,7 +883,7 @@
 
 (el-get-bundle copilot
   :type github
-  :pkgname "zerolfx/copilot.el"
+  :pkgname "copilot-emacs/copilot.el"
   :branch "main")
 (add-hook 'prog-mode-hook 'copilot-mode)
 (defun copilot-tab ()
