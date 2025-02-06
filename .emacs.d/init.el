@@ -536,6 +536,14 @@
   :type github
   :pkgname "emacsorphanage/tree-mode")
 (setenv "EDITOR" "emacsclient")
+(el-get-bundle shell-maker
+  :type github
+  :pkgname "xenodium/shell-maker"
+  :branch "main")
+(el-get-bundle chep/copilot-chat.el
+  :type github
+  :pkgname "chep/copilot-chat.el"
+  :depends (shell-maker))
 (el-get-bundle transient
   :branch "main")
 (el-get-bundle with-editor
@@ -551,7 +559,8 @@
   :branch "main")
 (with-eval-after-load 'git-commit
   ;; It is recommended to run `git config --global commit.verbose true`
-  (add-hook 'git-commit-setup-hook #'copilot-mode))
+  (add-hook 'git-commit-setup-hook #'copilot-mode)
+  (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message))
 (with-eval-after-load 'magit
   ;; (require 'forge)
   ;; see https://stackoverflow.com/a/32914548/4956633
