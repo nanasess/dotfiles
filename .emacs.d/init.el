@@ -549,6 +549,9 @@
   :build `(("make" ,(format "EMACSBIN=%s" el-get-emacs) "lisp")
            ("touch" "lisp/magit-autoloads.el"))
   :branch "main")
+(with-eval-after-load 'git-commit
+  ;; It is recommended to run `git config --global commit.verbose true`
+  (add-hook 'git-commit-setup-hook #'copilot-mode))
 (with-eval-after-load 'magit
   ;; (require 'forge)
   ;; see https://stackoverflow.com/a/32914548/4956633
