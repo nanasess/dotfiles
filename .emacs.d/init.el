@@ -564,6 +564,9 @@
   :depends (shell-maker))
 (setopt copilot-chat-frontend 'markdown)
 
+(el-get-bundle llama
+  :type github
+  :pkgname "tarsius/llama")
 (el-get-bundle transient
   :branch "main")
 (el-get-bundle with-editor
