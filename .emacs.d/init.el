@@ -1049,8 +1049,7 @@
 (el-get-bundle fsharp-mode
   :type github
   :pkgname "fsharp/emacs-fsharp-mode"
-  :depends (jsonrpc)
-  :load-path ("."))
+  :depends (jsonrpc))
 
 (el-get-bundle haskell-mode
   :type github
