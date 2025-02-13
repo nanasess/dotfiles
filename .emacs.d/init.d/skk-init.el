@@ -21,7 +21,7 @@
 (setq skk-use-face t)
 (setq skk-use-color-cursor t)
 (setq skk-japanese-message-and-error nil)
-(setq skk-show-annotation t)
+(setq skk-show-annotation nil)
 (setq skk-auto-start-henkan t)
 (setq skk-show-icon t)
 (setq skk-dcomp-activate nil)
