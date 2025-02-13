@@ -36,7 +36,7 @@
         (fosi :checksum "c1d5ed6bc4c6c1e5d8c14c21ff0d6234e65bc83a")
         (wakatime-mode :checksum
                        "25fb775178d16decb818b75f32fd23301c0f5da0")
-        (compat :checksum "8d4e8a366681def88751f5e9975738ecd3180deb")
+        (compat :checksum "bfc0a46098be2dcaad0518ec200ff5a2be5cc9bb")
         (lsp-bridge :checksum
                     "c4520d69effa9a01dc1ef2c025e713c7b6f3094f")
         (copilot :checksum "f831b2b8375950eb1cc282d15ccc78ed90f30a1a")
@@ -85,7 +85,7 @@
         (tree-mode :checksum
                    "b06078826d5875d74b0e7b7ac47b0d0917610534")
         (with-editor :checksum
-                     "ca902ae02972bdd6919a902be2593d8cb6bd991b")
+          "ca902ae02972bdd6919a902be2593d8cb6bd991b")
         (terminal-here :checksum
                        "c996304c1e873e561108a509129b9e4358d354d5")
         (emacs-sql-indent :checksum
