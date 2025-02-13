@@ -320,7 +320,8 @@
 (el-get-bundle all-the-icons)
 (el-get-bundle nerd-icons.el
   :type github
-  :pkgname "rainstormstudio/nerd-icons.el")
+  :pkgname "rainstormstudio/nerd-icons.el"
+  :branch "main")
 (with-eval-after-load 'nerd-icons
   (setf (alist-get "php" nerd-icons-extension-icon-alist)
         '(nerd-icons-sucicon "nf-seti-php" :face nerd-icons-lpurple))

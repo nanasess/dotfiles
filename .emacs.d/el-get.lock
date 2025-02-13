@@ -18,7 +18,7 @@
         (eglot :checksum "db91d58374627a195b731a61bead9b4f84a7e4bc")
         (oauth2 :checksum "0147cabd8e82e46af27aef07aeed402b0bb9a0fb")
         (nerd-icons.el :checksum
-                       "66658b89287c3599c7b9b6babea7bcb3dff9a9e4")
+                       "546ee20caf825e65da4c5435d31f13d269ed2a81")
         (fsharp-mode :checksum
                      "677d78c4d6cb574086408082dedbcaef04a85359")
         (nard-icons.el :checksum
