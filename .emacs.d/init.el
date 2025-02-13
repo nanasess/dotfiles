@@ -61,6 +61,7 @@
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
 (setq debug-on-error t)
+(setq warning-minimum-level :error)
 
 (setopt el-get-bundle-sync t
         el-get-is-lazy t
