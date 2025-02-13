@@ -63,10 +63,10 @@
 (setq debug-on-error t)
 
 (setopt el-get-bundle-sync t
-      el-get-is-lazy t
-      el-get-verbose nil
-      el-get-bundle-byte-compile t
-      el-get-auto-update-cached-recipes nil)
+        el-get-is-lazy t
+        el-get-verbose nil
+        el-get-bundle-byte-compile t
+        el-get-auto-update-cached-recipes nil)
 
 (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
 (unless (require 'el-get nil 'noerror)
@@ -538,6 +538,24 @@
   :type github
   :pkgname "xenodium/shell-maker"
   :branch "main")
+
+(el-get-bundle copilot
+  :type github
+  :pkgname "copilot-emacs/copilot.el"
+  :branch "main")
+(add-hook 'prog-mode-hook 'copilot-mode)
+(defun copilot-tab ()
+  (interactive)
+  (or (copilot-accept-completion)
+      (indent-for-tab-command)))
+(with-eval-after-load 'copilot
+  (define-key copilot-mode-map (kbd "TAB") #'copilot-tab)
+  (define-key copilot-mode-map [(tab)] #'copilot-tab)
+  (define-key copilot-mode-map (kbd "C-TAB") #'copilot-accept-completion-by-word)
+  (define-key copilot-mode-map (kbd "C-<tab>") #'copilot-accept-completion-by-word)
+  (define-key copilot-mode-map (kbd "C-z n") #'copilot-next-completion)
+  (define-key copilot-mode-map (kbd "C-z p") #'copilot-previous-completion))
+
 (el-get-bundle chep/copilot-chat.el
   :type github
   :pkgname "chep/copilot-chat.el"
@@ -878,19 +896,6 @@
 ;;   :type github
 ;;   :pkgname "Alexander-Miller/treemacs"
 ;;   :load-path ("src/elisp"))
-
-(el-get-bundle copilot
-  :type github
-  :pkgname "copilot-emacs/copilot.el"
-  :branch "main")
-(add-hook 'prog-mode-hook 'copilot-mode)
-(defun copilot-tab ()
-  (interactive)
-  (or (copilot-accept-completion)
-      (indent-for-tab-command)))
-(with-eval-after-load 'copilot
-  (define-key copilot-mode-map (kbd "TAB") #'copilot-tab)
-  (define-key copilot-mode-map [(tab)] #'copilot-tab))
 
 (setq x-gtk-resize-child-frames 'resize-mode)
 (el-get-bundle lsp-bridge
