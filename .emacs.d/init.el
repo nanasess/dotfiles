@@ -159,9 +159,7 @@
       skk-init-file (concat user-initial-directory "skk-init.el")
       skk-isearch-start-mode 'latin)
 (setq skk-preload nil)
-(add-hook 'skk-load-hook
-          (lambda ()
-            (require 'context-skk)))
+
 ;;; global key-bindings
 (add-hook
  'emacs-startup-hook
