@@ -646,9 +646,9 @@
 
 (setopt howm-directory (concat external-directory "howm/"))
 (el-get-bundle howm
-  ;; :type github
-  ;; :pkgname "kaorahi/howm"
-  ;; :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
+  :type github
+  :pkgname "kaorahi/howm"
+  :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
   :prepare (progn
              (defvar howm-menu-lang 'ja)
              (defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt")
@@ -1046,7 +1046,7 @@
   :pkgname "Groovy-Emacs-Modes/groovy-emacs-modes")
 
 (el-get-bundle csv-mode in emacsmirror/csv-mode)
-(el-get-bundle fsharp-mode
+(el-get-bundle emacs-fsharp-mode
   :type github
   :pkgname "fsharp/emacs-fsharp-mode"
   :depends (jsonrpc))

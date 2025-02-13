@@ -1,5 +1,7 @@
 (setq el-get-lock-package-versions
-      '((llama :checksum "9802c215a3eea748d9d7f81a1465850388006897")
+      '((emacs-fsharp-mode :checksum
+                           "677d78c4d6cb574086408082dedbcaef04a85359")
+        (llama :checksum "9802c215a3eea748d9d7f81a1465850388006897")
         (ultra-scroll :checksum
                       "2c517bf9b61bf432f706ff8a585ba453c7476be2")
         (shell-maker :checksum
@@ -88,7 +90,7 @@
         (tree-mode :checksum
                    "b06078826d5875d74b0e7b7ac47b0d0917610534")
         (with-editor :checksum
-                     "ca902ae02972bdd6919a902be2593d8cb6bd991b")
+          "ca902ae02972bdd6919a902be2593d8cb6bd991b")
         (terminal-here :checksum
                        "d321d9e33e42cba045341b0ef4d978056ad6f4d7")
         (emacs-sql-indent :checksum
