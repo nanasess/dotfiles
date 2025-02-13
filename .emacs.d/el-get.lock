@@ -88,7 +88,7 @@
         (tree-mode :checksum
                    "b06078826d5875d74b0e7b7ac47b0d0917610534")
         (with-editor :checksum
-                     "ca902ae02972bdd6919a902be2593d8cb6bd991b")
+          "ca902ae02972bdd6919a902be2593d8cb6bd991b")
         (terminal-here :checksum
                        "d321d9e33e42cba045341b0ef4d978056ad6f4d7")
         (emacs-sql-indent :checksum
@@ -183,7 +183,7 @@
         (helm-ls-git :checksum
                      "ae2202fbbbe11873ad4b393a6959da50ac250c1e")
         (helm :checksum "4e99cc8ef66aac2d824c456f58abe833be26c99d")
-        (howm :checksum "ffc1e7da1f02f750094a9f0fe8a0aa837743193b")
+        (howm :checksum "83e41a06994b92598eeefe78a23ba794b5474924")
         (magit :checksum "4a01405bf1b6cdcaafabcbf7692a1ad0f67ea7b5")
         (transient :checksum
                    "32a7e256aab281bada5db8569e0871c8c3ad2115")
