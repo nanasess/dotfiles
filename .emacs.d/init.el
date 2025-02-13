@@ -566,7 +566,8 @@
 
 (el-get-bundle llama
   :type github
-  :pkgname "tarsius/llama")
+  :pkgname "tarsius/llama"
+  :branch "main")
 (el-get-bundle transient
   :branch "main")
 (el-get-bundle with-editor
