@@ -1114,18 +1114,6 @@
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
                             'po-find-file-coding-system)
 
-
-;;; brew install plantuml
-(el-get-bundle plantuml-mode
-  :type github
-  :pkgname "skuro/plantuml-mode")
-(add-to-list 'auto-mode-alist '("\\.puml$" . plantuml-mode))
-(with-eval-after-load 'plantuml-mode
-  (setq plantuml-indent-level 2)
-  (setq plantuml-executable-path "plantuml")
-  (setq plantuml-default-exec-mode 'executable)
-  (setq plantuml-output-type "png"))
-
 (el-get-bundle mermaid-mode
   :type github
   :pkgname "abrochard/mermaid-mode")
