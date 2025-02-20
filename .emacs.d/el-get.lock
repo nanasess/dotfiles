@@ -96,7 +96,7 @@
         (emacs-sql-indent :checksum
                           "2ed4c6a26b8f3d651ac6231eaafb2565d77c918b")
         (editorconfig :checksum
-                      "24f5b2b1cd4e37adc245fb59f7edeb6872a707a4")
+                      "1a9942746cf5b10daae8962f380b5f2a459086f3")
         (recentf-ext :checksum
                      "95f81dfac24d3f67002024f0a24e6b997bf6d647")
         (plantuml-mode :checksum
