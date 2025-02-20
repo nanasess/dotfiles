@@ -1,5 +1,8 @@
 (setq el-get-lock-package-versions
-      '((emacs-fsharp-mode :checksum
+      '((poly-markdown :checksum
+                       "98695eb7ca4ca11dcec71a1cab64903bbf79b4d3")
+        (polymode :checksum "74ba75d4bcfbea959ccc9080a95ab9ef759849f2")
+        (emacs-fsharp-mode :checksum
                            "677d78c4d6cb574086408082dedbcaef04a85359")
         (llama :checksum "9802c215a3eea748d9d7f81a1465850388006897")
         (ultra-scroll :checksum
@@ -7,7 +10,7 @@
         (shell-maker :checksum
                      "72ce76bb3059e6c715b2471856851aac21198ac7")
         (copilot-chat.el :checksum
-                         "efc6af7acc6c92165a71942ec30dafe73ac8ff1a")
+                         "d358e33f3f37267774c92f413f528cff89ecccb9")
         (puni :checksum "72e091ef30e0c9299dbcd0bc4669ab9bb8fb6e47")
         (emacs-todoist :checksum
                        "205c730a4615dec20ea71ccd0a09479a420cb974")
@@ -90,7 +93,7 @@
         (tree-mode :checksum
                    "b06078826d5875d74b0e7b7ac47b0d0917610534")
         (with-editor :checksum
-          "ca902ae02972bdd6919a902be2593d8cb6bd991b")
+                     "ca902ae02972bdd6919a902be2593d8cb6bd991b")
         (terminal-here :checksum
                        "d321d9e33e42cba045341b0ef4d978056ad6f4d7")
         (emacs-sql-indent :checksum

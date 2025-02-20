@@ -557,11 +557,16 @@
   (define-key copilot-mode-map (kbd "C-<tab>") #'copilot-accept-completion-by-word)
   (define-key copilot-mode-map (kbd "C-z n") #'copilot-next-completion)
   (define-key copilot-mode-map (kbd "C-z p") #'copilot-previous-completion))
-
-(el-get-bundle chep/copilot-chat.el
+(el-get-bundle polymode
+  :type github
+  :pkgname "polymode/polymode")
+(el-get-bundle poly-markdown
+  :type github
+  :pkgname "polymode/poly-markdown")
+(el-get-bundle copilot-chat.el
   :type github
   :pkgname "chep/copilot-chat.el"
-  :depends (shell-maker))
+  :depends (polymode poly-markdown))
 (setopt copilot-chat-frontend 'markdown)
 
 (el-get-bundle llama
