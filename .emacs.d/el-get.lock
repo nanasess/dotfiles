@@ -192,7 +192,7 @@
         (smart-jump :checksum
                     "3392eb35e3cde37e6f5f2a48dc0db15ca535143c")
         (dumb-jump :checksum
-                   "9f3967b0bea038c37d4a6c6bb96144574bb706ee")
+                   "93665381d94a468e3fe965e3688995c1290e92b7")
         (popup :checksum "4b35c57ec88428233eecf27537854fc1f5f802ff")
         (multiple-cursors :checksum
                           "89f1a8df9b1fc721b1672b4c7b6d3ab451e7e3ef")
