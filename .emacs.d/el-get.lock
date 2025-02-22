@@ -191,7 +191,7 @@
         (howm :checksum "00fb080ccc7d6929a6ee9bb480484c9308727d09")
         (magit :checksum "9914feb4d5a2feab091076be554d80781594869d")
         (transient :checksum
-                   "0439eb80d89e51b71e71faac689b1136f180ec46")
+                   "abb71675b5b538c91c838207385b913b58e29718")
         (smart-jump :checksum
                     "3392eb35e3cde37e6f5f2a48dc0db15ca535143c")
         (dumb-jump :checksum
