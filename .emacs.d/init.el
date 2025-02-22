@@ -320,7 +320,8 @@
 (el-get-bundle all-the-icons)
 (el-get-bundle nerd-icons.el
   :type github
-  :pkgname "rainstormstudio/nerd-icons.el")
+  :pkgname "rainstormstudio/nerd-icons.el"
+  :branch "main")
 (with-eval-after-load 'nerd-icons
   (setf (alist-get "php" nerd-icons-extension-icon-alist)
         '(nerd-icons-sucicon "nf-seti-php" :face nerd-icons-lpurple))
@@ -556,13 +557,22 @@
   (define-key copilot-mode-map (kbd "C-<tab>") #'copilot-accept-completion-by-word)
   (define-key copilot-mode-map (kbd "C-z n") #'copilot-next-completion)
   (define-key copilot-mode-map (kbd "C-z p") #'copilot-previous-completion))
-
-(el-get-bundle chep/copilot-chat.el
+(el-get-bundle polymode
+  :type github
+  :pkgname "polymode/polymode")
+(el-get-bundle poly-markdown
+  :type github
+  :pkgname "polymode/poly-markdown")
+(el-get-bundle copilot-chat.el
   :type github
   :pkgname "chep/copilot-chat.el"
-  :depends (shell-maker))
+  :depends (polymode poly-markdown))
 (setopt copilot-chat-frontend 'markdown)
 
+(el-get-bundle llama
+  :type github
+  :pkgname "tarsius/llama"
+  :branch "main")
 (el-get-bundle transient
   :branch "main")
 (el-get-bundle with-editor
@@ -1041,11 +1051,10 @@
   :pkgname "Groovy-Emacs-Modes/groovy-emacs-modes")
 
 (el-get-bundle csv-mode in emacsmirror/csv-mode)
-(el-get-bundle fsharp-mode
+(el-get-bundle emacs-fsharp-mode
   :type github
   :pkgname "fsharp/emacs-fsharp-mode"
-  :depends (jsonrpc)
-  :load-path ("."))
+  :depends (jsonrpc))
 
 (el-get-bundle haskell-mode
   :type github
@@ -1109,18 +1118,6 @@
 (autoload 'po-find-file-coding-system "po-compat")
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
                             'po-find-file-coding-system)
-
-
-;;; brew install plantuml
-(el-get-bundle plantuml-mode
-  :type github
-  :pkgname "skuro/plantuml-mode")
-(add-to-list 'auto-mode-alist '("\\.puml$" . plantuml-mode))
-(with-eval-after-load 'plantuml-mode
-  (setq plantuml-indent-level 2)
-  (setq plantuml-executable-path "plantuml")
-  (setq plantuml-default-exec-mode 'executable)
-  (setq plantuml-output-type "png"))
 
 (el-get-bundle mermaid-mode
   :type github
