@@ -51,8 +51,3 @@ jobs:
     - run: yarn install --frozen-lockfile
       working-directory: .emacs.d/bin
     - run: emacs -Q -l .emacs.d/early-init.el -l .emacs.d/init.el  --batch
-    - name: Eask
-      run: |
-        eask clean all
-        eask compile
-
