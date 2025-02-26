@@ -366,8 +366,7 @@
 
 ;;; Indent settings
 (setq-default indent-tabs-mode nil)
-
-(el-get-bundle editorconfig)
+(editorconfig-mode 1)
 (el-get-bundle prettier-js)
 
 ;;; Misc settings
