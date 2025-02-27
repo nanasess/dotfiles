@@ -918,14 +918,12 @@
               (global-lsp-bridge-mode)))
 (with-eval-after-load 'lsp-bridge
   ;; curl -O https://releases.hashicorp.com/terraform-ls/0.32.4/terraform-ls_0.32.4_linux_amd64.zip && unzip terraform-ls_0.32.4_linux_amd64.zip
-  ;; (push '(terraform-mode . "terraform-ls") lsp-bridge-single-lang-server-mode-list)
-  ;; (push 'terraform-mode-hook lsp-bridge-default-mode-hooks)
   (defun sm-try-smerge ()
     "Searches for merge conflict markers and disables lsp-bridge-mode if found."
     (save-excursion
       (goto-char (point-min))
       (when (re-search-forward "^<<<<<<< " nil t)
-  	(lsp-bridge-mode -1))))
+        (lsp-bridge-mode -1))))
   (add-hook 'lsp-bridge-mode-hook 'sm-try-smerge t)
   (defun lsp-bridge--mode-line-format ()
     "Compose the LSP-bridge's mode-line."
@@ -985,7 +983,6 @@
   (add-hook 'web-mode-hook
             #'(lambda ()
                 (setq web-mode-enable-auto-indentation nil)))
-  (add-hook 'web-mode-hook 'editorconfig-apply)
   ;; (add-hook 'web-mode-hook 'prettier-js-mode)
   (add-hook 'web-mode-hook
             #'(lambda ()
@@ -994,33 +991,18 @@
   (add-hook 'web-mode-hook
             #'(lambda ()
                 (when (string-equal "tpl" (file-name-extension buffer-file-name))
-                  (web-mode-set-engine "eccube"))))
-  (add-hook 'editorconfig-custom-hooks
-            (lambda (hash) (setq web-mode-block-padding 0))))
+                  (web-mode-set-engine "eccube")))))
 
 (el-get-bundle yaml-mode)
 ;; npm i -g yaml-language-server
 (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
 
-;; (el-get-bundle php-mode
-;;   :type github
-;;   :pkgname "emacs-php/php-mode"
-;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-;;   :load-path ("lisp"))
-;; (el-get-bundle php-ts-mode
-;;   :type github
-;;   :pkgname "emacs-php/php-ts-mode"
-;;   :branch "master"
-;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
 (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-ts-mode))
 (with-eval-after-load 'php-ts-mode
-  ;; (add-to-list 'treesit-language-source-alist
-  ;;              '(php "https://github.com/tree-sitter/tree-sitter-php" "v0.21.1" "php/src"))
   (with-eval-after-load 'lsp-bridge
     (add-hook 'php-ts-mode-hook #'(lambda ()
                                     (push '(php-ts-mode . lsp-bridge-php-lsp-server) lsp-bridge-single-lang-server-mode-list)
                                     (lsp-bridge-mode 1))))
-  (add-hook 'php-ts-mode-hook 'editorconfig-apply)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   ;; (setq-local electric-layout-rules '((?{ . around)))
@@ -1178,11 +1160,9 @@
   (interactive "r")
   (shell-command-on-region beg end "jq ." nil t))
 (setq treesit-language-source-alist
+      ;; tree-sitter-php is installed by `php-ts-mode-install-parser`
       '((csharp . ("https://github.com/tree-sitter/tree-sitter-c-sharp.git"))))
-;; (add-hook 'emacs-startup-hook
-;;           #'(lambda ()
-;;               (add-to-list 'major-mode-remap-alist
-;;                            '(csharp-mode . csharp-ts-mode))))
+
 (el-get 'sync)
 (ffap-bindings)
 ;; (setq epa-pinentry-mode 'loopback)
