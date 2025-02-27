@@ -983,7 +983,6 @@
   (add-hook 'web-mode-hook
             #'(lambda ()
                 (setq web-mode-enable-auto-indentation nil)))
-  (add-hook 'web-mode-hook 'editorconfig-apply)
   ;; (add-hook 'web-mode-hook 'prettier-js-mode)
   (add-hook 'web-mode-hook
             #'(lambda ()
@@ -992,9 +991,7 @@
   (add-hook 'web-mode-hook
             #'(lambda ()
                 (when (string-equal "tpl" (file-name-extension buffer-file-name))
-                  (web-mode-set-engine "eccube"))))
-  (add-hook 'editorconfig-custom-hooks
-            (lambda (hash) (setq web-mode-block-padding 0))))
+                  (web-mode-set-engine "eccube")))))
 
 (el-get-bundle yaml-mode)
 ;; npm i -g yaml-language-server
@@ -1006,7 +1003,6 @@
     (add-hook 'php-ts-mode-hook #'(lambda ()
                                     (push '(php-ts-mode . lsp-bridge-php-lsp-server) lsp-bridge-single-lang-server-mode-list)
                                     (lsp-bridge-mode 1))))
-  (add-hook 'php-ts-mode-hook 'editorconfig-apply)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   ;; (setq-local electric-layout-rules '((?{ . around)))
