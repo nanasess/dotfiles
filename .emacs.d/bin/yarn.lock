@@ -1670,10 +1670,10 @@ turndown@7.2.0:
   dependencies:
     "@mixmark-io/domino" "^2.2.0"
 
-typescript-language-server@^4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/typescript-language-server/-/typescript-language-server-4.3.3.tgz#b52836fa0ec7a9c05007af44d5a49605f5fe72e0"
-  integrity sha512-3QLj57Ru9S6zv10sa4z1pA3TIR1Rdkd04Ke0EszbO4fx5PLdlYhlC/PMxwlyxls9wrZs7wPCME1Ru0s1Gabz4Q==
+typescript-language-server@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/typescript-language-server/-/typescript-language-server-4.3.4.tgz#ca1dfd8923a33248026add883c7646de9563a0dd"
+  integrity sha512-0pQ4ffAarsf10VwFhyyyqNJhuDd4r6f4dSsQN38WdbQ3WVxqi08p/bI//v1VnOV5CSVd4AeOUY/jfJYheHTQPQ==
 
 typescript@^4.0.5:
   version "4.9.5"
