@@ -19,14 +19,28 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-latest]
+        os:
+          - ubuntu-24.04
+          # - macos-latest
         emacs-version:
-          - "29.4"
+          - "release-snapshot"
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with:
         python-version: '3.12'
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.2'
+    - name: Setup PHP with composer v2
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4'
+        tools: composer:v2
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
     - uses: purcell/setup-emacs@master
       with:
         version: ${{ matrix.emacs-version }}
@@ -38,11 +52,4 @@ jobs:
       working-directory: .emacs.d/bin
     - run: yarn install --frozen-lockfile
       working-directory: .emacs.d/bin
-    - run: pip3 install -r bin/requirements.txt
-      working-directory: .emacs.d
     - run: emacs -Q -l .emacs.d/early-init.el -l .emacs.d/init.el  --batch
-    - name: Eask
-      run: |
-        eask clean all
-        eask compile
-

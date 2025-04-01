@@ -61,12 +61,13 @@
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
 (setq debug-on-error t)
+(setq warning-minimum-level :error)
 
 (setopt el-get-bundle-sync t
-      el-get-is-lazy t
-      el-get-verbose nil
-      el-get-bundle-byte-compile t
-      el-get-auto-update-cached-recipes nil)
+        el-get-is-lazy t
+        el-get-verbose nil
+        el-get-bundle-byte-compile t
+        el-get-auto-update-cached-recipes nil)
 
 (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
 (unless (require 'el-get nil 'noerror)
@@ -159,10 +160,12 @@
       skk-init-file (concat user-initial-directory "skk-init.el")
       skk-isearch-start-mode 'latin)
 (setq skk-preload nil)
-(add-hook 'skk-load-hook
-          (lambda ()
-            (require 'context-skk)))
+
 ;;; global key-bindings
+(add-hook
+ 'emacs-startup-hook
+ #'(lambda ()
+     (which-key-mode 1)))
 (global-unset-key (kbd "C-M-t"))
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-\\"))
@@ -182,43 +185,44 @@
 (global-set-key (kbd "C-x <right>") 'find-file)
 (global-set-key (kbd "C-x <end>") 'eval-last-sexp)
 
-;; https://www.reddit.com/r/emacs/comments/13accue/emacs_29_pixelscrollprecisionmode_seems_to_break/
-(if (fboundp 'pixel-scroll-precision-mode)
-    (progn
-      (setq scroll-step 1)
-      (setq-default scroll-conservatively 0)
-      (setq-default scroll-margin 0)
+(el-get-bundle ultra-scroll
+  :type github
+  :pkgname "jdtsmith/ultra-scroll"
+  :branch "main")
+(add-hook 'emacs-startup-hook
+          #'(lambda ()
+              (pixel-scroll-precision-mode t)
+              (setq scroll-conservatively 101 ; important!
+                    scroll-margin 0
+                    scroll-step 1
+                    pixel-scroll-precision-use-momentum t
+                    pixel-scroll-precision-interpolate-mice t
+                    pixel-scroll-precision-large-scroll-height 10.0
+                    pixel-scroll-precision-interpolation-factor 1.0
+                    pixel-scroll-precision-interpolate-page t
+                    pixel-scroll-precision-interpolation-total-time 0.25)
 
-      (setq pixel-scroll-precision-use-momentum t)
-      (setq pixel-scroll-precision-interpolate-mice t)
-      (setq pixel-scroll-precision-large-scroll-height 10.0)
-      (setq pixel-scroll-precision-interpolation-factor 1.0)
-      (setq pixel-scroll-precision-interpolate-page t)
-      (setq pixel-scroll-precision-interpolation-total-time 0.25)
-      (pixel-scroll-precision-mode t)
+              (ultra-scroll-mode 1)
+              ;; https://www.reddit.com/r/emacs/comments/13accue/emacs_29_pixelscrollprecisionmode_seems_to_break/
+              (defun +pixel-scroll-interpolate-down ()
+                "Interpolate a scroll downwards by one page."
+                (interactive)
+                (if pixel-scroll-precision-interpolate-page
+                    (pixel-scroll-precision-interpolate
+                     ;; Don't use an interpolation factor,
+                     ;; since we want exactly 1 page to be scrolled.
+                     (- (/ (window-text-height nil t) 2)) nil 1)
+                  (cua-scroll-up)))
 
-      (defun +pixel-scroll-interpolate-down ()
-        "Interpolate a scroll downwards by one page."
-        (interactive)
-        (if pixel-scroll-precision-interpolate-page
-            (pixel-scroll-precision-interpolate (- (/ (window-text-height nil t) 2))
-                                                ;; Don't use an
-                                                ;; interpolation factor,
-                                                ;; since we want exactly 1
-                                                ;; page to be scrolled.
-                                                nil 1)
-          (cua-scroll-up)))
-
-      (defun +pixel-scroll-interpolate-up ()
-        "Interpolate a scroll upwards by one page."
-        (interactive)
-        (if pixel-scroll-precision-interpolate-page
-            (pixel-scroll-precision-interpolate (/ (window-text-height nil t) 2)
-                                                nil 1)
-          (cua-scroll-down)))
-
-      (global-set-key (kbd "C-v") '+pixel-scroll-interpolate-down)
-      (global-set-key (kbd "M-v") '+pixel-scroll-interpolate-up)))
+              (defun +pixel-scroll-interpolate-up ()
+                "Interpolate a scroll upwards by one page."
+                (interactive)
+                (if pixel-scroll-precision-interpolate-page
+                    (pixel-scroll-precision-interpolate
+                     (/ (window-text-height nil t) 2) nil 1)
+                  (cua-scroll-down)))
+              (global-set-key (kbd "C-v") '+pixel-scroll-interpolate-down)
+              (global-set-key (kbd "M-v") '+pixel-scroll-interpolate-up)))
 
 ;; see http://cha.la.coocan.jp/wp/2024/05/05/post-1300/
 ;; you need to install "wl-clipboard" first.
@@ -316,7 +320,8 @@
 (el-get-bundle all-the-icons)
 (el-get-bundle nerd-icons.el
   :type github
-  :pkgname "rainstormstudio/nerd-icons.el")
+  :pkgname "rainstormstudio/nerd-icons.el"
+  :branch "main")
 (with-eval-after-load 'nerd-icons
   (setf (alist-get "php" nerd-icons-extension-icon-alist)
         '(nerd-icons-sucicon "nf-seti-php" :face nerd-icons-lpurple))
@@ -361,8 +366,7 @@
 
 ;;; Indent settings
 (setq-default indent-tabs-mode nil)
-
-(el-get-bundle editorconfig)
+(editorconfig-mode 1)
 (el-get-bundle prettier-js)
 
 ;;; Misc settings
@@ -531,6 +535,43 @@
   :type github
   :pkgname "emacsorphanage/tree-mode")
 (setenv "EDITOR" "emacsclient")
+(el-get-bundle shell-maker
+  :type github
+  :pkgname "xenodium/shell-maker"
+  :branch "main")
+
+(el-get-bundle copilot
+  :type github
+  :pkgname "copilot-emacs/copilot.el"
+  :branch "main")
+(add-hook 'prog-mode-hook 'copilot-mode)
+(defun copilot-tab ()
+  (interactive)
+  (or (copilot-accept-completion)
+      (indent-for-tab-command)))
+(with-eval-after-load 'copilot
+  (define-key copilot-mode-map (kbd "TAB") #'copilot-tab)
+  (define-key copilot-mode-map [(tab)] #'copilot-tab)
+  (define-key copilot-mode-map (kbd "C-TAB") #'copilot-accept-completion-by-word)
+  (define-key copilot-mode-map (kbd "C-<tab>") #'copilot-accept-completion-by-word)
+  (define-key copilot-mode-map (kbd "C-z n") #'copilot-next-completion)
+  (define-key copilot-mode-map (kbd "C-z p") #'copilot-previous-completion))
+(el-get-bundle polymode
+  :type github
+  :pkgname "polymode/polymode")
+(el-get-bundle poly-markdown
+  :type github
+  :pkgname "polymode/poly-markdown")
+(el-get-bundle copilot-chat.el
+  :type github
+  :pkgname "chep/copilot-chat.el"
+  :depends (polymode poly-markdown))
+(setopt copilot-chat-frontend 'markdown)
+
+(el-get-bundle llama
+  :type github
+  :pkgname "tarsius/llama"
+  :branch "main")
 (el-get-bundle transient
   :branch "main")
 (el-get-bundle with-editor
@@ -538,12 +579,16 @@
 (el-get-bundle magit
   :type github
   :pkgname "magit/magit"
-  :depends (dash transient with-editor compat)
+  :depends (transient with-editor compat)
   :load-path "lisp/"
   :compile "lisp/"
   :build `(("make" ,(format "EMACSBIN=%s" el-get-emacs) "lisp")
            ("touch" "lisp/magit-autoloads.el"))
   :branch "main")
+(with-eval-after-load 'git-commit
+  ;; It is recommended to run `git config --global commit.verbose true`
+  (add-hook 'git-commit-setup-hook #'copilot-mode)
+  (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message))
 (with-eval-after-load 'magit
   ;; (require 'forge)
   ;; see https://stackoverflow.com/a/32914548/4956633
@@ -862,19 +907,6 @@
 ;;   :pkgname "Alexander-Miller/treemacs"
 ;;   :load-path ("src/elisp"))
 
-(el-get-bundle copilot
-  :type github
-  :pkgname "zerolfx/copilot.el"
-  :branch "main")
-(add-hook 'prog-mode-hook 'copilot-mode)
-(defun copilot-tab ()
-  (interactive)
-  (or (copilot-accept-completion)
-      (indent-for-tab-command)))
-(with-eval-after-load 'copilot
-  (define-key copilot-mode-map (kbd "TAB") #'copilot-tab)
-  (define-key copilot-mode-map [(tab)] #'copilot-tab))
-
 (setq x-gtk-resize-child-frames 'resize-mode)
 (el-get-bundle lsp-bridge
   :type github
@@ -886,14 +918,12 @@
               (global-lsp-bridge-mode)))
 (with-eval-after-load 'lsp-bridge
   ;; curl -O https://releases.hashicorp.com/terraform-ls/0.32.4/terraform-ls_0.32.4_linux_amd64.zip && unzip terraform-ls_0.32.4_linux_amd64.zip
-  ;; (push '(terraform-mode . "terraform-ls") lsp-bridge-single-lang-server-mode-list)
-  ;; (push 'terraform-mode-hook lsp-bridge-default-mode-hooks)
   (defun sm-try-smerge ()
     "Searches for merge conflict markers and disables lsp-bridge-mode if found."
     (save-excursion
       (goto-char (point-min))
       (when (re-search-forward "^<<<<<<< " nil t)
-  	(lsp-bridge-mode -1))))
+        (lsp-bridge-mode -1))))
   (add-hook 'lsp-bridge-mode-hook 'sm-try-smerge t)
   (defun lsp-bridge--mode-line-format ()
     "Compose the LSP-bridge's mode-line."
@@ -953,7 +983,6 @@
   (add-hook 'web-mode-hook
             #'(lambda ()
                 (setq web-mode-enable-auto-indentation nil)))
-  (add-hook 'web-mode-hook 'editorconfig-apply)
   ;; (add-hook 'web-mode-hook 'prettier-js-mode)
   (add-hook 'web-mode-hook
             #'(lambda ()
@@ -962,33 +991,18 @@
   (add-hook 'web-mode-hook
             #'(lambda ()
                 (when (string-equal "tpl" (file-name-extension buffer-file-name))
-                  (web-mode-set-engine "eccube"))))
-  (add-hook 'editorconfig-custom-hooks
-            (lambda (hash) (setq web-mode-block-padding 0))))
+                  (web-mode-set-engine "eccube")))))
 
 (el-get-bundle yaml-mode)
 ;; npm i -g yaml-language-server
 (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
 
-;; (el-get-bundle php-mode
-;;   :type github
-;;   :pkgname "emacs-php/php-mode"
-;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs)))
-;;   :load-path ("lisp"))
-;; (el-get-bundle php-ts-mode
-;;   :type github
-;;   :pkgname "emacs-php/php-ts-mode"
-;;   :branch "master"
-;;   :build `(("make" ,(format "EMACS=%s" el-get-emacs))))
 (add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-ts-mode))
 (with-eval-after-load 'php-ts-mode
-  (add-to-list 'treesit-language-source-alist
-               '(php "https://github.com/tree-sitter/tree-sitter-php" "v0.21.1" "php/src"))
   (with-eval-after-load 'lsp-bridge
     (add-hook 'php-ts-mode-hook #'(lambda ()
                                     (push '(php-ts-mode . lsp-bridge-php-lsp-server) lsp-bridge-single-lang-server-mode-list)
                                     (lsp-bridge-mode 1))))
-  (add-hook 'php-ts-mode-hook 'editorconfig-apply)
   (electric-indent-local-mode t)
   (electric-layout-mode t)
   ;; (setq-local electric-layout-rules '((?{ . around)))
@@ -1018,12 +1032,10 @@
   :pkgname "Groovy-Emacs-Modes/groovy-emacs-modes")
 
 (el-get-bundle csv-mode in emacsmirror/csv-mode)
-(el-get-bundle csharp-mode)
-(el-get-bundle fsharp-mode
+(el-get-bundle emacs-fsharp-mode
   :type github
   :pkgname "fsharp/emacs-fsharp-mode"
-  :depends (jsonrpc)
-  :load-path ("."))
+  :depends (jsonrpc))
 
 (el-get-bundle haskell-mode
   :type github
@@ -1088,18 +1100,6 @@
 (modify-coding-system-alist 'file "\\.po\\'\\|\\.po\\."
                             'po-find-file-coding-system)
 
-
-;;; brew install plantuml
-(el-get-bundle plantuml-mode
-  :type github
-  :pkgname "skuro/plantuml-mode")
-(add-to-list 'auto-mode-alist '("\\.puml$" . plantuml-mode))
-(with-eval-after-load 'plantuml-mode
-  (setq plantuml-indent-level 2)
-  (setq plantuml-executable-path "plantuml")
-  (setq plantuml-default-exec-mode 'executable)
-  (setq plantuml-output-type "png"))
-
 (el-get-bundle mermaid-mode
   :type github
   :pkgname "abrochard/mermaid-mode")
@@ -1159,6 +1159,9 @@
 (defun jq-format (beg end)
   (interactive "r")
   (shell-command-on-region beg end "jq ." nil t))
+(setq treesit-language-source-alist
+      ;; tree-sitter-php is installed by `php-ts-mode-install-parser`
+      '((csharp . ("https://github.com/tree-sitter/tree-sitter-c-sharp.git"))))
 
 (el-get 'sync)
 (ffap-bindings)
