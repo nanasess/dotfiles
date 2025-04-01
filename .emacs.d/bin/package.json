@@ -9,7 +9,7 @@
     "bash-language-server": "^5.4.3",
     "copilot-node-server": "^1.41.0",
     "dockerfile-language-server-nodejs": "^0.13.0",
-    "typescript": "^5.5.4",
+    "typescript": "^5.8.2",
     "typescript-language-server": "^4.3.3",
     "vscode-langservers-extracted": "^4.10.0",
     "yaml-language-server": "^1.15.0"
