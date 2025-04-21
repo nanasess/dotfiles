@@ -11,6 +11,8 @@ autoload -U compinit promptinit
 compinit
 promptinit; prompt gentoo
 
+eval "$(op completion zsh)"; compdef _op op
+
 autoload -U +X bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
 complete -o nospace -C /usr/bin/terraform terraform
