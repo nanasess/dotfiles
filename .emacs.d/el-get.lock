@@ -34,7 +34,7 @@
                        "25fb775178d16decb818b75f32fd23301c0f5da0")
         (compat :checksum "8d4e8a366681def88751f5e9975738ecd3180deb")
         (lsp-bridge :checksum
-                    "c4520d69effa9a01dc1ef2c025e713c7b6f3094f")
+                    "6fd5eb21a174e6a04247a2f370b544dcd6cb2420")
         (copilot :checksum "f831b2b8375950eb1cc282d15ccc78ed90f30a1a")
         (eldoc-box :checksum
                    "5c067f5c195198ffd16df2f455da95e46cc8ce02")
@@ -81,7 +81,7 @@
         (tree-mode :checksum
                    "b06078826d5875d74b0e7b7ac47b0d0917610534")
         (with-editor :checksum
-                     "5db5f0eb2202f52d44f529fe00654c866bb64eb1")
+                     "ca902ae02972bdd6919a902be2593d8cb6bd991b")
         (terminal-here :checksum
                        "c996304c1e873e561108a509129b9e4358d354d5")
         (emacs-sql-indent :checksum
@@ -177,9 +177,9 @@
                      "ae2202fbbbe11873ad4b393a6959da50ac250c1e")
         (helm :checksum "4e99cc8ef66aac2d824c456f58abe833be26c99d")
         (howm :checksum "ffc1e7da1f02f750094a9f0fe8a0aa837743193b")
-        (magit :checksum "020aca7c9c4154dbc4a72acbd56165ecccea1bf1")
+        (magit :checksum "7adad8c8d3bd61ae36659638751223cfa2c7d720")
         (transient :checksum
-                   "55d5d41b48d7f7bc1ecf1f90c012d7821dff5724")
+                   "005e50bf4683cbb58b5c48c873609e7f4af7ac5f")
         (smart-jump :checksum
                     "3392eb35e3cde37e6f5f2a48dc0db15ca535143c")
         (dumb-jump :checksum
