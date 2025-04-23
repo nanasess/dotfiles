@@ -56,6 +56,7 @@ export LESS="-SXFR"
 export RSYNC_RSH=ssh
 export JQ_COLORS="0;33:0;33:0;33:0;35:0;36:0;31:0;31"
 export GPG_TTY=$(tty)
+export SSH_AUTH_SOCK=~/.1password/agent.sock
 
 if [ ! -n "${TERM}" ]; then
     TERM=xterm-256color
