@@ -63,6 +63,9 @@ then
     if which setxkbmap > /dev/null; then setxkbmap -layout us; fi
 fi
 
+# require 1Password integration
+# source $HOME/.config/op/plugins.sh
+
 # if which docker > /dev/null; then
 #    export ONEDRIVE_DATA_DIR="$HOME/OneDrive - Skirnir Inc"
 #    export ONEDRIVE_GID=$(id -g)
