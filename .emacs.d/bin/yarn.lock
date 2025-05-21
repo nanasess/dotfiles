@@ -1948,10 +1948,10 @@ y18n@^5.0.5:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
   integrity sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==
 
-yaml-language-server@^1.17.0:
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/yaml-language-server/-/yaml-language-server-1.17.0.tgz#a65c3fd02fcee2ff5e96d74e50eecb6dc1e455e4"
-  integrity sha512-cGgjTUNsR/mPGq2NrsNuJYEG3eKMOUro46Kk+qG4pib5LIJUDdn2h+eZPmi1E1DUr5wGvnZuh9IC6OhtsuyfLQ==
+yaml-language-server@^1.18.0:
+  version "1.18.0"
+  resolved "https://registry.yarnpkg.com/yaml-language-server/-/yaml-language-server-1.18.0.tgz#d607b82656ebcabdc11f94571f76075183ae34d6"
+  integrity sha512-N1g0S7IcA+1PXDNNfnNHB+jQkwWh33Id7yhWLLmTyAsf3HSFdTYTbqnUaVrhiz5MrCUbiKtZjiAVxrn/N4HKLg==
   dependencies:
     ajv "^8.11.0"
     lodash "4.17.21"
