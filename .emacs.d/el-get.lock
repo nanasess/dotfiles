@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((poly-markdown :checksum
+      '((pyvenv :checksum "31ea715f2164dd611e7fc77b26390ef3ca93509b")
+        (poly-markdown :checksum
                        "98695eb7ca4ca11dcec71a1cab64903bbf79b4d3")
         (polymode :checksum "74ba75d4bcfbea959ccc9080a95ab9ef759849f2")
         (emacs-fsharp-mode :checksum
@@ -189,7 +190,7 @@
                      "ae2202fbbbe11873ad4b393a6959da50ac250c1e")
         (helm :checksum "4e99cc8ef66aac2d824c456f58abe833be26c99d")
         (howm :checksum "00fb080ccc7d6929a6ee9bb480484c9308727d09")
-        (magit :checksum "bf58615a033b8c827bf630962531c67539789215")
+        (magit :checksum "04ee83d93fabbfbe202e9e7dc781b0dcd4d5b502")
         (transient :checksum
                    "afc88b24e4faa5c7e246303648e70b4507652f32")
         (smart-jump :checksum
