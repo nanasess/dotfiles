@@ -10,6 +10,7 @@ fi
 export PATH=$HOME/bin:$HOME/.nodebrew/current/bin:$HOME/go/bin:$HOME/.cpan/CPAN/bin:$HOME/.cabal/bin:/Library/Frameworks/HaskellPlatform.framework/bin:/usr/local/texlive/2014/bin/x86_64-darwin:/opt/local/lib/postgresql91/bin:/usr/local/heroku/bin:$HOME/bin/jdk-11.0.23+9/bin:$HOME/.dotnet/tools:$HOME/.cargo/bin:/opt/local/bin:/usr/local/bin:$PATH
 
 export UID=${UID} GID=${GID}
+export USER_ID=${UID} GROUP_ID=${GID}
 
 export ORACLE_BASE=~/oracle
 export ORACLE_HOME=$ORACLE_BASE/product/11.2.0/client_1
@@ -36,6 +37,7 @@ export PATH=$HOME/.symfony/bin:$PATH
 export PATH=$HOME/.symfony5/bin:$PATH
 export PATH=$HOME/.composer/vendor/bin:$PATH
 export PATH=$HOME/google-cloud-sdk/bin:$PATH
+export PATH=$HOME/.dotnet/tools:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 # export PATH=$HOME/.emacs.d/bin:$PATH
