@@ -190,9 +190,9 @@
                      "ae2202fbbbe11873ad4b393a6959da50ac250c1e")
         (helm :checksum "4e99cc8ef66aac2d824c456f58abe833be26c99d")
         (howm :checksum "00fb080ccc7d6929a6ee9bb480484c9308727d09")
-        (magit :checksum "04ee83d93fabbfbe202e9e7dc781b0dcd4d5b502")
+        (magit :checksum "2f1ff91f128f28aa277e0e060ef44b4be8a989c1")
         (transient :checksum
-                   "afc88b24e4faa5c7e246303648e70b4507652f32")
+                   "b326421f93bbdb89a2aa33b85416afe5e8064671")
         (smart-jump :checksum
                     "3392eb35e3cde37e6f5f2a48dc0db15ca535143c")
         (dumb-jump :checksum
