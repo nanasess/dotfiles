@@ -50,3 +50,7 @@ server
 /yarn.lock
 /undo-tree
 !/undo-tree/.gitkeep
+/bin/LICENSE.txt
+/bin/skk-jisyo/
+/bin/terraform-ls
+/bin/watchmedo
