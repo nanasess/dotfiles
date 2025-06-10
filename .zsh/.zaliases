@@ -84,6 +84,3 @@ say() {
 # 1Password integration
 alias ssh='/mnt/c/Windows/System32/OpenSSH/ssh.exe'
 alias ssh-add='/mnt/c/Windows/System32/OpenSSH/ssh-add.exe'
-
-# VS Code Insiders alias
-alias code="/mnt/c/Users/${USER}/AppData/Local/Programs/Microsoft\ VS\ Code\ Insiders/bin/code-insiders"
