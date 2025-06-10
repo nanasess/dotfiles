@@ -80,7 +80,3 @@ find_file() {
 say() {
     vterm_cmd message "%s" "$*"
 }
-
-# 1Password integration
-alias ssh='/mnt/c/Windows/System32/OpenSSH/ssh.exe'
-alias ssh-add='/mnt/c/Windows/System32/OpenSSH/ssh-add.exe'

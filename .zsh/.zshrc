@@ -74,22 +74,6 @@ fi
 
 eval "$(fzf --zsh)"
 
-# see https://qiita.com/mfunaki/items/db6e1ffcf1e6f1eff252#wsl2%E5%81%B4%E3%81%A7%E3%81%AE%E8%A8%AD%E5%AE%9A%E5%8B%95%E4%BD%9C%E7%A2%BA%E8%AA%8D
-# need `ps -ww` to get non-truncated command for matching
-# use square brackets to generate a regex match for the process we want but that doesn't match the grep command running it!
-ALREADY_RUNNING=$(ps -auxww | grep -q "[n]piperelay.exe -ei -s //./pipe/openssh-ssh-agent"; echo $?)
-if [[ $ALREADY_RUNNING != "0" ]]; then
-    if [[ -S $SSH_AUTH_SOCK ]]; then
-        # not expecting the socket to exist as the forwarding command isn't running (http://www.tldp.org/LDP/abs/html/fto.html)
-        echo "removing previous socket..."
-        rm $SSH_AUTH_SOCK
-    fi
-    echo "Starting SSH-Agent relay..."
-    # setsid to force new session to keep running
-    # set socat to listen on $SSH_AUTH_SOCK and forward to npiperelay which then forwards to openssh-ssh-agent on windows
-    (setsid socat UNIX-LISTEN:$SSH_AUTH_SOCK,fork EXEC:"npiperelay.exe -ei -s //./pipe/openssh-ssh-agent",nofork &) >/dev/null 2>&1
-fi
-
 if which onedrive > /dev/null
 then
     # onedrive --synchronize --single-directory 'emacs' > /dev/null &
