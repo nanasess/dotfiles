@@ -38,6 +38,9 @@ export PATH=$HOME/.composer/vendor/bin:$PATH
 export PATH=$HOME/google-cloud-sdk/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
+export PATH="/mnt/c/Users/${USER}/AppData/Local/Programs/Microsoft VS Code/bin":$PATH
+export PATH=~/.npm-global/bin:$PATH
+
 # export PATH=$HOME/.emacs.d/bin:$PATH
 #export PATH="$(brew --prefix openssl)/bin:$PATH"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
