@@ -934,8 +934,8 @@
 
     (when lsp-bridge-server
       (propertize "橋"'face mode-face)))
-  ;; require https://pipx.pypa.io/stable/
-  (setopt lsp-bridge-python-command "pipx")
+  ;; see https://docs.astral.sh/uv/
+  (setopt lsp-bridge-python-command "uv")
   (setq lsp-bridge-php-lsp-server "phpactor")
   (setq lsp-bridge-python-lsp-server "pyright")
   ;; dotnet tool install --global csharp-ls
