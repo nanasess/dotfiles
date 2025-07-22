@@ -735,40 +735,40 @@ diff@^5.0.0:
   resolved "https://registry.yarnpkg.com/diff/-/diff-5.2.0.tgz#26ded047cd1179b78b9537d5ef725503ce1ae531"
   integrity sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A==
 
-dockerfile-ast@0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/dockerfile-ast/-/dockerfile-ast-0.6.1.tgz#1dc1a8c751b677c6582547bc1834b05b333ff5f4"
-  integrity sha512-m3rH2qHHU2pSTCppXgJT+1KLxhvkdROOxVPof5Yz4IPGSw6K+x0B0/RFdYgXN5zsIUTlbOSRyfDCv3/uVhnNmg==
+dockerfile-ast@0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/dockerfile-ast/-/dockerfile-ast-0.7.1.tgz#16f2be0434bfc940c9eaf00da97099fe5d2c050f"
+  integrity sha512-oX/A4I0EhSkGqrFv0YuvPkBUSYp1XiY8O8zAKc8Djglx8ocz+JfOr8gP0ryRMC2myqvDLagmnZaU9ot1vG2ijw==
   dependencies:
     vscode-languageserver-textdocument "^1.0.8"
     vscode-languageserver-types "^3.17.3"
 
-dockerfile-language-server-nodejs@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/dockerfile-language-server-nodejs/-/dockerfile-language-server-nodejs-0.13.0.tgz#e2ce87f7383cd09ffe439e30a5c02f1ad12a5931"
-  integrity sha512-r8GwQGVBHuRj83nFYoA7ulGfp6tgUH8gxlPRap0ewuroEb/XgP4KtLsIUIN9CvkTZge/IkX7cbFTVO0lq9gZ3A==
+dockerfile-language-server-nodejs@^0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/dockerfile-language-server-nodejs/-/dockerfile-language-server-nodejs-0.14.1.tgz#b16617621e84a32800200b166e8c9ac758d4e7ff"
+  integrity sha512-50bvRWmAemwJ9VJD2LIQYiKHyL1pW5WoA1Q7keJ4wT+fCGCVxz59kIJY3GXnnlTSXHh9niv3Wc4pFtmXfmILMg==
   dependencies:
-    dockerfile-language-service "0.14.0"
-    dockerfile-utils "0.16.1"
+    dockerfile-language-service "0.15.1"
+    dockerfile-utils "0.16.3"
     vscode-languageserver "~8.0.0"
     vscode-languageserver-textdocument "~1.0.8"
 
-dockerfile-language-service@0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/dockerfile-language-service/-/dockerfile-language-service-0.14.0.tgz#b0f3df4711b23b0e707102bfb05afc3d3ebbb212"
-  integrity sha512-G3FDjCpuWQNrTuarSFtlOUNwwJl9ECJqsQdqGQN79nCmA1av0bbNSD++ipvfBqb/1fFeP2XxFy/N7WRIF12aBg==
+dockerfile-language-service@0.15.1:
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/dockerfile-language-service/-/dockerfile-language-service-0.15.1.tgz#b4523377222ee1117906bc13b8d01955ad5db6fd"
+  integrity sha512-0iQBvt/3u8x6ZgYag7QyYPSY2M6Hfn0zB2soywAFZ5THX/13FGk+Vmksqw+a1l+uPDiA+yV7trUedKQ5R0A2aA==
   dependencies:
-    dockerfile-ast "0.6.1"
-    dockerfile-utils "0.16.1"
+    dockerfile-ast "0.7.1"
+    dockerfile-utils "0.16.3"
     vscode-languageserver-textdocument "1.0.8"
     vscode-languageserver-types "3.17.3"
 
-dockerfile-utils@0.16.1:
-  version "0.16.1"
-  resolved "https://registry.yarnpkg.com/dockerfile-utils/-/dockerfile-utils-0.16.1.tgz#6d82fefdc4c7c3995abe9e397b894d7b1c1431fd"
-  integrity sha512-kYj772IlJi8aVYB8fS/1ByJH3skQ/Nroa8NkSHrnHE51savvIXKV/9vpRrjnokL/qGWtSDeIWOVHev2S7zZpcA==
+dockerfile-utils@0.16.3:
+  version "0.16.3"
+  resolved "https://registry.yarnpkg.com/dockerfile-utils/-/dockerfile-utils-0.16.3.tgz#2c47679b23c062c8bc4e80e3f860d17baf036c77"
+  integrity sha512-BslaqRR6PzCnhu+toDbkVAjq0B0CEgrCltk+enJ/xwCmvAHB1QqpO9QhXVIzMg/iSuD4tzS0Ex9n4Ik5ffI7pA==
   dependencies:
-    dockerfile-ast "0.6.1"
+    dockerfile-ast "0.7.1"
     vscode-languageserver-textdocument "^1.0.8"
     vscode-languageserver-types "^3.17.3"
 

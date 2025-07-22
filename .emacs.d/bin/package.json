@@ -8,7 +8,7 @@
     "@mermaid-js/mermaid-cli": "^10.9.1",
     "bash-language-server": "^5.4.3",
     "copilot-node-server": "^1.41.0",
-    "dockerfile-language-server-nodejs": "^0.13.0",
+    "dockerfile-language-server-nodejs": "^0.14.1",
     "typescript": "^5.8.3",
     "typescript-language-server": "^4.3.4",
     "vscode-langservers-extracted": "^4.10.0",
