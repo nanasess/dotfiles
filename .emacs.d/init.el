@@ -649,13 +649,13 @@
   (define-key smerge-mode-map (kbd "M-p") 'smerge-prev))
 
 (setopt howm-directory (concat external-directory "howm/"))
+(setopt howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.md")
 (el-get-bundle howm
   :type github
   :pkgname "kaorahi/howm"
   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
   :prepare (progn
              (defvar howm-menu-lang 'ja)
-             (defvar howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt")
              (defvar howm-history-file (concat howm-directory ".howm-history"))
              (defvar howm-keyword-file (concat howm-directory ".howm-keys"))
              (defvar howm-menu-schedule-days-before 30)
@@ -689,7 +689,7 @@
     "kill screen when exiting from howm-mode"
     (interactive)
     (let* ((file-name (buffer-file-name)))
-      (when (and file-name (string-match "\\.txt" file-name))
+      (when (and file-name (string-match "\\.md" file-name))
         (if (save-excursion
               (goto-char (point-min))
               (re-search-forward "[^ \t\r\n]" nil t))
@@ -713,7 +713,7 @@
 
   (defun parse-howm-title ()
     (let* ((file-name (buffer-file-name)))
-      (when (and file-name (string-match "\\.txt" file-name))
+      (when (and file-name (string-match "\\.md" file-name))
         (if (save-excursion
               (goto-char (point-min))
               (re-search-forward "^Title: \\(.*\\)$" nil t))
@@ -725,9 +725,9 @@
     (let ((name (buffer-name))
           (filename (buffer-file-name))
           (new-name (parse-howm-title))
-          (new-filename (format "%s.txt" (parse-howm-title))))
+          (new-filename (format "%s.md" (parse-howm-title))))
       (if (not (string-empty-p new-name))
-          (if (not (string= new-filename "nil.txt"))
+          (if (not (string= new-filename "nil.md"))
               (if (not filename)
                   (message "Buffer '%s' is not visiting a file!" name)
                 (if (get-buffer new-filename)
