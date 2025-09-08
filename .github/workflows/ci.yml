@@ -38,7 +38,7 @@ jobs:
         php-version: '8.4'
         tools: composer:v2
     - name: Install Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
         node-version: 22
     - uses: purcell/setup-emacs@master
