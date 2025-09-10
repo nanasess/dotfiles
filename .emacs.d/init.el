@@ -49,6 +49,10 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
+(require 'package)
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
 (when load-file-name
@@ -576,10 +580,11 @@
   :branch "main")
 (el-get-bundle with-editor
   :branch "main")
+(el-get-bundle elpa:cond-let)
 (el-get-bundle magit
   :type github
   :pkgname "magit/magit"
-  :depends (transient with-editor compat)
+  :depends (transient with-editor compat cond-let)
   :load-path "lisp/"
   :compile "lisp/"
   :build `(("make" ,(format "EMACSBIN=%s" el-get-emacs) "lisp")
