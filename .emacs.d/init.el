@@ -924,12 +924,17 @@
 (with-eval-after-load 'lsp-bridge
   ;; curl -O https://releases.hashicorp.com/terraform-ls/0.32.4/terraform-ls_0.32.4_linux_amd64.zip && unzip terraform-ls_0.32.4_linux_amd64.zip
   (defun sm-try-smerge ()
-    "Searches for merge conflict markers and disables lsp-bridge-mode if found."
-    (save-excursion
-      (goto-char (point-min))
-      (when (re-search-forward "^<<<<<<< " nil t)
-        (lsp-bridge-mode -1))))
-  (add-hook 'lsp-bridge-mode-hook 'sm-try-smerge t)
+    "Searches for merge conflict markers and prevents lsp-bridge-mode if found."
+    (when (and (buffer-file-name)
+               (save-excursion
+                 (goto-char (point-min))
+                 (re-search-forward "^<<<<<<< " nil t)))
+      (when (bound-and-true-p lsp-bridge-mode)
+        (lsp-bridge-mode -1))
+      (message "lsp-bridge-mode disabled due to merge conflict markers")
+      (smerge-mode 1)))
+
+  (add-hook 'find-file-hook 'sm-try-smerge t)
   (defun lsp-bridge--mode-line-format ()
     "Compose the LSP-bridge's mode-line."
     (setq-local mode-face
