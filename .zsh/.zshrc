@@ -86,3 +86,9 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/dotfiles/.zsh/.p10k.zsh.
 [[ ! -f ${XDG_CONFIG_HOME}/dotfiles/.zsh/.p10k.zsh ]] || source ${XDG_CONFIG_HOME}/dotfiles/.zsh/.p10k.zsh
+
+. "$HOME/.local/share/../bin/env"
+
+# bun completions
+[ -s "/home/nanasess/.bun/_bun" ] && source "/home/nanasess/.bun/_bun"
+

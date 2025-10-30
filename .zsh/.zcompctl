@@ -17,5 +17,9 @@ autoload -U +X bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
 complete -o nospace -C /usr/bin/terraform terraform
 
+if [ -f "$HOME/.config/azure-cli-env/az.completion" ]; then
+  source "$HOME/.config/azure-cli-env/az.completion"
+fi
+
 zstyle ':completion:*:default' menu select=1
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
