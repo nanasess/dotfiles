@@ -131,7 +131,8 @@
                    (expand-file-name "~/bin")
                    (expand-file-name "~/.emacs.d/bin")
                    (expand-file-name "~/.emacs.d/el-get/mew/bin")
-                   (expand-file-name "~/.local/bin")))
+                   (expand-file-name "~/.local/bin")
+                   (expand-file-name "~/.config/claude/local/")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
