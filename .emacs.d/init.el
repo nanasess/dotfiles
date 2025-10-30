@@ -590,10 +590,170 @@
   :build `(("make" ,(format "EMACSBIN=%s" el-get-emacs) "lisp")
            ("touch" "lisp/magit-autoloads.el"))
   :branch "main")
+(defvar my/claude-commit-language nil
+  "Language for Claude Code commit message generation.
+Set to 'ja for Japanese, 'en for English, or nil for default (Japanese).")
+
+(defun my/claude-code-generate-commit-message (&optional lang)
+  "Generate commit message using Claude Code CLI.
+
+言語選択:
+- 引数なし: 日本語（デフォルト）
+- C-u: 英語
+- C-u C-u: 対話的に選択
+
+LANG が指定された場合は、その言語を使用（'ja または 'en）
+magit-commit-create からのプレフィクス引数も考慮します。"
+  (interactive "P")
+  (let* ((language
+          (cond
+           ;; 明示的に言語が指定された場合
+           ((and lang (symbolp lang)) lang)
+           ;; magit-commit-create からのプレフィクス引数
+           ((and (boundp 'my/claude-commit-language)
+                 my/claude-commit-language)
+            (prog1 my/claude-commit-language
+              (setq my/claude-commit-language nil)))
+           ;; C-u C-u: 対話的に選択
+           ((equal lang '(16))
+            (intern (completing-read "言語を選択: " '("ja" "en") nil t)))
+           ;; C-u: 英語
+           ((equal lang '(4)) 'en)
+           ;; 引数なし: 日本語（デフォルト）
+           (t 'ja)))
+         (process-environment
+          ;; ANTHROPIC_API_KEY を未設定にして、Max プランのサブスクリプションを使用
+          (cl-remove-if (lambda (s) (string-prefix-p "ANTHROPIC_API_KEY=" s))
+                        process-environment))
+         (diff (shell-command-to-string "git diff --cached"))
+         (prompt (if (eq language 'en)
+                     (format "Generate an appropriate commit message from the following git diff.
+
+Analyze the `git diff --cached` result
+Based on the analysis:
+   - New files: use `feat:` or `docs:`
+   - Bug fixes: use `fix:`
+   - Refactoring: use `refactor:`
+   - Performance improvements: use `perf:`
+   - Tests: use `test:`
+   - Build/dependencies: use `build:` or `chore:`
+   - Deletions/cleanup: use `chore:` (e.g., chore: remove deprecated files)
+   - Scope: add scope in parentheses (e.g., feat(api): add endpoint, fix(auth): resolve login issue)
+   - Breaking changes: add `!` after type, or add `BREAKING CHANGE:` in footer
+Generate a concise commit message following Conventional Commits v1.0.0 format.
+Write concisely in English.
+
+[IMPORTANT] Output format:
+- Output ONLY the commit message text
+- NO preambles like \"I analyzed the diff\" or \"Here's the commit message\"
+- NO markdown code block symbols (```)
+- Start directly with the commit type (e.g., feat:, fix:)
+
+Output format structure:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+Keep the first line summary within 50 characters, and each line of the body within 72 characters.
+
+%s" diff)
+                   (format "以下のgit diffから、適切なコミットメッセージを生成してください。
+
+`git diff --cached` の結果を分析
+分析結果に基づいて：
+   - 新規ファイル: `feat:` または `docs:` を使用
+   - バグ修正: `fix:` を使用
+   - リファクタリング: `refactor:` を使用
+   - パフォーマンス改善: `perf:` を使用
+   - テスト: `test:` を使用
+   - ビルド・依存関係: `build:` または `chore:` を使用
+   - 削除・クリーンアップ: `chore:` を使用（例: chore: remove deprecated files）
+   - スコープ: 影響範囲を括弧で追加（例: feat(api): add endpoint, fix(auth): resolve login issue）
+   - 破壊的変更: タイプの後に `!` を追加、またはフッターに `BREAKING CHANGE:` を記述
+Conventional Commits v1.0.0 形式に従った簡潔なコミットメッセージを生成してください。
+日本語で簡潔に記述してください。
+
+【重要】出力形式:
+- コミットメッセージのテキストのみを出力してください
+- 「差分を分析しました」「以下がコミットメッセージです」などの前置きは不要です
+- マークダウンのコードブロック記号（```）は不要です
+- feat: や fix: などのコミットタイプから直接始めてください
+
+出力形式のフォーマット:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+1行目の要約は50文字以内、本文の各行を72文字以内を目安としてください
+
+%s" diff)))
+         (temp-file (make-temp-file "claude-prompt-"))
+         (response-file (make-temp-file "claude-response-")))
+    (unwind-protect
+        (progn
+          (with-temp-file temp-file
+            (insert prompt))
+          (message "Claude Code でコミットメッセージを生成中（%s）..."
+                   (if (eq language 'en) "英語" "日本語"))
+          (shell-command
+           (format "claude --print --model claude-haiku-4-5 < %s > %s 2>&1"
+                   (shell-quote-argument temp-file)
+                   (shell-quote-argument response-file)))
+          (let ((response (with-temp-buffer
+                           (insert-file-contents response-file)
+                           (buffer-string))))
+            (if (string-match-p "error\\|Error\\|ERROR" response)
+                (message "Claude Code エラー: %s" response)
+              (with-current-buffer (get-buffer "COMMIT_EDITMSG")
+                (goto-char (point-min))
+                (insert (string-trim response))
+                (insert "\n\n")
+                (message "コミットメッセージを生成しました（%s）"
+                         (if (eq language 'en) "英語" "日本語"))))))
+      (delete-file temp-file)
+      (delete-file response-file))))
+
+;; magit-commit-create のプレフィクス引数をキャプチャ
+(defun my/magit-commit-capture-prefix (orig-fun &rest args)
+  "Capture prefix argument from magit-commit-create and store language preference."
+  (when (and (called-interactively-p 'any)
+             current-prefix-arg)
+    (setq my/claude-commit-language
+          (cond
+           ;; C-u C-u: 対話的に選択
+           ((equal current-prefix-arg '(16))
+            (intern (completing-read "言語を選択: " '("ja" "en") nil t)))
+           ;; C-u: 英語
+           ((equal current-prefix-arg '(4)) 'en)
+           ;; それ以外: デフォルト（日本語）
+           (t 'ja))))
+  (apply orig-fun args))
+
 (with-eval-after-load 'git-commit
   ;; It is recommended to run `git config --global commit.verbose true`
-  (add-hook 'git-commit-setup-hook #'copilot-mode)
-  (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message))
+  ;; Claude Code CLI を使用したコミットメッセージ生成
+  (add-hook 'git-commit-setup-hook #'my/claude-code-generate-commit-message)
+
+  ;; 手動で呼び出す場合のキーバインド
+  (define-key git-commit-mode-map (kbd "C-c C-l")
+    #'my/claude-code-generate-commit-message)
+
+  ;; 日本語/英語で再生成
+  (define-key git-commit-mode-map (kbd "C-c C-j")
+    (lambda () (interactive) (my/claude-code-generate-commit-message 'ja)))
+  (define-key git-commit-mode-map (kbd "C-c C-k")
+    (lambda () (interactive) (my/claude-code-generate-commit-message 'en))))
+
 (with-eval-after-load 'magit
   ;; (require 'forge)
   ;; see https://stackoverflow.com/a/32914548/4956633
@@ -637,7 +797,10 @@
   (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
   (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
   (define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
-  (remove-hook 'server-switch-hook 'magit-commit-diff))
+  (remove-hook 'server-switch-hook 'magit-commit-diff)
+
+  ;; magit-commit-create にアドバイスを追加してプレフィクス引数をキャプチャ
+  (advice-add 'magit-commit-create :around #'my/magit-commit-capture-prefix))
 (global-set-key (kbd "C-z m") 'magit-status)
 
 ;; (el-get-bundle ghub
