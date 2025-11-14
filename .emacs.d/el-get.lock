@@ -1,5 +1,6 @@
 (setq el-get-lock-package-versions
-      '((eat :checksum "c8d54d649872bfe7b2b9f49ae5c2addbf12d3b99")
+      '((cond-let :checksum "288b7d36563223ebaf64cb220a3b270bdffb63f1")
+        (eat :checksum "c8d54d649872bfe7b2b9f49ae5c2addbf12d3b99")
         (vterm :checksum "056ad74653704bc353d8ec8ab52ac75267b7d373")
         (web-server :checksum
                     "6357a1c2d1718778503f7ee0909585094117525b")
@@ -103,7 +104,7 @@
         (tree-mode :checksum
                    "b06078826d5875d74b0e7b7ac47b0d0917610534")
         (with-editor :checksum
-                     "87a384a0e59260cca41ca8831d98e195b1ec8ada")
+                     "96356c4d221dda4e6a3b7195ea439f1fdd428a15")
         (terminal-here :checksum
                        "d321d9e33e42cba045341b0ef4d978056ad6f4d7")
         (emacs-sql-indent :checksum
@@ -199,9 +200,9 @@
                      "ae2202fbbbe11873ad4b393a6959da50ac250c1e")
         (helm :checksum "4e99cc8ef66aac2d824c456f58abe833be26c99d")
         (howm :checksum "00fb080ccc7d6929a6ee9bb480484c9308727d09")
-        (magit :checksum "b828afbb4b45641998fb6483a08effb1efb214e1")
+        (magit :checksum "c2a9595119ab4aa60b7079b1dcb8f1cca8a75da6")
         (transient :checksum
-                   "053d56e4de2dd78bf32f7af7ed5f289a91cdb6ac")
+                   "5a37ade046d7150cc5aff679b782df9c081e5a2b")
         (smart-jump :checksum
                     "3392eb35e3cde37e6f5f2a48dc0db15ca535143c")
         (dumb-jump :checksum
