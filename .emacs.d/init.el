@@ -577,11 +577,16 @@
   :type github
   :pkgname "tarsius/llama"
   :branch "main")
-(el-get-bundle transient
+(el-get-bundle elpa:seq)
+(el-get-bundle cond-let
+  :type github
+  :pkgname "tarsius/cond-let"
   :branch "main")
+(el-get-bundle transient
+  :branch "main"
+  :depends (seq compat cond-let))
 (el-get-bundle with-editor
   :branch "main")
-(el-get-bundle elpa:cond-let)
 (el-get-bundle magit
   :type github
   :pkgname "magit/magit"
@@ -743,7 +748,7 @@ Conventional Commits v1.0.0 形式に従った簡潔なコミットメッセー�
 (with-eval-after-load 'git-commit
   ;; It is recommended to run `git config --global commit.verbose true`
   ;; Claude Code CLI を使用したコミットメッセージ生成
-  (add-hook 'git-commit-setup-hook #'my/claude-code-generate-commit-message)
+  ;; (add-hook 'git-commit-setup-hook #'my/claude-code-generate-commit-message)
 
   ;; 手動で呼び出す場合のキーバインド
   (define-key git-commit-mode-map (kbd "C-c C-l")
