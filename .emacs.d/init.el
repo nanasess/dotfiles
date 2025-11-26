@@ -581,6 +581,7 @@
   :pkgname "chep/copilot-chat.el"
   :depends (polymode poly-markdown aio request shell-maker mcp.el))
 (setopt copilot-chat-frontend 'markdown)
+(setopt copilot-chat-commit-model "claude-haiku-4.5")
 
 (el-get-bundle llama
   :type github
