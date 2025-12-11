@@ -17,7 +17,7 @@ sh ./install
 
 This creates symlinks in the home directory for:
 - `.emacs.d` → Emacs configuration
-- `.zsh` → Zsh shell configuration  
+- `.zsh` → Zsh shell configuration
 - `.zshenv` → Zsh environment variables
 - `.signature` → Email signature
 - `phpactor` → PHP language server configuration
@@ -63,7 +63,7 @@ The repository includes language servers and development tools for:
 - **Eask**: Emacs package management (configured in root `Eask` file)
 - **el-get**: Emacs package manager (lock file tracked)
 - **Composer**: PHP dependencies
-- **Yarn**: JavaScript dependencies  
+- **Yarn**: JavaScript dependencies
 - **Bundler**: Ruby dependencies
 - **Sheldon**: Zsh plugin management
 
