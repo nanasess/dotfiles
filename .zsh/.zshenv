@@ -12,7 +12,7 @@ if [[ -p "$ZDOTDIR/.env.local" ]]; then
   _OP_ENV_CONTENT=$(timeout 1 cat "$ZDOTDIR/.env.local" 2>/dev/null)
   if [[ -n "$_OP_ENV_CONTENT" ]]; then
     set -a
-    source <(echo "$_OP_ENV_CONTENT")
+    source <(printf '%s\n' "$_OP_ENV_CONTENT")
     set +a
   else
     echo "\e[33m[WARNING] Could not load secrets: 1Password is not running.\e[0m" >&2
