@@ -5,3 +5,7 @@ ln -s $PWD/.signature $HOME/.signature
 ln -s $PWD/.zsh $HOME/.zsh
 ln -s $PWD/.zsh/.zshenv $HOME/.zshenv
 ln -s $PWD/phpactor $HOME/.config/phpactor
+
+# bin directory
+mkdir -p $HOME/bin
+ln -sf $PWD/bin/gh $HOME/bin/gh
