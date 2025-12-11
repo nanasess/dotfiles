@@ -6,4 +6,4 @@ if [ -n "$_OP_GH_WRAPPER" ]; then
     exec /usr/bin/gh "$@"
 fi
 export _OP_GH_WRAPPER=1
-exec /usr/bin/op plugin run -- gh "$@"
+exec op plugin run -- gh "$@"
