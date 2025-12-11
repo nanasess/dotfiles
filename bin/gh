@@ -1,0 +1,9 @@
+#!/bin/bash
+# Wrapper script for gh command with 1Password integration
+# Prevents infinite loop when called from op plugin
+
+if [ -n "$_OP_GH_WRAPPER" ]; then
+    exec /usr/bin/gh "$@"
+fi
+export _OP_GH_WRAPPER=1
+exec /usr/bin/op plugin run -- gh "$@"
