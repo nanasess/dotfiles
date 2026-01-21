@@ -81,7 +81,7 @@
     (goto-char (point-max))
     (eval-print-last-sexp))
   (with-eval-after-load 'el-get-git
-    (setopt el-get-git-shallow-clone t)))
+    (setopt el-get-git-shallow-clone nil)))
 
 (el-get-bundle el-get-lock
   :type github
