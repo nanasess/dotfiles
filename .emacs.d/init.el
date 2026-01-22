@@ -81,13 +81,13 @@
     (goto-char (point-max))
     (eval-print-last-sexp))
   (with-eval-after-load 'el-get-git
-    (setopt el-get-git-shallow-clone t)))
+    (setopt el-get-git-shallow-clone nil)))
 
 (el-get-bundle el-get-lock
   :type github
   :pkgname "tarao/el-get-lock")
 (el-get-lock)
-(el-get-lock-unlock 'el-get 'seq)
+(el-get-lock-unlock 'el-get)
 
 ;; (el-get-bundle with-eval-after-load-feature-el
 ;;   :type github
@@ -642,14 +642,13 @@
   :type github
   :pkgname "tarsius/llama"
   :branch "main")
-(el-get-bundle elpa:seq)
 (el-get-bundle cond-let
   :type github
   :pkgname "tarsius/cond-let"
   :branch "main")
 (el-get-bundle transient
   :branch "main"
-  :depends (seq compat cond-let))
+  :depends (compat cond-let))
 (el-get-bundle with-editor
   :branch "main")
 (el-get-bundle magit
@@ -1261,7 +1260,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(jsonrpc queue seq)))
+ '(package-selected-packages '(jsonrpc queue)))
 ;; (profiler-report)
 ;; (profiler-stop)
 (setq file-name-handler-alist my/saved-file-name-handler-alist)
