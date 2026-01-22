@@ -41,6 +41,10 @@ export PATH=/usr/local/sbin:$PATH
 export PATH="/mnt/c/Users/${USER}/AppData/Local/Programs/Microsoft VS Code/bin":$PATH
 export PATH=~/.npm-global/bin:$PATH
 
+# https://bun.com/docs/installation
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
 # export PATH=$HOME/.emacs.d/bin:$PATH
 #export PATH="$(brew --prefix openssl)/bin:$PATH"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
