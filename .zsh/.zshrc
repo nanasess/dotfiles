@@ -58,9 +58,6 @@ export JQ_COLORS="0;33:0;33:0;33:0;35:0;36:0;31:0;31"
 export GPG_TTY=$(tty)
 export SSH_AUTH_SOCK=~/.1password/agent.sock
 
-# 1Password Shell Plugins
-[[ -f ~/.config/op/plugins.sh ]] && source ~/.config/op/plugins.sh
-
 if [ ! -n "${TERM}" ]; then
     TERM=xterm-256color
 fi
@@ -95,3 +92,11 @@ fi
 # bun completions
 [ -s "/home/nanasess/.bun/_bun" ] && source "/home/nanasess/.bun/_bun"
 
+
+# pnpm
+export PNPM_HOME="/home/nanasess/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
