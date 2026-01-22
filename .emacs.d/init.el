@@ -49,6 +49,10 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
+(require 'package)
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
 (when load-file-name
@@ -62,6 +66,10 @@
 (defvar openweathermap-api-key nil)
 (setq debug-on-error t)
 (setq warning-minimum-level :error)
+
+;; Run builds synchronously in CI to avoid race conditions
+(when noninteractive
+  (setq el-get-default-process-sync t))
 
 (setopt el-get-bundle-sync t
         el-get-is-lazy t
@@ -77,13 +85,13 @@
     (goto-char (point-max))
     (eval-print-last-sexp))
   (with-eval-after-load 'el-get-git
-    (setopt el-get-git-shallow-clone t)))
+    (setopt el-get-git-shallow-clone nil)))
 
 (el-get-bundle el-get-lock
   :type github
   :pkgname "tarao/el-get-lock")
 (el-get-lock)
-(el-get-lock-unlock 'el-get 'seq)
+(el-get-lock-unlock 'el-get)
 
 ;; (el-get-bundle with-eval-after-load-feature-el
 ;;   :type github
@@ -127,7 +135,8 @@
                    (expand-file-name "~/bin")
                    (expand-file-name "~/.emacs.d/bin")
                    (expand-file-name "~/.emacs.d/el-get/mew/bin")
-                   (expand-file-name "~/.local/bin")))
+                   (expand-file-name "~/.local/bin")
+                   (expand-file-name "~/.config/claude/local/")))
 
   (when (and (file-exists-p dir) (not (member dir exec-path)))
     (setenv "PATH" (concat dir ":" (getenv "PATH")))
@@ -500,8 +509,63 @@
 (setopt undo-tree-history-directory-alist `(("." . ,(expand-file-name "undo-tree" user-emacs-directory))))
 
 (el-get-bundle easy-kill in leoliu/easy-kill)
-(with-eval-after-load 'easy-kill
-  (global-set-key [remap kill-ring-save] 'easy-kill))
+
+;; Copy menu with transient (M-w)
+(defun my/copy-buffer-file-name ()
+  "Copy full path to kill ring."
+  (interactive)
+  (if-let ((f (buffer-file-name)))
+      (progn (kill-new f) (message "Copied: %s" f))
+    (message "Buffer has no file")))
+
+(defun my/copy-buffer-file-name-nondirectory ()
+  "Copy file name only to kill ring."
+  (interactive)
+  (if-let ((f (buffer-file-name)))
+      (let ((name (file-name-nondirectory f)))
+        (kill-new name) (message "Copied: %s" name))
+    (message "Buffer has no file")))
+
+(defun my/copy-buffer-directory ()
+  "Copy directory to kill ring."
+  (interactive)
+  (if-let ((f (buffer-file-name)))
+      (let ((dir (file-name-directory f)))
+        (kill-new dir) (message "Copied: %s" dir))
+    (message "Buffer has no file")))
+
+(defun my/copy-buffer-file-name-with-line ()
+  "Copy file:line format to kill ring."
+  (interactive)
+  (if-let ((f (buffer-file-name)))
+      (let ((loc (format "%s:%d" f (line-number-at-pos))))
+        (kill-new loc) (message "Copied: %s" loc))
+    (message "Buffer has no file")))
+
+(with-eval-after-load 'transient
+  (transient-define-prefix my/copy-dwim ()
+    "Select what to copy."
+    [["File Info"
+      ("f" "Full path" my/copy-buffer-file-name :transient nil)
+      ("n" "File name only" my/copy-buffer-file-name-nondirectory :transient nil)
+      ("d" "Directory" my/copy-buffer-directory :transient nil)
+      ("l" "File:line" my/copy-buffer-file-name-with-line :transient nil)]
+     ["Text (easy-kill)"
+      ("w" "Word" (lambda () (interactive) (easy-kill ?w)) :transient nil)
+      ("s" "Symbol" (lambda () (interactive) (easy-kill ?s)) :transient nil)
+      ("L" "Line" (lambda () (interactive) (easy-kill ?l)) :transient nil)
+      ("-" "Defun" (lambda () (interactive) (easy-kill ?-)) :transient nil)]]))
+
+(defun my/copy-or-menu ()
+  "Copy region if active, otherwise show copy menu."
+  (interactive)
+  (if (use-region-p)
+      (kill-ring-save (region-beginning) (region-end))
+    (if (fboundp 'my/copy-dwim)
+        (my/copy-dwim)
+      (message "Copy menu not available. Run M-x magit-status to load transient first."))))
+
+(global-set-key (kbd "M-w") #'my/copy-or-menu)
 
 (el-get-bundle yasnippet)
 (add-hook 'emacs-startup-hook 'yas-global-mode)
@@ -562,24 +626,39 @@
 (el-get-bundle poly-markdown
   :type github
   :pkgname "polymode/poly-markdown")
+(el-get-bundle aio
+  :type github
+  :pkgname "skeeto/emacs-aio")
+(el-get-bundle request
+  :type github
+  :pkgname "tkf/emacs-request")
+(el-get-bundle mcp.el
+  :type github
+  :pkgname "lizqwerscott/mcp.el")
 (el-get-bundle copilot-chat.el
   :type github
   :pkgname "chep/copilot-chat.el"
-  :depends (polymode poly-markdown))
+  :depends (polymode poly-markdown aio request shell-maker mcp.el))
 (setopt copilot-chat-frontend 'markdown)
+(setopt copilot-chat-commit-model "claude-haiku-4.5")
 
 (el-get-bundle llama
   :type github
   :pkgname "tarsius/llama"
   :branch "main")
-(el-get-bundle transient
+(el-get-bundle cond-let
+  :type github
+  :pkgname "tarsius/cond-let"
   :branch "main")
+(el-get-bundle transient
+  :branch "main"
+  :depends (compat cond-let))
 (el-get-bundle with-editor
   :branch "main")
 (el-get-bundle magit
   :type github
   :pkgname "magit/magit"
-  :depends (transient with-editor compat)
+  :depends (transient with-editor compat cond-let)
   :load-path "lisp/"
   :compile "lisp/"
   :build `(("make" ,(format "EMACSBIN=%s" el-get-emacs) "lisp")
@@ -589,6 +668,7 @@
   ;; It is recommended to run `git config --global commit.verbose true`
   (add-hook 'git-commit-setup-hook #'copilot-mode)
   (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message))
+
 (with-eval-after-load 'magit
   ;; (require 'forge)
   ;; see https://stackoverflow.com/a/32914548/4956633
@@ -919,12 +999,17 @@
 (with-eval-after-load 'lsp-bridge
   ;; curl -O https://releases.hashicorp.com/terraform-ls/0.32.4/terraform-ls_0.32.4_linux_amd64.zip && unzip terraform-ls_0.32.4_linux_amd64.zip
   (defun sm-try-smerge ()
-    "Searches for merge conflict markers and disables lsp-bridge-mode if found."
-    (save-excursion
-      (goto-char (point-min))
-      (when (re-search-forward "^<<<<<<< " nil t)
-        (lsp-bridge-mode -1))))
-  (add-hook 'lsp-bridge-mode-hook 'sm-try-smerge t)
+    "Searches for merge conflict markers and prevents lsp-bridge-mode if found."
+    (when (and (buffer-file-name)
+               (save-excursion
+                 (goto-char (point-min))
+                 (re-search-forward "^<<<<<<< " nil t)))
+      (when (bound-and-true-p lsp-bridge-mode)
+        (lsp-bridge-mode -1))
+      (message "lsp-bridge-mode disabled due to merge conflict markers")
+      (smerge-mode 1)))
+
+  (add-hook 'find-file-hook 'sm-try-smerge t)
   (defun lsp-bridge--mode-line-format ()
     "Compose the LSP-bridge's mode-line."
     (setq-local mode-face
@@ -1179,7 +1264,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(queue)))
+ '(package-selected-packages '(jsonrpc queue)))
 ;; (profiler-report)
 ;; (profiler-stop)
 (setq file-name-handler-alist my/saved-file-name-handler-alist)
