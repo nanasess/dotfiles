@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+日本語で回答してください
+
 ## Repository Overview
 
 This is a comprehensive dotfiles repository for development environments, primarily focused on Emacs, shell configuration (Zsh), and development tools. The repository contains personal configuration files for a multi-language development setup including PHP, JavaScript/TypeScript, Ruby, and Python.
@@ -15,7 +17,7 @@ sh ./install
 
 This creates symlinks in the home directory for:
 - `.emacs.d` → Emacs configuration
-- `.zsh` → Zsh shell configuration  
+- `.zsh` → Zsh shell configuration
 - `.zshenv` → Zsh environment variables
 - `.signature` → Email signature
 - `phpactor` → PHP language server configuration
@@ -61,7 +63,7 @@ The repository includes language servers and development tools for:
 - **Eask**: Emacs package management (configured in root `Eask` file)
 - **el-get**: Emacs package manager (lock file tracked)
 - **Composer**: PHP dependencies
-- **Yarn**: JavaScript dependencies  
+- **Yarn**: JavaScript dependencies
 - **Bundler**: Ruby dependencies
 - **Sheldon**: Zsh plugin management
 
