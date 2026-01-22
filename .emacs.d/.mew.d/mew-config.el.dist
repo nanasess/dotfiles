@@ -2,14 +2,6 @@
       '("User <user@example.com>"
         "User <user@example.jp>"
         "User <user@example.net>"))
-(setopt mew-oauth2-client-id "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com")
-(setopt mew-oauth2-client-secret "xxxxxxxxxxxxxxxxxxxxxxxx")
-(setopt mew-oauth2-redirect-url "http://localhost:8080")
-(setopt mew-oauth2-redirect-port 8080)
-(setopt mew-auth-oauth2-client-id mew-oauth2-client-id)
-(setopt mew-auth-oauth2-client-secret mew-oauth2-client-secret)
-(setopt mew-auth-oauth2-redirect-url mew-oauth2-redirect-url)
-(setopt mew-auth-oauth2-redirect-port mew-oauth2-redirect-port)
 (setq plstore-cache-passphrase-for-symmetric-encryption t)
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 (setq epa-pinentry-mode 'loopback)
@@ -34,13 +26,15 @@
          (imap-size        0)
          (imap-header-only t))
         (Gmail
+         ;; https://console.cloud.google.com/apis で OAuth2.0 クライアントIDを作成し、以下の値を設定してください。
          ("oauth2-client-id"  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com")
          ("oauth2-client-secret"  "xxxxxxxxxxxxxxxxxxxxxxxx")
          ("oauth2-auth-url"  "https://accounts.google.com/o/oauth2/auth")
          ("oauth2-token-url"  "https://accounts.google.com/o/oauth2/token")
          ("oauth2-resource-url"  "https://mail.google.com/")
-         ("oauth2-redirect-url"  "http://localhost:8080")
-         ("oauth2-redirect-port"  8080)
+         ;; リダイレクトURLは、OAuth2.0 クライアントIDを作成した際に設定した値と同じにしてください。
+         ("oauth2-redirect-url"  "http://localhost:28080")
+         ("oauth2-redirect-port"  28080)
          ("imap-auth-list"  ("XOAUTH2"))
          ("smtp-auth-list"  ("XOAUTH2"))
          (name             "User")
