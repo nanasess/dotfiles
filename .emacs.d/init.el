@@ -67,6 +67,10 @@
 (setq debug-on-error t)
 (setq warning-minimum-level :error)
 
+;; Run builds synchronously in CI to avoid race conditions
+(when noninteractive
+  (setq el-get-default-process-sync t))
+
 (setopt el-get-bundle-sync t
         el-get-is-lazy t
         el-get-verbose nil
