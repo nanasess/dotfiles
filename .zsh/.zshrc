@@ -92,3 +92,11 @@ fi
 # bun completions
 [ -s "/home/nanasess/.bun/_bun" ] && source "/home/nanasess/.bun/_bun"
 
+
+# pnpm
+export PNPM_HOME="/home/nanasess/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

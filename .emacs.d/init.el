@@ -81,13 +81,13 @@
     (goto-char (point-max))
     (eval-print-last-sexp))
   (with-eval-after-load 'el-get-git
-    (setopt el-get-git-shallow-clone t)))
+    (setopt el-get-git-shallow-clone nil)))
 
 (el-get-bundle el-get-lock
   :type github
   :pkgname "tarao/el-get-lock")
 (el-get-lock)
-(el-get-lock-unlock 'el-get 'seq)
+(el-get-lock-unlock 'el-get)
 
 ;; (el-get-bundle with-eval-after-load-feature-el
 ;;   :type github
@@ -505,8 +505,63 @@
 (setopt undo-tree-history-directory-alist `(("." . ,(expand-file-name "undo-tree" user-emacs-directory))))
 
 (el-get-bundle easy-kill in leoliu/easy-kill)
-(with-eval-after-load 'easy-kill
-  (global-set-key [remap kill-ring-save] 'easy-kill))
+
+;; Copy menu with transient (M-w)
+(defun my/copy-buffer-file-name ()
+  "Copy full path to kill ring."
+  (interactive)
+  (if-let ((f (buffer-file-name)))
+      (progn (kill-new f) (message "Copied: %s" f))
+    (message "Buffer has no file")))
+
+(defun my/copy-buffer-file-name-nondirectory ()
+  "Copy file name only to kill ring."
+  (interactive)
+  (if-let ((f (buffer-file-name)))
+      (let ((name (file-name-nondirectory f)))
+        (kill-new name) (message "Copied: %s" name))
+    (message "Buffer has no file")))
+
+(defun my/copy-buffer-directory ()
+  "Copy directory to kill ring."
+  (interactive)
+  (if-let ((f (buffer-file-name)))
+      (let ((dir (file-name-directory f)))
+        (kill-new dir) (message "Copied: %s" dir))
+    (message "Buffer has no file")))
+
+(defun my/copy-buffer-file-name-with-line ()
+  "Copy file:line format to kill ring."
+  (interactive)
+  (if-let ((f (buffer-file-name)))
+      (let ((loc (format "%s:%d" f (line-number-at-pos))))
+        (kill-new loc) (message "Copied: %s" loc))
+    (message "Buffer has no file")))
+
+(with-eval-after-load 'transient
+  (transient-define-prefix my/copy-dwim ()
+    "Select what to copy."
+    [["File Info"
+      ("f" "Full path" my/copy-buffer-file-name :transient nil)
+      ("n" "File name only" my/copy-buffer-file-name-nondirectory :transient nil)
+      ("d" "Directory" my/copy-buffer-directory :transient nil)
+      ("l" "File:line" my/copy-buffer-file-name-with-line :transient nil)]
+     ["Text (easy-kill)"
+      ("w" "Word" (lambda () (interactive) (easy-kill ?w)) :transient nil)
+      ("s" "Symbol" (lambda () (interactive) (easy-kill ?s)) :transient nil)
+      ("L" "Line" (lambda () (interactive) (easy-kill ?l)) :transient nil)
+      ("-" "Defun" (lambda () (interactive) (easy-kill ?-)) :transient nil)]]))
+
+(defun my/copy-or-menu ()
+  "Copy region if active, otherwise show copy menu."
+  (interactive)
+  (if (use-region-p)
+      (kill-ring-save (region-beginning) (region-end))
+    (if (fboundp 'my/copy-dwim)
+        (my/copy-dwim)
+      (message "Copy menu not available. Run M-x magit-status to load transient first."))))
+
+(global-set-key (kbd "M-w") #'my/copy-or-menu)
 
 (el-get-bundle yasnippet)
 (add-hook 'emacs-startup-hook 'yas-global-mode)
@@ -567,24 +622,33 @@
 (el-get-bundle poly-markdown
   :type github
   :pkgname "polymode/poly-markdown")
+(el-get-bundle aio
+  :type github
+  :pkgname "skeeto/emacs-aio")
+(el-get-bundle request
+  :type github
+  :pkgname "tkf/emacs-request")
+(el-get-bundle mcp.el
+  :type github
+  :pkgname "lizqwerscott/mcp.el")
 (el-get-bundle copilot-chat.el
   :type github
   :pkgname "chep/copilot-chat.el"
-  :depends (polymode poly-markdown))
+  :depends (polymode poly-markdown aio request shell-maker mcp.el))
 (setopt copilot-chat-frontend 'markdown)
+(setopt copilot-chat-commit-model "claude-haiku-4.5")
 
 (el-get-bundle llama
   :type github
   :pkgname "tarsius/llama"
   :branch "main")
-(el-get-bundle elpa:seq)
 (el-get-bundle cond-let
   :type github
   :pkgname "tarsius/cond-let"
   :branch "main")
 (el-get-bundle transient
   :branch "main"
-  :depends (seq compat cond-let))
+  :depends (compat cond-let))
 (el-get-bundle with-editor
   :branch "main")
 (el-get-bundle magit
@@ -596,169 +660,10 @@
   :build `(("make" ,(format "EMACSBIN=%s" el-get-emacs) "lisp")
            ("touch" "lisp/magit-autoloads.el"))
   :branch "main")
-(defvar my/claude-commit-language nil
-  "Language for Claude Code commit message generation.
-Set to 'ja for Japanese, 'en for English, or nil for default (Japanese).")
-
-(defun my/claude-code-generate-commit-message (&optional lang)
-  "Generate commit message using Claude Code CLI.
-
-言語選択:
-- 引数なし: 日本語（デフォルト）
-- C-u: 英語
-- C-u C-u: 対話的に選択
-
-LANG が指定された場合は、その言語を使用（'ja または 'en）
-magit-commit-create からのプレフィクス引数も考慮します。"
-  (interactive "P")
-  (let* ((language
-          (cond
-           ;; 明示的に言語が指定された場合
-           ((and lang (symbolp lang)) lang)
-           ;; magit-commit-create からのプレフィクス引数
-           ((and (boundp 'my/claude-commit-language)
-                 my/claude-commit-language)
-            (prog1 my/claude-commit-language
-              (setq my/claude-commit-language nil)))
-           ;; C-u C-u: 対話的に選択
-           ((equal lang '(16))
-            (intern (completing-read "言語を選択: " '("ja" "en") nil t)))
-           ;; C-u: 英語
-           ((equal lang '(4)) 'en)
-           ;; 引数なし: 日本語（デフォルト）
-           (t 'ja)))
-         (process-environment
-          ;; ANTHROPIC_API_KEY を未設定にして、Max プランのサブスクリプションを使用
-          (cl-remove-if (lambda (s) (string-prefix-p "ANTHROPIC_API_KEY=" s))
-                        process-environment))
-         (diff (shell-command-to-string "git diff --cached"))
-         (prompt (if (eq language 'en)
-                     (format "Generate an appropriate commit message from the following git diff.
-
-Analyze the `git diff --cached` result
-Based on the analysis:
-   - New files: use `feat:` or `docs:`
-   - Bug fixes: use `fix:`
-   - Refactoring: use `refactor:`
-   - Performance improvements: use `perf:`
-   - Tests: use `test:`
-   - Build/dependencies: use `build:` or `chore:`
-   - Deletions/cleanup: use `chore:` (e.g., chore: remove deprecated files)
-   - Scope: add scope in parentheses (e.g., feat(api): add endpoint, fix(auth): resolve login issue)
-   - Breaking changes: add `!` after type, or add `BREAKING CHANGE:` in footer
-Generate a concise commit message following Conventional Commits v1.0.0 format.
-Write concisely in English.
-
-[IMPORTANT] Output format:
-- Output ONLY the commit message text
-- NO preambles like \"I analyzed the diff\" or \"Here's the commit message\"
-- NO markdown code block symbols (```)
-- Start directly with the commit type (e.g., feat:, fix:)
-
-Output format structure:
-
-```
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-Keep the first line summary within 50 characters, and each line of the body within 72 characters.
-
-%s" diff)
-                   (format "以下のgit diffから、適切なコミットメッセージを生成してください。
-
-`git diff --cached` の結果を分析
-分析結果に基づいて：
-   - 新規ファイル: `feat:` または `docs:` を使用
-   - バグ修正: `fix:` を使用
-   - リファクタリング: `refactor:` を使用
-   - パフォーマンス改善: `perf:` を使用
-   - テスト: `test:` を使用
-   - ビルド・依存関係: `build:` または `chore:` を使用
-   - 削除・クリーンアップ: `chore:` を使用（例: chore: remove deprecated files）
-   - スコープ: 影響範囲を括弧で追加（例: feat(api): add endpoint, fix(auth): resolve login issue）
-   - 破壊的変更: タイプの後に `!` を追加、またはフッターに `BREAKING CHANGE:` を記述
-Conventional Commits v1.0.0 形式に従った簡潔なコミットメッセージを生成してください。
-日本語で簡潔に記述してください。
-
-【重要】出力形式:
-- コミットメッセージのテキストのみを出力してください
-- 「差分を分析しました」「以下がコミットメッセージです」などの前置きは不要です
-- マークダウンのコードブロック記号（```）は不要です
-- feat: や fix: などのコミットタイプから直接始めてください
-
-出力形式のフォーマット:
-
-```
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-1行目の要約は50文字以内、本文の各行を72文字以内を目安としてください
-
-%s" diff)))
-         (temp-file (make-temp-file "claude-prompt-"))
-         (response-file (make-temp-file "claude-response-")))
-    (unwind-protect
-        (progn
-          (with-temp-file temp-file
-            (insert prompt))
-          (message "Claude Code でコミットメッセージを生成中（%s）..."
-                   (if (eq language 'en) "英語" "日本語"))
-          (shell-command
-           (format "claude --print --model claude-haiku-4-5 < %s > %s 2>&1"
-                   (shell-quote-argument temp-file)
-                   (shell-quote-argument response-file)))
-          (let ((response (with-temp-buffer
-                           (insert-file-contents response-file)
-                           (buffer-string))))
-            (if (string-match-p "error\\|Error\\|ERROR" response)
-                (message "Claude Code エラー: %s" response)
-              (with-current-buffer (get-buffer "COMMIT_EDITMSG")
-                (goto-char (point-min))
-                (insert (string-trim response))
-                (insert "\n\n")
-                (message "コミットメッセージを生成しました（%s）"
-                         (if (eq language 'en) "英語" "日本語"))))))
-      (delete-file temp-file)
-      (delete-file response-file))))
-
-;; magit-commit-create のプレフィクス引数をキャプチャ
-(defun my/magit-commit-capture-prefix (orig-fun &rest args)
-  "Capture prefix argument from magit-commit-create and store language preference."
-  (when (and (called-interactively-p 'any)
-             current-prefix-arg)
-    (setq my/claude-commit-language
-          (cond
-           ;; C-u C-u: 対話的に選択
-           ((equal current-prefix-arg '(16))
-            (intern (completing-read "言語を選択: " '("ja" "en") nil t)))
-           ;; C-u: 英語
-           ((equal current-prefix-arg '(4)) 'en)
-           ;; それ以外: デフォルト（日本語）
-           (t 'ja))))
-  (apply orig-fun args))
-
 (with-eval-after-load 'git-commit
   ;; It is recommended to run `git config --global commit.verbose true`
-  ;; Claude Code CLI を使用したコミットメッセージ生成
-  ;; (add-hook 'git-commit-setup-hook #'my/claude-code-generate-commit-message)
-
-  ;; 手動で呼び出す場合のキーバインド
-  (define-key git-commit-mode-map (kbd "C-c C-l")
-    #'my/claude-code-generate-commit-message)
-
-  ;; 日本語/英語で再生成
-  (define-key git-commit-mode-map (kbd "C-c C-j")
-    (lambda () (interactive) (my/claude-code-generate-commit-message 'ja)))
-  (define-key git-commit-mode-map (kbd "C-c C-k")
-    (lambda () (interactive) (my/claude-code-generate-commit-message 'en))))
+  (add-hook 'git-commit-setup-hook #'copilot-mode)
+  (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message))
 
 (with-eval-after-load 'magit
   ;; (require 'forge)
@@ -803,10 +708,7 @@ Conventional Commits v1.0.0 形式に従った簡潔なコミットメッセー�
   (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
   (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
   (define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
-  (remove-hook 'server-switch-hook 'magit-commit-diff)
-
-  ;; magit-commit-create にアドバイスを追加してプレフィクス引数をキャプチャ
-  (advice-add 'magit-commit-create :around #'my/magit-commit-capture-prefix))
+  (remove-hook 'server-switch-hook 'magit-commit-diff))
 (global-set-key (kbd "C-z m") 'magit-status)
 
 ;; (el-get-bundle ghub
@@ -1358,7 +1260,7 @@ Conventional Commits v1.0.0 形式に従った簡潔なコミットメッセー�
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(queue)))
+ '(package-selected-packages '(jsonrpc queue)))
 ;; (profiler-report)
 ;; (profiler-stop)
 (setq file-name-handler-alist my/saved-file-name-handler-alist)
