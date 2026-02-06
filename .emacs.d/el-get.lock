@@ -1,7 +1,7 @@
 (setq el-get-lock-package-versions
       '((aio :checksum "58157e51e7eb7a4b954894ee4182564c507a2f01")
         (mcp.el :checksum "963b4af6ce743fbb6224f61bb61f05de1c37f511")
-        (magit :checksum "b828afbb4b45641998fb6483a08effb1efb214e1")
+        (magit :checksum "3e91100014c58d16413c57cb849f5025e53fb30e")
         (gcmh :checksum "0089f9c3a6d4e9a310d0791cf6fa8f35642ecfd9")
         (auto-save-buffers-enhanced :checksum
                                     "461e8c816c1b7c650be5f209078b381fe55da8c6")
@@ -75,11 +75,11 @@
         (wgrep :checksum "49f09ab9b706d2312cab1199e1eeb1bcd3f27f6f")
         (howm :checksum "d1431c9e678de6e0c179b2a2bf405e8804472fee")
         (with-editor :checksum
-                     "72e80f1236237f346d9692ab8e793798b8c038c5")
+                     "902b4d572af2c2f36060da01e3c33d194cdec32b")
         (transient :checksum
-                   "88ff8d66637ad6e212e979f5c03b64be0740b693")
-        (cond-let :checksum "288b7d36563223ebaf64cb220a3b270bdffb63f1")
-        (llama :checksum "e4803de8ab85991b6a944430bb4f543ea338636d")
+                   "66be2fa4c80577646c549bfc592deddbb97c1b7a")
+        (cond-let :checksum "8bf87d45e169ebc091103b2aae325aece3aa804d")
+        (llama :checksum "2a89ba755b0459914a44b1ffa793e57f759a5b85")
         (copilot-chat.el :checksum
                          "1bded1dbe4e8044913fec3db5cc68bc710d55344")
         (poly-markdown :checksum
