@@ -604,22 +604,6 @@
   :pkgname "xenodium/shell-maker"
   :branch "main")
 
-(el-get-bundle copilot
-  :type github
-  :pkgname "copilot-emacs/copilot.el"
-  :branch "main")
-(add-hook 'prog-mode-hook 'copilot-mode)
-(defun copilot-tab ()
-  (interactive)
-  (or (copilot-accept-completion)
-      (indent-for-tab-command)))
-(with-eval-after-load 'copilot
-  (define-key copilot-mode-map (kbd "TAB") #'copilot-tab)
-  (define-key copilot-mode-map [(tab)] #'copilot-tab)
-  (define-key copilot-mode-map (kbd "C-TAB") #'copilot-accept-completion-by-word)
-  (define-key copilot-mode-map (kbd "C-<tab>") #'copilot-accept-completion-by-word)
-  (define-key copilot-mode-map (kbd "C-z n") #'copilot-next-completion)
-  (define-key copilot-mode-map (kbd "C-z p") #'copilot-previous-completion))
 (el-get-bundle polymode
   :type github
   :pkgname "polymode/polymode")
@@ -635,12 +619,6 @@
 (el-get-bundle mcp.el
   :type github
   :pkgname "lizqwerscott/mcp.el")
-(el-get-bundle copilot-chat.el
-  :type github
-  :pkgname "chep/copilot-chat.el"
-  :depends (polymode poly-markdown aio request shell-maker mcp.el))
-(setopt copilot-chat-frontend 'markdown)
-(setopt copilot-chat-commit-model "claude-haiku-4.5")
 
 (el-get-bundle llama
   :type github
@@ -664,10 +642,6 @@
   :build `(("make" ,(format "EMACSBIN=%s" el-get-emacs) "lisp")
            ("touch" "lisp/magit-autoloads.el"))
   :branch "main")
-(with-eval-after-load 'git-commit
-  ;; It is recommended to run `git config --global commit.verbose true`
-  (add-hook 'git-commit-setup-hook #'copilot-mode)
-  (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message))
 
 (with-eval-after-load 'magit
   ;; (require 'forge)
