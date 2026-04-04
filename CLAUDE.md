@@ -25,9 +25,11 @@ This creates symlinks in the home directory for:
 ## Development Commands
 
 ### Emacs Configuration
-- **Compile Emacs Lisp**: `cd ~/.emacs.d && find . -name '*.el' | xargs emacs -Q -batch -l ~/.emacs.d/init.el -f batch-byte-compile`
-- **Clean compiled files**: `cd ~/.emacs.d && find . -name '*.elc' -delete -print`
 - **Test Emacs configuration**: `emacs --init-directory .emacs.d -l .emacs.d/early-init.el -l .emacs.d/init.el --batch`
+- **Generate lock file**: `ELPACA_WRITE_LOCK=1 emacs --init-directory .emacs.d -l .emacs.d/early-init.el -l .emacs.d/init.el --batch`
+- **Clean compiled files**: `cd ~/.emacs.d && find . -name '*.elc' -delete -print`
+
+> **Note**: `--batch` は `-q` を含意するため init.el を自動ロードしません。`--init-directory` で `user-emacs-directory` を設定しつつ、`-l` で明示的にロードする必要があります。
 
 ### Package Management
 - **Install PHP dependencies**: `composer install` (in `.emacs.d/bin/`)
@@ -49,6 +51,17 @@ The CI pipeline tests the configuration with:
 - **`phpactor/`**: PHP language server configuration
 - **`sheldon/`**: Shell plugin manager configuration
 
+### Emacs Package Management
+- **elpaca**: Async package manager with use-package integration
+  - Bootstrap code in `init.el` (elpaca installer v0.12)
+  - Lock file: `.emacs.d/elpaca.lock` — version pinning via `elpaca-lock-file`
+  - GUI からロックファイル更新: `M-x elpaca-write-lock-file`
+  - Batch からロックファイル生成: `ELPACA_WRITE_LOCK=1` 環境変数を設定して batch 実行
+- **use-package**: Emacs 30 組み込みの宣言的パッケージ設定マクロ
+  - `:ensure` で elpaca 経由のインストール
+  - `:ensure nil` で組み込みパッケージの設定
+  - GitHub リポジトリは `:ensure (:host github :repo "owner/repo")` で指定
+
 ### Development Tool Integration
 The repository includes language servers and development tools for:
 - **PHP**: PHPStan, PHP-CS-Fixer, Phpactor, PsySH
@@ -59,9 +72,8 @@ The repository includes language servers and development tools for:
 - **YAML**: YAML language server
 - **Markdown**: Mermaid CLI for diagrams
 
-### Package Management
+### Other Package Managers
 - **Eask**: Emacs package management (configured in root `Eask` file)
-- **elpaca**: Emacs package manager with use-package integration
 - **Composer**: PHP dependencies
 - **Yarn**: JavaScript dependencies
 - **Bundler**: Ruby dependencies
@@ -70,7 +82,9 @@ The repository includes language servers and development tools for:
 ## Key Files
 - `install`: Main installation script
 - `Eask`: Emacs package configuration requiring Emacs 30.1+
-- `.emacs.d/init.el`: Main Emacs configuration entry point
+- `.emacs.d/early-init.el`: Early Emacs initialization (GC, native-comp, package-enable-at-startup)
+- `.emacs.d/init.el`: Main Emacs configuration entry point (elpaca bootstrap, use-package declarations)
+- `.emacs.d/elpaca.lock`: Package version lock file (replaces el-get.lock)
 - `.zsh/.zshrc`: Primary Zsh configuration
 - `phpactor/phpactor.yml`: PHP language server settings
 - `sheldon/plugins.toml`: Shell plugin definitions
