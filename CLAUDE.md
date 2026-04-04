@@ -73,7 +73,6 @@ The repository includes language servers and development tools for:
 - **Markdown**: Mermaid CLI for diagrams
 
 ### Other Package Managers
-- **Eask**: Emacs package management (configured in root `Eask` file)
 - **Composer**: PHP dependencies
 - **Yarn**: JavaScript dependencies
 - **Bundler**: Ruby dependencies
@@ -81,7 +80,6 @@ The repository includes language servers and development tools for:
 
 ## Key Files
 - `install`: Main installation script
-- `Eask`: Emacs package configuration requiring Emacs 30.1+
 - `.emacs.d/early-init.el`: Early Emacs initialization (GC, native-comp, package-enable-at-startup)
 - `.emacs.d/init.el`: Main Emacs configuration entry point (elpaca bootstrap, use-package declarations)
 - `.emacs.d/elpaca.lock`: Package version lock file (replaces el-get.lock)

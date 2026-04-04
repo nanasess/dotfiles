@@ -44,9 +44,6 @@ jobs:
     - uses: purcell/setup-emacs@master
       with:
         version: ${{ matrix.emacs-version }}
-    - uses: emacs-eask/setup-eask@master
-      with:
-        version: 'snapshot'
     - uses: actions/cache@v4
       with:
         path: .emacs.d/elpaca/
