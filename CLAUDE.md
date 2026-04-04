@@ -27,7 +27,7 @@ This creates symlinks in the home directory for:
 ### Emacs Configuration
 - **Compile Emacs Lisp**: `cd ~/.emacs.d && find . -name '*.el' | xargs emacs -Q -batch -l ~/.emacs.d/init.el -f batch-byte-compile`
 - **Clean compiled files**: `cd ~/.emacs.d && find . -name '*.elc' -delete -print`
-- **Test Emacs configuration**: `emacs -Q -l .emacs.d/early-init.el -l .emacs.d/init.el --batch`
+- **Test Emacs configuration**: `emacs --init-directory .emacs.d --batch`
 
 ### Package Management
 - **Install PHP dependencies**: `composer install` (in `.emacs.d/bin/`)
