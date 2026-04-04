@@ -150,25 +150,24 @@
   (setq default-process-coding-system '(utf-8 . utf-8))
   (setenv "LANG" "ja_JP.UTF-8"))
 
-(el-get-bundle ddskk
+(el-get-bundle nskk
   :type github
-  :pkgname "skk-dev/ddskk"
-  ;; :info "doc/skk.info"
-  ;; :load-path (".")
-  ;; :autoloads "skk-autoloads"
-  :features ("skk-setup")
-  :build `(("sh" "-c" "echo \"(setq SKK_SET_JISYO t)\" > SKK-CFG")
-           (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
-           (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile")
-           ;; (,el-get-emacs "-batch" "-q" "-no-site-file" "-l" "SKK-MK" "-f" "SKK-MK-compile-info")
-           ("cp" "skk-setup.el.in" "skk-setup.el")))
+  :pkgname "takeokunn/nskk.el"
+  :branch "main"
+  :autoloads nil)
+;; nskk-azik.el のトップレベルに nskk-converter-register-style の呼び出しがあり、
+;; el-get の autoloads 生成時に .loaddefs.el に取り込まれると
+;; nskk-converter.el 未ロードのため void-function エラーとなる。
+;; :autoloads nil で抑制し、明示的に require する。
+(require 'nskk)
 (setopt
-      skk-server-host nil
-      skk-server-portnum nil
-      skk-user-directory (concat external-directory "ddskk")
-      skk-init-file (concat user-initial-directory "skk-init.el")
-      skk-isearch-start-mode 'latin)
-(setq skk-preload nil)
+      nskk-dict-user-dictionary-file (concat external-directory "nskk/jisyo")
+      nskk-dict-system-dictionary-files
+      (list (concat external-directory "ddskk/SKK-JISYO.all.utf8"))
+      nskk-show-tooltip t
+      nskk-use-color-cursor t
+      nskk-converter-auto-start-henkan t
+      nskk-henkan-show-candidates-nth 5)
 
 ;;; global key-bindings
 (add-hook
@@ -179,11 +178,10 @@
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-\\"))
 (global-set-key (kbd "M-g") 'goto-line)
-(global-set-key (kbd "C-j") 'skk-mode)
-(global-set-key (kbd "C-x C-j") 'skk-mode)
+(global-set-key (kbd "C-j") 'nskk-toggle-mode)
+(global-set-key (kbd "C-x C-j") 'nskk-toggle-mode)
 (global-set-key (kbd "C-t") 'other-window)
 (global-set-key (kbd "C-z C-u") 'other-frame)
-(global-set-key (kbd "C-z C-j") 'toggle-skk-kutouten)
 
 (global-set-key (kbd "C-M-g") 'end-of-buffer)
 (global-set-key (kbd "C-M-j") 'next-line)
@@ -1066,8 +1064,7 @@
   (electric-layout-mode t)
   ;; (setq-local electric-layout-rules '((?{ . around)))
   (electric-pair-local-mode t)
-  (with-eval-after-load 'skk
-    (add-to-list 'context-skk-programming-mode 'php-ts-mode)))
+)
 
 (el-get-bundle php-runtime
   :type github
@@ -1204,7 +1201,7 @@
 (gcmh-mode 1)
 (with-eval-after-load 'gcmh
   (setq gcmh-verbose t))
-(define-key minibuffer-local-map (kbd "C-x C-j") 'skk-kakutei)
+(define-key minibuffer-local-map (kbd "C-x C-j") 'nskk-kakutei)
 ;; npm i -g vscode-json-languageserver
 ;; for json format
 ;; see https://qiita.com/saku/items/d97e930ffc9ca39ac976
