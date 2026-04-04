@@ -62,6 +62,10 @@
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
 
+;; Lock file for version pinning (replaces el-get-lock)
+;; Generate: M-x elpaca-write-lock-file
+(setopt elpaca-lock-file (expand-file-name "elpaca.lock" user-emacs-directory))
+
 ;;;; ============================================================
 ;;;; Base libraries (wait for completion before dependents)
 ;;;; ============================================================
@@ -950,6 +954,12 @@
 ;;;; Finalize
 ;;;; ============================================================
 (elpaca-wait)
+
+;; Generate lock file: ELPACA_WRITE_LOCK=1 emacs --init-directory .emacs.d --batch
+;; Generate lock file: ELPACA_WRITE_LOCK=1 emacs --init-directory .emacs.d -l .emacs.d/early-init.el -l .emacs.d/init.el --batch
+(when (getenv "ELPACA_WRITE_LOCK")
+  (elpaca-write-lock-file elpaca-lock-file))
+
 (ffap-bindings)
 (setq gc-cons-percentage 0.1)
 (setq file-name-handler-alist my/saved-file-name-handler-alist)

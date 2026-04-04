@@ -56,4 +56,4 @@ jobs:
       working-directory: .emacs.d/bin
     - run: yarn install --frozen-lockfile
       working-directory: .emacs.d/bin
-    - run: emacs --init-directory .emacs.d --batch
+    - run: emacs --init-directory .emacs.d -l .emacs.d/early-init.el -l .emacs.d/init.el --batch
