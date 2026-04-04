@@ -17,8 +17,8 @@
 (defvar user-bin-directory (locate-user-emacs-file "bin/"))
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
 (defvar openweathermap-api-key nil)
-(setq debug-on-error t)
-(setq warning-minimum-level :error)
+(setopt debug-on-error t)
+(setopt warning-minimum-level :error)
 
 ;;;; ============================================================
 ;;;; elpaca bootstrap
@@ -167,15 +167,15 @@
   :hook (emacs-startup
          . (lambda ()
              (pixel-scroll-precision-mode t)
-             (setq scroll-conservatively 101
-                   scroll-margin 0
-                   scroll-step 1
-                   pixel-scroll-precision-use-momentum t
-                   pixel-scroll-precision-interpolate-mice t
-                   pixel-scroll-precision-large-scroll-height 10.0
-                   pixel-scroll-precision-interpolation-factor 1.0
-                   pixel-scroll-precision-interpolate-page t
-                   pixel-scroll-precision-interpolation-total-time 0.25)
+             (setopt scroll-conservatively 101
+                    scroll-margin 0
+                    scroll-step 1
+                    pixel-scroll-precision-use-momentum t
+                    pixel-scroll-precision-interpolate-mice t
+                    pixel-scroll-precision-large-scroll-height 10.0
+                    pixel-scroll-precision-interpolation-factor 1.0
+                    pixel-scroll-precision-interpolate-page t
+                    pixel-scroll-precision-interpolation-total-time 0.25)
              (ultra-scroll-mode 1)
 
              ;; https://www.reddit.com/r/emacs/comments/13accue/emacs_29_pixelscrollprecisionmode_seems_to_break/
@@ -230,32 +230,32 @@
 (use-package emacs
   :ensure nil
   :config
-  (setq dired-bind-jump nil)
-  (setq dired-dwim-target t)
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-  (setq enable-recursive-minibuffers t)
-  (setq cua-enable-cua-keys nil)
+  (setopt dired-bind-jump nil)
+  (setopt dired-dwim-target t)
+  (setopt ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setopt enable-recursive-minibuffers t)
+  (setopt cua-enable-cua-keys nil)
 
   ;; backup files
   (add-to-list 'backup-directory-alist (cons "\\.*$" (expand-file-name "~/.bak/")))
-  (setq delete-old-versions t
-        make-backup-files t
-        version-control t)
+  (setopt delete-old-versions t
+         make-backup-files t
+         version-control t)
 
   ;; show-paren
   (show-paren-mode 1)
 
   ;; visible-bell
-  (setq visible-bell t)
+  (setopt visible-bell t)
 
   ;; whitespace
   (require 'whitespace)
-  (setq whitespace-style '(face trailing tabs spaces space-mark tab-mark))
-  (setq whitespace-display-mappings nil)
-  (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
-  (setq whitespace-space-regexp "\\(\u3000+\\)")
-  (setq whitespace-global-modes
-        '(not dired-mode tar-mode magit-log-mode magit-diff-mode mew-draft-mode))
+  (setopt whitespace-style '(face trailing tabs spaces space-mark tab-mark))
+  (setopt whitespace-display-mappings nil)
+  (setopt whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+  (setopt whitespace-space-regexp "\\(\u3000+\\)")
+  (setopt whitespace-global-modes
+          '(not dired-mode tar-mode magit-log-mode magit-diff-mode mew-draft-mode))
   (global-whitespace-mode t)
 
   ;; hl-line
@@ -276,8 +276,8 @@
 
   ;; uniquify
   (require 'uniquify)
-  (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
-  (setq uniquify-ignore-buffers-re "*[^*]+*")
+  (setopt uniquify-buffer-name-style 'post-forward-angle-brackets)
+  (setopt uniquify-ignore-buffers-re "*[^*]+*")
 
   ;; dired
   (add-hook 'dired-mode-hook
@@ -292,12 +292,12 @@
   (setq-default indent-tabs-mode nil)
 
   ;; misc
-  (setq indicate-empty-lines t)
-  (setq isearch-lax-whitespace nil)
-  (setq mouse-yank-at-point t)
-  (setq select-enable-clipboard t)
-  (setq select-enable-primary t)
-  (setq save-interprogram-paste-before-kill t)
+  (setopt indicate-empty-lines t)
+  (setopt isearch-lax-whitespace nil)
+  (setopt mouse-yank-at-point t)
+  (setopt select-enable-clipboard t)
+  (setopt select-enable-primary t)
+  (setopt save-interprogram-paste-before-kill t)
   (delete-selection-mode 1)
 
   ;; XXX allow remembering risky and safe variables
@@ -308,9 +308,9 @@
   ;; view-mode
   (add-hook 'view-mode-hook
             #'(lambda ()
-                (setq view-read-only t)
+                (setopt view-read-only t)
                 (auto-revert-mode 1)
-                (setq line-move-visual nil)))
+                (setopt line-move-visual nil)))
   (with-eval-after-load 'view
     (define-key view-mode-map (kbd "h") 'backward-word)
     (define-key view-mode-map (kbd "l") 'forward-word)
@@ -322,7 +322,7 @@
 
   ;; treesit
   (setopt treesit-font-lock-level 4)
-  (setq treesit-language-source-alist
+  (setopt treesit-language-source-alist
         '((csharp . ("https://github.com/tree-sitter/tree-sitter-c-sharp.git"))))
 
   ;; editor
@@ -477,9 +477,9 @@
   :custom
   (vertico-count 20)
   :config
-  (setq read-file-name-completion-ignore-case t
-        read-buffer-completion-ignore-case t
-        completion-ignore-case t)
+  (setopt read-file-name-completion-ignore-case t
+         read-buffer-completion-ignore-case t
+         completion-ignore-case t)
   (require 'consult)
   (require 'orderless)
   (require 'marginalia)
@@ -610,7 +610,7 @@
   :ensure t
   :bind ("C-=" . er/expand-region)
   :init
-  (setq shift-select-mode nil))
+  (setopt shift-select-mode nil))
 
 (use-package multiple-cursors
   :ensure t
@@ -693,7 +693,7 @@
           (visit-gh-pull-request repo)
         (visit-bb-pull-request repo))))
 
-  (setq magit-diff-refine-hunk t)
+  (setopt magit-diff-refine-hunk t)
   (add-to-list 'magit-process-password-prompt-regexps "^パスフレーズを入力: ?$")
   (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
   (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
@@ -781,12 +781,12 @@
          ("\\.twig\\'" . web-mode)
          ("\\.html\\'" . web-mode))
   :config
-  (setq web-mode-enable-block-face t)
-  (setq web-mode-enable-current-column-highlight nil)
-  (setq web-mode-enable-auto-indentation nil)
+  (setopt web-mode-enable-block-face t)
+  (setopt web-mode-enable-current-column-highlight nil)
+  (setopt web-mode-enable-auto-indentation nil)
   (add-hook 'web-mode-hook
             #'(lambda ()
-                (setq web-mode-enable-auto-indentation nil)))
+                (setopt web-mode-enable-auto-indentation nil)))
   (add-hook 'web-mode-hook
             #'(lambda ()
                 (when (string-equal "tpl" (file-name-extension buffer-file-name))
@@ -832,7 +832,7 @@
 (use-package haskell-mode
   :ensure (:host github :repo "haskell/haskell-mode")
   :config
-  (setq haskell-stylish-on-save t)
+  (setopt haskell-stylish-on-save t)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
 
@@ -917,9 +917,9 @@
 (use-package auto-save-buffers-enhanced
   :ensure (:host github :repo "kentaro/auto-save-buffers-enhanced")
   :config
-  (setq auto-save-buffers-enhanced-interval 30)
-  (setq auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
-  (setq auto-save-buffers-enhanced-file-related-with-scratch-buffer
+  (setopt auto-save-buffers-enhanced-interval 30)
+  (setopt auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
+  (setopt auto-save-buffers-enhanced-file-related-with-scratch-buffer
         (concat howm-directory "scratch.txt"))
   (auto-save-buffers-enhanced t)
   :bind ("C-x a s" . auto-save-buffers-enhanced-toggle-activity))
@@ -929,7 +929,7 @@
   :demand t
   :config
   (gcmh-mode 1)
-  (setq gcmh-verbose t))
+  (setopt gcmh-verbose t))
 
 ;;;; ============================================================
 ;;;; Minibuffer extras
