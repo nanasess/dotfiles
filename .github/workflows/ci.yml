@@ -44,12 +44,13 @@ jobs:
     - uses: purcell/setup-emacs@master
       with:
         version: ${{ matrix.emacs-version }}
-    - uses: emacs-eask/setup-eask@master
+    - uses: actions/cache@v4
       with:
-        version: 'snapshot'
-    - run: mv .emacs.d/el-get/.gitkeep .emacs.d/el-get/.status.el
+        path: .emacs.d/elpaca/
+        key: elpaca-${{ hashFiles('.emacs.d/init.el') }}
+        restore-keys: elpaca-
     - run: composer install
       working-directory: .emacs.d/bin
     - run: yarn install --frozen-lockfile
       working-directory: .emacs.d/bin
-    - run: emacs -Q -l .emacs.d/early-init.el -l .emacs.d/init.el  --batch
+    - run: emacs --init-directory .emacs.d -l .emacs.d/early-init.el -l .emacs.d/init.el --batch

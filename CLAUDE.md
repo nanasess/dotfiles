@@ -25,9 +25,11 @@ This creates symlinks in the home directory for:
 ## Development Commands
 
 ### Emacs Configuration
-- **Compile Emacs Lisp**: `cd ~/.emacs.d && find . -name '*.el' | xargs emacs -Q -batch -l ~/.emacs.d/init.el -f batch-byte-compile`
+- **Test Emacs configuration**: `emacs --init-directory .emacs.d -l .emacs.d/early-init.el -l .emacs.d/init.el --batch`
+- **Generate lock file**: `ELPACA_WRITE_LOCK=1 emacs --init-directory .emacs.d -l .emacs.d/early-init.el -l .emacs.d/init.el --batch`
 - **Clean compiled files**: `cd ~/.emacs.d && find . -name '*.elc' -delete -print`
-- **Test Emacs configuration**: `emacs -Q -l .emacs.d/early-init.el -l .emacs.d/init.el --batch`
+
+> **Note**: `--batch` は `-q` を含意するため init.el を自動ロードしません。`--init-directory` で `user-emacs-directory` を設定しつつ、`-l` で明示的にロードする必要があります。
 
 ### Package Management
 - **Install PHP dependencies**: `composer install` (in `.emacs.d/bin/`)
@@ -45,9 +47,20 @@ The CI pipeline tests the configuration with:
 ### Configuration Structure
 - **Root level**: Core dotfiles (`.bashrc`, `.signature`, etc.)
 - **`.zsh/`**: Complete Zsh configuration with PowerLevel10k theme, aliases, and environment setup
-- **`.emacs.d/`**: Comprehensive Emacs configuration with package management via el-get
+- **`.emacs.d/`**: Comprehensive Emacs configuration with package management via elpaca + use-package
 - **`phpactor/`**: PHP language server configuration
 - **`sheldon/`**: Shell plugin manager configuration
+
+### Emacs Package Management
+- **elpaca**: Async package manager with use-package integration
+  - Bootstrap code in `init.el` (elpaca installer v0.12)
+  - Lock file: `.emacs.d/elpaca.lock` — version pinning via `elpaca-lock-file`
+  - GUI からロックファイル更新: `M-x elpaca-write-lock-file`
+  - Batch からロックファイル生成: `ELPACA_WRITE_LOCK=1` 環境変数を設定して batch 実行
+- **use-package**: Emacs 30 組み込みの宣言的パッケージ設定マクロ
+  - `:ensure` で elpaca 経由のインストール
+  - `:ensure nil` で組み込みパッケージの設定
+  - GitHub リポジトリは `:ensure (:host github :repo "owner/repo")` で指定
 
 ### Development Tool Integration
 The repository includes language servers and development tools for:
@@ -59,9 +72,7 @@ The repository includes language servers and development tools for:
 - **YAML**: YAML language server
 - **Markdown**: Mermaid CLI for diagrams
 
-### Package Management
-- **Eask**: Emacs package management (configured in root `Eask` file)
-- **el-get**: Emacs package manager (lock file tracked)
+### Other Package Managers
 - **Composer**: PHP dependencies
 - **Yarn**: JavaScript dependencies
 - **Bundler**: Ruby dependencies
@@ -69,8 +80,9 @@ The repository includes language servers and development tools for:
 
 ## Key Files
 - `install`: Main installation script
-- `Eask`: Emacs package configuration requiring Emacs 29.3+
-- `.emacs.d/init.el`: Main Emacs configuration entry point
+- `.emacs.d/early-init.el`: Early Emacs initialization (GC, native-comp, package-enable-at-startup)
+- `.emacs.d/init.el`: Main Emacs configuration entry point (elpaca bootstrap, use-package declarations)
+- `.emacs.d/elpaca.lock`: Package version lock file (replaces el-get.lock)
 - `.zsh/.zshrc`: Primary Zsh configuration
 - `phpactor/phpactor.yml`: PHP language server settings
 - `sheldon/plugins.toml`: Shell plugin definitions
