@@ -311,22 +311,26 @@
                 (setopt view-read-only t)
                 (auto-revert-mode 1)
                 (setopt line-move-visual nil)))
-  (with-eval-after-load 'view
-    (define-key view-mode-map (kbd "h") 'backward-word)
-    (define-key view-mode-map (kbd "l") 'forward-word)
-    (define-key view-mode-map (kbd "j") 'next-line)
-    (define-key view-mode-map (kbd "k") 'previous-line)
-    (define-key view-mode-map " " 'scroll-up)
-    (define-key view-mode-map (kbd "b") 'scroll-down))
   (add-to-list 'auto-mode-alist '("\\.log$" . view-mode))
 
   ;; treesit
   (setopt treesit-font-lock-level 4)
   (setopt treesit-language-source-alist
-        '((csharp . ("https://github.com/tree-sitter/tree-sitter-c-sharp.git"))))
+          '((csharp . ("https://github.com/tree-sitter/tree-sitter-c-sharp.git"))))
 
   ;; editor
   (setenv "EDITOR" "emacsclient"))
+
+(use-package view
+  :ensure nil
+  :defer t
+  :bind (:map view-mode-map
+         ("h" . backward-word)
+         ("l" . forward-word)
+         ("j" . next-line)
+         ("k" . previous-line)
+         (" " . scroll-up)
+         ("b" . scroll-down)))
 
 ;;;; ============================================================
 ;;;; Theme & UI
@@ -450,11 +454,13 @@
 
 (use-package embark
   :ensure (:host github :repo "oantolin/embark")
-  :bind ("C-," . embark-act)
+  :bind ("C-," . embark-act))
+
+(use-package embark-consult
+  :ensure nil
+  :after (embark consult)
   :config
-  (with-eval-after-load 'consult
-    (require 'embark-consult)
-    (define-key embark-file-map "s" #'sudo-edit)))
+  (define-key embark-file-map "s" #'sudo-edit))
 
 (use-package vertico
   :ensure (:host github :repo "minad/vertico" :branch "main"
@@ -647,19 +653,18 @@
   :ensure t
   :bind ("C-z m" . magit-status)
   :config
-  (with-eval-after-load 'transient
-    (transient-define-prefix my/copy-dwim ()
-      "Select what to copy."
-      [["File Info"
-        ("f" "Full path" my/copy-buffer-file-name :transient nil)
-        ("n" "File name only" my/copy-buffer-file-name-nondirectory :transient nil)
-        ("d" "Directory" my/copy-buffer-directory :transient nil)
-        ("l" "File:line" my/copy-buffer-file-name-with-line :transient nil)]
-       ["Text (easy-kill)"
-        ("w" "Word" (lambda () (interactive) (easy-kill ?w)) :transient nil)
-        ("s" "Symbol" (lambda () (interactive) (easy-kill ?s)) :transient nil)
-        ("L" "Line" (lambda () (interactive) (easy-kill ?l)) :transient nil)
-        ("-" "Defun" (lambda () (interactive) (easy-kill ?-)) :transient nil)]]))
+  (transient-define-prefix my/copy-dwim ()
+    "Select what to copy."
+    [["File Info"
+      ("f" "Full path" my/copy-buffer-file-name :transient nil)
+      ("n" "File name only" my/copy-buffer-file-name-nondirectory :transient nil)
+      ("d" "Directory" my/copy-buffer-directory :transient nil)
+      ("l" "File:line" my/copy-buffer-file-name-with-line :transient nil)]
+     ["Text (easy-kill)"
+      ("w" "Word" (lambda () (interactive) (easy-kill ?w)) :transient nil)
+      ("s" "Symbol" (lambda () (interactive) (easy-kill ?s)) :transient nil)
+      ("L" "Line" (lambda () (interactive) (easy-kill ?l)) :transient nil)
+      ("-" "Defun" (lambda () (interactive) (easy-kill ?-)) :transient nil)]])
 
   (defun visit-gh-pull-request (repo)
     "Visit the current branch's PR on Github."
@@ -700,9 +705,12 @@
   (define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
   (remove-hook 'server-switch-hook 'magit-commit-diff))
 
-(with-eval-after-load 'smerge-mode
-  (define-key smerge-mode-map (kbd "M-n") 'smerge-next)
-  (define-key smerge-mode-map (kbd "M-p") 'smerge-prev))
+(use-package smerge-mode
+  :ensure nil
+  :defer t
+  :bind (:map smerge-mode-map
+         ("M-n" . smerge-next)
+         ("M-p" . smerge-prev)))
 
 ;;;; ============================================================
 ;;;; howm (commented out — preserved for future use)
@@ -798,11 +806,13 @@
   :mode "\\.ya?ml$")
 
 ;;; PHP
-(add-to-list 'auto-mode-alist '("\\.\\(inc\\|php[s34]?\\)$" . php-ts-mode))
-(with-eval-after-load 'php-ts-mode
-  (electric-indent-local-mode t)
-  (electric-layout-mode t)
-  (electric-pair-local-mode t))
+(use-package php-ts-mode
+  :ensure nil
+  :mode "\\.\\(inc\\|php[s34]?\\)$"
+  :hook (php-ts-mode . (lambda ()
+                         (electric-indent-local-mode t)
+                         (electric-layout-mode t)
+                         (electric-pair-local-mode t))))
 
 (use-package php-runtime
   :ensure (:host github :repo "emacs-php/php-runtime.el"))
