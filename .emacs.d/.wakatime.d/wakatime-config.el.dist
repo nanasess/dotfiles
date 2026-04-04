@@ -1,2 +1,0 @@
-;; https://wakatime.com/settings/api-key
-(setq wakatime-api-key "waka_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")

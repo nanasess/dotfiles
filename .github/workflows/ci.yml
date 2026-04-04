@@ -15,42 +15,8 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-24.04
-          # - macos-latest
-        emacs-version:
-          - "release-snapshot"
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-python@v6
-      with:
-        python-version: '3.12'
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '3.2'
-    - name: Setup PHP with composer v2
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.4'
-        tools: composer:v2
-    - name: Install Node.js
-      uses: actions/setup-node@v6
-      with:
-        node-version: 22
-    - uses: purcell/setup-emacs@master
-      with:
-        version: ${{ matrix.emacs-version }}
-    - uses: actions/cache@v4
-      with:
-        path: .emacs.d/elpaca/
-        key: elpaca-${{ hashFiles('.emacs.d/init.el') }}
-        restore-keys: elpaca-
-    - run: composer install
-      working-directory: .emacs.d/bin
-    - run: yarn install --frozen-lockfile
-      working-directory: .emacs.d/bin
-    - run: emacs --init-directory .emacs.d -l .emacs.d/early-init.el -l .emacs.d/init.el --batch
+    - name: Verify zsh configuration syntax
+      run: zsh -n .zsh/.zshrc
