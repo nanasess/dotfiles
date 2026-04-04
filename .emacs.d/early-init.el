@@ -27,9 +27,7 @@
 ;; see https://zenn.dev/takeokunn/articles/56010618502ccc#el-get%E3%81%AEpackage%E3%82%82nativecomp%E3%81%99%E3%82%8B
 (defun my/native-comp-packages ()
   (interactive)
-  (native-compile-async "~/.emacs.d/init.el")
   (native-compile-async "~/.emacs.d/init.d" 'recursively)
-  (native-compile-async "~/.emacs.d/early-init.el")
   (native-compile-async "~/.emacs.d/elpaca/builds" 'recursively))
 
 (provide 'early-init)

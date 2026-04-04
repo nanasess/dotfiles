@@ -45,7 +45,7 @@ The CI pipeline tests the configuration with:
 ### Configuration Structure
 - **Root level**: Core dotfiles (`.bashrc`, `.signature`, etc.)
 - **`.zsh/`**: Complete Zsh configuration with PowerLevel10k theme, aliases, and environment setup
-- **`.emacs.d/`**: Comprehensive Emacs configuration with package management via el-get
+- **`.emacs.d/`**: Comprehensive Emacs configuration with package management via elpaca + use-package
 - **`phpactor/`**: PHP language server configuration
 - **`sheldon/`**: Shell plugin manager configuration
 
@@ -61,7 +61,7 @@ The repository includes language servers and development tools for:
 
 ### Package Management
 - **Eask**: Emacs package management (configured in root `Eask` file)
-- **el-get**: Emacs package manager (lock file tracked)
+- **elpaca**: Emacs package manager with use-package integration
 - **Composer**: PHP dependencies
 - **Yarn**: JavaScript dependencies
 - **Bundler**: Ruby dependencies
@@ -69,7 +69,7 @@ The repository includes language servers and development tools for:
 
 ## Key Files
 - `install`: Main installation script
-- `Eask`: Emacs package configuration requiring Emacs 29.3+
+- `Eask`: Emacs package configuration requiring Emacs 30.1+
 - `.emacs.d/init.el`: Main Emacs configuration entry point
 - `.zsh/.zshrc`: Primary Zsh configuration
 - `phpactor/phpactor.yml`: PHP language server settings

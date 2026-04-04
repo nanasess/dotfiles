@@ -433,16 +433,15 @@
          ([remap goto-line] . consult-goto-line)
          ("C-M-s" . consult-line)
          ("C-x C-d" . consult-dir)
-         ("C-z s" . consult-howm-do-ag)
          ("C-z l" . consult-ls-git))
   :custom
   (consult-narrow-key ">")
   (consult-widen-key "<")
   (consult-preview-key "M-.")
   :config
-  (defun consult-howm-do-ag ()
-    (interactive)
-    (consult-ripgrep howm-directory))
+  ;; (defun consult-howm-do-ag ()
+  ;;   (interactive)
+  ;;   (consult-ripgrep howm-directory))
   (consult-customize
    consult-ripgrep
    consult-grep
@@ -644,11 +643,7 @@
 ;;;; Git / Magit
 ;;;; ============================================================
 (use-package transient
-  :ensure t)
-
-(use-package magit
   :ensure t
-  :bind ("C-z m" . magit-status)
   :config
   (transient-define-prefix my/copy-dwim ()
     "Select what to copy."
@@ -661,8 +656,12 @@
       ("w" "Word" (lambda () (interactive) (easy-kill ?w)) :transient nil)
       ("s" "Symbol" (lambda () (interactive) (easy-kill ?s)) :transient nil)
       ("L" "Line" (lambda () (interactive) (easy-kill ?l)) :transient nil)
-      ("-" "Defun" (lambda () (interactive) (easy-kill ?-)) :transient nil)]])
+      ("-" "Defun" (lambda () (interactive) (easy-kill ?-)) :transient nil)]]))
 
+(use-package magit
+  :ensure t
+  :bind ("C-z m" . magit-status)
+  :config
   (defun visit-gh-pull-request (repo)
     "Visit the current branch's PR on Github."
     (interactive)
@@ -714,15 +713,9 @@
 ;;;; ============================================================
 ;;;; howm (commented out — preserved for future use)
 ;;;; ============================================================
-(setopt howm-directory (concat external-directory "howm/"))
-(setopt howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.md")
-;; (el-get-bundle howm
-;;   :type github
-;;   :pkgname "kaorahi/howm"
-;;   :build `(("./configure" ,(concat "--with-emacs=" el-get-emacs)) ("make"))
-;;   :prepare (progn
-;;              (defvar howm-menu-lang 'ja)
-;;              ...))
+;; howm is not installed — these are preserved for reference
+;; (setopt howm-directory (concat external-directory "howm/"))
+;; (setopt howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.md")
 
 ;; see https://stackoverflow.com/a/384346
 (defun rename-file-and-buffer (new-name)
@@ -740,8 +733,8 @@
           (set-visited-file-name new-name)
           (set-buffer-modified-p nil))))))
 
-(bind-keys ("C-z c" . howm-create)
-           ("C-c ,c" . howm-create))
+;; (bind-keys ("C-z c" . howm-create)
+;;            ("C-c ,c" . howm-create))
 
 ;;;; ============================================================
 ;;;; Markdown
@@ -930,7 +923,7 @@
   (setopt auto-save-buffers-enhanced-interval 30)
   (setopt auto-save-buffers-enhanced-save-scratch-buffer-to-file-p t)
   (setopt auto-save-buffers-enhanced-file-related-with-scratch-buffer
-        (concat howm-directory "scratch.txt"))
+        (concat external-directory "howm/scratch.txt"))
   (auto-save-buffers-enhanced t)
   :bind ("C-x a s" . auto-save-buffers-enhanced-toggle-activity))
 
