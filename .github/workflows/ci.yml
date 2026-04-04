@@ -47,7 +47,11 @@ jobs:
     - uses: emacs-eask/setup-eask@master
       with:
         version: 'snapshot'
-    - run: mv .emacs.d/el-get/.gitkeep .emacs.d/el-get/.status.el
+    - uses: actions/cache@v4
+      with:
+        path: .emacs.d/elpaca/
+        key: elpaca-${{ hashFiles('.emacs.d/init.el') }}
+        restore-keys: elpaca-
     - run: composer install
       working-directory: .emacs.d/bin
     - run: yarn install --frozen-lockfile

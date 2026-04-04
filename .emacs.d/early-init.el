@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: t; -*-
+;;; early-init.el --- Early Emacs initialization. -*- lexical-binding: t; -*-
 
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6)
@@ -17,6 +17,9 @@
 (setq load-prefer-newer t)
 (push '(tool-bar-lines . 0) default-frame-alist)
 
+;; elpaca takes over package management
+(setq package-enable-at-startup nil)
+
 (with-eval-after-load 'comp
   (setq native-comp-async-jobs-number 16)
   (setq native-comp-speed 3))
@@ -27,9 +30,6 @@
   (native-compile-async "~/.emacs.d/init.el")
   (native-compile-async "~/.emacs.d/init.d" 'recursively)
   (native-compile-async "~/.emacs.d/early-init.el")
-  (native-compile-async "~/.emacs.d/el-get/.loaddefs.el")
-  (native-compile-async "~/.emacs.d/el-get-init.d" 'recursively)
-  (native-compile-async "~/.emacs.d/elpa" 'recursively)
-  (native-compile-async "~/.emacs.d/el-get" 'recursively))
+  (native-compile-async "~/.emacs.d/elpaca/builds" 'recursively))
 
 (provide 'early-init)
