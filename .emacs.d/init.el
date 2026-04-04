@@ -13,10 +13,7 @@
 
 (defvar user-initial-directory (locate-user-emacs-file "init.d/"))
 (defvar user-site-lisp-directory (locate-user-emacs-file "site-lisp/"))
-(defvar user-misc-directory (locate-user-emacs-file "etc/"))
-(defvar user-bin-directory (locate-user-emacs-file "bin/"))
 (defvar external-directory (expand-file-name "~/OneDrive - Skirnir Inc/emacs/"))
-(defvar openweathermap-api-key nil)
 (setopt debug-on-error t)
 (setopt warning-minimum-level :error)
 
@@ -147,17 +144,17 @@
 (global-unset-key (kbd "C-M-t"))
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-\\"))
-(global-set-key (kbd "M-g") 'goto-line)
-(global-set-key (kbd "C-t") 'other-window)
-(global-set-key (kbd "C-z C-u") 'other-frame)
-(global-set-key (kbd "C-M-g") 'end-of-buffer)
-(global-set-key (kbd "C-M-j") 'next-line)
-(global-set-key (kbd "C-M-k") 'previous-line)
-(global-set-key (kbd "C-M-h") 'backward-char)
-(global-set-key (kbd "C-M-l") 'forward-char)
-;; XXX PowerToys hack
-(global-set-key (kbd "C-x <right>") 'find-file)
-(global-set-key (kbd "C-x <end>") 'eval-last-sexp)
+(bind-keys ("M-g" . goto-line)
+           ("C-t" . other-window)
+           ("C-z C-u" . other-frame)
+           ("C-M-g" . end-of-buffer)
+           ("C-M-j" . next-line)
+           ("C-M-k" . previous-line)
+           ("C-M-h" . backward-char)
+           ("C-M-l" . forward-char)
+           ;; XXX PowerToys hack
+           ("C-x <right>" . find-file)
+           ("C-x <end>" . eval-last-sexp))
 
 ;;;; ============================================================
 ;;;; Scroll settings
@@ -255,7 +252,7 @@
   (setopt whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
   (setopt whitespace-space-regexp "\\(\u3000+\\)")
   (setopt whitespace-global-modes
-          '(not dired-mode tar-mode magit-log-mode magit-diff-mode mew-draft-mode))
+          '(not dired-mode tar-mode magit-log-mode magit-diff-mode))
   (global-whitespace-mode t)
 
   ;; hl-line
@@ -280,13 +277,7 @@
   (setopt uniquify-ignore-buffers-re "*[^*]+*")
 
   ;; dired
-  (add-hook 'dired-mode-hook
-            #'(lambda ()
-                (local-set-key (kbd "C-t") 'other-window)
-                (local-set-key (kbd "r") 'wdired-change-to-wdired-mode)))
-  (add-hook 'dired-load-hook
-            #'(lambda ()
-                (load "dired-x")))
+  (add-hook 'dired-load-hook (lambda () (load "dired-x")))
 
   ;; indent
   (setq-default indent-tabs-mode nil)
@@ -307,7 +298,7 @@
 
   ;; view-mode
   (add-hook 'view-mode-hook
-            #'(lambda ()
+            (lambda ()
                 (setopt view-read-only t)
                 (auto-revert-mode 1)
                 (setopt line-move-visual nil)))
@@ -320,6 +311,13 @@
 
   ;; editor
   (setenv "EDITOR" "emacsclient"))
+
+(use-package dired
+  :ensure nil
+  :defer t
+  :bind (:map dired-mode-map
+         ("C-t" . other-window)
+         ("r" . wdired-change-to-wdired-mode)))
 
 (use-package view
   :ensure nil
@@ -413,8 +411,8 @@
   (interactive)
   (set-frame-width (selected-frame) (- (frame-width (selected-frame)) 1)))
 
-(global-set-key (kbd "C-z C-a") 'toggle-fullscreen)
-(global-set-key (kbd "C-z C-z") 'toggle-size-frame)
+(bind-keys ("C-z C-a" . toggle-fullscreen)
+           ("C-z C-z" . toggle-size-frame))
 
 ;;;; ============================================================
 ;;;; Completion framework (vertico, consult, marginalia, orderless, embark)
@@ -459,38 +457,33 @@
 (use-package embark-consult
   :ensure nil
   :after (embark consult)
-  :config
-  (define-key embark-file-map "s" #'sudo-edit))
+  :bind (:map embark-file-map
+         ("s" . sudo-edit)))
+
+(use-package savehist
+  :ensure nil
+  :hook (emacs-startup . savehist-mode)
+  :custom
+  (savehist-additional-variables
+   '(kill-ring log-edit-comment-ring search-ring regexp-search-ring)))
 
 (use-package vertico
   :ensure (:host github :repo "minad/vertico" :branch "main"
            :files ("*.el" "extensions/*.el"))
-  :hook (emacs-startup
-         . (lambda ()
-             (vertico-mode)
-             (marginalia-mode)
-             (savehist-mode)
-             (add-to-list 'savehist-additional-variables 'kill-ring)
-             (add-to-list 'savehist-additional-variables 'log-edit-comment-ring)
-             (add-to-list 'savehist-additional-variables 'search-ring)
-             (add-to-list 'savehist-additional-variables 'regexp-search-ring)))
-  :bind (:map vertico-map
+  :hook ((emacs-startup . vertico-mode)
+         (emacs-startup . marginalia-mode)
+         (minibuffer-setup . vertico-repeat-save))
+  :bind (("C-z C-r" . vertico-repeat)
+         :map vertico-map
          ("C-l" . vertico-directory-up)
          ("C-j" . vertico-directory-enter)
          ("M-v" . vertico-next-group)
-         ("C-v" . vertico-previous-group)
-         ("C-z C-r" . vertico-repeat))
+         ("C-v" . vertico-previous-group))
   :custom
   (vertico-count 20)
-  :config
-  (setopt read-file-name-completion-ignore-case t
-         read-buffer-completion-ignore-case t
-         completion-ignore-case t)
-  (require 'consult)
-  (require 'orderless)
-  (require 'marginalia)
-  (require 'savehist)
-  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save))
+  (read-file-name-completion-ignore-case t)
+  (read-buffer-completion-ignore-case t)
+  (completion-ignore-case t))
 
 (use-package consult-ls-git
   :ensure (:host github :repo "rcj/consult-ls-git" :branch "main"))
@@ -537,7 +530,7 @@
             migemo-use-frequent-pattern-alist t
             migemo-pattern-alist-length 10000
             migemo-coding-system 'utf-8-unix))
-  (add-hook 'isearch-mode-hook #'(lambda ()
+  (add-hook 'isearch-mode-hook (lambda ()
                                    (unless (featurep 'migemo)
                                      (require 'migemo))
                                    (migemo-init))))
@@ -600,7 +593,7 @@
         (my/copy-dwim)
       (message "Copy menu not available. Run M-x magit-status to load transient first."))))
 
-(global-set-key (kbd "M-w") #'my/copy-or-menu)
+(bind-key "M-w" #'my/copy-or-menu)
 
 (use-package yasnippet
   :ensure t
@@ -631,17 +624,21 @@
 (use-package sql-indent
   :ensure (:host github :repo "alex-hhh/emacs-sql-indent")
   :hook (sql-mode . (lambda ()
-                      (set (make-local-variable 'sql-product) 'sqlite)
+                      (setq-local sql-product 'sqlite)
                       (sql-indent-enable)
-                      (setq sqlind-basic-offset 4))))
+                      (setq-local sqlind-basic-offset 4))))
 
 ;;;; ============================================================
 ;;;; org-mode
 ;;;; ============================================================
-(setopt org-directory (concat external-directory "howm/"))
-(setopt org-return-follows-link t)
-(setopt org-startup-folded nil)
-(setopt org-startup-truncated nil)
+(use-package org
+  :ensure nil
+  :defer t
+  :custom
+  (org-directory (concat external-directory "howm/"))
+  (org-return-follows-link t)
+  (org-startup-folded nil)
+  (org-startup-truncated nil))
 
 ;;;; ============================================================
 ;;;; Git / Magit
@@ -700,10 +697,12 @@
 
   (setopt magit-diff-refine-hunk t)
   (add-to-list 'magit-process-password-prompt-regexps "^パスフレーズを入力: ?$")
-  (define-key magit-mode-map "v" #'endless/visit-pull-request-url)
-  (define-key magit-log-mode-map (kbd "j") 'magit-section-forward)
-  (define-key magit-log-mode-map (kbd "k") 'magit-section-backward)
-  (remove-hook 'server-switch-hook 'magit-commit-diff))
+  (remove-hook 'server-switch-hook 'magit-commit-diff)
+  :bind (:map magit-mode-map
+         ("v" . endless/visit-pull-request-url)
+         :map magit-log-mode-map
+         ("j" . magit-section-forward)
+         ("k" . magit-section-backward)))
 
 (use-package smerge-mode
   :ensure nil
@@ -741,8 +740,8 @@
           (set-visited-file-name new-name)
           (set-buffer-modified-p nil))))))
 
-(global-set-key (kbd "C-z c") 'howm-create)
-(global-set-key (kbd "C-c ,c") 'howm-create)
+(bind-keys ("C-z c" . howm-create)
+           ("C-c ,c" . howm-create))
 
 ;;;; ============================================================
 ;;;; Markdown
@@ -774,8 +773,13 @@
 ;;;; ============================================================
 
 ;;; TypeScript
-(add-to-list 'auto-mode-alist '("\\.ts$" . typescript-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx$" . tsx-ts-mode))
+(use-package typescript-ts-mode
+  :ensure nil
+  :mode "\\.ts$")
+
+(use-package tsx-ts-mode
+  :ensure nil
+  :mode "\\.tsx$")
 
 ;;; jq
 (use-package jq-mode
@@ -788,17 +792,13 @@
          ("\\.vue\\'" . web-mode)
          ("\\.twig\\'" . web-mode)
          ("\\.html\\'" . web-mode))
-  :config
-  (setopt web-mode-enable-block-face t)
-  (setopt web-mode-enable-current-column-highlight nil)
-  (setopt web-mode-enable-auto-indentation nil)
-  (add-hook 'web-mode-hook
-            #'(lambda ()
-                (setopt web-mode-enable-auto-indentation nil)))
-  (add-hook 'web-mode-hook
-            #'(lambda ()
-                (when (string-equal "tpl" (file-name-extension buffer-file-name))
-                  (web-mode-set-engine "eccube")))))
+  :custom
+  (web-mode-enable-block-face t)
+  (web-mode-enable-current-column-highlight nil)
+  (web-mode-enable-auto-indentation nil)
+  :hook (web-mode . (lambda ()
+                      (when (string-equal "tpl" (file-name-extension buffer-file-name))
+                        (web-mode-set-engine "eccube")))))
 
 ;;; YAML
 (use-package yaml-mode
@@ -841,10 +841,10 @@
 ;;; Haskell
 (use-package haskell-mode
   :ensure (:host github :repo "haskell/haskell-mode")
-  :config
-  (setopt haskell-stylish-on-save t)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
+  :custom
+  (haskell-stylish-on-save t)
+  :hook ((haskell-mode . turn-on-haskell-doc-mode)
+         (haskell-mode . turn-on-haskell-indentation)))
 
 ;;; Dockerfile
 (use-package dockerfile-mode
@@ -944,7 +944,7 @@
 ;;;; ============================================================
 ;;;; Minibuffer extras
 ;;;; ============================================================
-(define-key minibuffer-local-map (kbd "C-x C-j") 'nskk-kakutei)
+(bind-key "C-x C-j" #'nskk-kakutei minibuffer-local-map)
 
 ;; npm i -g vscode-json-languageserver
 ;; for json format
